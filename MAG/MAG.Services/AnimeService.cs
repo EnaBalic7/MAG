@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MAG.Model;
+using MAG.Model.SearchObjects;
 using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,21 +11,27 @@ using System.Threading.Tasks;
 
 namespace MAG.Services
 {
-    public class AnimeService : IAnimeService
+    public class AnimeService : BaseService<Model.Anime, Database.Anime, AnimeSearchObject>, IAnimeService
     {
-        MyAnimeGalaxyContext _context;
-        public IMapper _mapper { get; set; }
-
-        public AnimeService(MyAnimeGalaxyContext context, IMapper mapper)
+        public AnimeService(MyAnimeGalaxyContext context, IMapper mapper) : base(context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
+
         }
-        public async Task<List<Model.Anime>> Get()
-        {
-            var entityList = await _context.Animes.ToListAsync();
 
-            return _mapper.Map<List<Model.Anime>>(entityList);
+        public override IQueryable<Database.Anime> AddFilter(IQueryable<Database.Anime> query, AnimeSearchObject? search = null)
+        {
+
+            if (!string.IsNullOrWhiteSpace(search?.Name))
+            {
+                query = query.Where(x => x.TitleEn.StartsWith(search.Name));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.FTS))
+            {
+                query = query.Where(x => x.TitleEn.Contains(search.FTS));
+            }
+
+            return base.AddFilter(query, search);
         }
     }
 }

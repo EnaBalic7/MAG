@@ -1,24 +1,15 @@
+using MAG.Model.SearchObjects;
 using MAG.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MAG.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AnimeController : ControllerBase
+    public class AnimeController : BaseController<Model.Anime, AnimeSearchObject>
     {
-
-        private readonly IAnimeService _service;
-        public AnimeController(IAnimeService service)
+        public AnimeController(IAnimeService service) : base(service)
         {
-            _service = service;
-        }
 
-        [HttpGet]
-        public IEnumerable<Model.Anime> Get()
-        {
-            return _service.Get();
         }
-
     }
 }
