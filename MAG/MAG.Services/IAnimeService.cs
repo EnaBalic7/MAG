@@ -1,4 +1,5 @@
-﻿using MAG.Model.SearchObjects;
+﻿using MAG.Model.Requests;
+using MAG.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MAG.Services
 {
-    public interface IAnimeService : IService<Model.Anime, AnimeSearchObject>
+    public interface IAnimeService : ICRUDService<Model.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>
     {
     }
 }

@@ -7,7 +7,7 @@ namespace MAG.Controllers
     [Route("[controller]")]
     public class BaseController<T, TSearch> : ControllerBase where T : class where TSearch : class
     {
-        private readonly IService<T, TSearch> _service;
+        protected readonly IService<T, TSearch> _service;
         public BaseController(IService<T, TSearch> service)
         {
             _service = service;

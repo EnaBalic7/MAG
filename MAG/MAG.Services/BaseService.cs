@@ -14,10 +14,10 @@ namespace MAG.Services
     public class BaseService<T, TDb, TSearch> : IService<T, TSearch> where T : class where TDb : class where TSearch : BaseSearchObject
     {
 
-        MyAnimeGalaxyContext _context;
-        public IMapper _mapper { get; set; }
+        protected MagContext _context;
+        protected IMapper _mapper { get; set; }
 
-        public BaseService(MyAnimeGalaxyContext context, IMapper mapper)
+        public BaseService(MagContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<MyAnimeGalaxyContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<MagContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddAutoMapper(typeof(IAnimeService));
 builder.Services.AddControllersWithViews();
 

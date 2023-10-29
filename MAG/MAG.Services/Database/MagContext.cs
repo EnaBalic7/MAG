@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MAG.Services.Database;
 
-public partial class MyAnimeGalaxyContext : DbContext
+public partial class MagContext : DbContext
 {
-    public MyAnimeGalaxyContext()
+    public MagContext()
     {
     }
 
-    public MyAnimeGalaxyContext(DbContextOptions<MyAnimeGalaxyContext> options)
+    public MagContext(DbContextOptions<MagContext> options)
         : base(options)
     {
     }
@@ -49,7 +49,7 @@ public partial class MyAnimeGalaxyContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=MyAnimeGalaxy;TrustServerCertificate=true;Trusted_Connection=true");
+        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=MAG;TrustServerCertificate=true;Trusted_Connection=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,9 +57,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Anime");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.BeginAir).HasColumnType("datetime");
             entity.Property(e => e.FinishAir).HasColumnType("datetime");
             entity.Property(e => e.ImageUrl)
@@ -103,9 +101,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Club");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.DateCreated).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.OwnerId).HasColumnName("OwnerID");
@@ -139,9 +135,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Comment");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.DateCommented).HasColumnType("datetime");
             entity.Property(e => e.PostId).HasColumnName("PostID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -161,11 +155,9 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Donation");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.DateDonated).HasColumnType("datetime");
-            entity.Property(e => e.Status).HasMaxLength(20);
+            entity.Property(e => e.Status).HasMaxLength(30);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Donations)
@@ -178,9 +170,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Genre");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).HasMaxLength(50);
 
             entity.HasMany(d => d.Animes).WithMany(p => p.Genres)
@@ -226,9 +216,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("List");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.DateCreated).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -262,9 +250,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Post");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ClubId).HasColumnName("ClubID");
             entity.Property(e => e.DatePosted).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
@@ -284,9 +270,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Q&A");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -305,9 +289,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Q&ACategory");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
@@ -315,9 +297,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Rating");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
             entity.Property(e => e.DateAdded).HasColumnType("datetime");
             entity.Property(e => e.Rating1).HasColumnName("Rating");
@@ -338,9 +318,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Role");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
@@ -348,9 +326,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("User");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.DateJoined).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(50);
@@ -371,9 +347,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("UserProfilePicture");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
         });
 
         modelBuilder.Entity<UserRole>(entity =>
@@ -400,9 +374,7 @@ public partial class MyAnimeGalaxyContext : DbContext
         {
             entity.ToTable("Watchlist");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.DateAdded).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 

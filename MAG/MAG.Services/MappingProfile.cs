@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MAG.Model.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace MAG.Services
         public MappingProfile()
         { 
             CreateMap<Database.Anime, Model.Anime>();
+            CreateMap<AnimeInsertRequest, Database.Anime>();
+            CreateMap<AnimeUpdateRequest, Database.Anime>();
+
 
         }
     }

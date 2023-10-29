@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MAG.Model;
+using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace MAG.Services
 {
-    public class AnimeService : BaseService<Model.Anime, Database.Anime, AnimeSearchObject>, IAnimeService
+    public class AnimeService : BaseCRUDService<Model.Anime, Database.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>, IAnimeService
     {
-        public AnimeService(MyAnimeGalaxyContext context, IMapper mapper) : base(context, mapper)
+        public AnimeService(MagContext context, IMapper mapper) : base(context, mapper)
         {
 
         }
@@ -23,12 +24,12 @@ namespace MAG.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Name))
             {
-                query = query.Where(x => x.TitleEn.StartsWith(search.Name));
+                query = query.Where(x => x.TitleEn.StartsWith(search.Name) || x.TitleJp.StartsWith(search.Name));
             }
 
             if (!string.IsNullOrWhiteSpace(search?.FTS))
             {
-                query = query.Where(x => x.TitleEn.Contains(search.FTS));
+                query = query.Where(x => x.TitleEn.Contains(search.FTS) || x.TitleJp.Contains(search.FTS));
             }
 
             return base.AddFilter(query, search);
