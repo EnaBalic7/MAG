@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MAG.Model;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace MAG.Services
         public virtual async Task<T> Update(int id, TUpdate update)
         {
             var set = _context.Set<TDb>();
+           
 
             var entity = await set.FindAsync(id);
 
@@ -47,7 +49,7 @@ namespace MAG.Services
             }
             else
             {
-                return null;
+                throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided ID [{id}]");
             }
             
             await _context.SaveChangesAsync();

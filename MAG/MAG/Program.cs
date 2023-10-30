@@ -1,3 +1,4 @@
+using MAG.Filters;
 using MAG.Services;
 using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,10 @@ builder.Services.AddTransient<IAnimeService, AnimeService>();
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(x =>
+{
+    x.Filters.Add<ErrorFilter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
