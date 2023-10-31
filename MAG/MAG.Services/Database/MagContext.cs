@@ -331,7 +331,6 @@ public partial class MagContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.LastName).HasMaxLength(50);
-            entity.Property(e => e.Password).HasMaxLength(50);
             entity.Property(e => e.PasswordHash).HasMaxLength(50);
             entity.Property(e => e.PasswordSalt).HasMaxLength(50);
             entity.Property(e => e.ProfilePictureId).HasColumnName("ProfilePictureID");

@@ -16,7 +16,12 @@ namespace MAG.Services
             CreateMap<AnimeInsertRequest, Database.Anime>();
             CreateMap<AnimeUpdateRequest, Database.Anime>();
 
+            CreateMap<Database.User, Model.User>();
+            CreateMap<UserInsertRequest, Database.User>();
+            CreateMap<UserUpdateRequest, Database.User>();
 
+            CreateMap<Database.Role, Model.Role>();
+            CreateMap<Database.UserRole, Model.UserRole>();
         }
     }
 }
