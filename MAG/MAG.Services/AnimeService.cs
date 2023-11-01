@@ -22,9 +22,9 @@ namespace MAG.Services
         public override IQueryable<Database.Anime> AddFilter(IQueryable<Database.Anime> query, AnimeSearchObject? search = null)
         {
 
-            if (!string.IsNullOrWhiteSpace(search?.Name))
+            if (!string.IsNullOrWhiteSpace(search?.Title))
             {
-                query = query.Where(x => x.TitleEn.StartsWith(search.Name) || x.TitleJp.StartsWith(search.Name));
+                query = query.Where(x => x.TitleEn.StartsWith(search.Title) || x.TitleJp.StartsWith(search.Title));
             }
 
             if (!string.IsNullOrWhiteSpace(search?.FTS))

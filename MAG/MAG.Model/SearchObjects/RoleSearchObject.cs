@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace MAG.Model.SearchObjects
 {
-    public class AnimeSearchObject : BaseSearchObject
+    public class RoleSearchObject : BaseSearchObject
     {
-        public string? Title { get; set; }
-        public string? FTS { get; set; } //FTS - Full Text Search
+        public string? Name { get; set; }
     }
 }

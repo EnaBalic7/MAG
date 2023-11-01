@@ -57,7 +57,14 @@ namespace MAG.Services
         }
         public async Task<T> GetById(int id)
         {
-            var entity = await _context.Set<TDb>().FindAsync(id);
+            var set = _context.Set<TDb>();
+
+            var entity = await set.FindAsync(id);
+
+            if(entity == null)
+            {
+                throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided ID [{id}]");
+            }
 
             return _mapper.Map<T>(entity);
         }

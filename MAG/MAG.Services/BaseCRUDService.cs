@@ -39,7 +39,6 @@ namespace MAG.Services
         public virtual async Task<T> Update(int id, TUpdate update)
         {
             var set = _context.Set<TDb>();
-           
 
             var entity = await set.FindAsync(id);
 
@@ -52,6 +51,26 @@ namespace MAG.Services
                 throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided ID [{id}]");
             }
             
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<T>(entity);
+        }
+
+        public virtual async Task<T> Delete(int id)
+        {
+            var set = _context.Set<TDb>();
+
+            var entity = await set.FindAsync(id);
+
+            if(entity != null)
+            {
+                set.Remove(entity);
+            }
+            else
+            {
+                throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided ID [{id}]");
+            }
+
             await _context.SaveChangesAsync();
 
             return _mapper.Map<T>(entity);

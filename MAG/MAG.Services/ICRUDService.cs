@@ -10,5 +10,6 @@ namespace MAG.Services
     {
         Task<T> Insert(TInsert insert);
         Task<T> Update(int id, TUpdate update);
+        Task<T> Delete(int id);
     }
 }

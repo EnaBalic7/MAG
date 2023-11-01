@@ -66,5 +66,31 @@ namespace MAG.Services
 
             return _mapper.Map<Model.User>(entity);
         }
+
+        public override IQueryable<Database.User> AddFilter(IQueryable<Database.User> query, UserSearchObject? search = null)
+        {
+
+            if (!string.IsNullOrWhiteSpace(search?.Username))
+            {
+                query = query.Where(x => x.Username.StartsWith(search.Username));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.FirstName))
+            {
+                query = query.Where(x => x.FirstName.StartsWith(search.FirstName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.LastName))
+            {
+                query = query.Where(x => x.LastName.StartsWith(search.LastName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.FTS))
+            {
+                query = query.Where(x => (x.FirstName + " " + x.LastName).Contains(search.FTS) || (x.LastName + " " + x.FirstName).Contains(search.FTS));
+            }
+
+            return base.AddFilter(query, search);
+        }
     }
 }
