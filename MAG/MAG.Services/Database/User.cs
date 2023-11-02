@@ -23,6 +23,8 @@ public partial class User
 
     public DateTime DateJoined { get; set; }
 
+    public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
+
     public virtual ICollection<Club> Clubs { get; set; } = new List<Club>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
@@ -33,6 +35,8 @@ public partial class User
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
+    public virtual ICollection<PreferredGenre> PreferredGenres { get; set; } = new List<PreferredGenre>();
+
     public virtual UserProfilePicture ProfilePicture { get; set; } = null!;
 
     public virtual ICollection<QA> QAs { get; set; } = new List<QA>();
@@ -42,8 +46,4 @@ public partial class User
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
     public virtual ICollection<Watchlist> Watchlists { get; set; } = new List<Watchlist>();
-
-    public virtual ICollection<Club> ClubsNavigation { get; set; } = new List<Club>();
-
-    public virtual ICollection<Genre> Genres { get; set; } = new List<Genre>();
 }

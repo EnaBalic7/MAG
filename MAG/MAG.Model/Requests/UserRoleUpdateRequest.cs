@@ -5,21 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAG.Model
+namespace MAG.Model.Requests
 {
-    public class UserRole
+    public class UserRoleUpdateRequest
     {
-        public int Id { get; set; }
-
-        public int UserId { get; set; }
-
-        public int RoleId { get; set; }
-
         public bool CanReview { get; set; }
 
         public bool CanAskQuestions { get; set; }
-
-        public virtual Role Role { get; set; } = null!;
-
     }
 }

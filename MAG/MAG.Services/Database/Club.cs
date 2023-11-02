@@ -17,9 +17,9 @@ public partial class Club
 
     public DateTime DateCreated { get; set; }
 
+    public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
+
     public virtual User Owner { get; set; } = null!;
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
-
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

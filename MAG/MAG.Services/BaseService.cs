@@ -55,7 +55,7 @@ namespace MAG.Services
         {
             return query;
         }
-        public async Task<T> GetById(int id)
+        public virtual async Task<T> GetById(int id)
         {
             var set = _context.Set<TDb>();
 

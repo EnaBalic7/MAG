@@ -11,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAnimeService, AnimeService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
+builder.Services.AddTransient<IListService, ListService>();
+builder.Services.AddTransient<IGenreService, GenreService>();
+
 
 // Add services to the container.
 

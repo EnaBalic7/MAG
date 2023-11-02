@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace MAG.Services
 {
-    public interface IUserRoleService : ICRUDService<Model.UserRole, BaseSearchObject, UserRoleInsertRequest, UserRoleUpdateRequest>
+    public interface IListService : ICRUDService<Model.List, ListSearchObject, ListInsertRequest, ListUpdateRequest>
     {
+
     }
 }

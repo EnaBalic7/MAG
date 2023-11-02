@@ -9,7 +9,7 @@ public partial class Genre
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Anime> Animes { get; set; } = new List<Anime>();
+    public virtual ICollection<GenreAnime> GenreAnimes { get; set; } = new List<GenreAnime>();
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<PreferredGenre> PreferredGenres { get; set; } = new List<PreferredGenre>();
 }

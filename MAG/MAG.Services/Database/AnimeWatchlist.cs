@@ -5,6 +5,8 @@ namespace MAG.Services.Database;
 
 public partial class AnimeWatchlist
 {
+    public int Id { get; set; }
+
     public int AnimeId { get; set; }
 
     public int WatchlistId { get; set; }

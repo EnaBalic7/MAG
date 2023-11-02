@@ -17,9 +17,13 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Anime> Animes { get; set; }
 
+    public virtual DbSet<AnimeList> AnimeLists { get; set; }
+
     public virtual DbSet<AnimeWatchlist> AnimeWatchlists { get; set; }
 
     public virtual DbSet<Club> Clubs { get; set; }
+
+    public virtual DbSet<ClubUser> ClubUsers { get; set; }
 
     public virtual DbSet<Comment> Comments { get; set; }
 
@@ -27,9 +31,13 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Genre> Genres { get; set; }
 
+    public virtual DbSet<GenreAnime> GenreAnimes { get; set; }
+
     public virtual DbSet<List> Lists { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
+
+    public virtual DbSet<PreferredGenre> PreferredGenres { get; set; }
 
     public virtual DbSet<QA> QAs { get; set; }
 
@@ -76,15 +84,33 @@ public partial class MagContext : DbContext
                 .HasColumnName("TrailerURL");
         });
 
+        modelBuilder.Entity<AnimeList>(entity =>
+        {
+            entity.ToTable("Anime_List");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
+            entity.Property(e => e.ListId).HasColumnName("ListID");
+
+            entity.HasOne(d => d.Anime).WithMany(p => p.AnimeLists)
+                .HasForeignKey(d => d.AnimeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Anime_List_Anime");
+
+            entity.HasOne(d => d.List).WithMany(p => p.AnimeLists)
+                .HasForeignKey(d => d.ListId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Anime_List_List");
+        });
+
         modelBuilder.Entity<AnimeWatchlist>(entity =>
         {
-            entity.HasKey(e => new { e.AnimeId, e.WatchlistId });
-
             entity.ToTable("Anime_Watchlist");
 
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
-            entity.Property(e => e.WatchlistId).HasColumnName("WatchlistID");
             entity.Property(e => e.WatchStatus).HasMaxLength(30);
+            entity.Property(e => e.WatchlistId).HasColumnName("WatchlistID");
 
             entity.HasOne(d => d.Anime).WithMany(p => p.AnimeWatchlists)
                 .HasForeignKey(d => d.AnimeId)
@@ -110,25 +136,25 @@ public partial class MagContext : DbContext
                 .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Club_User");
+        });
 
-            entity.HasMany(d => d.Users).WithMany(p => p.ClubsNavigation)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ClubUser",
-                    r => r.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Club_User_User"),
-                    l => l.HasOne<Club>().WithMany()
-                        .HasForeignKey("ClubId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Club_User_Club"),
-                    j =>
-                    {
-                        j.HasKey("ClubId", "UserId");
-                        j.ToTable("Club_User");
-                        j.IndexerProperty<int>("ClubId").HasColumnName("ClubID");
-                        j.IndexerProperty<int>("UserId").HasColumnName("UserID");
-                    });
+        modelBuilder.Entity<ClubUser>(entity =>
+        {
+            entity.ToTable("Club_User");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ClubId).HasColumnName("ClubID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.ClubUsers)
+                .HasForeignKey(d => d.ClubId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Club_User_Club");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ClubUsers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Club_User_User");
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -172,44 +198,25 @@ public partial class MagContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name).HasMaxLength(50);
+        });
 
-            entity.HasMany(d => d.Animes).WithMany(p => p.Genres)
-                .UsingEntity<Dictionary<string, object>>(
-                    "GenreAnime",
-                    r => r.HasOne<Anime>().WithMany()
-                        .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Genre_Anime_Anime"),
-                    l => l.HasOne<Genre>().WithMany()
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Genre_Anime_Genre"),
-                    j =>
-                    {
-                        j.HasKey("GenreId", "AnimeId");
-                        j.ToTable("Genre_Anime");
-                        j.IndexerProperty<int>("GenreId").HasColumnName("GenreID");
-                        j.IndexerProperty<int>("AnimeId").HasColumnName("AnimeID");
-                    });
+        modelBuilder.Entity<GenreAnime>(entity =>
+        {
+            entity.ToTable("Genre_Anime");
 
-            entity.HasMany(d => d.Users).WithMany(p => p.Genres)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PreferredGenre",
-                    r => r.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_PreferredGenres_User"),
-                    l => l.HasOne<Genre>().WithMany()
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_PreferredGenres_Genre"),
-                    j =>
-                    {
-                        j.HasKey("GenreId", "UserId");
-                        j.ToTable("PreferredGenres");
-                        j.IndexerProperty<int>("GenreId").HasColumnName("GenreID");
-                        j.IndexerProperty<int>("UserId").HasColumnName("UserID");
-                    });
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
+            entity.Property(e => e.GenreId).HasColumnName("GenreID");
+
+            entity.HasOne(d => d.Anime).WithMany(p => p.GenreAnimes)
+                .HasForeignKey(d => d.AnimeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Genre_Anime_Anime");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.GenreAnimes)
+                .HasForeignKey(d => d.GenreId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Genre_Anime_Genre");
         });
 
         modelBuilder.Entity<List>(entity =>
@@ -225,25 +232,6 @@ public partial class MagContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_List_User");
-
-            entity.HasMany(d => d.Animes).WithMany(p => p.Lists)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AnimeList",
-                    r => r.HasOne<Anime>().WithMany()
-                        .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Anime_List_Anime"),
-                    l => l.HasOne<List>().WithMany()
-                        .HasForeignKey("ListId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Anime_List_List"),
-                    j =>
-                    {
-                        j.HasKey("ListId", "AnimeId");
-                        j.ToTable("Anime_List");
-                        j.IndexerProperty<int>("ListId").HasColumnName("ListID");
-                        j.IndexerProperty<int>("AnimeId").HasColumnName("AnimeID");
-                    });
         });
 
         modelBuilder.Entity<Post>(entity =>
@@ -264,6 +252,23 @@ public partial class MagContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Post_User");
+        });
+
+        modelBuilder.Entity<PreferredGenre>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.GenreId).HasColumnName("GenreID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Genre).WithMany(p => p.PreferredGenres)
+                .HasForeignKey(d => d.GenreId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PreferredGenres_Genre");
+
+            entity.HasOne(d => d.User).WithMany(p => p.PreferredGenres)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PreferredGenres_User");
         });
 
         modelBuilder.Entity<QA>(entity =>
@@ -351,12 +356,11 @@ public partial class MagContext : DbContext
 
         modelBuilder.Entity<UserRole>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.RoleId });
-
             entity.ToTable("User_Role");
 
-            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Role).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.RoleId)

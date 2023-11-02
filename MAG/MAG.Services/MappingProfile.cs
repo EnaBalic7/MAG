@@ -25,6 +25,16 @@ namespace MAG.Services
             CreateMap<RoleUpdateRequest, Database.Role>();
 
             CreateMap<Database.UserRole, Model.UserRole>();
+            CreateMap<UserRoleInsertRequest, Database.UserRole>();
+            CreateMap<UserRoleUpdateRequest, Database.UserRole>();
+
+            CreateMap<Database.List, Model.List>();
+            CreateMap<ListInsertRequest, Database.List>();
+            CreateMap<ListUpdateRequest, Database.List>();
+
+            CreateMap<Database.Genre, Model.Genre>();
+            CreateMap<GenreInsertRequest, Database.Genre>();
+            CreateMap<GenreUpdateRequest, Database.Genre>();
         }
     }
 }

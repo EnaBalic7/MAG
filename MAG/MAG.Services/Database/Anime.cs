@@ -29,11 +29,11 @@ public partial class Anime
 
     public string Studio { get; set; } = null!;
 
+    public virtual ICollection<AnimeList> AnimeLists { get; set; } = new List<AnimeList>();
+
     public virtual ICollection<AnimeWatchlist> AnimeWatchlists { get; set; } = new List<AnimeWatchlist>();
 
+    public virtual ICollection<GenreAnime> GenreAnimes { get; set; } = new List<GenreAnime>();
+
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
-
-    public virtual ICollection<Genre> Genres { get; set; } = new List<Genre>();
-
-    public virtual ICollection<List> Lists { get; set; } = new List<List>();
 }

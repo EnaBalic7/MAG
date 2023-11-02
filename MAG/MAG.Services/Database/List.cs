@@ -13,7 +13,7 @@ public partial class List
 
     public DateTime DateCreated { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public virtual ICollection<AnimeList> AnimeLists { get; set; } = new List<AnimeList>();
 
-    public virtual ICollection<Anime> Animes { get; set; } = new List<Anime>();
+    public virtual User User { get; set; } = null!;
 }
