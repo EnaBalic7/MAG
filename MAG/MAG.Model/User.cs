@@ -27,5 +27,7 @@ namespace MAG.Model
         public DateTime DateJoined { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
+        public virtual ICollection<Watchlist> Watchlists { get; set; } = new List<Watchlist>();
     }
 }

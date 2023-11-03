@@ -4,17 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAG.Model
+namespace MAG.Model.Requests
 {
-    public class Watchlist
+    public class WatchlistInsertRequest
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public DateTime DateAdded { get; set; }
-
-       // public virtual ICollection<AnimeWatchlist> AnimeWatchlists { get; set; } = new List<AnimeWatchlist>();
-
     }
 }

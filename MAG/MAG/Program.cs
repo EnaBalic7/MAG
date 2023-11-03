@@ -14,6 +14,9 @@ builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 builder.Services.AddTransient<IListService, ListService>();
 builder.Services.AddTransient<IGenreService, GenreService>();
+builder.Services.AddTransient<IWatchlistService, WatchlistService>();
+builder.Services.AddTransient<IClubService, ClubService>();
+builder.Services.AddTransient<IClubUserService, ClubUserService>();
 
 
 // Add services to the container.

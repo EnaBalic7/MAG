@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
@@ -19,7 +20,24 @@ namespace MAG.Services
 
         }
 
-        public override async Task BeforeInsert(User entity, UserInsertRequest insert)
+        public override IQueryable<Database.User> AddInclude(IQueryable<Database.User> query, UserSearchObject? search = null)
+        {
+            if (search.RolesIncluded == true)
+            {
+                query = query.Include(user => user.UserRoles)
+                             .ThenInclude(userRole => userRole.Role);
+            }
+
+            if (search.WatchlistsIncluded == true)
+            {
+                query = query.Include(watchlist => watchlist.Watchlists)
+                            .ThenInclude(watchlists => watchlists.AnimeWatchlists);
+            }
+
+
+            return base.AddInclude(query, search);
+        }
+        public override async Task BeforeInsert(Database.User entity, UserInsertRequest insert)
         {
             entity.PasswordSalt = GenerateSalt();
             entity.PasswordHash = GenerateHash(entity.PasswordSalt, insert.Password);

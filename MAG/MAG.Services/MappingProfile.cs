@@ -35,6 +35,18 @@ namespace MAG.Services
             CreateMap<Database.Genre, Model.Genre>();
             CreateMap<GenreInsertRequest, Database.Genre>();
             CreateMap<GenreUpdateRequest, Database.Genre>();
+
+            CreateMap<Database.Watchlist, Model.Watchlist>();
+            CreateMap<WatchlistInsertRequest, Database.Watchlist>();
+            CreateMap<WatchlistUpdateRequest, Database.Watchlist>();
+
+            CreateMap<Database.Club, Model.Club>();
+            CreateMap<ClubInsertRequest, Database.Club>();
+            // CreateMap<ClubUpdateRequest, Database.Club>();
+
+            CreateMap<Database.ClubUser, Model.ClubUser>();
+            CreateMap<ClubUserInsertRequest, Database.ClubUser>();
+            // CreateMap<ClubUserUpdateRequest, Database.ClubUser>();
         }
     }
 }

@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAG.Model
+namespace MAG.Model.Requests
 {
-    public class Role
+    public class WatchlistUpdateRequest
     {
-        public int Id { get; set; }
-
-        public string Name { get; set; } = null!;
-
+        
     }
 }

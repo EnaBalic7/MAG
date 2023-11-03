@@ -12,5 +12,7 @@ namespace MAG.Model.SearchObjects
         public string? LastName { get; set; }
         public string? Username { get; set; }
         public string? FTS { get; set; } //FTS - Full Text Search
+        public bool? RolesIncluded { get; set; }
+        public bool? WatchlistsIncluded { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MAG.Controllers
 {
     [ApiController]
-    public class UserRoleController : BaseCRUDController<Model.UserRole, BaseSearchObject, UserRoleInsertRequest, UserRoleUpdateRequest>
+    public class UserRoleController : BaseCRUDController<Model.UserRole, UserRoleSearchObject, UserRoleInsertRequest, UserRoleUpdateRequest>
     {
         public UserRoleController(IUserRoleService service) : base(service)
         {
