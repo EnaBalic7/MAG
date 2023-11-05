@@ -47,6 +47,26 @@ namespace MAG.Services
             CreateMap<Database.ClubUser, Model.ClubUser>();
             CreateMap<ClubUserInsertRequest, Database.ClubUser>();
             // CreateMap<ClubUserUpdateRequest, Database.ClubUser>();
+
+            CreateMap<Database.AnimeList, Model.AnimeList>();
+            CreateMap<AnimeListInsertRequest, Database.AnimeList>();
+            // CreateMap<AnimeListUpdateRequest, Database.AnimeList>();
+
+            CreateMap<Database.Post, Model.Post>();
+            CreateMap<PostInsertRequest, Database.Post>();
+            CreateMap<PostUpdateRequest, Database.Post>();
+
+            CreateMap<Database.Comment, Model.Comment>();
+            CreateMap<CommentInsertRequest, Database.Comment>();
+            CreateMap<CommentUpdateRequest, Database.Comment>();
+
+            CreateMap<Database.GenreAnime, Model.GenreAnime>();
+            CreateMap<GenreAnimeInsertRequest, Database.GenreAnime>();
+            // CreateMap<GenreAnimeUpdateRequest, Database.GenreAnime>();
+
+            CreateMap<Database.PreferredGenre, Model.PreferredGenre>();
+            CreateMap<PreferredGenreInsertRequest, Database.PreferredGenre>();
+            // CreateMap<PreferredGenreUpdateRequest, Database.PreferredGenre>();
         }
     }
 }

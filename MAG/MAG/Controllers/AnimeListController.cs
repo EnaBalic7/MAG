@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace MAG.Controllers
 {
     [ApiController]
-    public class WatchlistController : BaseCRUDController<Model.Watchlist, BaseSearchObject, WatchlistInsertRequest, WatchlistUpdateRequest>
+    public class AnimeListController : BaseCRUDController<Model.AnimeList, AnimeListSearchObject, AnimeListInsertRequest, AnimeListUpdateRequest>
     {
-        public WatchlistController(IWatchlistService service) : base(service)
+        public AnimeListController(IAnimeListService service) : base(service)
         {
 
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public override Task<Watchlist> Update(int id, [FromBody] WatchlistUpdateRequest update)
+        public override Task<AnimeList> Update(int id, [FromBody] AnimeListUpdateRequest update)
         {
             return base.Update(id, update);
         }

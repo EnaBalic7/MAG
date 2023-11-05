@@ -17,6 +17,12 @@ builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IWatchlistService, WatchlistService>();
 builder.Services.AddTransient<IClubService, ClubService>();
 builder.Services.AddTransient<IClubUserService, ClubUserService>();
+builder.Services.AddTransient<IAnimeListService, AnimeListService>();
+builder.Services.AddTransient<IAnimeWatchlistService, AnimeWatchlistService>();
+builder.Services.AddTransient<IPostService, PostService>();
+builder.Services.AddTransient<ICommentService, CommentService>();
+builder.Services.AddTransient<IGenreAnimeService, GenreAnimeService>();
+builder.Services.AddTransient<IPreferredGenreService, PreferredGenreService>();
 
 
 // Add services to the container.

@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAG.Model
+namespace MAG.Model.SearchObjects
 {
-    public class Genre
+    public class CommentSearchObject : BaseSearchObject
     {
-        public int Id { get; set; }
-
-        public string Name { get; set; } = null!;
+        public string? FTS { get; set; }
     }
 }
