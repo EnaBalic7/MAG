@@ -305,7 +305,7 @@ public partial class MagContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
             entity.Property(e => e.DateAdded).HasColumnType("datetime");
-            entity.Property(e => e.Rating1).HasColumnName("Rating");
+            entity.Property(e => e.RatingValue).HasColumnName("RatingValue");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Anime).WithMany(p => p.Ratings)

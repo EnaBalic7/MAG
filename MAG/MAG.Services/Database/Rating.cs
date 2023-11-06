@@ -11,7 +11,7 @@ public partial class Rating
 
     public int AnimeId { get; set; }
 
-    public int? Rating1 { get; set; }
+    public int? RatingValue { get; set; }
 
     public string ReviewText { get; set; } = null!;
 

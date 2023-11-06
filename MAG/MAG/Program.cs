@@ -23,6 +23,14 @@ builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddTransient<IGenreAnimeService, GenreAnimeService>();
 builder.Services.AddTransient<IPreferredGenreService, PreferredGenreService>();
+builder.Services.AddTransient<IQAcategoryService, QAcategoryService>();
+builder.Services.AddTransient<IQAService, QAService>();
+builder.Services.AddTransient<IRatingService, RatingService>();
+builder.Services.AddTransient<IDonationService, DonationService>();
+builder.Services.AddTransient<IUserProfilePictureService, UserProfilePictureService>();
+
+
+
 
 
 // Add services to the container.

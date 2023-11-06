@@ -67,6 +67,26 @@ namespace MAG.Services
             CreateMap<Database.PreferredGenre, Model.PreferredGenre>();
             CreateMap<PreferredGenreInsertRequest, Database.PreferredGenre>();
             // CreateMap<PreferredGenreUpdateRequest, Database.PreferredGenre>();
+
+            CreateMap<Database.QAcategory, Model.QAcategory>();
+            CreateMap<QAcategoryInsertRequest, Database.QAcategory>();
+            CreateMap<QAcategoryUpdateRequest, Database.QAcategory>();
+
+            CreateMap<Database.QA, Model.QA>();
+            CreateMap<QAInsertRequest, Database.QA>();
+            CreateMap<QAUpdateRequest, Database.QA>();
+
+            CreateMap<Database.Rating, Model.Rating>();
+            CreateMap<RatingInsertRequest, Database.Rating>();
+            CreateMap<RatingUpdateRequest, Database.Rating>();
+
+            CreateMap<Database.Donation, Model.Donation>();
+            CreateMap<DonationInsertRequest, Database.Donation>();
+            CreateMap<DonationUpdateRequest, Database.Donation>();
+
+            CreateMap<Database.UserProfilePicture, Model.UserProfilePicture>();
+            CreateMap<UserProfilePictureInsertRequest, Database.UserProfilePicture>();
+            CreateMap<UserProfilePictureUpdateRequest, Database.UserProfilePicture>();
         }
     }
 }
