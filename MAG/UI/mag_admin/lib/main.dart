@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:mag_admin/utils/colors.dart';
+import 'package:mag_admin/utils/util.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyMaterialApp());
 }
+
+//final ThemeData theme = ThemeData(
+//  primarySwatch: generateMaterialColor(Palette.primary),
+//);
+
+//class Palette {
+//  static const Color primary = Color.fromRGBO(12, 11, 30, 1);
+//}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,15 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+
+        primarySwatch: generateMaterialColor(Palette.midnightPurple),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -71,10 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title)),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -106,10 +108,36 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(Icons
+              .add)), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class MyMaterialApp extends StatelessWidget {
+  const MyMaterialApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My Anime Galaxy',
+      theme: ThemeData(primaryColor: Color.fromRGBO(12, 11, 3, 1)),
+      home: MyApp(),
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Column(
+          children: [Text("Tying"), Text("Out"), Text("Something")],
+        ),
+        color: Color.fromRGBO(12, 11, 3, 1));
   }
 }
