@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:mag_admin/main.dart';
+import '../utils/colors.dart';
+import './/main.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
@@ -19,19 +18,37 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: widget.title_widget ?? Text(widget.title ?? "")),
+        appBar: AppBar(
+            title: widget.title_widget ?? Text(widget.title ?? ""),
+            iconTheme: IconThemeData(color: Palette.lightPurple)),
         drawer: Drawer(
             child: ListView(children: [
-          ListTile(
-            title: Text("Anime"),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ),
-              );
-            },
+          Container(
+            decoration: BoxDecoration(
+                gradient: Palette.gradient,
+                borderRadius: BorderRadiusGeometry.lerp(null, null, 50)),
+            child: ListTile(
+              title: Text("Login"),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+            ),
           ),
-        ])));
+        ])),
+        body: Stack(children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.2,
+              child: Image.asset(
+                  'assets/images/starsBg.png', // Replace with your image asset path
+                  fit: BoxFit.cover),
+            ),
+          ),
+          widget.child!
+        ]));
   }
 }
