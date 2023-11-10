@@ -36,7 +36,8 @@ class MyMaterialApp extends StatelessWidget {
             scrimColor: Palette.black.withOpacity(0.3),
           ),
           iconTheme: IconThemeData(color: Palette.lightPurple),
-          listTileTheme: ListTileThemeData()),
+          listTileTheme:
+              ListTileThemeData(selectedTileColor: Palette.starYellow)),
       home: LoginPage(),
     );
   }

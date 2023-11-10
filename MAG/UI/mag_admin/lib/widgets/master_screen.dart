@@ -15,6 +15,11 @@ class MasterScreenWidget extends StatefulWidget {
 }
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
+  bool? isHover;
+  Map<String, bool> hoverStates = {
+    'Login': false,
+    'Anime': false,
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,32 +28,55 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             iconTheme: IconThemeData(color: Palette.lightPurple)),
         drawer: Drawer(
             child: ListView(children: [
-          Container(
-            decoration: BoxDecoration(
-                gradient: Palette.gradient,
-                borderRadius: BorderRadiusGeometry.lerp(null, null, 50)),
-            child: ListTile(
-              title: Text("Login"),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                );
-              },
-            ),
-          ),
+          Container(child: Image.asset('assets/images/logo.png')),
+          buildListTile(context, 'Login', Icon(Icons.login), LoginPage()),
+          buildListTile(
+              context,
+              'Anime',
+              Image.asset(
+                '/assets/icons/AnimeIco.png',
+                width: 48,
+                height: 48,
+              ),
+              LoginPage()),
         ])),
         body: Stack(children: [
           Positioned.fill(
             child: Opacity(
               opacity: 0.2,
-              child: Image.asset(
-                  'assets/images/starsBg.png', // Replace with your image asset path
-                  fit: BoxFit.cover),
+              child:
+                  Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
             ),
           ),
           widget.child!
         ]));
+  }
+
+  MouseRegion buildListTile(
+      BuildContext context, String title, Widget leading, Widget screen) {
+    return MouseRegion(
+      onEnter: (event) => setState(() {
+        hoverStates[title] = true;
+      }),
+      onExit: (event) => setState(() {
+        hoverStates[title] = false;
+      }),
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: (hoverStates[title] == true) ? Palette.gradient : null,
+            borderRadius: BorderRadius.circular(50)),
+        child: ListTile(
+          title: Text(title),
+          leading: leading,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => screen,
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
