@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:mag_admin/screens/anime_screen.dart';
 import '../utils/colors.dart';
+import '../utils/icons.dart';
 import './/main.dart';
 
 class MasterScreenWidget extends StatefulWidget {
@@ -25,20 +29,19 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     return Scaffold(
         appBar: AppBar(
             title: widget.title_widget ?? Text(widget.title ?? ""),
+            actions: [buildAstronautIcon(), SizedBox(width: 40)],
             iconTheme: IconThemeData(color: Palette.lightPurple)),
         drawer: Drawer(
             child: ListView(children: [
           Container(child: Image.asset('assets/images/logo.png')),
-          buildListTile(context, 'Login', Icon(Icons.login), LoginPage()),
+          buildListTile(context, 'Login',
+              Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
+          buildListTile(context, 'Anime', buildAnimeIcon(), AnimeScreen()),
+          buildListTile(context, 'Users', buildUsersIcon(), LoginPage()),
           buildListTile(
-              context,
-              'Anime',
-              Image.asset(
-                '/assets/icons/AnimeIco.png',
-                width: 48,
-                height: 48,
-              ),
-              LoginPage()),
+              context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
+          buildListTile(context, 'Clubs', buildClubsIcon(), LoginPage()),
+          buildListTile(context, 'Help', buildHelpIcon(), LoginPage())
         ])),
         body: Stack(children: [
           Positioned.fill(

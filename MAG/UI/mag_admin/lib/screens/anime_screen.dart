@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 
 class AnimeScreen extends StatefulWidget {
@@ -15,7 +16,22 @@ class _AnimeScreenState extends State<AnimeScreen> {
       child: Center(
         child: Column(
           children: [
-            Text("Anime cards"),
+            Row(
+              children: [
+                Container(
+                    width: 265,
+                    height: 403,
+                    child: Column(
+                      children: [
+                        Image.network(
+                          "https://wallpapers.com/images/hd/anime-girl-background-bs0kczie5vqucxqj.jpg",
+                          width: 265,
+                          height: 224,
+                        )
+                      ],
+                    ))
+              ],
+            ),
           ],
         ),
       ),

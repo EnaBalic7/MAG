@@ -16,28 +16,28 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Anime Galaxy',
       darkTheme: ThemeData(
-          primarySwatch: generateMaterialColor(Palette.darkPurple),
-          scaffoldBackgroundColor: Palette.midnightPurple,
-          textTheme: Theme.of(context).textTheme.apply(
-                bodyColor: Palette.lightPurple,
-                displayColor: Palette.lightPurple,
-              ),
-          appBarTheme: const AppBarTheme(
-              titleTextStyle: TextStyle(
-                  color: Palette.lightPurple,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500)),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                  primary: Palette.teal.withOpacity(0.5),
-                  textStyle: TextStyle(color: Palette.white))),
-          drawerTheme: DrawerThemeData(
-            backgroundColor: Palette.midnightPurple,
-            scrimColor: Palette.black.withOpacity(0.3),
-          ),
-          iconTheme: IconThemeData(color: Palette.lightPurple),
-          listTileTheme:
-              ListTileThemeData(selectedTileColor: Palette.starYellow)),
+        primarySwatch: generateMaterialColor(Palette.darkPurple),
+        scaffoldBackgroundColor: Palette.midnightPurple,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Palette.lightPurple,
+              displayColor: Palette.lightPurple,
+            ),
+        appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(
+                color: Palette.lightPurple,
+                fontSize: 20,
+                fontWeight: FontWeight.w500)),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+                primary: Palette.teal.withOpacity(0.5),
+                textStyle: TextStyle(color: Palette.white))),
+        drawerTheme: DrawerThemeData(
+          backgroundColor: Palette.midnightPurple,
+          scrimColor: Palette.black.withOpacity(0.3),
+        ),
+        iconTheme: IconThemeData(color: Palette.lightPurple),
+        listTileTheme: ListTileThemeData(selectedTileColor: Palette.starYellow),
+      ),
       home: LoginPage(),
     );
   }
