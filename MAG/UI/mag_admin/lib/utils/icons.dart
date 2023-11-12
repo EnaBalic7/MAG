@@ -22,11 +22,14 @@ Stack buildAnimeIcon() {
   ]);
 }
 
-Stack buildStarIcon() {
+Stack buildStarIcon(double size) {
   return Stack(children: [
-    Icon(IconData(0xe914, fontFamily: 'icomoon'), color: Palette.starIco_e914),
-    Icon(IconData(0xe915, fontFamily: 'icomoon'), color: Palette.starIco_e915),
-    Icon(IconData(0xe916, fontFamily: 'icomoon'), color: Palette.starIco_e916)
+    Icon(IconData(0xe914, fontFamily: 'icomoon'),
+        color: Palette.starIco_e914, size: size),
+    Icon(IconData(0xe915, fontFamily: 'icomoon'),
+        color: Palette.starIco_e915, size: size),
+    Icon(IconData(0xe916, fontFamily: 'icomoon'),
+        color: Palette.starIco_e916, size: size)
   ]);
 }
 

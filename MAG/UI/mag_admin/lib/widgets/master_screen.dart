@@ -46,7 +46,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         body: Stack(children: [
           Positioned.fill(
             child: Opacity(
-              opacity: 0.2,
+              opacity: 0.1,
               child:
                   Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
             ),
