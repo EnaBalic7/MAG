@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:provider/provider.dart';
 
+import '../models/anime.dart';
+import '../models/search_result.dart';
 import '../utils/colors.dart';
 
 class AnimeScreen extends StatefulWidget {
@@ -12,6 +16,16 @@ class AnimeScreen extends StatefulWidget {
 }
 
 class _AnimeScreenState extends State<AnimeScreen> {
+  late AnimeProvider _animeProvider;
+  SearchResult<Anime>? result;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    _animeProvider = context.read<AnimeProvider>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(

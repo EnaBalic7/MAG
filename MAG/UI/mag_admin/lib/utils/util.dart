@@ -33,3 +33,8 @@ Color shadeColor(Color color, double factor) => Color.fromRGBO(
     shadeValue(color.green, factor),
     shadeValue(color.blue, factor),
     1);
+
+class Authorization {
+  static String? username;
+  static String? password;
+}
