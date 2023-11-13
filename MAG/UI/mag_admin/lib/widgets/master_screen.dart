@@ -19,10 +19,14 @@ class MasterScreenWidget extends StatefulWidget {
 }
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
-  bool? isHover;
+  bool? removeAppBar;
   Map<String, bool> hoverStates = {
     'Login': false,
     'Anime': false,
+    'Users': false,
+    'Analytics': false,
+    'Clubs': false,
+    'Help': false
   };
   @override
   Widget build(BuildContext context) {
