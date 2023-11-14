@@ -1,8 +1,28 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:mag_admin/utils/icons.dart';
+
+import '../utils/colors.dart';
 
 class MyTextField extends StatefulWidget {
-  String? labelText;
-  MyTextField({Key? key, this.labelText}) : super(key: key);
+  String? hintText;
+  Color? fillColor;
+  bool? obscureText;
+  double? width;
+  double? height;
+  double? borderRadius;
+  TextEditingController? controller;
+  MyTextField(
+      {Key? key,
+      this.hintText,
+      this.fillColor,
+      this.obscureText,
+      this.width,
+      this.height,
+      this.borderRadius,
+      this.controller})
+      : super(key: key);
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -11,6 +31,22 @@ class MyTextField extends StatefulWidget {
 class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
-    return TextField(decoration: InputDecoration(labelText: widget.labelText));
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: TextField(
+        controller: widget.controller,
+        style: TextStyle(color: Palette.darkPurple),
+        obscuringCharacter: '✮',
+        obscureText: widget.obscureText ?? false,
+        decoration: InputDecoration(
+            //labelText: widget.labelText ?? "",
+            hintText: widget.hintText ?? "",
+            hintStyle: TextStyle(height: 1, fontWeight: FontWeight.w400),
+            fillColor: widget.fillColor,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 0))),
+      ),
+    );
   }
 }

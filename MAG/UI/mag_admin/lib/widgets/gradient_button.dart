@@ -30,11 +30,11 @@ class _GradientButtonState extends State<GradientButton> {
             padding: EdgeInsets.zero,
             minimumSize: Size(widget.width!, widget.height!),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius!))),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 0))),
         child: Ink(
             decoration: BoxDecoration(
                 gradient: widget.gradient,
-                borderRadius: BorderRadius.circular(widget.borderRadius!)),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 0)),
             child: Container(
                 width: widget.width,
                 height: widget.height,

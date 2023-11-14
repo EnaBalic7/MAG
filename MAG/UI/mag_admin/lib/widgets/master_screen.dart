@@ -70,7 +70,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       }),
       child: Container(
         decoration: BoxDecoration(
-            gradient: (hoverStates[title] == true) ? Palette.gradient : null,
+            gradient:
+                (hoverStates[title] == true) ? Palette.menuGradient : null,
             borderRadius: BorderRadius.circular(50)),
         child: ListTile(
           title: Text(title),

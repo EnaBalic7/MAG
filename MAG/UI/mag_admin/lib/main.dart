@@ -22,33 +22,34 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Anime Galaxy',
       darkTheme: ThemeData(
-        primarySwatch: generateMaterialColor(Palette.darkPurple),
-        scaffoldBackgroundColor: Palette.midnightPurple,
-        textTheme: Theme.of(context).textTheme.apply(
-              bodyColor: Palette.lightPurple,
-              displayColor: Palette.lightPurple,
-            ),
-        appBarTheme: const AppBarTheme(
-            titleTextStyle: TextStyle(
-                color: Palette.lightPurple,
-                fontSize: 20,
-                fontWeight: FontWeight.w500)),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-                primary: Palette.teal.withOpacity(0.5),
-                textStyle: TextStyle(color: Palette.white))),
-        drawerTheme: DrawerThemeData(
-          backgroundColor: Palette.midnightPurple,
-          scrimColor: Palette.black.withOpacity(0.3),
-        ),
-        iconTheme: IconThemeData(color: Palette.lightPurple),
-        scrollbarTheme: ScrollbarThemeData(
-            crossAxisMargin: -10,
-            thickness: MaterialStateProperty.all(7),
-            trackBorderColor: MaterialStateProperty.all(Palette.white),
-            thumbColor: MaterialStateProperty.all(
-                Palette.lightPurple.withOpacity(0.5))),
-      ),
+          primarySwatch: generateMaterialColor(Palette.darkPurple),
+          scaffoldBackgroundColor: Palette.midnightPurple,
+          textTheme: Theme.of(context).textTheme.apply(
+                bodyColor: Palette.lightPurple,
+                displayColor: Palette.lightPurple,
+              ),
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                  color: Palette.lightPurple,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                  primary: Palette.teal.withOpacity(0.5),
+                  textStyle: TextStyle(color: Palette.white))),
+          drawerTheme: DrawerThemeData(
+            backgroundColor: Palette.midnightPurple,
+            scrimColor: Palette.black.withOpacity(0.3),
+          ),
+          iconTheme: IconThemeData(color: Palette.lightPurple),
+          scrollbarTheme: ScrollbarThemeData(
+              crossAxisMargin: -10,
+              thickness: MaterialStateProperty.all(7),
+              trackBorderColor: MaterialStateProperty.all(Palette.white),
+              thumbColor: MaterialStateProperty.all(
+                  Palette.lightPurple.withOpacity(0.5))),
+          inputDecorationTheme: InputDecorationTheme(
+              filled: true, fillColor: Palette.lightPurple)),
       home: LoginPage(),
     );
   }
@@ -63,6 +64,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _animeProvider = context.read<AnimeProvider>();
     return Scaffold(
       body: Stack(
         children: [
@@ -82,21 +84,55 @@ class LoginPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
+                  SizedBox(height: 40),
                   Image.asset("assets/images/logo2.png"),
+                  SizedBox(height: 40),
                   MyTextField(
-                    labelText: "Username",
+                      hintText: "Username",
+                      fillColor: Palette.textFieldPurple.withOpacity(0.9),
+                      obscureText: false,
+                      width: 417,
+                      height: 38,
+                      borderRadius: 15,
+                      controller: _usernameController),
+                  SizedBox(height: 20),
+                  MyTextField(
+                    hintText: "Password",
+                    fillColor: Palette.textFieldPurple.withOpacity(0.9),
+                    obscureText: true,
+                    width: 417,
+                    height: 38,
+                    borderRadius: 15,
+                    controller: _passwordController,
                   ),
-                  TextField(decoration: InputDecoration(labelText: "Password")),
+                  SizedBox(height: 40),
                   GradientButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const AnimeScreen()));
+                      onPressed: () async {
+                        var username = _usernameController.text;
+                        var password = _passwordController.text;
+                        print("Login proceed: $username $password");
+
+                        Authorization.username = username;
+                        Authorization.password = password;
+
+                        try {
+                          await _animeProvider.get();
+
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => const AnimeScreen()));
+                        } on Exception catch (e) {
+                          showErrorDialog(context, e);
+                        }
                       },
-                      width: 100,
-                      height: 30,
+                      width: 110,
+                      height: 35,
                       borderRadius: 50,
-                      gradient: Palette.gradient2,
-                      child: Text("Log In")),
+                      gradient: Palette.buttonGradient,
+                      child: Text("Log In",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500))),
                 ],
               ),
             ),
@@ -104,5 +140,28 @@ class LoginPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void showErrorDialog(BuildContext context, Exception e) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                actionsAlignment: MainAxisAlignment.center,
+                backgroundColor: Palette.darkPurple,
+                title: Text("Error"),
+                content: Text(e.toString()),
+                actions: [
+                  Padding(
+                      padding: EdgeInsets.all(5),
+                      child: GradientButton(
+                          onPressed: () => Navigator.pop(context),
+                          width: 85,
+                          height: 28,
+                          borderRadius: 15,
+                          gradient: Palette.buttonGradient,
+                          child: Text("OK"))),
+                ]));
   }
 }
