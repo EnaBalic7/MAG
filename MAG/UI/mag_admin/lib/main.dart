@@ -27,8 +27,9 @@ class MyMaterialApp extends StatelessWidget {
           textTheme: Theme.of(context).textTheme.apply(
                 bodyColor: Palette.lightPurple,
                 displayColor: Palette.lightPurple,
+                decorationColor: Palette.lightPurple,
               ),
-          appBarTheme: const AppBarTheme(
+          appBarTheme: AppBarTheme(
               titleTextStyle: TextStyle(
                   color: Palette.lightPurple,
                   fontSize: 20,

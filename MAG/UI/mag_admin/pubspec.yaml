@@ -37,6 +37,7 @@ dependencies:
   http: ^0.13.5
   provider: ^6.0.5
   json_annotation: ^4.7.0
+  app_bar_with_search_switch: ^1.6.0
 
 dev_dependencies:
   json_serializable: ^6.2.0

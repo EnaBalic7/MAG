@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -31,10 +33,34 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: widget.title_widget ?? Text(widget.title ?? ""),
-            actions: [buildAstronautIcon(), SizedBox(width: 40)],
-            iconTheme: IconThemeData(color: Palette.lightPurple)),
+        appBar: AppBarWithSearchSwitch(
+          titleTextStyle: TextStyle(fontSize: 16),
+          centerTitle: true,
+          searchInputDecoration: InputDecoration(
+              contentPadding: EdgeInsets.only(top: 5, left: 15),
+              hintText: "Search",
+              hintStyle: TextStyle(color: Palette.lightPurple, fontSize: 16),
+              fillColor: Palette.searchBar,
+              constraints: BoxConstraints(maxHeight: 40, maxWidth: 500),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
+          iconTheme: IconThemeData(color: Palette.lightPurple),
+          appBarBuilder: (context) {
+            return AppBar(
+                title: widget.title_widget ?? Text(widget.title ?? ""),
+                actions: [
+                  AppBarSearchButton(
+                    searchIcon: buildSearchIcon(true),
+                    searchActiveButtonColor: Palette.lightRed,
+                    searchActiveIcon: buildSearchIcon(true),
+                  ),
+                  SizedBox(width: 10),
+                  buildAstronautIcon(),
+                  SizedBox(width: 40)
+                ],
+                iconTheme: IconThemeData(color: Palette.lightPurple));
+          },
+        ),
         drawer: Drawer(
             child: ListView(children: [
           Container(child: Image.asset('assets/images/logo.png')),

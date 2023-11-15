@@ -50,7 +50,12 @@ Icon buildAstronautIcon() => Icon(IconData(0xe90a, fontFamily: 'icomoon'));
 
 Icon buildEditIcon() => Icon(IconData(0xe90c, fontFamily: 'icomoon'));
 
-Icon buildSearchIcon() => Icon(IconData(0xe913, fontFamily: 'icomoon'));
+dynamic buildSearchIcon(bool returnIconData) {
+  if (returnIconData == true) {
+    return IconData(0xe913, fontFamily: 'icomoon');
+  }
+  return Icon(IconData(0xe913, fontFamily: 'icomoon'));
+}
 
 Icon buildTrashIcon() {
   return Icon(IconData(0xe917, fontFamily: 'icomoon'), color: Palette.lightRed);
