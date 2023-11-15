@@ -18,41 +18,54 @@ class AnimeScreen extends StatefulWidget {
 class _AnimeScreenState extends State<AnimeScreen> {
   late AnimeProvider _animeProvider;
   SearchResult<Anime>? result;
+  late Future<SearchResult<Anime>> _animeFuture;
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _animeProvider = context.read<AnimeProvider>();
+    _animeFuture = _animeProvider.get();
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      child: SingleChildScrollView(
-        child: Center(
-          child: Wrap(
-            children: [
-              buildAnimeCard(),
-              buildAnimeCard(),
-              buildAnimeCard(),
-              buildAnimeCard(),
-              buildAnimeCard(),
-              buildAnimeCard(),
-              buildAnimeCard(),
-              buildAnimeCard()
-            ],
-          ),
-        ),
+      child: FutureBuilder<SearchResult<Anime>>(
+        future: _animeFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var animeList = snapshot.data!.result;
+            return SingleChildScrollView(
+              child: Center(
+                child: Wrap(
+                  children: _buildAnimeCards(animeList),
+                ),
+              ),
+            );
+          }
+        },
       ),
       title_widget: Text("Anime"),
     );
   }
 
-  Container buildAnimeCard() {
+  List<Container> _buildAnimeCards(List<Anime> animeList) {
+    return List.generate(
+      animeList.length,
+      (index) => buildAnimeCard(animeList[index]),
+    );
+  }
+
+  Container buildAnimeCard(Anime anime) {
     return Container(
         width: 290,
-        height: 403,
+        height: 453,
         margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
@@ -62,10 +75,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Image.network(
-                "https://wallpapers.com/images/hd/anime-girl-background-bs0kczie5vqucxqj.jpg",
-                // width: 265,
-                height: 195,
+                anime.imageUrl!,
+                width: 290,
+                height: 250,
                 fit: BoxFit.cover,
+                alignment: Alignment.center,
               ),
             ),
             Row(
@@ -78,21 +92,25 @@ class _AnimeScreenState extends State<AnimeScreen> {
                     children: [
                       buildStarIcon(15),
                       SizedBox(width: 3),
-                      Text("8.75",
+                      Text(anime.score.toString(),
                           style: TextStyle(
                               color: Palette.starYellow, fontSize: 11)),
                     ],
                   ),
                 ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 10, left: 10, right: 10, top: 5),
-                    child: Text(
-                      "When the Wind Blows",
-                      overflow: TextOverflow.clip,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 10, left: 0, right: 0, top: 5),
+                      child: Text(
+                        anime.titleEn!,
+                        overflow: TextOverflow.clip,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 )
@@ -105,8 +123,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
                   controller: ScrollController(),
                   child: Column(
                     children: [
-                      Text(
-                          "'A believing heart is your magic!'—these were the words that Atsuko 'Akko' Kagari's idol, the renowned witch Shiny Chariot, said to her during a magic performance years ago. Since then, Akko has lived by these words and aspired to be a witch just like Shiny Chariot, one that can make people, 'A believing heart is your magic!'—these were the words that Atsuko 'Akko' Kagari's idol, the renowned witch Shiny Chariot, said to her during a magic performance years ago. Since then, Akko has lived by these words and aspired to be a witch just like Shiny Chariot, one that can make people"),
+                      Text(anime.synopsis!),
                     ],
                   ),
                 ),
