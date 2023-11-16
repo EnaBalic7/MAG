@@ -19,6 +19,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
   late AnimeProvider _animeProvider;
   SearchResult<Anime>? result;
   late Future<SearchResult<Anime>> _animeFuture;
+  TextEditingController _animeController = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -31,8 +32,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      onSubmitted: _search,
+      controller: _animeController,
       child: FutureBuilder<SearchResult<Anime>>(
         future: _animeFuture,
+        initialData: result,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator(); // Loading state
@@ -53,6 +57,14 @@ class _AnimeScreenState extends State<AnimeScreen> {
       ),
       title_widget: Text("Anime"),
     );
+  }
+
+  void _search(String searchText) async {
+    var data = _animeProvider.get(filter: {'fts': _animeController.text});
+
+    setState(() {
+      _animeFuture = data;
+    });
   }
 
   List<Container> _buildAnimeCards(List<Anime> animeList) {

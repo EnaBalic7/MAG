@@ -12,8 +12,15 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? child;
   String? title;
   Widget? title_widget;
-
-  MasterScreenWidget({this.child, this.title, this.title_widget, Key? key})
+  TextEditingController? controller;
+  void Function(String)? onSubmitted;
+  MasterScreenWidget(
+      {Key? key,
+      this.child,
+      this.title,
+      this.title_widget,
+      this.controller,
+      this.onSubmitted})
       : super(key: key);
 
   @override
@@ -34,6 +41,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBarWithSearchSwitch(
+          closeOnSubmit: false,
+          onSubmitted: widget.onSubmitted,
+          customTextEditingController: widget.controller,
           titleTextStyle: TextStyle(fontSize: 16),
           centerTitle: true,
           searchInputDecoration: InputDecoration(
