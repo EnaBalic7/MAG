@@ -14,14 +14,18 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? title_widget;
   TextEditingController? controller;
   void Function(String)? onSubmitted;
-  MasterScreenWidget(
-      {Key? key,
-      this.child,
-      this.title,
-      this.title_widget,
-      this.controller,
-      this.onSubmitted})
-      : super(key: key);
+  bool? showBackArrow;
+  bool? showSearch;
+  MasterScreenWidget({
+    Key? key,
+    this.child,
+    this.title,
+    this.title_widget,
+    this.controller,
+    this.onSubmitted,
+    this.showBackArrow,
+    this.showSearch,
+  }) : super(key: key);
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -57,17 +61,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           iconTheme: IconThemeData(color: Palette.lightPurple),
           appBarBuilder: (context) {
             return AppBar(
+                leading: _buildLeading(context),
                 title: widget.title_widget ?? Text(widget.title ?? ""),
-                actions: [
-                  AppBarSearchButton(
-                    searchIcon: buildSearchIcon(true),
-                    searchActiveButtonColor: Palette.lightRed,
-                    searchActiveIcon: buildSearchIcon(true),
-                  ),
-                  SizedBox(width: 10),
-                  buildAstronautIcon(),
-                  SizedBox(width: 40)
-                ],
+                actions: _buildActions,
                 iconTheme: IconThemeData(color: Palette.lightPurple));
           },
         ),
@@ -93,6 +89,40 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           ),
           widget.child!
         ]));
+  }
+
+  List<Widget> get _buildActions {
+    List<Widget> actions = [];
+    if (widget.showSearch == true) {
+      actions.add(AppBarSearchButton(
+        searchIcon: buildSearchIcon(true),
+        searchActiveButtonColor: Palette.lightRed,
+        searchActiveIcon: buildSearchIcon(true),
+      ));
+    }
+    actions.add(SizedBox(width: 10));
+    actions.add(buildAstronautIcon());
+    actions.add(SizedBox(width: 40));
+    return actions;
+  }
+
+  Widget _buildLeading(BuildContext context) {
+    if (widget.showBackArrow == true) {
+      return InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Palette.lightPurple,
+          ));
+    } else {
+      return Builder(
+          builder: (context) => IconButton(
+                icon: new Icon(Icons.menu_rounded),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ));
+    }
   }
 
   MouseRegion buildListTile(

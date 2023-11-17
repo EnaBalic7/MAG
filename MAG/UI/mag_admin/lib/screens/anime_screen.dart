@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../models/anime.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
+import 'anime_detail_screen.dart';
 
 class AnimeScreen extends StatefulWidget {
   const AnimeScreen({Key? key}) : super(key: key);
@@ -32,11 +33,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      showSearch: true,
       onSubmitted: _search,
       controller: _animeController,
       child: FutureBuilder<SearchResult<Anime>>(
         future: _animeFuture,
-        initialData: result,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator(); // Loading state
@@ -116,12 +117,22 @@ class _AnimeScreenState extends State<AnimeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(
                           bottom: 10, left: 0, right: 0, top: 5),
-                      child: Text(
-                        anime.titleEn!,
-                        overflow: TextOverflow.clip,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  AnimeDetailScreen(anime: anime)));
+                        },
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Text(
+                            anime.titleEn!,
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ),
                   ),
