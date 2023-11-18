@@ -14,6 +14,7 @@ class Palette {
   static const Color lightRed = Color.fromRGBO(255, 185, 235, 1);
   static const Color textFieldPurple = Color.fromRGBO(140, 131, 215, 1);
   static const Color searchBar = Color.fromRGBO(52, 48, 110, 1);
+  static const Color disabledControl = Color.fromRGBO(69, 67, 108, 1);
 
   //Gradients
   static const LinearGradient menuGradient = LinearGradient(colors: [

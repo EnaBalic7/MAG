@@ -44,51 +44,50 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBarWithSearchSwitch(
-          closeOnSubmit: false,
-          onSubmitted: widget.onSubmitted,
-          customTextEditingController: widget.controller,
-          titleTextStyle: TextStyle(fontSize: 16),
-          centerTitle: true,
-          searchInputDecoration: InputDecoration(
-              contentPadding: EdgeInsets.only(top: 5, left: 15),
-              hintText: "Search",
-              hintStyle: TextStyle(color: Palette.lightPurple, fontSize: 16),
-              fillColor: Palette.searchBar,
-              constraints: BoxConstraints(maxHeight: 40, maxWidth: 500),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
-          iconTheme: IconThemeData(color: Palette.lightPurple),
-          appBarBuilder: (context) {
-            return AppBar(
-                leading: _buildLeading(context),
-                title: widget.title_widget ?? Text(widget.title ?? ""),
-                actions: _buildActions,
-                iconTheme: IconThemeData(color: Palette.lightPurple));
-          },
-        ),
-        drawer: Drawer(
-            child: ListView(children: [
-          Container(child: Image.asset('assets/images/logo.png')),
-          buildListTile(context, 'Login',
-              Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
-          buildListTile(context, 'Anime', buildAnimeIcon(), AnimeScreen()),
-          buildListTile(context, 'Users', buildUsersIcon(), LoginPage()),
-          buildListTile(
-              context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
-          buildListTile(context, 'Clubs', buildClubsIcon(), LoginPage()),
-          buildListTile(context, 'Help', buildHelpIcon(), LoginPage())
-        ])),
-        body: Stack(children: [
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.1,
-              child:
-                  Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
-            ),
+      appBar: AppBarWithSearchSwitch(
+        closeOnSubmit: false,
+        onSubmitted: widget.onSubmitted,
+        customTextEditingController: widget.controller,
+        titleTextStyle: TextStyle(fontSize: 16),
+        centerTitle: true,
+        searchInputDecoration: InputDecoration(
+            contentPadding: EdgeInsets.only(top: 5, left: 15),
+            hintText: "Search",
+            hintStyle: TextStyle(color: Palette.lightPurple, fontSize: 16),
+            fillColor: Palette.searchBar,
+            constraints: BoxConstraints(maxHeight: 40, maxWidth: 500),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
+        iconTheme: IconThemeData(color: Palette.lightPurple),
+        appBarBuilder: (context) {
+          return AppBar(
+              leading: _buildLeading(context),
+              title: widget.title_widget ?? Text(widget.title ?? ""),
+              actions: _buildActions,
+              iconTheme: IconThemeData(color: Palette.lightPurple));
+        },
+      ),
+      drawer: Drawer(
+          child: ListView(children: [
+        Container(child: Image.asset('assets/images/logo.png')),
+        buildListTile(context, 'Login',
+            Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
+        buildListTile(context, 'Anime', buildAnimeIcon(), AnimeScreen()),
+        buildListTile(context, 'Users', buildUsersIcon(), LoginPage()),
+        buildListTile(context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
+        buildListTile(context, 'Clubs', buildClubsIcon(), LoginPage()),
+        buildListTile(context, 'Help', buildHelpIcon(), LoginPage())
+      ])),
+      body: Stack(children: [
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.1,
+            child: Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
           ),
-          widget.child!
-        ]));
+        ),
+        widget.child!
+      ]),
+    );
   }
 
   List<Widget> get _buildActions {
@@ -140,7 +139,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 (hoverStates[title] == true) ? Palette.menuGradient : null,
             borderRadius: BorderRadius.circular(50)),
         child: ListTile(
-          title: Text(title),
+          title: Text(title, style: TextStyle(fontSize: 16)),
           leading: leading,
           onTap: () {
             Navigator.of(context).push(

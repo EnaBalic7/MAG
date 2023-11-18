@@ -24,37 +24,145 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     return MasterScreenWidget(
       showBackArrow: true,
       title_widget: Text(widget.anime?.titleEn.toString() ?? "Untitled"),
-      child: Center(
-          child: Wrap(
-        children: [
-          Image.network(widget.anime?.imageUrl ?? ""),
-          FormBuilder(
-            key: _formKey,
-            child: Wrap(
-              children: [
-                MyFormBuilderTextField(
-                  name: "titleEn",
-                  hintText: "Title (English)",
-                  fillColor: Palette.textFieldPurple.withOpacity(0.9),
-                  obscureText: false,
-                  width: 350,
-                  height: 38,
-                  borderRadius: 15,
-                ),
-                MyFormBuilderTextField(
-                  name: "titleJp",
-                  hintText: "Title (Japanese)",
-                  fillColor: Palette.textFieldPurple.withOpacity(0.9),
-                  obscureText: false,
-                  width: 350,
-                  height: 38,
-                  borderRadius: 15,
-                ),
-              ],
+      child: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(45.0),
+            child: FormBuilder(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.network(
+                          widget.anime?.imageUrl ?? "",
+                          width: 400,
+                        ),
+                      ),
+                      Expanded(
+                        child: Wrap(
+                          children: [
+                            MyFormBuilderTextField(
+                              name: "titleEn",
+                              labelText: "Title (English)",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              initialValue: widget.anime?.titleEn ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "titleJp",
+                              labelText: "Title (Japanese)",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              initialValue: widget.anime?.titleJp ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "episodesNumber",
+                              labelText: "Number of episodes",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              keyboardType: TextInputType.number,
+                              initialValue:
+                                  widget.anime?.episodesNumber.toString() ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "score",
+                              labelText: "Score",
+                              fillColor: Palette.darkPurple,
+                              readOnly: true,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              keyboardType: TextInputType.number,
+                              initialValue:
+                                  widget.anime?.score.toString() ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "beginAir",
+                              labelText: "Began airing",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              keyboardType: TextInputType.datetime,
+                              initialValue:
+                                  widget.anime?.beginAir.toString() ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "finishAir",
+                              labelText: "Finished airing",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              keyboardType: TextInputType.datetime,
+                              initialValue:
+                                  widget.anime?.finishAir.toString() ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "season",
+                              labelText: "Season",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              initialValue: widget.anime?.season ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "studio",
+                              labelText: "Studio",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              initialValue: widget.anime?.studio ?? "",
+                            ),
+                            MyFormBuilderTextField(
+                              name: "imageUrl",
+                              labelText: "Image URL",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              initialValue: widget.anime?.imageUrl ?? "",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyFormBuilderTextField(
+                          name: "synopsis",
+                          labelText: "Synopsis",
+                          fillColor: Palette.darkPurple,
+                          width: 1000,
+                          height: 200,
+                          borderRadius: 15,
+                          initialValue: widget.anime?.synopsis ?? "",
+                          maxLines: null,
+                          paddingTop: 40,
+                          paddingLeft: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ],
-      )),
+        ),
+      ),
     );
   }
 }
