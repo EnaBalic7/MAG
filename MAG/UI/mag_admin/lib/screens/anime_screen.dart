@@ -33,6 +33,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      showFloatingActionButton: true,
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => AnimeDetailScreen()));
+      },
       showSearch: true,
       onSubmitted: _search,
       controller: _animeController,

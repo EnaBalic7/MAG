@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_admin/widgets/form_builder_datetime_picker.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 
 import '../models/anime.dart';
@@ -18,12 +19,21 @@ class AnimeDetailScreen extends StatefulWidget {
 
 class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
+  TextEditingController _imageUrlController = TextEditingController();
+
+  @override
+  void initState() {
+    _imageUrlController.text = widget.anime?.imageUrl ?? "";
+  }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      showFloatingActionButton: true,
+      floatingActionButtonIcon:
+          Icon(Icons.save_rounded, size: 48, color: Palette.lightPurple),
       showBackArrow: true,
-      title_widget: Text(widget.anime?.titleEn.toString() ?? "Untitled"),
+      title_widget: Text(widget.anime?.titleEn.toString() ?? "New Anime"),
       child: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -36,10 +46,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          widget.anime?.imageUrl ?? "",
-                          width: 400,
-                        ),
+                        child: _buildImage(),
                       ),
                       Expanded(
                         child: Wrap(
@@ -83,29 +90,27 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
                               initialValue:
-                                  widget.anime?.score.toString() ?? "",
+                                  widget.anime?.score.toString() ?? "0.0",
                             ),
-                            MyFormBuilderTextField(
+                            MyDateTimePicker(
                               name: "beginAir",
                               labelText: "Began airing",
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              keyboardType: TextInputType.datetime,
                               initialValue:
-                                  widget.anime?.beginAir.toString() ?? "",
+                                  widget.anime?.beginAir ?? DateTime.now(),
                             ),
-                            MyFormBuilderTextField(
+                            MyDateTimePicker(
                               name: "finishAir",
                               labelText: "Finished airing",
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              keyboardType: TextInputType.datetime,
                               initialValue:
-                                  widget.anime?.finishAir.toString() ?? "",
+                                  widget.anime?.finishAir ?? DateTime.now(),
                             ),
                             MyFormBuilderTextField(
                               name: "season",
@@ -132,7 +137,22 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: widget.anime?.imageUrl ?? "",
+                              initialValue: null,
+                              textEditingController: _imageUrlController,
+                              onSubmitted: (p0) {
+                                setState(() {
+                                  _buildImage();
+                                });
+                              },
+                            ),
+                            MyFormBuilderTextField(
+                              name: "trailerUrl",
+                              labelText: "Trailer URL",
+                              fillColor: Palette.darkPurple,
+                              width: 500,
+                              height: 45,
+                              borderRadius: 50,
+                              initialValue: widget.anime?.trailerUrl ?? "",
                             ),
                           ],
                         ),
@@ -164,5 +184,45 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         ),
       ),
     );
+  }
+
+  Image _buildImage() {
+    if (widget.anime != null) {
+      if (widget.anime?.imageUrl == null) {
+        return Image.asset(
+          "assets/images/emptyImg.png",
+          width: 400,
+        );
+      } else if (widget.anime!.imageUrl!
+          .startsWith("https://cdn.myanimelist.net/images/anime")) {
+        return Image.network(
+          widget.anime?.imageUrl ?? "",
+          width: 400,
+        );
+      } else {
+        return Image.asset(
+          "assets/images/emptyImg.png",
+          width: 400,
+        );
+      }
+    } else {
+      if (_imageUrlController.text.isEmpty) {
+        return Image.asset(
+          "assets/images/emptyImg.png",
+          width: 400,
+        );
+      } else if (_imageUrlController.text
+          .startsWith("https://cdn.myanimelist.net/images/anime")) {
+        return Image.network(
+          _imageUrlController.text,
+          width: 400,
+        );
+      } else {
+        return Image.asset(
+          "assets/images/emptyImg.png",
+          width: 400,
+        );
+      }
+    }
   }
 }

@@ -7,6 +7,7 @@ import 'package:mag_admin/screens/anime_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import './/main.dart';
+import 'gradient_button.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
@@ -14,8 +15,12 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? title_widget;
   TextEditingController? controller;
   void Function(String)? onSubmitted;
+  void Function()? onPressed;
   bool? showBackArrow;
   bool? showSearch;
+  bool? showFloatingActionButton;
+  Widget? floatingActionButtonIcon;
+  GradientButton? gradientButton;
   MasterScreenWidget({
     Key? key,
     this.child,
@@ -25,6 +30,10 @@ class MasterScreenWidget extends StatefulWidget {
     this.onSubmitted,
     this.showBackArrow,
     this.showSearch,
+    this.showFloatingActionButton = false,
+    this.floatingActionButtonIcon,
+    this.gradientButton,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -44,6 +53,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: _buildFloatingActionButton(),
       appBar: AppBarWithSearchSwitch(
         closeOnSubmit: false,
         onSubmitted: widget.onSubmitted,
@@ -88,6 +98,20 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         widget.child!
       ]),
     );
+  }
+
+  Widget _buildFloatingActionButton() {
+    if (widget.showFloatingActionButton == false) {
+      return Container();
+    }
+    return GradientButton(
+        width: 90,
+        height: 90,
+        borderRadius: 100,
+        onPressed: widget.onPressed,
+        gradient: Palette.menuGradient,
+        child: widget.floatingActionButtonIcon ??
+            Icon(Icons.add_rounded, size: 48, color: Palette.lightPurple));
   }
 
   List<Widget> get _buildActions {

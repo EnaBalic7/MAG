@@ -26,9 +26,13 @@ class MyMaterialApp extends StatelessWidget {
           scaffoldBackgroundColor: Palette.midnightPurple,
           textTheme: Theme.of(context).textTheme.apply(
                 bodyColor: Palette.lightPurple,
-                displayColor: Palette.lightPurple,
-                decorationColor: Palette.lightPurple,
+                displayColor: Color.fromARGB(255, 90, 83, 155),
+                decorationColor: Palette.midnightPurple,
               ),
+          textSelectionTheme: TextSelectionThemeData(
+              cursorColor: Palette.lightPurple,
+              selectionColor: Palette.midnightPurple,
+              selectionHandleColor: Palette.midnightPurple),
           appBarTheme: AppBarTheme(
               titleTextStyle: TextStyle(
                   color: Palette.lightPurple,
@@ -50,7 +54,7 @@ class MyMaterialApp extends StatelessWidget {
               thumbColor: MaterialStateProperty.all(
                   Palette.lightPurple.withOpacity(0.5))),
           inputDecorationTheme: InputDecorationTheme(
-              filled: true, fillColor: Palette.lightPurple)),
+              filled: true, fillColor: Palette.darkPurple)),
       home: LoginPage(),
     );
   }

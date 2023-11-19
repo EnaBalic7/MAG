@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/colors.dart';
+
 class GradientButton extends StatefulWidget {
   void Function()? onPressed;
   double? width;
@@ -7,15 +9,15 @@ class GradientButton extends StatefulWidget {
   double? borderRadius;
   LinearGradient? gradient;
   Widget? child;
-  GradientButton(
-      {Key? key,
-      this.onPressed,
-      this.width,
-      this.height,
-      this.borderRadius,
-      this.gradient,
-      this.child})
-      : super(key: key);
+  GradientButton({
+    Key? key,
+    this.onPressed,
+    this.width,
+    this.height,
+    this.borderRadius = 0,
+    this.gradient,
+    this.child,
+  }) : super(key: key);
 
   @override
   State<GradientButton> createState() => _GradientButtonState();
@@ -33,6 +35,7 @@ class _GradientButtonState extends State<GradientButton> {
                 borderRadius: BorderRadius.circular(widget.borderRadius ?? 0))),
         child: Ink(
             decoration: BoxDecoration(
+                border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
                 gradient: widget.gradient,
                 borderRadius: BorderRadius.circular(widget.borderRadius ?? 0)),
             child: Container(
