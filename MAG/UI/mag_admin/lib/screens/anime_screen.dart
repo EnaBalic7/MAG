@@ -23,6 +23,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
   TextEditingController _animeController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+  }
+
+  @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
@@ -34,7 +39,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       showFloatingActionButton: true,
-      onPressed: () {
+      floatingButtonOnPressed: () {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => AnimeDetailScreen()));
       },

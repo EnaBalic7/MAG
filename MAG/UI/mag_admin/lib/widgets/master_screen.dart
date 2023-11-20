@@ -15,7 +15,7 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? title_widget;
   TextEditingController? controller;
   void Function(String)? onSubmitted;
-  void Function()? onPressed;
+  void Function()? floatingButtonOnPressed;
   bool? showBackArrow;
   bool? showSearch;
   bool? showFloatingActionButton;
@@ -33,7 +33,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.showFloatingActionButton = false,
     this.floatingActionButtonIcon,
     this.gradientButton,
-    this.onPressed,
+    this.floatingButtonOnPressed,
   }) : super(key: key);
 
   @override
@@ -108,7 +108,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         width: 90,
         height: 90,
         borderRadius: 100,
-        onPressed: widget.onPressed,
+        onPressed: widget.floatingButtonOnPressed,
         gradient: Palette.menuGradient,
         child: widget.floatingActionButtonIcon ??
             Icon(Icons.add_rounded, size: 48, color: Palette.lightPurple));

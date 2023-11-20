@@ -50,6 +50,9 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDateTimePicker(
+          valueTransformer: (selectedDate) {
+            return selectedDate?.toIso8601String();
+          },
           name: widget.name!,
           decoration: InputDecoration(
             suffixIcon: Icon(Icons.date_range_rounded,
@@ -66,8 +69,6 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
               borderRadius: BorderRadius.circular(widget.borderRadius!),
             ),
           ),
-          initialDate: DateTime.now(),
-          initialValue: widget.initialValue,
           inputType: InputType.date,
           format: DateFormat('MMM d, y'),
         ),

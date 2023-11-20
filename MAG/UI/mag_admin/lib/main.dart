@@ -146,27 +146,4 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
-
-  void showErrorDialog(BuildContext context, Exception e) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                actionsAlignment: MainAxisAlignment.center,
-                backgroundColor: Palette.darkPurple,
-                title: Text("Error"),
-                content: Text(e.toString()),
-                actions: [
-                  Padding(
-                      padding: EdgeInsets.all(5),
-                      child: GradientButton(
-                          onPressed: () => Navigator.pop(context),
-                          width: 85,
-                          height: 28,
-                          borderRadius: 15,
-                          gradient: Palette.buttonGradient,
-                          child: Text("OK"))),
-                ]));
-  }
 }

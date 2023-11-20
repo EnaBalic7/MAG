@@ -22,8 +22,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   double? paddingRight;
   double? paddingTop;
   double? paddingBottom;
-  void Function(String?)? onSubmitted;
-  TextEditingController? textEditingController;
+  void Function(String?)? onChanged;
   MyFormBuilderTextField({
     Key? key,
     required this.name,
@@ -41,8 +40,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.paddingRight = 0,
     this.paddingTop = 0,
     this.paddingBottom = 50,
-    this.onSubmitted,
-    this.textEditingController,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -62,10 +60,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderTextField(
-          controller: widget.textEditingController,
-          onSubmitted: widget.onSubmitted,
+          onChanged: widget.onChanged,
           maxLines: _maxLines(),
-          initialValue: widget.initialValue ?? "",
           keyboardType: widget.keyboardType ?? TextInputType.text,
           readOnly: widget.readOnly ?? false,
           name: widget.name,

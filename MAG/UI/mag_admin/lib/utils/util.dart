@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+import '../widgets/gradient_button.dart';
+import 'colors.dart';
+
 MaterialColor generateMaterialColor(Color color) {
   return MaterialColor(color.value, {
     50: tintColor(color, 0.9),
@@ -37,4 +40,50 @@ Color shadeColor(Color color, double factor) => Color.fromRGBO(
 class Authorization {
   static String? username;
   static String? password;
+}
+
+void showErrorDialog(BuildContext context, Exception e) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              actionsAlignment: MainAxisAlignment.center,
+              backgroundColor: Palette.darkPurple,
+              title: Text("Error"),
+              content: Text(e.toString()),
+              actions: [
+                Padding(
+                    padding: EdgeInsets.all(5),
+                    child: GradientButton(
+                        onPressed: () => Navigator.pop(context),
+                        width: 85,
+                        height: 28,
+                        borderRadius: 15,
+                        gradient: Palette.buttonGradient,
+                        child: Text("OK"))),
+              ]));
+}
+
+void showInfoDialog(BuildContext context, Widget? title, Widget? content) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              actionsAlignment: MainAxisAlignment.center,
+              backgroundColor: Palette.darkPurple,
+              title: title,
+              content: content,
+              actions: [
+                Padding(
+                    padding: EdgeInsets.all(5),
+                    child: GradientButton(
+                        onPressed: () => Navigator.pop(context),
+                        width: 85,
+                        height: 28,
+                        borderRadius: 15,
+                        gradient: Palette.buttonGradient,
+                        child: Text("OK"))),
+              ]));
 }

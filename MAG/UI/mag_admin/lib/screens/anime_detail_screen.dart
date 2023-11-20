@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/form_builder_datetime_picker.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
+import '../providers/anime_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/form_builder_text_field.dart';
 
@@ -19,16 +22,61 @@ class AnimeDetailScreen extends StatefulWidget {
 
 class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
-  TextEditingController _imageUrlController = TextEditingController();
+  Image? _image;
+  late AnimeProvider _animeProvider;
+  Map<String, dynamic> _initialValue = {};
 
   @override
   void initState() {
-    _imageUrlController.text = widget.anime?.imageUrl ?? "";
+    super.initState();
+    _initialValue = {
+      'titleEn': widget.anime?.titleEn ?? "",
+      'titleJp': widget.anime?.titleJp ?? "",
+      'synopsis': widget.anime?.synopsis ?? "",
+      'episodesNumber': widget.anime?.episodesNumber.toString() ?? "",
+      'imageUrl': widget.anime?.imageUrl ?? "",
+      'trailerUrl': widget.anime?.trailerUrl ?? "",
+      'score': widget.anime?.score.toString() ?? "0.0",
+      'beginAir': widget.anime?.beginAir ?? DateTime.now(),
+      'finishAir': widget.anime?.finishAir ?? DateTime.now(),
+      'season': widget.anime?.season ?? "",
+      'studio': widget.anime?.studio ?? ""
+    };
+    _image = _buildImage();
+    _animeProvider = context.read<AnimeProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      floatingButtonOnPressed: () async {
+        _formKey.currentState?.saveAndValidate();
+        var request = Map.from(_formKey.currentState!.value);
+
+        try {
+          if (widget.anime == null) {
+            await _animeProvider.insert(request);
+            showInfoDialog(
+                context,
+                Text("Info"),
+                Text(
+                  "Added successfully!",
+                  textAlign: TextAlign.center,
+                ));
+          } else {
+            await _animeProvider.update(widget.anime!.id!, request: request);
+            showInfoDialog(
+                context,
+                Text("Info"),
+                Text(
+                  "Updated successfully!",
+                  textAlign: TextAlign.center,
+                ));
+          }
+        } on Exception catch (e) {
+          showErrorDialog(context, e);
+        }
+      },
       showFloatingActionButton: true,
       floatingActionButtonIcon:
           Icon(Icons.save_rounded, size: 48, color: Palette.lightPurple),
@@ -40,13 +88,14 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             padding: const EdgeInsets.all(45.0),
             child: FormBuilder(
               key: _formKey,
+              initialValue: _initialValue,
               child: Column(
                 children: [
                   Row(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                        child: _buildImage(),
+                        child: _image,
                       ),
                       Expanded(
                         child: Wrap(
@@ -58,7 +107,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: widget.anime?.titleEn ?? "",
                             ),
                             MyFormBuilderTextField(
                               name: "titleJp",
@@ -67,7 +115,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: widget.anime?.titleJp ?? "",
                             ),
                             MyFormBuilderTextField(
                               name: "episodesNumber",
@@ -77,8 +124,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               height: 45,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
-                              initialValue:
-                                  widget.anime?.episodesNumber.toString() ?? "",
                             ),
                             MyFormBuilderTextField(
                               name: "score",
@@ -89,8 +134,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               height: 45,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
-                              initialValue:
-                                  widget.anime?.score.toString() ?? "0.0",
                             ),
                             MyDateTimePicker(
                               name: "beginAir",
@@ -99,8 +142,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue:
-                                  widget.anime?.beginAir ?? DateTime.now(),
                             ),
                             MyDateTimePicker(
                               name: "finishAir",
@@ -109,8 +150,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue:
-                                  widget.anime?.finishAir ?? DateTime.now(),
                             ),
                             MyFormBuilderTextField(
                               name: "season",
@@ -119,7 +158,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: widget.anime?.season ?? "",
                             ),
                             MyFormBuilderTextField(
                               name: "studio",
@@ -128,7 +166,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: widget.anime?.studio ?? "",
                             ),
                             MyFormBuilderTextField(
                               name: "imageUrl",
@@ -137,11 +174,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: null,
-                              textEditingController: _imageUrlController,
-                              onSubmitted: (p0) {
+                              onChanged: (newValue) {
                                 setState(() {
-                                  _buildImage();
+                                  widget.anime?.imageUrl = newValue;
+                                  _image = _buildImage(imageUrl: newValue!);
                                 });
                               },
                             ),
@@ -152,7 +188,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
-                              initialValue: widget.anime?.trailerUrl ?? "",
                             ),
                           ],
                         ),
@@ -169,7 +204,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           width: 1000,
                           height: 200,
                           borderRadius: 15,
-                          initialValue: widget.anime?.synopsis ?? "",
                           maxLines: null,
                           paddingTop: 40,
                           paddingLeft: 0,
@@ -186,15 +220,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     );
   }
 
-  Image _buildImage() {
-    if (widget.anime != null) {
+  Image _buildImage({String imageUrl = ""}) {
+    if (imageUrl == "") {
       if (widget.anime?.imageUrl == null) {
         return Image.asset(
           "assets/images/emptyImg.png",
           width: 400,
         );
-      } else if (widget.anime!.imageUrl!
-          .startsWith("https://cdn.myanimelist.net/images/anime")) {
+      } else if (widget.anime!.imageUrl!.startsWith(RegExp(
+          r'^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$'))) {
         return Image.network(
           widget.anime?.imageUrl ?? "",
           width: 400,
@@ -206,15 +240,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         );
       }
     } else {
-      if (_imageUrlController.text.isEmpty) {
-        return Image.asset(
-          "assets/images/emptyImg.png",
-          width: 400,
-        );
-      } else if (_imageUrlController.text
-          .startsWith("https://cdn.myanimelist.net/images/anime")) {
+      if (imageUrl.startsWith(RegExp(
+          r'^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$'))) {
         return Image.network(
-          _imageUrlController.text,
+          imageUrl,
           width: 400,
         );
       } else {
