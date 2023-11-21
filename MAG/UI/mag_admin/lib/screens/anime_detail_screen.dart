@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/form_builder_datetime_picker.dart';
+import 'package:mag_admin/widgets/form_builder_dropdown.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,7 @@ class AnimeDetailScreen extends StatefulWidget {
 class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   Image? _image;
+  Widget? _title;
   late AnimeProvider _animeProvider;
   Map<String, dynamic> _initialValue = {};
 
@@ -39,10 +41,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       'score': widget.anime?.score.toString() ?? "0.0",
       'beginAir': widget.anime?.beginAir ?? DateTime.now(),
       'finishAir': widget.anime?.finishAir ?? DateTime.now(),
-      'season': widget.anime?.season ?? "",
+      'season': widget.anime?.season ?? "Spring",
       'studio': widget.anime?.studio ?? ""
     };
     _image = _buildImage();
+    _title = _buildTitle();
     _animeProvider = context.read<AnimeProvider>();
   }
 
@@ -58,7 +61,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             await _animeProvider.insert(request);
             showInfoDialog(
                 context,
-                Text("Info"),
+                Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
                 Text(
                   "Added successfully!",
                   textAlign: TextAlign.center,
@@ -67,7 +70,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             await _animeProvider.update(widget.anime!.id!, request: request);
             showInfoDialog(
                 context,
-                Text("Info"),
+                Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
                 Text(
                   "Updated successfully!",
                   textAlign: TextAlign.center,
@@ -81,7 +84,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       floatingActionButtonIcon:
           Icon(Icons.save_rounded, size: 48, color: Palette.lightPurple),
       showBackArrow: true,
-      title_widget: Text(widget.anime?.titleEn.toString() ?? "New Anime"),
+      title_widget: _title,
       child: SingleChildScrollView(
         child: Center(
           child: Padding(
@@ -105,15 +108,21 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               labelText: "Title (English)",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
+                              onChanged: (newTitle) {
+                                setState(() {
+                                  widget.anime?.titleEn = newTitle;
+                                  _title = _buildTitle(title: newTitle!);
+                                });
+                              },
                             ),
                             MyFormBuilderTextField(
                               name: "titleJp",
                               labelText: "Title (Japanese)",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                             ),
                             MyFormBuilderTextField(
@@ -121,7 +130,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               labelText: "Number of episodes",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
                             ),
@@ -131,7 +140,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               fillColor: Palette.darkPurple,
                               readOnly: true,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
                             ),
@@ -140,7 +149,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               labelText: "Began airing",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                             ),
                             MyDateTimePicker(
@@ -148,16 +157,21 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               labelText: "Finished airing",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                             ),
-                            MyFormBuilderTextField(
+                            MyFormBuilderDropdown(
                               name: "season",
                               labelText: "Season",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
+                              icon: Icon(
+                                Icons.sunny_snowing,
+                                color: Palette.lightPurple,
+                              ),
+                              //initialValue: _initialValue['season'],
                             ),
                             MyFormBuilderTextField(
                               name: "studio",
@@ -172,7 +186,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               labelText: "Image URL",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                               onChanged: (newValue) {
                                 setState(() {
@@ -186,7 +200,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               labelText: "Trailer URL",
                               fillColor: Palette.darkPurple,
                               width: 500,
-                              height: 45,
+                              height: 50,
                               borderRadius: 50,
                             ),
                           ],
@@ -218,6 +232,18 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         ),
       ),
     );
+  }
+
+  Text _buildTitle({String title = ""}) {
+    if (title.isEmpty) {
+      if (widget.anime?.titleEn?.isEmpty ?? true) {
+        return Text("Untitled");
+      } else {
+        return Text("${widget.anime?.titleEn}");
+      }
+    } else {
+      return Text("$title");
+    }
   }
 
   Image _buildImage({String imageUrl = ""}) {

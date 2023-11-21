@@ -24,7 +24,15 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    context.read<AnimeProvider>().addListener(() {
+      _reloadAnimeList();
+    });
+  }
+
+  void _reloadAnimeList() {
+    setState(() {
+      _animeFuture = context.read<AnimeProvider>().get();
+    });
   }
 
   @override
