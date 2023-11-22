@@ -54,7 +54,10 @@ class MyMaterialApp extends StatelessWidget {
               thumbColor: MaterialStateProperty.all(
                   Palette.lightPurple.withOpacity(0.5))),
           inputDecorationTheme: InputDecorationTheme(
-              filled: true, fillColor: Palette.darkPurple)),
+              filled: true,
+              fillColor: Palette.darkPurple,
+              labelStyle: TextStyle(color: Palette.lightPurple),
+              helperStyle: TextStyle(color: Palette.lightPurple))),
       home: LoginPage(),
     );
   }

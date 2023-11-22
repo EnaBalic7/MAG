@@ -42,7 +42,7 @@ class Authorization {
   static String? password;
 }
 
-void showErrorDialog(BuildContext context, Exception e) {
+Future<void> showErrorDialog(BuildContext context, Exception e) async {
   showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -54,7 +54,7 @@ void showErrorDialog(BuildContext context, Exception e) {
               content: Text(e.toString()),
               actions: [
                 Padding(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.only(bottom: 10, top: 5),
                     child: GradientButton(
                         onPressed: () => Navigator.pop(context),
                         width: 85,
@@ -65,7 +65,8 @@ void showErrorDialog(BuildContext context, Exception e) {
               ]));
 }
 
-void showInfoDialog(BuildContext context, Widget? title, Widget? content) {
+Future<void> showInfoDialog(
+    BuildContext context, Widget? title, Widget? content) async {
   showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -77,7 +78,7 @@ void showInfoDialog(BuildContext context, Widget? title, Widget? content) {
               content: content,
               actions: [
                 Padding(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.only(bottom: 10, top: 5),
                     child: GradientButton(
                         onPressed: () => Navigator.pop(context),
                         width: 85,
@@ -86,4 +87,46 @@ void showInfoDialog(BuildContext context, Widget? title, Widget? content) {
                         gradient: Palette.buttonGradient,
                         child: Text("OK"))),
               ]));
+}
+
+Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
+    Widget? content, VoidCallback onPressedYes) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // Dialog cannot be dismissed by tapping outside
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        backgroundColor: Palette.darkPurple,
+        title: dialogTitle,
+        content: content,
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(left: 16, bottom: 10, top: 10),
+              child: GradientButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  width: 85,
+                  height: 28,
+                  borderRadius: 15,
+                  gradient: Palette.buttonGradient2,
+                  child: Text("No"))),
+          Padding(
+              padding: EdgeInsets.only(right: 16, bottom: 10, top: 10),
+              child: GradientButton(
+                  onPressed: () {
+                    onPressedYes();
+                    Navigator.of(context).pop();
+                  },
+                  width: 85,
+                  height: 28,
+                  borderRadius: 15,
+                  gradient: Palette.buttonGradient,
+                  child: Text("Yes"))),
+        ],
+      );
+    },
+  );
 }

@@ -23,6 +23,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   double? paddingTop;
   double? paddingBottom;
   void Function(String?)? onChanged;
+  String? Function(String?)? validator;
   MyFormBuilderTextField({
     Key? key,
     required this.name,
@@ -41,6 +42,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.paddingTop = 0,
     this.paddingBottom = 50,
     this.onChanged,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -60,6 +62,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderTextField(
+          autovalidateMode: AutovalidateMode.always,
+          validator: widget.validator,
           onChanged: widget.onChanged,
           maxLines: _maxLines(),
           keyboardType: widget.keyboardType ?? TextInputType.text,
@@ -69,6 +73,13 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           obscuringCharacter: '✮',
           obscureText: widget.obscureText ?? false,
           decoration: InputDecoration(
+            focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Palette.lightRed),
+                borderRadius: BorderRadius.circular(50)),
+            errorStyle: TextStyle(color: Palette.lightRed),
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Palette.lightRed),
+                borderRadius: BorderRadius.circular(50)),
             labelText: widget.labelText ?? "",
             floatingLabelBehavior: FloatingLabelBehavior.always,
             labelStyle: TextStyle(

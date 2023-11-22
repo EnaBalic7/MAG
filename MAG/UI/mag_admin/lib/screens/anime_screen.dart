@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:mag_admin/utils/icons.dart';
+import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +155,25 @@ class _AnimeScreenState extends State<AnimeScreen> {
                       ),
                     ),
                   ),
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 7, left: 5, right: 5, bottom: 5),
+                  child: GestureDetector(
+                      onTap: () {
+                        showConfirmationDialog(
+                            context,
+                            Icon(Icons.warning_rounded,
+                                color: Palette.lightRed, size: 55),
+                            Text("Are you sure you want to delete this anime?"),
+                            () {
+                          _animeProvider.delete(anime.id!);
+                        });
+                      },
+                      child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: buildTrashIcon(20))),
+                ),
               ],
             ),
             Expanded(

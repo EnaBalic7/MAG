@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/utils/icons.dart';
-
 import '../utils/colors.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class MyFormBuilderDropdown extends StatefulWidget {
   String name;
@@ -56,7 +56,6 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
         child: FormBuilderDropdown(
           icon: widget.icon,
           dropdownColor: Palette.darkPurple,
-          focusColor: Palette.plumPurple,
           items: [
             DropdownMenuItem(value: 'Spring', child: Text('Spring')),
             DropdownMenuItem(value: 'Summer', child: Text('Summer')),

@@ -12,6 +12,7 @@ import '../models/anime.dart';
 import '../providers/anime_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/form_builder_text_field.dart';
+import '../widgets/gradient_button.dart';
 
 class AnimeDetailScreen extends StatefulWidget {
   Anime? anime;
@@ -116,6 +117,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   _title = _buildTitle(title: newTitle!);
                                 });
                               },
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                              ]),
                             ),
                             MyFormBuilderTextField(
                               name: "titleJp",
@@ -124,6 +128,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 50,
                               borderRadius: 50,
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                              ]),
                             ),
                             MyFormBuilderTextField(
                               name: "episodesNumber",
@@ -133,6 +140,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               height: 50,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                                FormBuilderValidators.integer(context),
+                              ]),
                             ),
                             MyFormBuilderTextField(
                               name: "score",
@@ -180,6 +191,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 45,
                               borderRadius: 50,
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                              ]),
                             ),
                             MyFormBuilderTextField(
                               name: "imageUrl",
@@ -188,6 +202,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 50,
                               borderRadius: 50,
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                                FormBuilderValidators.url(context),
+                              ]),
                               onChanged: (newValue) {
                                 setState(() {
                                   widget.anime?.imageUrl = newValue;
@@ -202,6 +220,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               width: 500,
                               height: 50,
                               borderRadius: 50,
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context),
+                                FormBuilderValidators.url(context),
+                              ]),
                             ),
                           ],
                         ),
@@ -221,6 +243,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           maxLines: null,
                           paddingTop: 40,
                           paddingLeft: 0,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
                         ),
                       ),
                     ],

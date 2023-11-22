@@ -57,8 +57,12 @@ dynamic buildSearchIcon(bool returnIconData) {
   return Icon(IconData(0xe913, fontFamily: 'icomoon'));
 }
 
-Icon buildTrashIcon() {
-  return Icon(IconData(0xe917, fontFamily: 'icomoon'), color: Palette.lightRed);
+Icon buildTrashIcon(double size) {
+  return Icon(
+    IconData(0xe917, fontFamily: 'icomoon'),
+    color: Palette.lightRed,
+    size: size,
+  );
 }
 
 Icon buildHelpIcon() {

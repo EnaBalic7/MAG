@@ -18,6 +18,7 @@ class MyDateTimePicker extends StatefulWidget {
   double? paddingRight;
   double? paddingTop;
   double? paddingBottom;
+  String? Function(DateTime?)? validator;
   MyDateTimePicker({
     Key? key,
     required this.name,
@@ -31,6 +32,7 @@ class MyDateTimePicker extends StatefulWidget {
     this.paddingBottom = 50,
     this.initialValue,
     this.fillColor,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -50,6 +52,7 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDateTimePicker(
+          validator: widget.validator,
           valueTransformer: (selectedDate) {
             return selectedDate?.toIso8601String();
           },

@@ -80,8 +80,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       drawer: Drawer(
           child: ListView(children: [
         Container(child: Image.asset('assets/images/logo.png')),
-        buildListTile(context, 'Login',
-            Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
+        // buildListTile(context, 'Login',
+        //   Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
         buildListTile(context, 'Anime', buildAnimeIcon(), AnimeScreen()),
         buildListTile(context, 'Users', buildUsersIcon(), LoginPage()),
         buildListTile(context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
@@ -104,6 +104,30 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     if (widget.showFloatingActionButton == false) {
       return Container();
     }
+    /* return PopupMenuButton(itemBuilder: (BuildContext context) {
+      return [
+        PopupMenuItem(
+          child: GradientButton(
+              width: 90,
+              height: 90,
+              borderRadius: 100,
+              onPressed: widget.floatingButtonOnPressed,
+              gradient: Palette.menuGradient,
+              child: widget.floatingActionButtonIcon ??
+                  Icon(Icons.add_rounded,
+                      size: 48, color: Palette.lightPurple)),
+          onTap: () {
+            // Handle option 1 action
+          },
+        ),
+        PopupMenuItem(
+          child: Text('Option 2'),
+          onTap: () {
+            // Handle option 2 action
+          },
+        ),
+      ];
+    });*/
     return GradientButton(
         width: 90,
         height: 90,
