@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_admin/providers/genre_anime_provider.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/form_builder_datetime_picker.dart';
 import 'package:mag_admin/widgets/form_builder_dropdown.dart';
@@ -9,7 +10,10 @@ import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
+import '../models/genre.dart';
+import '../models/search_result.dart';
 import '../providers/anime_provider.dart';
+import '../providers/genre_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/form_builder_text_field.dart';
 import '../widgets/gradient_button.dart';
@@ -27,7 +31,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   Image? _image;
   Widget? _title;
   late AnimeProvider _animeProvider;
+  late GenreProvider _genreProvider;
+  late GenreAnimeProvider _genreAnimeProvider;
+  late Future<SearchResult<Genre>> _genreFuture;
   Map<String, dynamic> _initialValue = {};
+  Map<String, dynamic> _genreInitialValue = {};
 
   @override
   void initState() {
@@ -48,6 +56,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _image = _buildImage();
     _title = _buildTitle();
     _animeProvider = context.read<AnimeProvider>();
+    _genreProvider = context.read<GenreProvider>();
+    _genreAnimeProvider = context.read<GenreAnimeProvider>();
+    _genreFuture = _genreProvider.get();
+    _genreInitialValue = {'name': "Test"};
   }
 
   @override
@@ -250,6 +262,20 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                       ),
                     ],
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FormBuilderChoiceChip(
+                          initialValue: _genreFuture,
+                          name: "name",
+                          options: [
+                            FormBuilderFieldOption(
+                                value: "1", child: Text("Option"))
+                          ],
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),

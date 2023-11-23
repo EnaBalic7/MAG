@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
+import 'package:mag_admin/providers/genre_anime_provider.dart';
+import 'package:mag_admin/providers/genre_provider.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/text_field.dart';
@@ -9,9 +11,11 @@ import './utils/colors.dart';
 import './utils/util.dart';
 
 void main() {
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AnimeProvider())],
-      child: const MyMaterialApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => AnimeProvider()),
+    ChangeNotifierProvider(create: (_) => GenreProvider()),
+    ChangeNotifierProvider(create: (_) => GenreAnimeProvider())
+  ], child: const MyMaterialApp()));
 }
 
 class MyMaterialApp extends StatelessWidget {

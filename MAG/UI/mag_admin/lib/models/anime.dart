@@ -1,6 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'anime.g.dart';
 
+// flutter pub run build_runner build --delete-conflicting-outputs -> one time
+// flutter pub run build_runner watch --delete-conflicting-outputs -> continuous
+
 @JsonSerializable()
 class Anime {
   int? id;

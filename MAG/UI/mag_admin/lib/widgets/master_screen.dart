@@ -95,7 +95,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             child: Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
           ),
         ),
-        widget.child!
+        Align(
+          alignment: Alignment.topLeft,
+          child: widget.child!,
+        )
       ]),
     );
   }
@@ -104,30 +107,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     if (widget.showFloatingActionButton == false) {
       return Container();
     }
-    /* return PopupMenuButton(itemBuilder: (BuildContext context) {
-      return [
-        PopupMenuItem(
-          child: GradientButton(
-              width: 90,
-              height: 90,
-              borderRadius: 100,
-              onPressed: widget.floatingButtonOnPressed,
-              gradient: Palette.menuGradient,
-              child: widget.floatingActionButtonIcon ??
-                  Icon(Icons.add_rounded,
-                      size: 48, color: Palette.lightPurple)),
-          onTap: () {
-            // Handle option 1 action
-          },
-        ),
-        PopupMenuItem(
-          child: Text('Option 2'),
-          onTap: () {
-            // Handle option 2 action
-          },
-        ),
-      ];
-    });*/
+
     return GradientButton(
         width: 90,
         height: 90,

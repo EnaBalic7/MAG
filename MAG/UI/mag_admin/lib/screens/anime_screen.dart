@@ -87,14 +87,14 @@ class _AnimeScreenState extends State<AnimeScreen> {
     });
   }
 
-  List<Container> _buildAnimeCards(List<Anime> animeList) {
+  List<Widget> _buildAnimeCards(List<Anime> animeList) {
     return List.generate(
       animeList.length,
       (index) => buildAnimeCard(animeList[index]),
     );
   }
 
-  Container buildAnimeCard(Anime anime) {
+  Widget buildAnimeCard(Anime anime) {
     return Container(
         width: 290,
         height: 453,
