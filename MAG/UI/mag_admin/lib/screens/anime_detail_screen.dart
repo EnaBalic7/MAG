@@ -15,6 +15,7 @@ import '../models/search_result.dart';
 import '../providers/anime_provider.dart';
 import '../providers/genre_provider.dart';
 import '../utils/colors.dart';
+import '../widgets/form_builder_filter_chip.dart';
 import '../widgets/form_builder_text_field.dart';
 import '../widgets/gradient_button.dart';
 
@@ -59,39 +60,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _genreProvider = context.read<GenreProvider>();
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
     _genreFuture = _genreProvider.get();
-    _genreInitialValue = {'name': "Test"};
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       floatingButtonOnPressed: () async {
-        _formKey.currentState?.saveAndValidate();
-        var request = Map.from(_formKey.currentState!.value);
-
-        try {
-          if (widget.anime == null) {
-            await _animeProvider.insert(request);
-            showInfoDialog(
-                context,
-                Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-                Text(
-                  "Added successfully!",
-                  textAlign: TextAlign.center,
-                ));
-          } else {
-            await _animeProvider.update(widget.anime!.id!, request: request);
-            showInfoDialog(
-                context,
-                Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-                Text(
-                  "Updated successfully!",
-                  textAlign: TextAlign.center,
-                ));
-          }
-        } on Exception catch (e) {
-          showErrorDialog(context, e);
-        }
+        await _saveAnimeData(context);
       },
       showFloatingActionButton: true,
       floatingActionButtonIcon:
@@ -265,13 +240,34 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: FormBuilderChoiceChip(
-                          initialValue: _genreFuture,
-                          name: "name",
-                          options: [
-                            FormBuilderFieldOption(
-                                value: "1", child: Text("Option"))
-                          ],
+                        child: FutureBuilder<SearchResult<Genre>>(
+                          future: _genreFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator(); // Loading state
+                            } else if (snapshot.hasError) {
+                              return Text(
+                                  'Error: ${snapshot.error}'); // Error state
+                            } else {
+                              // Data loaded successfully
+                              var genreList = snapshot.data!.result;
+                              return MyFormBuilderFilterChip(
+                                labelText: "Genres",
+                                name: 'genres',
+                                options: genreList
+                                    .map(
+                                      (genre) => FormBuilderFieldOption(
+                                        value: genre.id.toString(),
+                                        child: Text(genre.name!,
+                                            style: TextStyle(
+                                                color: Palette.midnightPurple)),
+                                      ),
+                                    )
+                                    .toList(),
+                              );
+                            }
+                          },
                         ),
                       )
                     ],
@@ -283,6 +279,41 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _saveAnimeData(BuildContext context) async {
+    _formKey.currentState?.saveAndValidate();
+    var request = Map.from(_formKey.currentState!.value);
+
+    try {
+      if (widget.anime == null) {
+        await _animeProvider.insert(request);
+        showInfoDialog(
+            context,
+            Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            Text(
+              "Added successfully!",
+              textAlign: TextAlign.center,
+            ));
+      } else {
+        await _animeProvider.update(widget.anime!.id!, request: request);
+      }
+
+      var selectedGenres =
+          _formKey.currentState?.value['genres'] as List<String>? ?? [];
+      await _genreAnimeProvider.saveGenresForAnime(
+          widget.anime!.id!, selectedGenres);
+
+      showInfoDialog(
+          context,
+          Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+          Text(
+            "Updated successfully!",
+            textAlign: TextAlign.center,
+          ));
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   Text _buildTitle({String title = ""}) {

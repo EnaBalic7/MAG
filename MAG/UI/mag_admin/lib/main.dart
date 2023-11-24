@@ -31,8 +31,14 @@ class MyMaterialApp extends StatelessWidget {
           textTheme: Theme.of(context).textTheme.apply(
                 bodyColor: Palette.lightPurple,
                 displayColor: Color.fromARGB(255, 90, 83, 155),
-                decorationColor: Palette.midnightPurple,
+                decorationColor: Palette.lightPurple,
               ),
+          chipTheme: ChipThemeData(
+            padding: EdgeInsets.all(10),
+            selectedColor: Palette.teal,
+            checkmarkColor: Palette.midnightPurple,
+            backgroundColor: Palette.textFieldPurple,
+          ),
           textSelectionTheme: TextSelectionThemeData(
               cursorColor: Palette.lightPurple,
               selectionColor: Palette.midnightPurple,

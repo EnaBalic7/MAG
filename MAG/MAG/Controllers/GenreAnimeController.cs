@@ -9,6 +9,7 @@ namespace MAG.Controllers
     [ApiController]
     public class GenreAnimeController : BaseCRUDController<Model.GenreAnime, GenreAnimeSearchObject, GenreAnimeInsertRequest, GenreAnimeUpdateRequest>
     {
+        protected readonly IGenreAnimeService _service;
         public GenreAnimeController(IGenreAnimeService service) : base(service)
         {
 
@@ -18,6 +19,12 @@ namespace MAG.Controllers
         public override Task<GenreAnime> Update(int id, [FromBody] GenreAnimeUpdateRequest update)
         {
             return base.Update(id, update);
+        }
+
+        [HttpDelete("{animeId}")]
+        public virtual async Task<Model.GenreAnime> DeleteAllGenres(int animeId)
+        {
+            return await _service.DeleteAllGenres(animeId);
         }
     }
 }
