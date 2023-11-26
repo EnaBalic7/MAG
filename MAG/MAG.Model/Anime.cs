@@ -26,5 +26,7 @@
 
         public string Studio { get; set; } = null!;
 
+        public virtual ICollection<GenreAnime> GenreAnimes { get; set; } = new List<GenreAnime>();
+
     }
 }

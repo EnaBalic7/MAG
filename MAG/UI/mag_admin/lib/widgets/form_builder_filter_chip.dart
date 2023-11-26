@@ -9,11 +9,15 @@ class MyFormBuilderFilterChip extends StatefulWidget {
   String? name;
   List<FormBuilderFieldOption<dynamic>>? options;
   String? labelText;
+  final List<dynamic>? initialValue;
+  void Function(List<dynamic>?)? onChanged;
   MyFormBuilderFilterChip({
     Key? key,
     required this.name,
     required this.options,
     this.labelText,
+    this.initialValue,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -26,6 +30,7 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
   Widget build(BuildContext context) {
     return FormBuilderFilterChip(
       name: widget.name!,
+      initialValue: widget.initialValue ?? [],
       options: widget.options!,
       decoration: InputDecoration(
         labelText: widget.labelText ?? "",
@@ -38,6 +43,7 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
         ),
         border: InputBorder.none,
       ),
+      onChanged: widget.onChanged,
       spacing: 8,
       runSpacing: 12,
     );

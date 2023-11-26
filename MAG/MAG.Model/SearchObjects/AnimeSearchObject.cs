@@ -10,5 +10,6 @@ namespace MAG.Model.SearchObjects
     {
         public string? Title { get; set; }
         public string? FTS { get; set; } //FTS - Full Text Search
+        public bool? GenresIncluded { get; set; }
     }
 }

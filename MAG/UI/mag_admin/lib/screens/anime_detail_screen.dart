@@ -36,7 +36,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late GenreAnimeProvider _genreAnimeProvider;
   late Future<SearchResult<Genre>> _genreFuture;
   Map<String, dynamic> _initialValue = {};
-  Map<String, dynamic> _genreInitialValue = {};
 
   @override
   void initState() {
@@ -252,26 +251,39 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                             } else {
                               // Data loaded successfully
                               var genreList = snapshot.data!.result;
+
                               return MyFormBuilderFilterChip(
-                                labelText: "Genres",
-                                name: 'genres',
-                                options: genreList
-                                    .map(
-                                      (genre) => FormBuilderFieldOption(
-                                        value: genre.id.toString(),
-                                        child: Text(genre.name!,
-                                            style: TextStyle(
-                                                color: Palette.midnightPurple)),
-                                      ),
-                                    )
-                                    .toList(),
-                              );
+                                  labelText: "Genres",
+                                  name: 'genres',
+                                  options: [
+                                    ...genreList
+                                        .map(
+                                          (genre) => FormBuilderFieldOption(
+                                            value: genre.id.toString(),
+                                            child: Text(genre.name!,
+                                                style: TextStyle(
+                                                    color: Palette
+                                                        .midnightPurple)),
+                                          ),
+                                        )
+                                        .toList(),
+                                    FormBuilderFieldOption(
+                                      value: 'addGenre',
+                                      child: Icon(Icons.add_rounded,
+                                          color: Palette.darkPurple, size: 19),
+                                    ),
+                                  ],
+                                  initialValue: widget.anime?.genreAnimes
+                                          ?.map((genre) =>
+                                              genre.genreId.toString())
+                                          .toList() ??
+                                      []);
                             }
                           },
                         ),
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -299,8 +311,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         await _animeProvider.update(widget.anime!.id!, request: request);
       }
 
-      var selectedGenres =
-          _formKey.currentState?.value['genres'] as List<String>? ?? [];
+      var selectedGenres = (_formKey.currentState?.value['genres'] as List?)
+              ?.whereType<String>()
+              .toList() ??
+          [];
+
       await _genreAnimeProvider.saveGenresForAnime(
           widget.anime!.id!, selectedGenres);
 

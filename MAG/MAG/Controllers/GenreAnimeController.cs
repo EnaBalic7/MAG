@@ -12,7 +12,7 @@ namespace MAG.Controllers
         protected readonly IGenreAnimeService _service;
         public GenreAnimeController(IGenreAnimeService service) : base(service)
         {
-
+            _service = service;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -21,10 +21,11 @@ namespace MAG.Controllers
             return base.Update(id, update);
         }
 
-        [HttpDelete("{animeId}")]
-        public virtual async Task<Model.GenreAnime> DeleteAllGenres(int animeId)
+        [HttpDelete("DeleteAllGenres/{animeId}")]
+        public async Task<Model.GenreAnime> DeleteAllGenres(int animeId)
         {
             return await _service.DeleteAllGenres(animeId);
         }
+
     }
 }

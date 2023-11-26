@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
+import 'package:mag_admin/providers/genre_anime_provider.dart';
 import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
@@ -28,12 +29,19 @@ class _AnimeScreenState extends State<AnimeScreen> {
     context.read<AnimeProvider>().addListener(() {
       _reloadAnimeList();
     });
+    context.read<GenreAnimeProvider>().addListener(() {
+      _reloadAnimeList();
+    });
   }
 
   void _reloadAnimeList() {
-    setState(() {
-      _animeFuture = context.read<AnimeProvider>().get();
-    });
+    if (mounted) {
+      setState(() {
+        _animeFuture = context
+            .read<AnimeProvider>()
+            .get(filter: {"GenresIncluded": "true"});
+      });
+    }
   }
 
   @override
@@ -41,7 +49,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _animeProvider = context.read<AnimeProvider>();
-    _animeFuture = _animeProvider.get();
+    _animeFuture = _animeProvider.get(filter: {"GenresIncluded": "true"});
   }
 
   @override

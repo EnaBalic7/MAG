@@ -14,7 +14,7 @@ namespace MAG.Model
 
         public int AnimeId { get; set; }
 
-        public virtual Anime Anime { get; set; } = null!;
+       // public virtual Anime Anime { get; set; } = null!;
 
         public virtual Genre Genre { get; set; } = null!;
     }

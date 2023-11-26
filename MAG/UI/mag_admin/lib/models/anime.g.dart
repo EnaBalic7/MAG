@@ -23,6 +23,9 @@ Anime _$AnimeFromJson(Map<String, dynamic> json) => Anime(
           : DateTime.parse(json['finishAir'] as String),
       json['season'] as String?,
       json['studio'] as String?,
+      (json['genreAnimes'] as List<dynamic>?)
+          ?.map((e) => GenreAnime.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$AnimeToJson(Anime instance) => <String, dynamic>{
@@ -38,4 +41,5 @@ Map<String, dynamic> _$AnimeToJson(Anime instance) => <String, dynamic>{
       'finishAir': instance.finishAir?.toIso8601String(),
       'season': instance.season,
       'studio': instance.studio,
+      'genreAnimes': instance.genreAnimes,
     };

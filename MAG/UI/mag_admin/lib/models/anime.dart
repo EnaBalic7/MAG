@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mag_admin/models/genre_anime.dart';
 part 'anime.g.dart';
 
 // flutter pub run build_runner build --delete-conflicting-outputs -> one time
@@ -18,20 +19,22 @@ class Anime {
   DateTime? finishAir;
   String? season;
   String? studio;
-
+  List<GenreAnime>? genreAnimes;
   Anime(
-      this.id,
-      this.titleEn,
-      this.titleJp,
-      this.synopsis,
-      this.episodesNumber,
-      this.imageUrl,
-      this.trailerUrl,
-      this.score,
-      this.beginAir,
-      this.finishAir,
-      this.season,
-      this.studio);
+    this.id,
+    this.titleEn,
+    this.titleJp,
+    this.synopsis,
+    this.episodesNumber,
+    this.imageUrl,
+    this.trailerUrl,
+    this.score,
+    this.beginAir,
+    this.finishAir,
+    this.season,
+    this.studio,
+    this.genreAnimes,
+  );
 
   factory Anime.fromJson(Map<String, dynamic> json) => _$AnimeFromJson(json);
 

@@ -10,6 +10,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
   String _endpoint = "";
 
+  static String? get baseUrl => _baseUrl;
+
   HttpClient client = HttpClient();
   IOClient? http;
 

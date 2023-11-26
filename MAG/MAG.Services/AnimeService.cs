@@ -34,5 +34,17 @@ namespace MAG.Services
 
             return base.AddFilter(query, search);
         }
+
+        public override IQueryable<Database.Anime> AddInclude(IQueryable<Database.Anime> query, AnimeSearchObject? search = null)
+        {
+
+            if (search.GenresIncluded == true)
+            {
+                query = query.Include(x => x.GenreAnimes)
+                             .ThenInclude(genres => genres.Genre);
+            }
+
+            return base.AddInclude(query, search);
+        }
     }
 }

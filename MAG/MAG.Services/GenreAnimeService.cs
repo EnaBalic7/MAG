@@ -18,27 +18,33 @@ namespace MAG.Services
         protected IMapper _mapper { get; set; }
         public GenreAnimeService(MagContext context, IMapper mapper) : base(context, mapper)
         {
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<Model.GenreAnime> DeleteAllGenres(int animeId)
         {
             var set = _context.Set<Database.GenreAnime>();
 
-            var entity = await set.Where(x => x.AnimeId == animeId).ToListAsync();
+            var entityList = await set.Where(x => x.AnimeId == animeId).ToListAsync();
 
-            if (entity != null)
+            var entity = new Database.GenreAnime();
+
+            if (entityList.Count() != 0)
             {
-                set.RemoveRange(entity);
+                set.RemoveRange(entityList);
+                entity = entityList[0];
             }
-            else
-            {
-                throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided animeId [{animeId}]");
-            }
+            //else
+            //{
+            //    throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided animeId [{animeId}]");
+            //}
 
             await _context.SaveChangesAsync();
 
             return _mapper.Map<Model.GenreAnime>(entity);
 
         }
+
     }
 }
