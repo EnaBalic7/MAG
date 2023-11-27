@@ -60,7 +60,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           bottom: widget.paddingBottom!),
       child: SizedBox(
         width: widget.width,
-        height: widget.height,
+        height: widget.height ?? null,
         child: FormBuilderTextField(
           autovalidateMode: AutovalidateMode.always,
           validator: widget.validator,

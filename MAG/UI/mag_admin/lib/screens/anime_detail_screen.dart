@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -36,6 +38,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late GenreAnimeProvider _genreAnimeProvider;
   late Future<SearchResult<Genre>> _genreFuture;
   Map<String, dynamic> _initialValue = {};
+  bool? showGenresForm;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -73,6 +77,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       showBackArrow: true,
       title_widget: _title,
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(45.0),
@@ -224,11 +229,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           labelText: "Synopsis",
                           fillColor: Palette.darkPurple,
                           width: 1000,
-                          height: 200,
+                          // height: 500,
                           borderRadius: 15,
                           maxLines: null,
                           paddingTop: 40,
                           paddingLeft: 0,
+                          paddingBottom: 20,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
@@ -253,37 +259,89 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               var genreList = snapshot.data!.result;
 
                               return MyFormBuilderFilterChip(
-                                  labelText: "Genres",
-                                  name: 'genres',
-                                  options: [
-                                    ...genreList
-                                        .map(
-                                          (genre) => FormBuilderFieldOption(
-                                            value: genre.id.toString(),
-                                            child: Text(genre.name!,
-                                                style: TextStyle(
-                                                    color: Palette
-                                                        .midnightPurple)),
-                                          ),
-                                        )
-                                        .toList(),
-                                    FormBuilderFieldOption(
-                                      value: 'addGenre',
-                                      child: Icon(Icons.add_rounded,
-                                          color: Palette.darkPurple, size: 19),
-                                    ),
-                                  ],
-                                  initialValue: widget.anime?.genreAnimes
-                                          ?.map((genre) =>
-                                              genre.genreId.toString())
-                                          .toList() ??
-                                      []);
+                                labelText: "Genres",
+                                name: 'genres',
+                                options: [
+                                  ...genreList
+                                      .map(
+                                        (genre) => FormBuilderFieldOption(
+                                          value: genre.id.toString(),
+                                          child: Text(genre.name!,
+                                              style: TextStyle(
+                                                  color:
+                                                      Palette.midnightPurple)),
+                                        ),
+                                      )
+                                      .toList(),
+                                ],
+                                initialValue: widget.anime?.genreAnimes
+                                        ?.map(
+                                            (genre) => genre.genreId.toString())
+                                        .toList() ??
+                                    [],
+                              );
                             }
                           },
                         ),
                       ),
                     ],
                   ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: GradientButton(
+                          onPressed: () {
+                            setState(() {
+                              if (showGenresForm == false) {
+                                showGenresForm = true;
+                                WidgetsBinding.instance
+                                    ?.addPostFrameCallback((_) {
+                                  _scrollController.animateTo(
+                                    _scrollController.position.maxScrollExtent,
+                                    duration: Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut,
+                                  );
+                                });
+                              } else {
+                                showGenresForm = false;
+
+                                _scrollController.animateTo(
+                                  200,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
+                            });
+                          },
+                          width: 75,
+                          height: 30,
+                          gradient: Palette.buttonGradient,
+                          borderRadius: 50,
+                          child: Icon(Icons.add_rounded,
+                              size: 20, color: Palette.darkPurple),
+                        ),
+                      )
+                    ],
+                  ),
+                  if (showGenresForm == true)
+                    Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Palette.darkPurple,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        width: 300,
+                        height: 200,
+                        child: FormBuilder(
+                          child: Column(children: [
+                            Row(
+                              children: [],
+                            )
+                          ]),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -296,10 +354,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   Future<void> _saveAnimeData(BuildContext context) async {
     _formKey.currentState?.saveAndValidate();
     var request = Map.from(_formKey.currentState!.value);
+    Anime? response;
 
     try {
       if (widget.anime == null) {
-        await _animeProvider.insert(request);
+        response = await _animeProvider.insert(request);
         showInfoDialog(
             context,
             Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
@@ -309,6 +368,17 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             ));
       } else {
         await _animeProvider.update(widget.anime!.id!, request: request);
+        showInfoDialog(
+            context,
+            Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            Text(
+              "Updated successfully!",
+              textAlign: TextAlign.center,
+            ));
+      }
+
+      if (widget.anime == null && response != null) {
+        widget.anime = response;
       }
 
       var selectedGenres = (_formKey.currentState?.value['genres'] as List?)
@@ -318,14 +388,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
 
       await _genreAnimeProvider.saveGenresForAnime(
           widget.anime!.id!, selectedGenres);
-
-      showInfoDialog(
-          context,
-          Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-          Text(
-            "Updated successfully!",
-            textAlign: TextAlign.center,
-          ));
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
@@ -343,6 +405,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     }
   }
 
+//^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$
+//^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$
   Image _buildImage({String imageUrl = ""}) {
     if (imageUrl == "") {
       if (widget.anime?.imageUrl == null) {
@@ -350,11 +414,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
           "assets/images/emptyImg.png",
           width: 400,
         );
-      } else if (widget.anime!.imageUrl!.startsWith(RegExp(
-          r'^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$'))) {
+      } else if (widget.anime!.imageUrl!.startsWith(
+          RegExp(r'^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$'))) {
         return Image.network(
           widget.anime?.imageUrl ?? "",
           width: 400,
+          height: 500,
+          fit: BoxFit.cover,
         );
       } else {
         return Image.asset(
@@ -363,11 +429,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         );
       }
     } else {
-      if (imageUrl.startsWith(RegExp(
-          r'^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$'))) {
+      if (imageUrl.startsWith(
+          RegExp(r'^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$'))) {
         return Image.network(
           imageUrl,
           width: 400,
+          height: 500,
+          fit: BoxFit.cover,
         );
       } else {
         return Image.asset(

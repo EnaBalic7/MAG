@@ -12,8 +12,8 @@ class GradientButton extends StatefulWidget {
   GradientButton({
     Key? key,
     this.onPressed,
-    this.width,
-    this.height,
+    this.width = 0,
+    this.height = 0,
     this.borderRadius = 0,
     this.gradient,
     this.child,
