@@ -22,9 +22,9 @@ namespace MAG.Controllers
         }
 
         [HttpDelete("DeleteAllGenres/{animeId}")]
-        public async Task<Model.GenreAnime> DeleteAllGenres(int animeId)
+        public async Task<bool> DeleteAllGenres(int animeId)
         {
-            return await _service.DeleteAllGenres(animeId);
+           return await _service.DeleteAllGenres(animeId);
         }
 
     }

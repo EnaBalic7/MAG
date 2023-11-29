@@ -318,17 +318,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                         child: GradientButton(
                           onPressed: () {
                             setState(() {
-                              if (showGenresForm == false) {
-                                showGenresForm = true;
-                              } else {
-                                showGenresForm = false;
-
-                                _scrollController.animateTo(
-                                  200,
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.easeInOut,
-                                );
-                              }
+                              showGenresForm = true;
                             });
                           },
                           width: 75,
@@ -427,6 +417,20 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                                 ),
                                 Wrap(
                                   children: _buildGenres(genreList),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.close_rounded,
+                                      color: Palette.lightPurple, size: 24),
+                                  onPressed: () {
+                                    setState(() {
+                                      showGenresForm = false;
+                                      _scrollController.animateTo(
+                                        200,
+                                        duration: Duration(milliseconds: 500),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    });
+                                  },
                                 ),
                               ],
                             ),

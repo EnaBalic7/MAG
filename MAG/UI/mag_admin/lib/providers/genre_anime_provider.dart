@@ -20,7 +20,7 @@ class GenreAnimeProvider extends BaseProvider<GenreAnime> {
     }
   }
 
-  Future<GenreAnime> deleteGenresForAnime(int animeId) async {
+  Future<bool> deleteGenresForAnime(int animeId) async {
     var url = "${BaseProvider.baseUrl}$_endpoint/DeleteAllGenres/$animeId";
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -28,12 +28,12 @@ class GenreAnimeProvider extends BaseProvider<GenreAnime> {
     var response = await http!.delete(uri, headers: headers);
 
     if (isValidResponse(response)) {
-      if (response.body != "[]") {
-        var data = jsonDecode(response.body);
+      if (response.body == "true") {
+        //var data = jsonDecode(response.body);
         notifyListeners();
-        return fromJson(data);
+        return true;
       }
-      return GenreAnime(0, 0, 0);
+      return true;
     } else {
       throw Exception("Unknown error");
     }

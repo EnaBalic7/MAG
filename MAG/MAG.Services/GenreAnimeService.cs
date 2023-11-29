@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace MAG.Services
 {
     public class GenreAnimeService : BaseCRUDService<Model.GenreAnime, Database.GenreAnime, GenreAnimeSearchObject, GenreAnimeInsertRequest, GenreAnimeUpdateRequest>, IGenreAnimeService
@@ -22,27 +23,20 @@ namespace MAG.Services
             _mapper = mapper;
         }
 
-        public async Task<Model.GenreAnime> DeleteAllGenres(int animeId)
+        public async Task<bool> DeleteAllGenres(int animeId)
         {
             var set = _context.Set<Database.GenreAnime>();
-
+            
             var entityList = await set.Where(x => x.AnimeId == animeId).ToListAsync();
-
-            var entity = new Database.GenreAnime();
 
             if (entityList.Count() != 0)
             {
                 set.RemoveRange(entityList);
-                entity = entityList[0];
+
+                await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided animeId [{animeId}]");
-            //}
 
-            await _context.SaveChangesAsync();
-
-            return _mapper.Map<Model.GenreAnime>(entity);
+            return true;
 
         }
 
