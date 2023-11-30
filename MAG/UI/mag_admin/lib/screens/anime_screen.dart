@@ -20,6 +20,7 @@ class AnimeScreen extends StatefulWidget {
 
 class _AnimeScreenState extends State<AnimeScreen> {
   late AnimeProvider _animeProvider;
+  late GenreAnimeProvider _genreAnimeProvider;
   SearchResult<Anime>? result;
   late Future<SearchResult<Anime>> _animeFuture;
   TextEditingController _animeController = TextEditingController();
@@ -50,6 +51,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
     super.didChangeDependencies();
     _animeProvider = context.read<AnimeProvider>();
     _animeFuture = _animeProvider.get(filter: {"GenresIncluded": "true"});
+    _genreAnimeProvider = context.read<GenreAnimeProvider>();
   }
 
   @override
@@ -174,7 +176,8 @@ class _AnimeScreenState extends State<AnimeScreen> {
                             Icon(Icons.warning_rounded,
                                 color: Palette.lightRed, size: 55),
                             Text("Are you sure you want to delete this anime?"),
-                            () {
+                            () async {
+                          await _genreAnimeProvider.deleteByAnimeId(anime.id!);
                           _animeProvider.delete(anime.id!);
                         });
                       },

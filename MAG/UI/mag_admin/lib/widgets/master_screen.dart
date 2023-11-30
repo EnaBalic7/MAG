@@ -4,6 +4,7 @@ import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
+import 'package:mag_admin/screens/help_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import './/main.dart';
@@ -23,7 +24,7 @@ class MasterScreenWidget extends StatefulWidget {
   GradientButton? gradientButton;
   MasterScreenWidget({
     Key? key,
-    this.child,
+    required this.child,
     this.title,
     this.title_widget,
     this.controller,
@@ -86,7 +87,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         buildListTile(context, 'Users', buildUsersIcon(), LoginPage()),
         buildListTile(context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
         buildListTile(context, 'Clubs', buildClubsIcon(), LoginPage()),
-        buildListTile(context, 'Help', buildHelpIcon(), LoginPage())
+        buildListTile(context, 'Help', buildHelpIcon(), HelpScreen())
       ])),
       body: Stack(children: [
         Positioned.fill(

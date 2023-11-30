@@ -13,15 +13,15 @@ class GenreAnimeProvider extends BaseProvider<GenreAnime> {
   }
 
   Future<void> saveGenresForAnime(int animeId, List<String> genreIds) async {
-    await deleteGenresForAnime(animeId);
+    await deleteByAnimeId(animeId);
 
     for (var genreId in genreIds) {
       await insert(GenreAnime(null, int.parse(genreId), animeId));
     }
   }
 
-  Future<bool> deleteGenresForAnime(int animeId) async {
-    var url = "${BaseProvider.baseUrl}$_endpoint/DeleteAllGenres/$animeId";
+  Future<bool> deleteByAnimeId(int animeId) async {
+    var url = "${BaseProvider.baseUrl}$_endpoint/DeleteByAnimeId/$animeId";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
@@ -33,6 +33,20 @@ class GenreAnimeProvider extends BaseProvider<GenreAnime> {
         notifyListeners();
         return true;
       }
+      return true;
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
+  Future<bool> deleteByGenreId(int genreId) async {
+    var url = "${BaseProvider.baseUrl}$_endpoint/DeleteByGenreId/$genreId";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http!.delete(uri, headers: headers);
+
+    if (isValidResponse(response)) {
       return true;
     } else {
       throw Exception("Unknown error");

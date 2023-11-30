@@ -475,7 +475,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                             Icon(Icons.warning_rounded,
                                 color: Palette.lightRed, size: 55),
                             Text("Are you sure you want to delete this genre?"),
-                            () {
+                            () async {
+                          await _genreAnimeProvider
+                              .deleteByGenreId(genreList[index].id!);
                           _genreProvider.delete(genreList[index].id!);
                         });
                       },
