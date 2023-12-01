@@ -15,9 +15,12 @@ class MyFormBuilderTextField extends StatefulWidget {
   double? height;
   bool? readOnly;
   double? borderRadius;
+  double? borderWidth;
+  Color? borderColor;
   TextInputType? keyboardType;
   String? initialValue;
   int? maxLines;
+  int? minLines;
   double? paddingLeft;
   double? paddingRight;
   double? paddingTop;
@@ -37,12 +40,15 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.keyboardType,
     this.initialValue,
     this.maxLines = 1,
-    this.paddingLeft = 40,
+    this.minLines = 1,
+    this.paddingLeft = 0,
     this.paddingRight = 0,
     this.paddingTop = 0,
-    this.paddingBottom = 50,
+    this.paddingBottom = 0,
     this.onChanged,
     this.validator,
+    this.borderWidth = 0,
+    this.borderColor = Colors.transparent,
   }) : super(key: key);
 
   @override
@@ -62,6 +68,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         width: widget.width,
         height: widget.height ?? null,
         child: FormBuilderTextField(
+          initialValue: widget.initialValue,
+          minLines: widget.minLines,
           autovalidateMode: AutovalidateMode.always,
           validator: widget.validator,
           onChanged: widget.onChanged,
@@ -88,8 +96,12 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
               color: Palette.lightPurple,
             ),
             fillColor: _fillColor(),
-            border: OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
+              borderSide: BorderSide(
+                color: widget.borderColor!,
+                width: widget.borderWidth ?? 0,
+              ),
             ),
           ),
         ),

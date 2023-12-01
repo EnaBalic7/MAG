@@ -29,10 +29,10 @@ class MyFormBuilderDropdown extends StatefulWidget {
     this.height,
     this.borderRadius,
     this.initialValue,
-    this.paddingLeft = 40,
+    this.paddingLeft = 0,
     this.paddingRight = 0,
     this.paddingTop = 0,
-    this.paddingBottom = 50,
+    this.paddingBottom = 0,
     this.onChanged,
     this.icon,
   }) : super(key: key);

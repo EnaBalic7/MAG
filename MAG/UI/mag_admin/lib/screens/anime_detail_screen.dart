@@ -126,6 +126,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               onChanged: (newTitle) {
                                 setState(() {
@@ -143,6 +145,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
@@ -154,6 +158,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
@@ -168,6 +174,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               readOnly: true,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               keyboardType: TextInputType.number,
                             ),
@@ -177,6 +185,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                             ),
                             MyDateTimePicker(
@@ -185,6 +195,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                             ),
                             MyFormBuilderDropdown(
@@ -193,6 +205,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               icon: Icon(
                                 Icons.sunny_snowing,
@@ -206,6 +220,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 45,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
@@ -217,6 +233,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
@@ -235,6 +253,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                               fillColor: Palette.darkPurple,
                               width: 500,
                               height: 50,
+                              paddingLeft: 40,
+                              paddingBottom: 50,
                               borderRadius: 50,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(context),
@@ -253,10 +273,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                           name: "synopsis",
                           labelText: "Synopsis",
                           fillColor: Palette.darkPurple,
-                          width: 1000,
+                          // width: 1000,
                           // height: 500,
+                          minLines: 10,
+                          maxLines: 10,
                           borderRadius: 15,
-                          maxLines: null,
                           paddingTop: 40,
                           paddingLeft: 0,
                           paddingBottom: 20,
@@ -392,10 +413,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                                       width: 300,
                                       height: 50,
                                       borderRadius: 50,
-                                      paddingBottom: 0,
-                                      paddingLeft: 0,
-                                      paddingRight: 0,
-                                      paddingTop: 0,
                                       validator: FormBuilderValidators.compose([
                                         FormBuilderValidators.required(context),
                                       ]),
