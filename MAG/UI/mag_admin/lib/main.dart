@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:mag_admin/providers/genre_anime_provider.dart';
 import 'package:mag_admin/providers/genre_provider.dart';
+import 'package:mag_admin/providers/qa_category_provider.dart';
+import 'package:mag_admin/providers/qa_provider.dart';
+import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/text_field.dart';
@@ -14,7 +17,10 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AnimeProvider()),
     ChangeNotifierProvider(create: (_) => GenreProvider()),
-    ChangeNotifierProvider(create: (_) => GenreAnimeProvider())
+    ChangeNotifierProvider(create: (_) => GenreAnimeProvider()),
+    ChangeNotifierProvider(create: (_) => QAProvider()),
+    ChangeNotifierProvider(create: (_) => QAcategoryProvider()),
+    ChangeNotifierProvider(create: (_) => UserProvider()),
   ], child: const MyMaterialApp()));
 }
 

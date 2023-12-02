@@ -48,7 +48,13 @@ Stack buildPdfIcon() {
 
 Icon buildAstronautIcon() => Icon(IconData(0xe90a, fontFamily: 'icomoon'));
 
-Icon buildEditIcon() => Icon(IconData(0xe90c, fontFamily: 'icomoon'));
+Icon buildEditIcon(double size) {
+  return Icon(
+    IconData(0xe90c, fontFamily: 'icomoon'),
+    color: Palette.lightPurple,
+    size: size,
+  );
+}
 
 dynamic buildSearchIcon(bool returnIconData) {
   if (returnIconData == true) {
