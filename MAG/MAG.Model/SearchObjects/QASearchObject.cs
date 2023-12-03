@@ -9,5 +9,7 @@ namespace MAG.Model.SearchObjects
     public class QASearchObject : BaseSearchObject
     {
         public string? FTS { get; set; }
+        public bool? UserIncluded { get; set; }
+        public bool? CategoryIncluded { get; set; }
     }
 }

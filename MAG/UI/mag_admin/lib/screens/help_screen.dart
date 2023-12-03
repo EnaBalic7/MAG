@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../models/qa.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
+import '../utils/util.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({Key? key}) : super(key: key);
@@ -24,12 +25,23 @@ class _HelpScreenState extends State<HelpScreen> {
   ScrollController scrollController = ScrollController();
   late QAProvider _qaProvider;
   late Future<SearchResult<QA>> _qaFuture;
+  Map<String, dynamic> _initialValue = {};
+  int? qaID;
+
+  final _QAFormKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
     super.initState();
     _qaProvider = context.read<QAProvider>();
-    _qaFuture = _qaProvider.get();
+    _qaFuture = _qaProvider
+        .get(filter: {"UserIncluded": "true", "CategoryIncluded": "true"});
+
+    _initialValue = {
+      "answer": "",
+      "question": "",
+      "displayed": true,
+    };
   }
 
   @override
@@ -50,8 +62,10 @@ class _HelpScreenState extends State<HelpScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 40, top: 40),
                 child: FormBuilder(
+                  key: _QAFormKey,
+                  initialValue: _initialValue,
                   child: MyFormBuilderTextField(
-                    name: "test",
+                    name: "answer",
                     fillColor: Palette.darkPurple,
                     width: 500,
                     height: 600,
@@ -59,8 +73,6 @@ class _HelpScreenState extends State<HelpScreen> {
                     minLines: 40,
                     maxLines: 40,
                     borderColor: Palette.lightPurple.withOpacity(0.3),
-                    initialValue:
-                        "We do not have plans to implement a light mode. The way to create your own list is the following: \nYou go to the suitable screen, and click some buttons, and then poof - Magic happens. Have you ever wondered about complexities of life? For example, why do magicians flaunt shiny things? Word's around they do it when there is something else they don't want you to see.",
                   ),
                 ),
               ),
@@ -76,6 +88,30 @@ class _HelpScreenState extends State<HelpScreen> {
                         color: Palette.midnightPurple,
                         fontWeight: FontWeight.w500,
                         fontSize: 15)),
+                onPressed: () async {
+                  _QAFormKey.currentState?.saveAndValidate();
+                  var tmp = Map.from(_QAFormKey.currentState!.value);
+                  var request = {
+                    "answer": tmp["answer"].toString(),
+                    "question": _initialValue["question"].toString(),
+                    "displayed": true,
+                  };
+                  try {
+                    if (qaID != null) {
+                      await _qaProvider.update(qaID!, request: request);
+                      showInfoDialog(
+                          context,
+                          Icon(Icons.task_alt,
+                              color: Palette.lightPurple, size: 50),
+                          Text(
+                            "Answered successfully!",
+                            textAlign: TextAlign.center,
+                          ));
+                    }
+                  } on Exception catch (e) {
+                    showErrorDialog(context, e);
+                  }
+                },
               ),
             ],
           ),
@@ -136,17 +172,50 @@ class _HelpScreenState extends State<HelpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Text(
-                      "How can I solve this issue? Can you explain Constellations to me?",
+                  child: Text(qa.question.toString(),
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                 ),
                 Container(
                     child: Row(
                   children: [
-                    buildEditIcon(24),
+                    IconButton(
+                        constraints:
+                            BoxConstraints(maxHeight: 24, maxWidth: 24),
+                        alignment: Alignment.topCenter,
+                        tooltip: "Add or edit answer",
+                        visualDensity:
+                            VisualDensity(horizontal: -4, vertical: -4),
+                        padding: EdgeInsets.zero,
+                        splashRadius: 0.1,
+                        onPressed: () {
+                          setState(() {
+                            _initialValue["question"] = qa.question.toString();
+                            qaID = qa.id;
+                            _QAFormKey.currentState!.fields["answer"]!
+                                .didChange(qa.answer.toString());
+                          });
+                        },
+                        icon: buildEditIcon(24)),
                     SizedBox(width: 10),
-                    buildTrashIcon(24),
+                    IconButton(
+                        constraints:
+                            BoxConstraints(maxHeight: 24, maxWidth: 24),
+                        alignment: Alignment.topCenter,
+                        tooltip: "Delete question",
+                        visualDensity:
+                            VisualDensity(horizontal: -4, vertical: -4),
+                        padding: EdgeInsets.zero,
+                        splashRadius: 0.1,
+                        onPressed: () {},
+                        icon: buildTrashIcon(24)),
+
+                    /* GestureDetector(
+                        onTap: () {},
+                        child: MouseRegion(child: buildEditIcon(24))),
+                    GestureDetector(
+                        onTap: () {},
+                        child: MouseRegion(child: buildTrashIcon(24))),*/
                   ],
                 ))
               ],
@@ -162,20 +231,20 @@ class _HelpScreenState extends State<HelpScreen> {
                         Row(
                           children: [
                             Icon(Icons.person_rounded,
-                                size: 17, color: Palette.lightPurple),
+                                size: 19, color: Palette.lightPurple),
                             SizedBox(width: 5),
-                            Text("Nezuko Kamado"),
+                            Text(qa.user.username.toString()),
                           ],
                         ),
                         GradientButton(
                             contentPaddingLeft: 5,
                             contentPaddingRight: 5,
                             contentPaddingBottom: 1,
-                            contentPaddingTop: 1,
+                            contentPaddingTop: 0,
                             borderRadius: 50,
                             gradient: Palette.menuGradient,
                             child: Text(
-                              "General",
+                              qa.category.name.toString(),
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Palette.lightPurple,
@@ -190,11 +259,12 @@ class _HelpScreenState extends State<HelpScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Container(
-                height: 100,
+                constraints: BoxConstraints(minHeight: 30, maxHeight: 100),
+                //height: 100,
                 child: SingleChildScrollView(
                   controller: ScrollController(),
                   child: Text(
-                    "We do not have plans to implement a light mode. The way to create your own list is the following: \nYou go to the suitable screen, and click some buttons, and then poof - Magic happens. Have you ever wondered about complexities of life? For example, why do magicians flaunt shiny things? Word's around they do it when there is something else they don't want you to see.",
+                    qa.answer.toString(),
                     style: TextStyle(fontSize: 15),
                   ),
                 ),

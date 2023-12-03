@@ -2,6 +2,7 @@
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,22 @@ namespace MAG.Services
             }
 
             return base.AddFilter(query, search);
+        }
+
+        public override IQueryable<QA> AddInclude(IQueryable<QA> query, QASearchObject? search = null)
+        {
+
+            if (search.UserIncluded == true)
+            {
+                query = query.Include(x => x.User);
+            }
+
+            if (search.CategoryIncluded == true)
+            {
+                query = query.Include(x => x.Category);
+            }
+
+            return base.AddInclude(query, search);
         }
     }
 }
