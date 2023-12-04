@@ -11,5 +11,6 @@ namespace MAG.Model.SearchObjects
         public string? FTS { get; set; }
         public bool? UserIncluded { get; set; }
         public bool? CategoryIncluded { get; set; }
+        public bool? NewestFirst { get; set; }
     }
 }

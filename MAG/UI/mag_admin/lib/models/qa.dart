@@ -12,8 +12,8 @@ class QA {
   String? question;
   String? answer;
   bool? displayed;
-  QAcategory category;
-  User user;
+  QAcategory? category;
+  User? user;
 
   QA(this.id, this.userId, this.categoryId, this.question, this.answer,
       this.displayed, this.category, this.user);

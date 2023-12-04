@@ -13,8 +13,12 @@ QA _$QAFromJson(Map<String, dynamic> json) => QA(
       json['question'] as String?,
       json['answer'] as String?,
       json['displayed'] as bool?,
-      QAcategory.fromJson(json['category'] as Map<String, dynamic>),
-      User.fromJson(json['user'] as Map<String, dynamic>),
+      json['category'] == null
+          ? null
+          : QAcategory.fromJson(json['category'] as Map<String, dynamic>),
+      json['user'] == null
+          ? null
+          : User.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$QAToJson(QA instance) => <String, dynamic>{

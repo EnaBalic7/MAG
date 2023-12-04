@@ -100,11 +100,67 @@ class _AnimeScreenState extends State<AnimeScreen> {
   List<Widget> _buildAnimeCards(List<Anime> animeList) {
     return List.generate(
       animeList.length,
-      (index) => buildAnimeCard(animeList[index]),
+      (index) => _buildAnimeCard(animeList[index]),
     );
   }
 
-  Widget buildAnimeCard(Anime anime) {
+  Widget _buildPopupMenu(Anime anime) {
+    return PopupMenuButton<String>(
+      tooltip: "Actions",
+      offset: Offset(250, 0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+      ),
+      icon: Icon(Icons.more_vert_rounded),
+      splashRadius: 1,
+      padding: EdgeInsets.zero,
+      color: Color.fromRGBO(50, 48, 90, 1),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightPurple.withOpacity(0.1),
+            leading:
+                Icon(Icons.visibility_off_outlined, color: Palette.lightPurple),
+            title: Text('See details',
+                style: TextStyle(color: Palette.lightPurple)),
+            subtitle: Text('See more information about this anime',
+                style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AnimeDetailScreen(anime: anime)));
+            },
+          ),
+        ),
+        PopupMenuItem<String>(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightRed.withOpacity(0.1),
+            leading: buildTrashIcon(24),
+            title: Text('Delete', style: TextStyle(color: Palette.lightRed)),
+            subtitle: Text('Delete permanently',
+                style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
+            onTap: () {
+              showConfirmationDialog(
+                  context,
+                  Icon(Icons.warning_rounded,
+                      color: Palette.lightRed, size: 55),
+                  Text("Are you sure you want to delete this anime?"),
+                  () async {
+                await _genreAnimeProvider.deleteByAnimeId(anime.id!);
+                _animeProvider.delete(anime.id!);
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnimeCard(Anime anime) {
     return Container(
         width: 290,
         height: 453,
@@ -146,44 +202,20 @@ class _AnimeScreenState extends State<AnimeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(
                           bottom: 10, left: 0, right: 0, top: 5),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  AnimeDetailScreen(anime: anime)));
-                        },
-                        child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Text(
-                            anime.titleEn!,
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                      child: Text(
+                        anime.titleEn!,
+                        overflow: TextOverflow.clip,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 7, left: 5, right: 5, bottom: 5),
-                  child: GestureDetector(
-                      onTap: () {
-                        showConfirmationDialog(
-                            context,
-                            Icon(Icons.warning_rounded,
-                                color: Palette.lightRed, size: 55),
-                            Text("Are you sure you want to delete this anime?"),
-                            () async {
-                          await _genreAnimeProvider.deleteByAnimeId(anime.id!);
-                          _animeProvider.delete(anime.id!);
-                        });
-                      },
-                      child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: buildTrashIcon(20))),
+                      top: 0, left: 0, right: 0, bottom: 0),
+                  child: _buildPopupMenu(anime),
                 ),
               ],
             ),

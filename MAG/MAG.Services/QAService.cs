@@ -24,6 +24,11 @@ namespace MAG.Services
                 query = query.Where(x => x.Question.Contains(search.FTS) || x.Answer.Contains(search.FTS));
             }
 
+            if (search.NewestFirst == true)
+            {
+                query = query.OrderByDescending(x => x.Id);
+            }
+
             return base.AddFilter(query, search);
         }
 
