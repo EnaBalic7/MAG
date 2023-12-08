@@ -107,7 +107,6 @@ class _AnimeScreenState extends State<AnimeScreen> {
   Widget _buildPopupMenu(Anime anime) {
     return PopupMenuButton<String>(
       tooltip: "Actions",
-      offset: Offset(250, 0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
@@ -123,7 +122,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
             visualDensity: VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
             leading:
-                Icon(Icons.visibility_off_outlined, color: Palette.lightPurple),
+                Icon(Icons.text_snippet_rounded, color: Palette.lightPurple),
             title: Text('See details',
                 style: TextStyle(color: Palette.lightPurple)),
             subtitle: Text('See more information about this anime',

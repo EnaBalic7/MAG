@@ -81,6 +81,13 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           obscuringCharacter: '✮',
           obscureText: widget.obscureText ?? false,
           decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
+              borderSide: BorderSide(
+                color: widget.borderColor!,
+                width: widget.borderWidth ?? 0,
+              ),
+            ),
             focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),

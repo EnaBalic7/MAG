@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/qa_provider.dart';
 import 'package:mag_admin/utils/icons.dart';
+import 'package:mag_admin/widgets/form_builder_dropdown.dart';
 import 'package:mag_admin/widgets/form_builder_text_field.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
@@ -29,6 +30,8 @@ class _HelpScreenState extends State<HelpScreen> {
   int? qaID;
   String? _questionTitle = "";
   final _QAFormKey = GlobalKey<FormBuilderState>();
+  final _QAfilterFormKey = GlobalKey<FormBuilderState>();
+  Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
 
   @override
   void initState() {
@@ -53,13 +56,42 @@ class _HelpScreenState extends State<HelpScreen> {
 
   void _reloadQAList() {
     if (mounted) {
-      setState(() {
-        _qaFuture = context.read<QAProvider>().get(filter: {
-          "UserIncluded": "true",
-          "CategoryIncluded": "true",
-          "NewestFirst": "true"
+      if (_selectedQAFilter == "All") {
+        setState(() {
+          _qaFuture = context.read<QAProvider>().get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true"
+          });
         });
-      });
+      } else if (_selectedQAFilter == "Unanswered") {
+        setState(() {
+          _qaFuture = context.read<QAProvider>().get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            "UnansweredOnly": "true"
+          });
+        });
+      } else if (_selectedQAFilter == "Hidden") {
+        setState(() {
+          _qaFuture = context.read<QAProvider>().get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            "HiddenOnly": "true"
+          });
+        });
+      } else if (_selectedQAFilter == "Displayed") {
+        setState(() {
+          _qaFuture = context.read<QAProvider>().get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            "DisplayedOnly": "true"
+          });
+        });
+      }
     }
   }
 
@@ -73,6 +105,7 @@ class _HelpScreenState extends State<HelpScreen> {
     return MasterScreenWidget(
         child: Center(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -173,16 +206,65 @@ class _HelpScreenState extends State<HelpScreen> {
                     } else {
                       // Data loaded successfully
                       var qaList = snapshot.data!.result;
-                      return Container(
-                        child: Column(
-                          children: [
-                            Wrap(
-                              children: _buildQACards(qaList),
-                              crossAxisAlignment: WrapCrossAlignment.start,
-                              alignment: WrapAlignment.start,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FormBuilder(
+                            key: _QAfilterFormKey,
+                            initialValue: _selectedQAFilter,
+                            child: MyFormBuilderDropdown(
+                              name: "QAfilter",
+                              width: 130,
+                              height: 50,
+                              borderRadius: 15,
+                              paddingRight: 15,
+                              onChanged: (filter) {
+                                setState(() {
+                                  _selectedQAFilter["QAfilter"] =
+                                      filter.toString();
+                                });
+                                _filterQA(filter!);
+                              },
+                              icon: Icon(Icons.filter_alt,
+                                  color: Palette.lightPurple),
+                              items: [
+                                DropdownMenuItem(
+                                    value: 'All', child: Text('All')),
+                                DropdownMenuItem(
+                                    value: 'Unanswered',
+                                    child: Text('Unanswered')),
+                                DropdownMenuItem(
+                                    value: 'Hidden', child: Text('Hidden')),
+                                DropdownMenuItem(
+                                    value: 'Displayed',
+                                    child: Text('Displayed')),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          LayoutBuilder(builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            double maxSeparatorWidth =
+                                constraints.maxWidth - 100;
+                            return Padding(
+                              padding: EdgeInsets.only(right: 25),
+                              child: Container(
+                                height: 1,
+                                width: maxSeparatorWidth,
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Palette.lightPurple.withOpacity(0.5),
+                                ),
+                              ),
+                            );
+                          }),
+                          Wrap(
+                            children: _buildQACards(qaList),
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            alignment: WrapAlignment.start,
+                          ),
+                        ],
                       );
                     }
                   },
@@ -431,6 +513,45 @@ class _HelpScreenState extends State<HelpScreen> {
       }
     } on Exception catch (e) {
       showErrorDialog(context, e);
+    }
+  }
+
+  void _filterQA(String filter) {
+    if (filter == "All") {
+      setState(() {
+        _qaFuture = _qaProvider.get(filter: {
+          "UserIncluded": "true",
+          "CategoryIncluded": "true",
+          "NewestFirst": "true",
+        });
+      });
+    } else if (filter == "Unanswered") {
+      setState(() {
+        _qaFuture = _qaProvider.get(filter: {
+          "UserIncluded": "true",
+          "CategoryIncluded": "true",
+          "NewestFirst": "true",
+          "UnansweredOnly": "true"
+        });
+      });
+    } else if (filter == "Hidden") {
+      setState(() {
+        _qaFuture = _qaProvider.get(filter: {
+          "UserIncluded": "true",
+          "CategoryIncluded": "true",
+          "NewestFirst": "true",
+          "HiddenOnly": "true"
+        });
+      });
+    } else if (filter == "Displayed") {
+      setState(() {
+        _qaFuture = _qaProvider.get(filter: {
+          "UserIncluded": "true",
+          "CategoryIncluded": "true",
+          "NewestFirst": "true",
+          "DisplayedOnly": "true"
+        });
+      });
     }
   }
 }

@@ -29,6 +29,21 @@ namespace MAG.Services
                 query = query.OrderByDescending(x => x.Id);
             }
 
+            if (search.UnansweredOnly == true)
+            {
+                query = query.Where(x => string.IsNullOrWhiteSpace(x.Answer));
+            }
+
+            if (search.HiddenOnly == true)
+            {
+                query = query.Where(x => x.Displayed == false);
+            }
+
+            if (search.DisplayedOnly == true)
+            {
+                query = query.Where(x => x.Displayed == true);
+            }
+
             return base.AddFilter(query, search);
         }
 

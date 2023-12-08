@@ -118,150 +118,168 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                         child: _image,
                       ),
                       Expanded(
-                        child: Wrap(
-                          children: [
-                            MyFormBuilderTextField(
-                              name: "titleEn",
-                              labelText: "Title (English)",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              onChanged: (newTitle) {
-                                setState(() {
-                                  widget.anime?.titleEn = newTitle;
-                                  _title = _buildTitle(title: newTitle!);
-                                });
-                              },
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
-                            MyFormBuilderTextField(
-                              name: "titleJp",
-                              labelText: "Title (Japanese)",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
-                            MyFormBuilderTextField(
-                              name: "episodesNumber",
-                              labelText: "Number of episodes",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              keyboardType: TextInputType.number,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                                FormBuilderValidators.integer(context),
-                              ]),
-                            ),
-                            MyFormBuilderTextField(
-                              name: "score",
-                              labelText: "Score",
-                              fillColor: Palette.darkPurple,
-                              readOnly: true,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              keyboardType: TextInputType.number,
-                            ),
-                            MyDateTimePicker(
-                              name: "beginAir",
-                              labelText: "Began airing",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                            ),
-                            MyDateTimePicker(
-                              name: "finishAir",
-                              labelText: "Finished airing",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                            ),
-                            MyFormBuilderDropdown(
-                              name: "season",
-                              labelText: "Season",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              icon: Icon(
-                                Icons.sunny_snowing,
-                                color: Palette.lightPurple,
-                              ),
-                              //initialValue: _initialValue['season'],
-                            ),
-                            MyFormBuilderTextField(
-                              name: "studio",
-                              labelText: "Studio",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 45,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                              ]),
-                            ),
-                            MyFormBuilderTextField(
-                              name: "imageUrl",
-                              labelText: "Image URL",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                                FormBuilderValidators.url(context),
-                              ]),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  widget.anime?.imageUrl = newValue;
-                                  _image = _buildImage(imageUrl: newValue!);
-                                });
-                              },
-                            ),
-                            MyFormBuilderTextField(
-                              name: "trailerUrl",
-                              labelText: "Trailer URL",
-                              fillColor: Palette.darkPurple,
-                              width: 500,
-                              height: 50,
-                              paddingLeft: 40,
-                              paddingBottom: 50,
-                              borderRadius: 50,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(context),
-                                FormBuilderValidators.url(context),
-                              ]),
-                            ),
-                          ],
+                        child: LayoutBuilder(
+                          builder: (BuildContext context,
+                              BoxConstraints constraints) {
+                            double maxTextFieldWidth =
+                                constraints.maxWidth / 2.5;
+
+                            return Wrap(
+                              children: [
+                                MyFormBuilderTextField(
+                                  name: "titleEn",
+                                  labelText: "Title (English)",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  onChanged: (newTitle) {
+                                    setState(() {
+                                      widget.anime?.titleEn = newTitle;
+                                      _title = _buildTitle(title: newTitle!);
+                                    });
+                                  },
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                  ]),
+                                ),
+                                MyFormBuilderTextField(
+                                  name: "titleJp",
+                                  labelText: "Title (Japanese)",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                  ]),
+                                ),
+                                MyFormBuilderTextField(
+                                  name: "episodesNumber",
+                                  labelText: "Number of episodes",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  keyboardType: TextInputType.number,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                    FormBuilderValidators.integer(context),
+                                  ]),
+                                ),
+                                MyFormBuilderTextField(
+                                  name: "score",
+                                  labelText: "Score",
+                                  fillColor: Palette.darkPurple,
+                                  readOnly: true,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  keyboardType: TextInputType.number,
+                                ),
+                                MyDateTimePicker(
+                                  name: "beginAir",
+                                  labelText: "Began airing",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                ),
+                                MyDateTimePicker(
+                                  name: "finishAir",
+                                  labelText: "Finished airing",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                ),
+                                MyFormBuilderDropdown(
+                                  name: "season",
+                                  labelText: "Season",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  items: [
+                                    DropdownMenuItem(
+                                        value: 'Spring', child: Text('Spring')),
+                                    DropdownMenuItem(
+                                        value: 'Summer', child: Text('Summer')),
+                                    DropdownMenuItem(
+                                        value: 'Fall', child: Text('Fall')),
+                                    DropdownMenuItem(
+                                        value: 'Winter', child: Text('Winter')),
+                                  ],
+                                  icon: Icon(
+                                    Icons.sunny_snowing,
+                                    color: Palette.lightPurple,
+                                  ),
+                                  //initialValue: _initialValue['season'],
+                                ),
+                                MyFormBuilderTextField(
+                                  name: "studio",
+                                  labelText: "Studio",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 45,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                  ]),
+                                ),
+                                MyFormBuilderTextField(
+                                  name: "imageUrl",
+                                  labelText: "Image URL",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                    FormBuilderValidators.url(context),
+                                  ]),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      widget.anime?.imageUrl = newValue;
+                                      _image = _buildImage(imageUrl: newValue!);
+                                    });
+                                  },
+                                ),
+                                MyFormBuilderTextField(
+                                  name: "trailerUrl",
+                                  labelText: "Trailer URL",
+                                  fillColor: Palette.darkPurple,
+                                  width: maxTextFieldWidth,
+                                  height: 50,
+                                  paddingLeft: 40,
+                                  paddingBottom: 50,
+                                  borderRadius: 50,
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context),
+                                    FormBuilderValidators.url(context),
+                                  ]),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ],

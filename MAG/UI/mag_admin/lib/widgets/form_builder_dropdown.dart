@@ -19,7 +19,8 @@ class MyFormBuilderDropdown extends StatefulWidget {
   double? paddingTop;
   double? paddingBottom;
   Widget? icon;
-  void Function(Object?)? onChanged;
+  void Function(String?)? onChanged;
+  List<DropdownMenuItem<String>> items;
   MyFormBuilderDropdown({
     Key? key,
     required this.name,
@@ -35,6 +36,7 @@ class MyFormBuilderDropdown extends StatefulWidget {
     this.paddingBottom = 0,
     this.onChanged,
     this.icon,
+    required this.items,
   }) : super(key: key);
 
   @override
@@ -56,12 +58,7 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
         child: FormBuilderDropdown(
           icon: widget.icon,
           dropdownColor: Palette.darkPurple,
-          items: [
-            DropdownMenuItem(value: 'Spring', child: Text('Spring')),
-            DropdownMenuItem(value: 'Summer', child: Text('Summer')),
-            DropdownMenuItem(value: 'Fall', child: Text('Fall')),
-            DropdownMenuItem(value: 'Winter', child: Text('Winter')),
-          ],
+          items: widget.items,
           onChanged: widget.onChanged,
           name: widget.name,
           style: TextStyle(color: Palette.lightPurple),

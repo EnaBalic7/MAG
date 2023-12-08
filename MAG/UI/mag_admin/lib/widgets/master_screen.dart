@@ -147,7 +147,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     } else {
       return Builder(
           builder: (context) => IconButton(
-                icon: new Icon(Icons.menu_rounded),
+                icon: Icon(Icons.menu_rounded),
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ));
     }
