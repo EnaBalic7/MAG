@@ -46,7 +46,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
       for (var item in data['result']) {
         result.result.add(fromJson(item));
       }
-
       return result;
     } else {
       throw Exception("Unknown error");

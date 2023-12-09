@@ -56,7 +56,7 @@ class _HelpScreenState extends State<HelpScreen> {
 
   void _reloadQAList() {
     if (mounted) {
-      if (_selectedQAFilter == "All") {
+      if (_selectedQAFilter["QAfilter"] == "All") {
         setState(() {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
@@ -64,7 +64,7 @@ class _HelpScreenState extends State<HelpScreen> {
             "NewestFirst": "true"
           });
         });
-      } else if (_selectedQAFilter == "Unanswered") {
+      } else if (_selectedQAFilter["QAfilter"] == "Unanswered") {
         setState(() {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
@@ -73,7 +73,7 @@ class _HelpScreenState extends State<HelpScreen> {
             "UnansweredOnly": "true"
           });
         });
-      } else if (_selectedQAFilter == "Hidden") {
+      } else if (_selectedQAFilter["QAfilter"] == "Hidden") {
         setState(() {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
@@ -82,7 +82,7 @@ class _HelpScreenState extends State<HelpScreen> {
             "HiddenOnly": "true"
           });
         });
-      } else if (_selectedQAFilter == "Displayed") {
+      } else if (_selectedQAFilter["QAfilter"] == "Displayed") {
         setState(() {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
@@ -245,7 +245,7 @@ class _HelpScreenState extends State<HelpScreen> {
                           LayoutBuilder(builder: (BuildContext context,
                               BoxConstraints constraints) {
                             double maxSeparatorWidth =
-                                constraints.maxWidth - 100;
+                                constraints.maxWidth - 300;
                             return Padding(
                               padding: EdgeInsets.only(right: 25),
                               child: Container(
@@ -500,6 +500,7 @@ class _HelpScreenState extends State<HelpScreen> {
       "question": qa.question.toString(),
       "displayed": (qa.displayed == true) ? false : true,
     };
+
     try {
       if (qaID != null) {
         await _qaProvider.update(qaID!, request: request);
