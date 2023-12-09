@@ -20,8 +20,8 @@ class Palette {
 
   //Gradients
   static const LinearGradient menuGradient = LinearGradient(colors: [
-    Color.fromRGBO(72, 72, 156, 0.7),
-    Color.fromRGBO(169, 87, 198, 0.7)
+    Color.fromRGBO(72, 72, 156, 0.9),
+    Color.fromRGBO(169, 87, 198, 0.9)
   ]);
   static const LinearGradient buttonGradient = LinearGradient(colors: [
     Color.fromRGBO(155, 108, 249, 0.8),

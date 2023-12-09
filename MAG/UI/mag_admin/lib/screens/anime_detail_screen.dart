@@ -365,7 +365,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                           gradient: Palette.buttonGradient,
                           borderRadius: 50,
                           child: Icon(Icons.add_rounded,
-                              size: 20, color: Palette.darkPurple),
+                              size: 20, color: Palette.white),
                         ),
                       )
                     ],
@@ -446,7 +446,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                                         gradient: Palette.buttonGradient,
                                         child: Text("Add",
                                             style: TextStyle(
-                                                color: Palette.darkPurple,
+                                                color: Palette.white,
                                                 fontWeight: FontWeight.w500))),
                                   ],
                                 ),

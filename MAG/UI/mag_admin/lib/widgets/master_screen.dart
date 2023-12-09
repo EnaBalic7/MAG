@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
 import 'package:mag_admin/screens/help_screen.dart';
+import 'package:mag_admin/screens/users_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import './/main.dart';
@@ -84,7 +85,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         // buildListTile(context, 'Login',
         //   Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
         buildListTile(context, 'Anime', buildAnimeIcon(), AnimeScreen()),
-        buildListTile(context, 'Users', buildUsersIcon(), LoginPage()),
+        buildListTile(context, 'Users', buildUsersIcon(), UsersScreen()),
         buildListTile(context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
         buildListTile(context, 'Clubs', buildClubsIcon(), LoginPage()),
         buildListTile(context, 'Help', buildHelpIcon(), HelpScreen())

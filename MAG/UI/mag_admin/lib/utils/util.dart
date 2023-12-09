@@ -61,7 +61,8 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
                         height: 28,
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
-                        child: Text("OK"))),
+                        child: Text("OK",
+                            style: TextStyle(fontWeight: FontWeight.w500)))),
               ]));
 }
 
@@ -85,7 +86,8 @@ Future<void> showInfoDialog(
                         height: 28,
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
-                        child: Text("OK"))),
+                        child: Text("OK",
+                            style: TextStyle(fontWeight: FontWeight.w500)))),
               ]));
 }
 
@@ -124,7 +126,8 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   height: 28,
                   borderRadius: 15,
                   gradient: Palette.buttonGradient,
-                  child: Text("Yes"))),
+                  child: Text("Yes",
+                      style: TextStyle(fontWeight: FontWeight.w500)))),
         ],
       );
     },

@@ -105,7 +105,7 @@ namespace MAG.Services
 
             if (!string.IsNullOrWhiteSpace(search?.FTS))
             {
-                query = query.Where(x => (x.FirstName + " " + x.LastName).Contains(search.FTS) || (x.LastName + " " + x.FirstName).Contains(search.FTS));
+                query = query.Where(x => (x.FirstName + " " + x.LastName).Contains(search.FTS) || (x.LastName + " " + x.FirstName).Contains(search.FTS) || x.Username.Contains(search.FTS));
             }
 
             return base.AddFilter(query, search);

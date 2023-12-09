@@ -5,7 +5,6 @@ import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
-
 import '../models/anime.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
@@ -161,7 +160,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
   Widget _buildAnimeCard(Anime anime) {
     return Container(
-        width: 290,
+        width: 300,
         height: 453,
         margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
         decoration: BoxDecoration(
@@ -173,18 +172,18 @@ class _AnimeScreenState extends State<AnimeScreen> {
                   topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Image.network(
                 anime.imageUrl!,
-                width: 290,
+                width: 300,
                 height: 250,
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   margin:
-                      EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5),
+                      EdgeInsets.only(top: 10, left: 10, right: 0, bottom: 13),
                   child: Row(
                     children: [
                       buildStarIcon(15),
@@ -197,14 +196,14 @@ class _AnimeScreenState extends State<AnimeScreen> {
                 ),
                 Expanded(
                   child: Container(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           bottom: 10, left: 0, right: 0, top: 5),
                       child: Text(
                         anime.titleEn!,
                         overflow: TextOverflow.clip,
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
