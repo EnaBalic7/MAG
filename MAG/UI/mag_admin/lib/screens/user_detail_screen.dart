@@ -8,10 +8,13 @@ import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../widgets/gradient_button.dart';
+import 'package:intl/intl.dart';
 
 class UserDetailScreen extends StatefulWidget {
   User? user;
-  UserDetailScreen({Key? key, this.user}) : super(key: key);
+  String? profilePicture;
+  UserDetailScreen({Key? key, this.user, this.profilePicture})
+      : super(key: key);
 
   @override
   State<UserDetailScreen> createState() => _UserDetailScreenState();
@@ -21,215 +24,280 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        child: Center(
-            child: Row(children: [
-      Padding(
-        padding: EdgeInsets.only(
-          top: 10,
-          left: 40,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Palette.darkPurple,
-                ),
-                width: 430,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.network(
-                            "https://cdn.oneesports.gg/cdn-data/2023/04/Anime_DemonSlayer_Muzan_3.jpg",
-                            width: 360,
-                            height: 330,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Palette.listTile,
-                          ),
-                          child: Column(children: [
-                            ListTile(
-                              title: Text("Lord Muzan"),
-                              subtitle: Text("Username",
-                                  style: TextStyle(
-                                      color: Palette.lightPurple
-                                          .withOpacity(0.5))),
-                              leading: Icon(Icons.person_rounded,
-                                  color: Palette.lightPurple.withOpacity(0.7),
-                                  size: 48),
-                            ),
-                          ]),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Palette.listTile,
-                          ),
-                          child: Column(children: [
-                            ListTile(
-                              title: Text("Muzan"),
-                              subtitle: Text("First name",
-                                  style: TextStyle(
-                                      color: Palette.lightPurple
-                                          .withOpacity(0.5))),
-                              leading: Icon(Icons.person_rounded,
-                                  color: Palette.lightPurple.withOpacity(0.7),
-                                  size: 48),
-                            ),
-                          ]),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Palette.listTile,
-                          ),
-                          child: Column(children: [
-                            ListTile(
-                              title: Text("Kibutsuji"),
-                              subtitle: Text("Last name",
-                                  style: TextStyle(
-                                      color: Palette.lightPurple
-                                          .withOpacity(0.5))),
-                              leading: Icon(Icons.person_rounded,
-                                  color: Palette.lightPurple.withOpacity(0.7),
-                                  size: 48),
-                            ),
-                          ]),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Palette.listTile,
-                          ),
-                          child: Column(children: [
-                            ListTile(
-                              title: Text("muzan@gmail.com"),
-                              subtitle: Text("E-mail",
-                                  style: TextStyle(
-                                      color: Palette.lightPurple
-                                          .withOpacity(0.5))),
-                              leading: Icon(Icons.email_rounded,
-                                  color: Palette.lightPurple.withOpacity(0.7),
-                                  size: 48),
-                            ),
-                          ]),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Palette.listTile,
-                          ),
-                          child: Column(children: [
-                            ListTile(
-                              title: Text("Jul 7, 2021"),
-                              subtitle: Text("Date joined",
-                                  style: TextStyle(
-                                      color: Palette.lightPurple
-                                          .withOpacity(0.5))),
-                              leading: Icon(Icons.calendar_month_rounded,
-                                  color: Palette.lightPurple.withOpacity(0.7),
-                                  size: 48),
-                            ),
-                          ]),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+      showBackArrow: true,
+      child: Center(
+        child: Row(children: [
+          _buildUserInfo(),
+          _buildUserContent(),
+        ]),
       ),
-      Expanded(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 200, top: 0),
+    );
+  }
+
+  Padding _buildUserInfo() {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 10,
+        left: 60,
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Palette.darkPurple,
+              ),
+              width: 430,
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text("Reviews", style: TextStyle(fontSize: 20)),
-                        Icon(Icons.star_rounded,
-                            color: Palette.starYellow, size: 20)
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(top: 15),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.network(
+                          "https://cdn.oneesports.gg/cdn-data/2023/04/Anime_DemonSlayer_Muzan_3.jpg",
+                          width: 360,
+                          height: 330,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    Row(
-                      children: [
-                        _buildCard(),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Palette.listTile,
+                        ),
+                        child: Column(children: [
+                          ListTile(
+                            horizontalTitleGap: 25,
+                            title: Text("${widget.user!.username}"),
+                            subtitle: Text("Username",
+                                style: TextStyle(
+                                    color:
+                                        Palette.lightPurple.withOpacity(0.5))),
+                            leading: Icon(Icons.person_rounded,
+                                color: Palette.lightPurple.withOpacity(0.7),
+                                size: 40),
+                          ),
+                        ]),
+                      ),
                     ),
-                    MySeparator(
-                      width: 600,
-                      borderRadius: 50,
-                      opacity: 0.5,
-                      marginVertical: 10,
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Palette.listTile,
+                        ),
+                        child: Column(children: [
+                          ListTile(
+                            horizontalTitleGap: 25,
+                            title: Text("${widget.user!.firstName}"),
+                            subtitle: Text("First name",
+                                style: TextStyle(
+                                    color:
+                                        Palette.lightPurple.withOpacity(0.5))),
+                            leading: Icon(Icons.person_rounded,
+                                color: Palette.lightPurple.withOpacity(0.7),
+                                size: 40),
+                          ),
+                        ]),
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Text("Reviews", style: TextStyle(fontSize: 20)),
-                        Icon(Icons.star_rounded,
-                            color: Palette.starYellow, size: 20)
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Palette.listTile,
+                        ),
+                        child: Column(children: [
+                          ListTile(
+                            horizontalTitleGap: 25,
+                            title: Text("${widget.user!.lastName}"),
+                            subtitle: Text("Last name",
+                                style: TextStyle(
+                                    color:
+                                        Palette.lightPurple.withOpacity(0.5))),
+                            leading: Icon(Icons.person_rounded,
+                                color: Palette.lightPurple.withOpacity(0.7),
+                                size: 40),
+                          ),
+                        ]),
+                      ),
                     ),
-                    Row(
-                      children: [
-                        _buildCard(),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Palette.listTile,
+                        ),
+                        child: Column(children: [
+                          ListTile(
+                            horizontalTitleGap: 25,
+                            title: Text("${widget.user!.email}"),
+                            subtitle: Text("E-mail",
+                                style: TextStyle(
+                                    color:
+                                        Palette.lightPurple.withOpacity(0.5))),
+                            leading: Icon(Icons.email_rounded,
+                                color: Palette.lightPurple.withOpacity(0.7),
+                                size: 40),
+                          ),
+                        ]),
+                      ),
                     ),
-                    MySeparator(
-                      width: 600,
-                      borderRadius: 50,
-                      opacity: 0.5,
-                      marginVertical: 10,
-                    ),
-                    Row(
-                      children: [
-                        Text("Reviews", style: TextStyle(fontSize: 20)),
-                        Icon(Icons.star_rounded,
-                            color: Palette.starYellow, size: 20)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        _buildCard(),
-                      ],
-                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Palette.listTile,
+                        ),
+                        child: Column(children: [
+                          ListTile(
+                            horizontalTitleGap: 25,
+                            title: Text(DateFormat('MMM d, y')
+                                .format(widget.user!.dateJoined!)),
+                            subtitle: Text("Date joined",
+                                style: TextStyle(
+                                    color:
+                                        Palette.lightPurple.withOpacity(0.5))),
+                            leading: Icon(Icons.calendar_month_rounded,
+                                color: Palette.lightPurple.withOpacity(0.7),
+                                size: 40),
+                          ),
+                        ]),
+                      ),
+                    )
                   ],
                 ),
               ),
-            )
-          ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Expanded _buildUserContent() {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(left: 150, top: 0),
+        child: SingleChildScrollView(
+          controller: ScrollController(),
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("Reviews", style: TextStyle(fontSize: 20)),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Icon(Icons.star_rounded,
+                            color: Palette.starYellow, size: 22),
+                      )
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildCard(),
+                      _buildSeeMoreButton(),
+                    ],
+                  ),
+                  MySeparator(
+                    width: 600,
+                    borderRadius: 50,
+                    opacity: 0.5,
+                    marginVertical: 10,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("Posts", style: TextStyle(fontSize: 20)),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Icon(Icons.list_alt,
+                            color: Palette.lightPurple, size: 20),
+                      )
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildCard(),
+                      _buildSeeMoreButton(),
+                    ],
+                  ),
+                  MySeparator(
+                    width: 600,
+                    borderRadius: 50,
+                    opacity: 0.5,
+                    marginVertical: 10,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("Comments", style: TextStyle(fontSize: 20)),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Icon(Icons.comment_rounded,
+                            color: Palette.lightPurple, size: 20),
+                      )
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildCard(),
+                      _buildSeeMoreButton(),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
-    ])));
+    );
+  }
+
+  TextButton _buildSeeMoreButton() {
+    return TextButton(
+      onPressed: () {},
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(Palette.lightPurple),
+        splashFactory: InkRipple.splashFactory,
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Colors
+                  .transparent; // Set to transparent for the pressed state
+            }
+            return Colors.transparent; // Default overlay color
+          },
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            "See more",
+            style: TextStyle(fontSize: 16),
+          ),
+          Icon(Icons.arrow_forward_ios_rounded, size: 16)
+        ],
+      ),
+    );
   }
 }
 

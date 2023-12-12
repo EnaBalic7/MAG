@@ -7,6 +7,8 @@ import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
+import '../models/user_profile_picture.dart';
+import '../providers/user_profile_picture_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -22,12 +24,21 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   late UserProvider _userProvider;
   late Future<SearchResult<User>> _userFuture;
+  late UserProfilePictureProvider _userProfilePictureProvider;
+  late SearchResult<UserProfilePicture> _userProfilePictureList;
   TextEditingController _userController = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
+    _userProfilePictureList = SearchResult<UserProfilePicture>();
+    fetchProfilePictures();
+  }
+
+  void fetchProfilePictures() async {
+    _userProfilePictureList = await _userProfilePictureProvider.get();
   }
 
   @override
@@ -84,92 +95,122 @@ class _UsersScreenState extends State<UsersScreen> {
 
   Widget _buildUserCard(User user) {
     return Container(
-      width: 290,
-      height: 360,
+      width: 200,
+      height: 280,
       margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-            child: Image.network(
+      child: FutureBuilder<SearchResult<UserProfilePicture>>(
+          future: _userProfilePictureProvider.getById(user.profilePictureId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return Text('No profile picture available');
+            } else {
+              // Data loaded successfully
+              var profilePicture = snapshot.data!;
+
+              return Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
+                    child: Image.memory(
+                      imageFromBase64String(
+                          profilePicture.result.single.profilePicture!),
+                      width: 200,
+                      height: 170,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    ),
+
+                    /*Image.network(
               "https://gogaffl-public.s3-us-west-2.amazonaws.com/default-pro-pic.jpg",
-              width: 290,
-              height: 250,
+              width: 200,
+              height: 170,
               fit: BoxFit.cover,
               alignment: Alignment.center,
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 10, left: 35, right: 0, top: 5),
-                    child: Text(
-                      user.username!,
-                      overflow: TextOverflow.clip,
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
+            ),*/
                   ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
-                child: _buildPopupMenu(user),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              child: SingleChildScrollView(
-                controller: ScrollController(),
-                child: Column(
-                  children: [
-                    Container(
-                      margin:
-                          EdgeInsets.only(top: 8, left: 0, right: 0, bottom: 0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.person,
-                              size: 20, color: Palette.lightPurple),
-                          SizedBox(width: 3),
-                          Text("${user.firstName} ${user.lastName}",
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 35, right: 0, top: 5),
+                            child: Text(
+                              user.username!,
+                              overflow: TextOverflow.clip,
+                              textAlign: TextAlign.left,
                               style: TextStyle(
-                                  color: Palette.lightPurple, fontSize: 16)),
-                        ],
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 0, left: 0, right: 0, bottom: 0),
+                        child: _buildPopupMenu(user),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
+                      child: SingleChildScrollView(
+                        controller: ScrollController(),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 8, left: 0, right: 0, bottom: 0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person,
+                                      size: 20, color: Palette.lightPurple),
+                                  SizedBox(width: 3),
+                                  Text("${user.firstName} ${user.lastName}",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple,
+                                          fontSize: 16)),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 5, left: 0, right: 0, bottom: 0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.calendar_month_rounded,
+                                      size: 20, color: Palette.lightPurple),
+                                  SizedBox(width: 3),
+                                  Text(
+                                      DateFormat('MMM d, y')
+                                          .format(user.dateJoined!),
+                                      style: TextStyle(
+                                          color: Palette.lightPurple,
+                                          fontSize: 16)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Container(
-                      margin:
-                          EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 0),
-                      child: Row(
-                        children: [
-                          Icon(Icons.calendar_month_rounded,
-                              size: 20, color: Palette.lightPurple),
-                          SizedBox(width: 3),
-                          Text(DateFormat('MMM d, y').format(user.dateJoined!),
-                              style: TextStyle(
-                                  color: Palette.lightPurple, fontSize: 16)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
+                  )
+                ],
+              );
+            }
+          }),
     );
   }
 

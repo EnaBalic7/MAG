@@ -186,11 +186,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
                       EdgeInsets.only(top: 10, left: 10, right: 0, bottom: 13),
                   child: Row(
                     children: [
-                      buildStarIcon(15),
+                      buildStarIcon(17),
                       SizedBox(width: 3),
                       Text(anime.score.toString(),
                           style: TextStyle(
-                              color: Palette.starYellow, fontSize: 11)),
+                              color: Palette.starYellow, fontSize: 13)),
                     ],
                   ),
                 ),

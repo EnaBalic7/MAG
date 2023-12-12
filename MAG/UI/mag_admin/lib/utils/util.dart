@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../widgets/gradient_button.dart';
@@ -132,4 +134,8 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
       );
     },
   );
+}
+
+Uint8List imageFromBase64String(String base64Image) {
+  return base64Decode(base64Image);
 }
