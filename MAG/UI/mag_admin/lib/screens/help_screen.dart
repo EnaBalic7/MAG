@@ -8,6 +8,7 @@ import 'package:mag_admin/widgets/form_builder_dropdown.dart';
 import 'package:mag_admin/widgets/form_builder_text_field.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/qa.dart';
@@ -246,17 +247,12 @@ class _HelpScreenState extends State<HelpScreen> {
                               BoxConstraints constraints) {
                             double maxSeparatorWidth =
                                 constraints.maxWidth - 300;
-                            return Padding(
-                              padding: EdgeInsets.only(right: 25),
-                              child: Container(
-                                height: 1,
-                                width: maxSeparatorWidth,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Palette.lightPurple.withOpacity(0.5),
-                                ),
-                              ),
+                            return MySeparator(
+                              width: maxSeparatorWidth,
+                              marginVertical: 10,
+                              paddingRight: 25,
+                              borderRadius: 50,
+                              opacity: 0.5,
                             );
                           }),
                           Wrap(
