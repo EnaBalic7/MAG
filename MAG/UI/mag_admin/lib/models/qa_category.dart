@@ -7,7 +7,10 @@ class QAcategory {
   int? id;
   String? name;
 
-  QAcategory(this.id, this.name);
+  QAcategory(
+    this.id,
+    this.name,
+  );
 
   factory QAcategory.fromJson(Map<String, dynamic> json) =>
       _$QAcategoryFromJson(json);

@@ -15,5 +15,21 @@ namespace MAG.Services
         public CommentService(MagContext context, IMapper mapper) : base(context, mapper)
         {
         }
+
+        public override IQueryable<Comment> AddFilter(IQueryable<Comment> query, CommentSearchObject? search = null)
+        {
+         
+            if (search?.UserId != null)
+            {
+                query = query.Where(x => x.UserId == search.UserId);
+            }
+
+            if (search?.PostId != null)
+            {
+                query = query.Where(x => x.PostId == search.PostId);
+            }
+
+            return base.AddFilter(query, search);
+        }
     }
 }

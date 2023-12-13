@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:mag_admin/providers/comment_provider.dart';
+import 'package:mag_admin/providers/post_provider.dart';
+import 'package:mag_admin/providers/rating_provider.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/separator.dart';
-
+import 'package:provider/provider.dart';
+import '../models/comment.dart';
+import '../models/post.dart';
+import '../models/rating.dart';
+import '../models/search_result.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
-import '../widgets/gradient_button.dart';
+import '../utils/util.dart';
 import 'package:intl/intl.dart';
 
 class UserDetailScreen extends StatefulWidget {
@@ -21,6 +26,13 @@ class UserDetailScreen extends StatefulWidget {
 }
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
+  late RatingProvider _ratingProvider;
+  late PostProvider _postProvider;
+  late CommentProvider _commentProvider;
+  Rating? rating;
+  Post? post;
+  Comment? comment;
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -32,6 +44,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         ]),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    _ratingProvider = context.read<RatingProvider>();
+    _postProvider = context.read<PostProvider>();
+    _commentProvider = context.read<CommentProvider>();
+
+    super.initState();
   }
 
   Padding _buildUserInfo() {
@@ -55,14 +76,13 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          "https://cdn.oneesports.gg/cdn-data/2023/04/Anime_DemonSlayer_Muzan_3.jpg",
-                          width: 360,
-                          height: 330,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.memory(
+                            imageFromBase64String(widget.profilePicture!),
+                            width: 360,
+                            height: 330,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -207,13 +227,39 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       )
                     ],
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _buildCard(),
-                      _buildSeeMoreButton(),
-                    ],
-                  ),
+                  FutureBuilder<SearchResult<Rating>>(
+                      future: _ratingProvider.get(filter: {
+                        "UserId": "${widget.user!.id}",
+                        "Page": "0",
+                        "PageSize": "1"
+                      }),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Loading state
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Error state
+                        } else {
+                          // Data loaded successfully
+                          if (snapshot.data!.result.isEmpty) {
+                            rating = null;
+                          } else {
+                            rating = snapshot.data!.result.single;
+                          }
+                        }
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildCard(object: rating),
+                            Visibility(
+                              visible: rating != null,
+                              child: _buildSeeMoreButton(),
+                            ),
+                          ],
+                        );
+                      }),
                   MySeparator(
                     width: 600,
                     borderRadius: 50,
@@ -231,13 +277,39 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       )
                     ],
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _buildCard(),
-                      _buildSeeMoreButton(),
-                    ],
-                  ),
+                  FutureBuilder<SearchResult<Post>>(
+                      future: _postProvider.get(filter: {
+                        "UserId": "${widget.user!.id}",
+                        "Page": "0",
+                        "PageSize": "1"
+                      }),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Loading state
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Error state
+                        } else {
+                          // Data loaded successfully
+                          if (snapshot.data!.result.isEmpty) {
+                            post = null;
+                          } else {
+                            post = snapshot.data!.result.single;
+                          }
+                        }
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildCard(object: post),
+                            Visibility(
+                              visible: post != null,
+                              child: _buildSeeMoreButton(),
+                            ),
+                          ],
+                        );
+                      }),
                   MySeparator(
                     width: 600,
                     borderRadius: 50,
@@ -299,135 +371,151 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       ),
     );
   }
-}
 
-//Adjust this part
-Widget _buildCard() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 0, right: 0),
-    child: Container(
-      constraints: BoxConstraints(minHeight: 100, maxHeight: 200),
-      height: 180,
-      width: 600,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          "https://cdn.oneesports.gg/cdn-data/2023/04/Anime_DemonSlayer_Muzan_3.jpg",
-                          width: 43,
-                          height: 43,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Muzan Kibutsuji",
-                            style: TextStyle(
-                                fontSize: 17, fontWeight: FontWeight.bold)),
-                        Text("Attack on Titan"),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 23),
-                child: Container(
-                  padding: EdgeInsets.zero,
+  //Adjust this part
+  Widget _buildCard({dynamic object}) {
+    if (object == null) {
+      return Container(child: Text("No content to show"));
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 0, right: 0),
+      child: Container(
+        constraints: BoxConstraints(minHeight: 100, maxHeight: 200),
+        height: 180,
+        width: 600,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
                   child: Row(
                     children: [
-                      IconButton(
-                        constraints:
-                            BoxConstraints(maxHeight: 24, maxWidth: 24),
-                        alignment: Alignment.topCenter,
-                        tooltip: "Hide from viewers",
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        padding: EdgeInsets.zero,
-                        splashRadius: 0.1,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.visibility_off_outlined,
-                          size: 24,
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.memory(
+                            imageFromBase64String(widget.profilePicture!),
+                            width: 43,
+                            height: 43,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      PopupMenuButton<String>(
-                        tooltip: "More actions",
-                        offset: Offset(195, 0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(
-                              color: Palette.lightPurple.withOpacity(0.3)),
-                        ),
-                        icon: Icon(Icons.more_vert_rounded),
-                        splashRadius: 1,
-                        padding: EdgeInsets.zero,
-                        color: Color.fromRGBO(50, 48, 90, 1),
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            padding: EdgeInsets.zero,
-                            child: ListTile(
-                              visualDensity:
-                                  VisualDensity(horizontal: -4, vertical: -4),
-                              hoverColor: Palette.lightPurple.withOpacity(0.1),
-                              onTap: () async {},
-                            ),
-                          ),
-                          PopupMenuItem<String>(
-                            padding: EdgeInsets.zero,
-                            child: ListTile(
-                              hoverColor: Palette.lightRed.withOpacity(0.1),
-                              leading: buildTrashIcon(24),
-                              title: Text('Delete',
-                                  style: TextStyle(color: Palette.lightRed)),
-                              subtitle: Text('Delete permanently',
-                                  style: TextStyle(
-                                      color:
-                                          Palette.lightRed.withOpacity(0.5))),
-                              onTap: () async {},
-                            ),
-                          ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              "${widget.user!.firstName} ${widget.user!.lastName}",
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold)),
+                          Text("Attack on Titan"),
                         ],
                       ),
                     ],
                   ),
                 ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Container(
-              alignment: Alignment.topLeft,
-              constraints: BoxConstraints(minHeight: 30, maxHeight: 100),
-              //height: 100,
-              child: SingleChildScrollView(
-                controller: ScrollController(),
-                child: Text(
-                  "I find this very entertaining. The screams of titan's victims feeds my soul. I only wish I could be there. I think I will go on a killing spree to satisfy my bloodlust.",
-                  style: TextStyle(fontSize: 15),
+                _buildPopupMenu()
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Container(
+                alignment: Alignment.topLeft,
+                constraints: BoxConstraints(minHeight: 30, maxHeight: 100),
+                //height: 100,
+                child: SingleChildScrollView(
+                  controller: ScrollController(),
+                  child: Column(
+                    children: [
+                      Visibility(
+                        visible: object is Rating,
+                        child: Text(
+                          "${rating?.reviewText}",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      Visibility(
+                        visible: object is Post,
+                        child: Text(
+                          "${post?.content}",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
-    ),
-  );
+    );
+  }
+
+  ConstrainedBox _buildPopupMenu() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: 23),
+      child: Container(
+        padding: EdgeInsets.zero,
+        child: Row(
+          children: [
+            IconButton(
+              constraints: BoxConstraints(maxHeight: 24, maxWidth: 24),
+              alignment: Alignment.topCenter,
+              tooltip: "Hide from viewers",
+              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+              padding: EdgeInsets.zero,
+              splashRadius: 0.1,
+              onPressed: () {},
+              icon: Icon(
+                Icons.visibility_off_outlined,
+                size: 24,
+              ),
+            ),
+            PopupMenuButton<String>(
+              tooltip: "More actions",
+              offset: Offset(195, 0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+              ),
+              icon: Icon(Icons.more_vert_rounded),
+              splashRadius: 1,
+              padding: EdgeInsets.zero,
+              color: Color.fromRGBO(50, 48, 90, 1),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  padding: EdgeInsets.zero,
+                  child: ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    hoverColor: Palette.lightPurple.withOpacity(0.1),
+                    onTap: () async {},
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  padding: EdgeInsets.zero,
+                  child: ListTile(
+                    hoverColor: Palette.lightRed.withOpacity(0.1),
+                    leading: buildTrashIcon(24),
+                    title: Text('Delete',
+                        style: TextStyle(color: Palette.lightRed)),
+                    subtitle: Text('Delete permanently',
+                        style: TextStyle(
+                            color: Palette.lightRed.withOpacity(0.5))),
+                    onTap: () async {},
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -7,7 +7,11 @@ class GenreAnime {
   int? genreId;
   int? animeId;
 
-  GenreAnime(this.id, this.genreId, this.animeId);
+  GenreAnime(
+    this.id,
+    this.genreId,
+    this.animeId,
+  );
 
   factory GenreAnime.fromJson(Map<String, dynamic> json) =>
       _$GenreAnimeFromJson(json);

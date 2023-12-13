@@ -25,7 +25,6 @@ class _UsersScreenState extends State<UsersScreen> {
   late UserProvider _userProvider;
   late Future<SearchResult<User>> _userFuture;
   late UserProfilePictureProvider _userProfilePictureProvider;
-  late SearchResult<UserProfilePicture> _userProfilePictureList;
   TextEditingController _userController = TextEditingController();
 
   @override
@@ -33,12 +32,6 @@ class _UsersScreenState extends State<UsersScreen> {
     // TODO: implement initState
     super.initState();
     _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
-    _userProfilePictureList = SearchResult<UserProfilePicture>();
-    fetchProfilePictures();
-  }
-
-  void fetchProfilePictures() async {
-    _userProfilePictureList = await _userProfilePictureProvider.get();
   }
 
   @override
@@ -100,7 +93,7 @@ class _UsersScreenState extends State<UsersScreen> {
       margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
-      child: FutureBuilder<SearchResult<UserProfilePicture>>(
+      child: FutureBuilder<UserProfilePicture>(
           future: _userProfilePictureProvider.getById(user.profilePictureId!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -120,21 +113,12 @@ class _UsersScreenState extends State<UsersScreen> {
                         topLeft: Radius.circular(15),
                         topRight: Radius.circular(15)),
                     child: Image.memory(
-                      imageFromBase64String(
-                          profilePicture.result.single.profilePicture!),
+                      imageFromBase64String(profilePicture.profilePicture!),
                       width: 200,
                       height: 170,
                       fit: BoxFit.cover,
                       alignment: Alignment.center,
                     ),
-
-                    /*Image.network(
-              "https://gogaffl-public.s3-us-west-2.amazonaws.com/default-pro-pic.jpg",
-              width: 200,
-              height: 170,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            ),*/
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,7 +142,7 @@ class _UsersScreenState extends State<UsersScreen> {
                       Padding(
                         padding: const EdgeInsets.only(
                             top: 0, left: 0, right: 0, bottom: 0),
-                        child: _buildPopupMenu(user),
+                        child: _buildPopupMenu(user, profilePicture),
                       ),
                     ],
                   ),
@@ -214,7 +198,7 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
-  Widget _buildPopupMenu(User user) {
+  Widget _buildPopupMenu(User user, UserProfilePicture picture) {
     return PopupMenuButton<String>(
       tooltip: "Actions",
       shape: RoundedRectangleBorder(
@@ -239,7 +223,8 @@ class _UsersScreenState extends State<UsersScreen> {
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => UserDetailScreen(user: user)));
+                  builder: (context) => UserDetailScreen(
+                      user: user, profilePicture: picture.profilePicture)));
             },
           ),
         ),

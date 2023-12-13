@@ -6,7 +6,10 @@ class Genre {
   int? id;
   String? name;
 
-  Genre(this.id, this.name);
+  Genre(
+    this.id,
+    this.name,
+  );
 
   factory Genre.fromJson(Map<String, dynamic> json) => _$GenreFromJson(json);
 

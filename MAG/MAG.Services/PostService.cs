@@ -15,5 +15,21 @@ namespace MAG.Services
         public PostService(MagContext context, IMapper mapper) : base(context, mapper)
         {
         }
+
+        public override IQueryable<Post> AddFilter(IQueryable<Post> query, PostSearchObject? search = null)
+        {
+
+            if (search?.ClubId != null)
+            {
+                query = query.Where(x => x.ClubId == search.ClubId);
+            }
+
+            if (search?.UserId != null)
+            {
+                query = query.Where(x => x.UserId == search.UserId);
+            }
+
+            return base.AddFilter(query, search);
+        }
     }
 }

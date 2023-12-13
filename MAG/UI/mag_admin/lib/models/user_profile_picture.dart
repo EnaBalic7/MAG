@@ -6,7 +6,10 @@ class UserProfilePicture {
   int? id;
   String? profilePicture;
 
-  UserProfilePicture(this.id, this.profilePicture);
+  UserProfilePicture(
+    this.id,
+    this.profilePicture,
+  );
 
   factory UserProfilePicture.fromJson(Map<String, dynamic> json) =>
       _$UserProfilePictureFromJson(json);

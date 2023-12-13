@@ -9,6 +9,11 @@ namespace MAG.Model.SearchObjects
     public class RatingSearchObject : BaseSearchObject
     {
         public int? Rating { get; set; }
+
         public string? FTS { get; set; }
+
+        public int? UserId { get; set; }
+
+        public int? AnimeId { get; set; }
     }
 }

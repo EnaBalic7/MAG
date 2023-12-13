@@ -29,6 +29,18 @@ namespace MAG.Services
                 query = query.Where(x => x.ReviewText.Contains(search.FTS));
             }
 
+
+            if (search?.UserId != null)
+            {
+                query = query.Where(x => x.UserId == search.UserId);
+            }
+
+
+            if (search?.AnimeId != null)
+            {
+                query = query.Where(x => x.AnimeId == search.AnimeId);
+            }
+
             return base.AddFilter(query, search);
         }
     }

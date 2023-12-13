@@ -9,5 +9,9 @@ namespace MAG.Model.SearchObjects
     public class PostSearchObject : BaseSearchObject
     {
         public string? FTS { get; set; }
+
+        public int? ClubId { get; set; }
+
+        public int? UserId { get; set; } 
     }
 }

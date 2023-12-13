@@ -52,7 +52,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
-  Future<SearchResult<T>> getById(int id) async {
+  Future<T> getById(int id) async {
     var url = "$_baseUrl$_endpoint/$id";
 
     var uri = Uri.parse(url);
@@ -62,14 +62,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-
-      var result = SearchResult<T>();
-      result.count = data['count'];
-
-      for (var item in data['result']) {
-        result.result.add(fromJson(item));
-      }
-      return result;
+      return fromJson(data);
     } else {
       throw Exception("Unknown error");
     }

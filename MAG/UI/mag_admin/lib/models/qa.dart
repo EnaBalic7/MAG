@@ -15,8 +15,16 @@ class QA {
   QAcategory? category;
   User? user;
 
-  QA(this.id, this.userId, this.categoryId, this.question, this.answer,
-      this.displayed, this.category, this.user);
+  QA(
+    this.id,
+    this.userId,
+    this.categoryId,
+    this.question,
+    this.answer,
+    this.displayed,
+    this.category,
+    this.user,
+  );
 
   factory QA.fromJson(Map<String, dynamic> json) => _$QAFromJson(json);
 

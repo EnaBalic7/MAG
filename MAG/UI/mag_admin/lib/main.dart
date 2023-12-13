@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/models/user_profile_picture.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
+import 'package:mag_admin/providers/club_provider.dart';
+import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/providers/genre_anime_provider.dart';
 import 'package:mag_admin/providers/genre_provider.dart';
+import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/qa_category_provider.dart';
 import 'package:mag_admin/providers/qa_provider.dart';
+import 'package:mag_admin/providers/rating_provider.dart';
 import 'package:mag_admin/providers/user_profile_picture_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/text_field.dart';
 import 'package:provider/provider.dart';
 import './screens/anime_screen.dart';
@@ -24,6 +26,10 @@ void main() {
     ChangeNotifierProvider(create: (_) => QAcategoryProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => UserProfilePictureProvider()),
+    ChangeNotifierProvider(create: (_) => RatingProvider()),
+    ChangeNotifierProvider(create: (_) => PostProvider()),
+    ChangeNotifierProvider(create: (_) => CommentProvider()),
+    ChangeNotifierProvider(create: (_) => ClubProvider()),
   ], child: const MyMaterialApp()));
 }
 

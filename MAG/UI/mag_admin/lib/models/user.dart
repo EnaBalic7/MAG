@@ -12,8 +12,15 @@ class User {
   int? profilePictureId;
   DateTime? dateJoined;
 
-  User(this.id, this.firstName, this.lastName, this.username, this.email,
-      this.profilePictureId, this.dateJoined);
+  User(
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.username,
+    this.email,
+    this.profilePictureId,
+    this.dateJoined,
+  );
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

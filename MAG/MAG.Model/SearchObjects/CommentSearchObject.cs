@@ -9,5 +9,9 @@ namespace MAG.Model.SearchObjects
     public class CommentSearchObject : BaseSearchObject
     {
         public string? FTS { get; set; }
+
+        public int? PostId { get; set; }
+
+        public int? UserId { get; set; }
     }
 }
