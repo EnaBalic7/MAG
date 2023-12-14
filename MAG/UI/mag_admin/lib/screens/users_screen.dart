@@ -174,8 +174,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   top: 5, left: 0, right: 0, bottom: 0),
                               child: Row(
                                 children: [
-                                  Icon(Icons.calendar_month_rounded,
-                                      size: 20, color: Palette.lightPurple),
+                                  buildCalendarIcon(20),
                                   SizedBox(width: 3),
                                   Text(
                                       DateFormat('MMM d, y')

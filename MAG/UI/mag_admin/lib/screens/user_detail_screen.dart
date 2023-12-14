@@ -188,9 +188,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 style: TextStyle(
                                     color:
                                         Palette.lightPurple.withOpacity(0.5))),
-                            leading: Icon(Icons.calendar_month_rounded,
-                                color: Palette.lightPurple.withOpacity(0.7),
-                                size: 40),
+                            leading: buildCalendarIcon(40,
+                                color: Palette.lightPurple.withOpacity(0.7)),
                           ),
                         ]),
                       ),
@@ -222,8 +221,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       Text("Reviews", style: TextStyle(fontSize: 20)),
                       Padding(
                         padding: EdgeInsets.only(left: 5),
-                        child: Icon(Icons.star_rounded,
-                            color: Palette.starYellow, size: 22),
+                        child: buildStarTrailIcon(22),
                       )
                     ],
                   ),
@@ -272,8 +270,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       Text("Posts", style: TextStyle(fontSize: 20)),
                       Padding(
                         padding: EdgeInsets.only(left: 5),
-                        child: Icon(Icons.list_alt,
-                            color: Palette.lightPurple, size: 20),
+                        child: buildPostIcon(23),
                       )
                     ],
                   ),
@@ -322,18 +319,41 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       Text("Comments", style: TextStyle(fontSize: 20)),
                       Padding(
                         padding: EdgeInsets.only(left: 5),
-                        child: Icon(Icons.comment_rounded,
-                            color: Palette.lightPurple, size: 20),
+                        child: buildCommentIcon(19),
                       )
                     ],
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _buildCard(),
-                      _buildSeeMoreButton(),
-                    ],
-                  ),
+                  FutureBuilder<SearchResult<Comment>>(
+                      future: _commentProvider.get(filter: {
+                        "UserId": "${widget.user!.id}",
+                        "Page": "0",
+                        "PageSize": "1"
+                      }),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Loading state
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Error state
+                        } else {
+                          // Data loaded successfully
+                          if (snapshot.data!.result.isEmpty) {
+                            comment = null;
+                          } else {
+                            comment = snapshot.data!.result.single;
+                          }
+                        }
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildCard(object: comment),
+                            Visibility(
+                                visible: comment != null,
+                                child: _buildSeeMoreButton()),
+                          ],
+                        );
+                      }),
                 ],
               )
             ],
@@ -375,7 +395,13 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   //Adjust this part
   Widget _buildCard({dynamic object}) {
     if (object == null) {
-      return Container(child: Text("No content to show"));
+      return Container(
+          child: Text("No content to show",
+              style: TextStyle(
+                fontSize: 15,
+                fontStyle: FontStyle.italic,
+                color: Palette.lightPurple.withOpacity(0.5),
+              )));
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 0, right: 0),
@@ -444,6 +470,13 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         visible: object is Post,
                         child: Text(
                           "${post?.content}",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      Visibility(
+                        visible: object is Comment,
+                        child: Text(
+                          "${comment?.content}",
                           style: TextStyle(fontSize: 15),
                         ),
                       ),

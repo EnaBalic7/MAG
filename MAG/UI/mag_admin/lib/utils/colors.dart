@@ -31,16 +31,16 @@ class Palette {
   static const LinearGradient buttonGradient2 = LinearGradient(
       colors: [Color.fromRGBO(52, 48, 110, 1), Color.fromRGBO(52, 48, 110, 1)]);
   //Detailed icon colors
-  static const Color animeIco_e901 = Color.fromRGBO(101, 91, 192, 1);
-  static const Color animeIco_e902 = Color.fromRGBO(140, 131, 215, 1);
-  static const Color animeIco_e903_e904_e905 = Color.fromRGBO(192, 185, 255, 1);
-  static const Color animeIco_e906_e907_e908_e909 = white;
+  static const Color animeIco_e902 = Color.fromRGBO(101, 91, 192, 1);
+  static const Color animeIco_e903 = Color.fromRGBO(140, 131, 215, 1);
+  static const Color animeIco_e904_e905_e906 = Color.fromRGBO(192, 185, 255, 1);
+  static const Color animeIco_e907_e908_e909_e90a = white;
 
-  static const Color starIco_e914 = Color.fromRGBO(255, 255, 141, 1);
-  static const Color starIco_e915 = white;
-  static const Color starIco_e916 = Color.fromRGBO(223, 223, 93, 1);
+  static const Color starIco_e918 = Color.fromRGBO(255, 255, 141, 1);
+  static const Color starIco_e919 = white;
+  static const Color starIco_e91a = Color.fromRGBO(223, 223, 93, 1);
 
-  static const Color pdfIco_e90e = Color.fromRGBO(96, 87, 173, 1);
-  static const Color pdfIco_e90f = Color.fromRGBO(192, 185, 255, 1);
-  static const Color pdfIco_e910_e911_e912 = Color.fromRGBO(255, 235, 238, 1);
+  static const Color pdfIco_e911 = Color.fromRGBO(96, 87, 173, 1);
+  static const Color pdfIco_e912 = Color.fromRGBO(192, 185, 255, 1);
+  static const Color pdfIco_e913_e914_e915 = Color.fromRGBO(255, 235, 238, 1);
 }
