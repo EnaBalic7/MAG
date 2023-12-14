@@ -12,6 +12,8 @@ namespace MAG.Model.SearchObjects
 
         public int? ClubId { get; set; }
 
-        public int? UserId { get; set; } 
+        public int? UserId { get; set; }
+
+        public bool? NewestFirst { get; set; }
     }
 }

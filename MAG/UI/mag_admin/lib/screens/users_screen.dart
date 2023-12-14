@@ -29,9 +29,8 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
+    super.initState();
   }
 
   @override

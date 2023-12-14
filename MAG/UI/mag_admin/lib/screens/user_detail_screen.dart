@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mag_admin/providers/anime_provider.dart';
+import 'package:mag_admin/providers/club_provider.dart';
 import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
+import '../models/anime.dart';
+import '../models/club.dart';
 import '../models/comment.dart';
 import '../models/post.dart';
 import '../models/rating.dart';
@@ -14,6 +18,8 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'package:intl/intl.dart';
+
+import 'anime_detail_screen.dart';
 
 class UserDetailScreen extends StatefulWidget {
   User? user;
@@ -29,6 +35,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   late RatingProvider _ratingProvider;
   late PostProvider _postProvider;
   late CommentProvider _commentProvider;
+  late AnimeProvider _animeProvider;
+  late ClubProvider _clubProvider;
+
   Rating? rating;
   Post? post;
   Comment? comment;
@@ -51,6 +60,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     _ratingProvider = context.read<RatingProvider>();
     _postProvider = context.read<PostProvider>();
     _commentProvider = context.read<CommentProvider>();
+    _animeProvider = context.read<AnimeProvider>();
+    _clubProvider = context.read<ClubProvider>();
 
     super.initState();
   }
@@ -225,39 +236,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       )
                     ],
                   ),
-                  FutureBuilder<SearchResult<Rating>>(
-                      future: _ratingProvider.get(filter: {
-                        "UserId": "${widget.user!.id}",
-                        "Page": "0",
-                        "PageSize": "1"
-                      }),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Loading state
-                        } else if (snapshot.hasError) {
-                          return Text(
-                              'Error: ${snapshot.error}'); // Error state
-                        } else {
-                          // Data loaded successfully
-                          if (snapshot.data!.result.isEmpty) {
-                            rating = null;
-                          } else {
-                            rating = snapshot.data!.result.single;
-                          }
-                        }
-
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            _buildCard(object: rating),
-                            Visibility(
-                              visible: rating != null,
-                              child: _buildSeeMoreButton(),
-                            ),
-                          ],
-                        );
-                      }),
+                  _ratingFutureBuilder(),
                   MySeparator(
                     width: 600,
                     borderRadius: 50,
@@ -274,39 +253,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       )
                     ],
                   ),
-                  FutureBuilder<SearchResult<Post>>(
-                      future: _postProvider.get(filter: {
-                        "UserId": "${widget.user!.id}",
-                        "Page": "0",
-                        "PageSize": "1"
-                      }),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Loading state
-                        } else if (snapshot.hasError) {
-                          return Text(
-                              'Error: ${snapshot.error}'); // Error state
-                        } else {
-                          // Data loaded successfully
-                          if (snapshot.data!.result.isEmpty) {
-                            post = null;
-                          } else {
-                            post = snapshot.data!.result.single;
-                          }
-                        }
-
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            _buildCard(object: post),
-                            Visibility(
-                              visible: post != null,
-                              child: _buildSeeMoreButton(),
-                            ),
-                          ],
-                        );
-                      }),
+                  _postFutureBuilder(),
                   MySeparator(
                     width: 600,
                     borderRadius: 50,
@@ -323,37 +270,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       )
                     ],
                   ),
-                  FutureBuilder<SearchResult<Comment>>(
-                      future: _commentProvider.get(filter: {
-                        "UserId": "${widget.user!.id}",
-                        "Page": "0",
-                        "PageSize": "1"
-                      }),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Loading state
-                        } else if (snapshot.hasError) {
-                          return Text(
-                              'Error: ${snapshot.error}'); // Error state
-                        } else {
-                          // Data loaded successfully
-                          if (snapshot.data!.result.isEmpty) {
-                            comment = null;
-                          } else {
-                            comment = snapshot.data!.result.single;
-                          }
-                        }
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            _buildCard(object: comment),
-                            Visibility(
-                                visible: comment != null,
-                                child: _buildSeeMoreButton()),
-                          ],
-                        );
-                      }),
+                  _commentFutureBuilder(),
                 ],
               )
             ],
@@ -361,6 +278,108 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         ),
       ),
     );
+  }
+
+  FutureBuilder<SearchResult<Comment>> _commentFutureBuilder() {
+    return FutureBuilder<SearchResult<Comment>>(
+        future: _commentProvider.get(filter: {
+          "UserId": "${widget.user!.id}",
+          "NewestFirst": "true",
+          "Page": "0",
+          "PageSize": "1"
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            if (snapshot.data!.result.isEmpty) {
+              comment = null;
+            } else {
+              comment = snapshot.data!.result.single;
+            }
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildCard(object: comment),
+              Visibility(
+                  visible: comment != null, child: _buildSeeMoreButton()),
+            ],
+          );
+        });
+  }
+
+  FutureBuilder<SearchResult<Post>> _postFutureBuilder() {
+    return FutureBuilder<SearchResult<Post>>(
+        future: _postProvider.get(filter: {
+          "UserId": "${widget.user!.id}",
+          "NewestFirst": "true",
+          "Page": "0",
+          "PageSize": "1"
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            if (snapshot.data!.result.isEmpty) {
+              post = null;
+            } else {
+              post = snapshot.data!.result.single;
+            }
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildCard(object: post),
+              Visibility(
+                visible: post != null,
+                child: _buildSeeMoreButton(),
+              ),
+            ],
+          );
+        });
+  }
+
+  FutureBuilder<SearchResult<Rating>> _ratingFutureBuilder() {
+    return FutureBuilder<SearchResult<Rating>>(
+        future: _ratingProvider.get(filter: {
+          "UserId": "${widget.user!.id}",
+          "NewestFirst": "true",
+          "Page": "0",
+          "PageSize": "1"
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            if (snapshot.data!.result.isEmpty) {
+              rating = null;
+            } else {
+              rating = snapshot.data!.result.single;
+            }
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildCard(object: rating),
+              Visibility(
+                visible: rating != null,
+                child: _buildSeeMoreButton(),
+              ),
+            ],
+          );
+        });
   }
 
   TextButton _buildSeeMoreButton() {
@@ -407,7 +426,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       padding: const EdgeInsets.only(bottom: 0, right: 0),
       child: Container(
         constraints: BoxConstraints(minHeight: 100, maxHeight: 200),
-        height: 180,
+        height: 194,
         width: 600,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
@@ -440,7 +459,97 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                               "${widget.user!.firstName} ${widget.user!.lastName}",
                               style: TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold)),
-                          Text("Attack on Titan"),
+                          Visibility(
+                            visible: rating != null && object is Rating,
+                            child: FutureBuilder<SearchResult<Anime>>(
+                                future: rating != null
+                                    ? _animeProvider.get(filter: {
+                                        "Id": "${rating!.animeId!}",
+                                        "GenresIncluded": "True"
+                                      })
+                                    : null,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator(); // Loading state
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                        'Error: ${snapshot.error}'); // Error state
+                                  } else {
+                                    // Data loaded successfully
+
+                                    Anime? tmp = snapshot.data?.result.single;
+                                    if (tmp != null) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AnimeDetailScreen(anime: tmp),
+                                            ),
+                                          );
+                                        },
+                                        child: MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: Text("${tmp.titleEn}"),
+                                        ),
+                                      );
+                                    } else {
+                                      return Text("Anime not found");
+                                    }
+                                  }
+                                }),
+                          ),
+                          Visibility(
+                            visible: post != null && object is Post,
+                            child: FutureBuilder<Club>(
+                                future: post != null
+                                    ? _clubProvider.getById(post!.clubId!)
+                                    : null,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator(); // Loading state
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                        'Error: ${snapshot.error}'); // Error state
+                                  } else {
+                                    // Data loaded successfully
+
+                                    Club? tmp = snapshot.data;
+                                    if (tmp != null) {
+                                      return Text("${tmp.name}");
+                                    } else {
+                                      return Text("Club not found");
+                                    }
+                                  }
+                                }),
+                          ),
+                          Visibility(
+                            visible: comment != null && object is Comment,
+                            child: FutureBuilder<Post>(
+                                future: comment != null
+                                    ? _postProvider.getById(comment!.postId!)
+                                    : null,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator(); // Loading state
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                        'Error: ${snapshot.error}'); // Error state
+                                  } else {
+                                    // Data loaded successfully
+
+                                    Post? tmp = snapshot.data;
+                                    if (tmp != null) {
+                                      return Text("Post #${tmp.id}");
+                                    } else {
+                                      return Text("Club not found");
+                                    }
+                                  }
+                                }),
+                          ),
                         ],
                       ),
                     ],

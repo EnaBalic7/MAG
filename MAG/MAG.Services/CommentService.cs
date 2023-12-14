@@ -29,6 +29,11 @@ namespace MAG.Services
                 query = query.Where(x => x.PostId == search.PostId);
             }
 
+            if (search?.NewestFirst == true)
+            {
+                query = query.OrderByDescending(x => x.Id);
+            }
+
             return base.AddFilter(query, search);
         }
     }

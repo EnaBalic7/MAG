@@ -36,7 +36,6 @@ class _HelpScreenState extends State<HelpScreen> {
 
   @override
   void initState() {
-    super.initState();
     _qaProvider = context.read<QAProvider>();
     _qaFuture = _qaProvider.get(filter: {
       "UserIncluded": "true",
@@ -53,6 +52,7 @@ class _HelpScreenState extends State<HelpScreen> {
     context.read<QAProvider>().addListener(() {
       _reloadQAList();
     });
+    super.initState();
   }
 
   void _reloadQAList() {

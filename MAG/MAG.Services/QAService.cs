@@ -24,22 +24,22 @@ namespace MAG.Services
                 query = query.Where(x => x.Question.Contains(search.FTS) || x.Answer.Contains(search.FTS));
             }
 
-            if (search.NewestFirst == true)
+            if (search?.NewestFirst == true)
             {
                 query = query.OrderByDescending(x => x.Id);
             }
 
-            if (search.UnansweredOnly == true)
+            if (search?.UnansweredOnly == true)
             {
                 query = query.Where(x => string.IsNullOrWhiteSpace(x.Answer));
             }
 
-            if (search.HiddenOnly == true)
+            if (search?.HiddenOnly == true)
             {
                 query = query.Where(x => x.Displayed == false);
             }
 
-            if (search.DisplayedOnly == true)
+            if (search?.DisplayedOnly == true)
             {
                 query = query.Where(x => x.Displayed == true);
             }
@@ -50,12 +50,12 @@ namespace MAG.Services
         public override IQueryable<QA> AddInclude(IQueryable<QA> query, QASearchObject? search = null)
         {
 
-            if (search.UserIncluded == true)
+            if (search?.UserIncluded == true)
             {
                 query = query.Include(x => x.User);
             }
 
-            if (search.CategoryIncluded == true)
+            if (search?.CategoryIncluded == true)
             {
                 query = query.Include(x => x.Category);
             }

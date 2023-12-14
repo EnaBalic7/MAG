@@ -50,7 +50,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
 
   @override
   void initState() {
-    super.initState();
     _initialValue = {
       'titleEn': widget.anime?.titleEn ?? "",
       'titleJp': widget.anime?.titleJp ?? "",
@@ -75,6 +74,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
     context.read<GenreProvider>().addListener(() {
       _reloadGenresList();
     });
+
+    super.initState();
   }
 
   void _reloadGenresList() {

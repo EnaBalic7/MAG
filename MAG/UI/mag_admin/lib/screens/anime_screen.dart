@@ -32,6 +32,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
     context.read<GenreAnimeProvider>().addListener(() {
       _reloadAnimeList();
     });
+    super.initState();
   }
 
   void _reloadAnimeList() {
