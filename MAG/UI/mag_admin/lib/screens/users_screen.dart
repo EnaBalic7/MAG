@@ -44,6 +44,13 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      title_widget: Row(
+        children: [
+          buildUsersIcon(24),
+          SizedBox(width: 5),
+          Text("Users"),
+        ],
+      ),
       showSearch: true,
       onSubmitted: _search,
       controller: _userController,

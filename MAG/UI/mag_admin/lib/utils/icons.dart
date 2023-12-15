@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'colors.dart';
 
-Stack buildAnimeIcon() {
+Stack buildAnimeIcon(double size) {
   return Stack(children: [
-    Icon(IconData(0xe902, fontFamily: 'icomoon'), color: Palette.animeIco_e902),
-    Icon(IconData(0xe903, fontFamily: 'icomoon'), color: Palette.animeIco_e903),
+    Icon(IconData(0xe902, fontFamily: 'icomoon'),
+        color: Palette.animeIco_e902, size: size),
+    Icon(IconData(0xe903, fontFamily: 'icomoon'),
+        color: Palette.animeIco_e903, size: size),
     Icon(IconData(0xe904, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e904_e905_e906),
+        color: Palette.animeIco_e904_e905_e906, size: size),
     Icon(IconData(0xe905, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e904_e905_e906),
+        color: Palette.animeIco_e904_e905_e906, size: size),
     Icon(IconData(0xe906, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e904_e905_e906),
+        color: Palette.animeIco_e904_e905_e906, size: size),
     Icon(IconData(0xe907, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e907_e908_e909_e90a),
+        color: Palette.animeIco_e907_e908_e909_e90a, size: size),
     Icon(IconData(0xe908, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e907_e908_e909_e90a),
+        color: Palette.animeIco_e907_e908_e909_e90a, size: size),
     Icon(IconData(0xe909, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e907_e908_e909_e90a.withOpacity(0.2)),
+        color: Palette.animeIco_e907_e908_e909_e90a.withOpacity(0.2),
+        size: size),
     Icon(IconData(0xe90a, fontFamily: 'icomoon'),
-        color: Palette.animeIco_e907_e908_e909_e90a.withOpacity(0.2))
+        color: Palette.animeIco_e907_e908_e909_e90a.withOpacity(0.2),
+        size: size)
   ]);
 }
 
@@ -71,9 +75,9 @@ Icon buildTrashIcon(double size) {
   );
 }
 
-Icon buildHelpIcon() {
+Icon buildHelpIcon(double size) {
   return Icon(IconData(0xe90f, fontFamily: 'icomoon'),
-      color: Palette.lightPurple);
+      color: Palette.lightPurple, size: size);
 }
 
 Icon buildClubsIcon() {
@@ -86,9 +90,9 @@ Icon buildAnalyticsIcon() {
       color: Palette.lightPurple);
 }
 
-Icon buildUsersIcon() {
+Icon buildUsersIcon(double size) {
   return Icon(IconData(0xe921, fontFamily: 'icomoon'),
-      color: Palette.lightPurple);
+      color: Palette.lightPurple, size: size);
 }
 
 Icon buildCalendarIcon(double size, {Color? color}) {

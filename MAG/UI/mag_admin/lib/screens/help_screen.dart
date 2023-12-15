@@ -104,173 +104,182 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+        title_widget: Row(
+          children: [
+            buildHelpIcon(21),
+            SizedBox(width: 5),
+            Text("Help"),
+          ],
+        ),
         child: Center(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: 400),
-                  child: Text(
-                    _questionTitle!,
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Palette.teal,
-                      fontWeight: FontWeight.bold,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 400),
+                      child: Text(
+                        _questionTitle!,
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Palette.teal,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, top: 20),
+                    child: FormBuilder(
+                      key: _QAFormKey,
+                      initialValue: _initialValue,
+                      child: Container(
+                        constraints: BoxConstraints(
+                          minHeight: 200,
+                          maxHeight: 400,
+                          minWidth: 500,
+                          maxWidth: 500,
+                        ),
+                        child: MyFormBuilderTextField(
+                          name: "answer",
+                          fillColor: Palette.darkPurple,
+                          width: 500,
+                          height: 300,
+                          borderRadius: 15,
+                          minLines: 40,
+                          maxLines: 40,
+                          borderColor: Palette.lightPurple.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GradientButton(
+                    paddingLeft: 15,
+                    paddingTop: 30,
+                    width: 100,
+                    height: 30,
+                    borderRadius: 50,
+                    gradient: Palette.buttonGradient,
+                    child: Text(
+                      "Save",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                    onPressed: () async {
+                      _QAFormKey.currentState?.saveAndValidate();
+                      var tmp = Map.from(_QAFormKey.currentState!.value);
+                      var request = {
+                        "answer": tmp["answer"].toString(),
+                        "question": _initialValue["question"].toString(),
+                        "displayed": true,
+                      };
+                      try {
+                        if (qaID != null) {
+                          await _qaProvider.update(qaID!, request: request);
+                          showInfoDialog(
+                              context,
+                              Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              Text(
+                                "Answered successfully!",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
+                      } on Exception catch (e) {
+                        showErrorDialog(context, e);
+                      }
+                    },
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40, top: 20),
-                child: FormBuilder(
-                  key: _QAFormKey,
-                  initialValue: _initialValue,
-                  child: Container(
-                    constraints: BoxConstraints(
-                      minHeight: 200,
-                      maxHeight: 400,
-                      minWidth: 500,
-                      maxWidth: 500,
-                    ),
-                    child: MyFormBuilderTextField(
-                      name: "answer",
-                      fillColor: Palette.darkPurple,
-                      width: 500,
-                      height: 300,
-                      borderRadius: 15,
-                      minLines: 40,
-                      maxLines: 40,
-                      borderColor: Palette.lightPurple.withOpacity(0.3),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: FutureBuilder<SearchResult<QA>>(
+                      future: _qaFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Loading state
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Error state
+                        } else {
+                          // Data loaded successfully
+                          var qaList = snapshot.data!.result;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              FormBuilder(
+                                key: _QAfilterFormKey,
+                                initialValue: _selectedQAFilter,
+                                child: MyFormBuilderDropdown(
+                                  name: "QAfilter",
+                                  width: 130,
+                                  height: 50,
+                                  borderRadius: 15,
+                                  paddingRight: 15,
+                                  onChanged: (filter) {
+                                    setState(() {
+                                      _selectedQAFilter["QAfilter"] =
+                                          filter.toString();
+                                    });
+                                    _filterQA(filter!);
+                                  },
+                                  icon: Icon(Icons.filter_alt,
+                                      color: Palette.lightPurple),
+                                  items: [
+                                    DropdownMenuItem(
+                                        value: 'All', child: Text('All')),
+                                    DropdownMenuItem(
+                                        value: 'Unanswered',
+                                        child: Text('Unanswered')),
+                                    DropdownMenuItem(
+                                        value: 'Hidden', child: Text('Hidden')),
+                                    DropdownMenuItem(
+                                        value: 'Displayed',
+                                        child: Text('Displayed')),
+                                  ],
+                                ),
+                              ),
+                              LayoutBuilder(builder: (BuildContext context,
+                                  BoxConstraints constraints) {
+                                double maxSeparatorWidth =
+                                    constraints.maxWidth - 300;
+                                return MySeparator(
+                                  width: maxSeparatorWidth,
+                                  marginVertical: 10,
+                                  paddingRight: 25,
+                                  borderRadius: 50,
+                                  opacity: 0.5,
+                                );
+                              }),
+                              Wrap(
+                                children: _buildQACards(qaList),
+                                crossAxisAlignment: WrapCrossAlignment.start,
+                                alignment: WrapAlignment.start,
+                              ),
+                            ],
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
-              ),
-              GradientButton(
-                paddingLeft: 15,
-                paddingTop: 30,
-                width: 100,
-                height: 30,
-                borderRadius: 50,
-                gradient: Palette.buttonGradient,
-                child: Text(
-                  "Save",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                  ),
-                ),
-                onPressed: () async {
-                  _QAFormKey.currentState?.saveAndValidate();
-                  var tmp = Map.from(_QAFormKey.currentState!.value);
-                  var request = {
-                    "answer": tmp["answer"].toString(),
-                    "question": _initialValue["question"].toString(),
-                    "displayed": true,
-                  };
-                  try {
-                    if (qaID != null) {
-                      await _qaProvider.update(qaID!, request: request);
-                      showInfoDialog(
-                          context,
-                          Icon(Icons.task_alt,
-                              color: Palette.lightPurple, size: 50),
-                          Text(
-                            "Answered successfully!",
-                            textAlign: TextAlign.center,
-                          ));
-                    }
-                  } on Exception catch (e) {
-                    showErrorDialog(context, e);
-                  }
-                },
               ),
             ],
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: FutureBuilder<SearchResult<QA>>(
-                  future: _qaFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Loading state
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}'); // Error state
-                    } else {
-                      // Data loaded successfully
-                      var qaList = snapshot.data!.result;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          FormBuilder(
-                            key: _QAfilterFormKey,
-                            initialValue: _selectedQAFilter,
-                            child: MyFormBuilderDropdown(
-                              name: "QAfilter",
-                              width: 130,
-                              height: 50,
-                              borderRadius: 15,
-                              paddingRight: 15,
-                              onChanged: (filter) {
-                                setState(() {
-                                  _selectedQAFilter["QAfilter"] =
-                                      filter.toString();
-                                });
-                                _filterQA(filter!);
-                              },
-                              icon: Icon(Icons.filter_alt,
-                                  color: Palette.lightPurple),
-                              items: [
-                                DropdownMenuItem(
-                                    value: 'All', child: Text('All')),
-                                DropdownMenuItem(
-                                    value: 'Unanswered',
-                                    child: Text('Unanswered')),
-                                DropdownMenuItem(
-                                    value: 'Hidden', child: Text('Hidden')),
-                                DropdownMenuItem(
-                                    value: 'Displayed',
-                                    child: Text('Displayed')),
-                              ],
-                            ),
-                          ),
-                          LayoutBuilder(builder: (BuildContext context,
-                              BoxConstraints constraints) {
-                            double maxSeparatorWidth =
-                                constraints.maxWidth - 300;
-                            return MySeparator(
-                              width: maxSeparatorWidth,
-                              marginVertical: 10,
-                              paddingRight: 25,
-                              borderRadius: 50,
-                              opacity: 0.5,
-                            );
-                          }),
-                          Wrap(
-                            children: _buildQACards(qaList),
-                            crossAxisAlignment: WrapCrossAlignment.start,
-                            alignment: WrapAlignment.start,
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 
   List<Widget> _buildQACards(List<QA> qaList) {

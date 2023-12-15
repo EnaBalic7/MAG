@@ -4,6 +4,8 @@ import 'package:mag_admin/providers/club_provider.dart';
 import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
+import 'package:mag_admin/screens/anime_screen.dart';
+import 'package:mag_admin/screens/reviews_screen.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +47,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      title_widget: widget.user != null
+          ? Text("User details: ${widget.user!.username}")
+          : Text(""),
       showBackArrow: true,
       child: Center(
         child: Row(children: [
@@ -306,7 +311,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
             children: [
               _buildCard(object: comment),
               Visibility(
-                  visible: comment != null, child: _buildSeeMoreButton()),
+                  visible: comment != null,
+                  child: _buildSeeMoreButton(AnimeScreen())),
             ],
           );
         });
@@ -340,7 +346,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               _buildCard(object: post),
               Visibility(
                 visible: post != null,
-                child: _buildSeeMoreButton(),
+                child: _buildSeeMoreButton(AnimeScreen()),
               ),
             ],
           );
@@ -375,16 +381,23 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               _buildCard(object: rating),
               Visibility(
                 visible: rating != null,
-                child: _buildSeeMoreButton(),
+                child: _buildSeeMoreButton(ReviewsScreen(
+                  widget.user!,
+                  profilePicture: widget.profilePicture,
+                )),
               ),
             ],
           );
         });
   }
 
-  TextButton _buildSeeMoreButton() {
+  TextButton _buildSeeMoreButton(Widget screenName) {
     return TextButton(
-      onPressed: () {},
+      key: UniqueKey(),
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => screenName));
+      },
       style: ButtonStyle(
         foregroundColor: MaterialStateProperty.all<Color>(Palette.lightPurple),
         splashFactory: InkRipple.splashFactory,
@@ -607,7 +620,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         padding: EdgeInsets.zero,
         child: Row(
           children: [
-            IconButton(
+            /* IconButton(
               constraints: BoxConstraints(maxHeight: 24, maxWidth: 24),
               alignment: Alignment.topCenter,
               tooltip: "Hide from viewers",
@@ -619,7 +632,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 Icons.visibility_off_outlined,
                 size: 24,
               ),
-            ),
+            ),*/
             PopupMenuButton<String>(
               tooltip: "More actions",
               offset: Offset(195, 0),
@@ -636,6 +649,13 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   padding: EdgeInsets.zero,
                   child: ListTile(
                     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(Icons.text_snippet_rounded,
+                        color: Palette.lightPurple),
+                    title: Text('See details',
+                        style: TextStyle(color: Palette.lightPurple)),
+                    subtitle: Text('See more information about this',
+                        style: TextStyle(
+                            color: Palette.lightPurple.withOpacity(0.5))),
                     hoverColor: Palette.lightPurple.withOpacity(0.1),
                     onTap: () async {},
                   ),

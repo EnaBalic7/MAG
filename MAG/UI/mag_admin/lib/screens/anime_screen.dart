@@ -47,16 +47,23 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
     _animeProvider = context.read<AnimeProvider>();
     _animeFuture = _animeProvider.get(filter: {"GenresIncluded": "true"});
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
+
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      title_widget: Row(
+        children: [
+          buildAnimeIcon(28),
+          SizedBox(width: 5),
+          Text("Anime"),
+        ],
+      ),
       showFloatingActionButton: true,
       floatingButtonOnPressed: () {
         Navigator.of(context)
@@ -85,7 +92,6 @@ class _AnimeScreenState extends State<AnimeScreen> {
           }
         },
       ),
-      title_widget: Text("Anime"),
     );
   }
 
