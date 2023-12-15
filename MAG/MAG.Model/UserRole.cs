@@ -19,6 +19,8 @@ namespace MAG.Model
 
         public bool CanAskQuestions { get; set; }
 
+        public bool? CanParticipateInClubs { get; set; }
+
         public virtual Role Role { get; set; } = null!;
 
     }

@@ -21,6 +21,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/overlay_form.dart';
 import 'anime_detail_screen.dart';
 
 class UserDetailScreen extends StatefulWidget {
@@ -43,6 +44,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Rating? rating;
   Post? post;
   Comment? comment;
+
+  OverlayEntry? _overlayEntry;
 
   @override
   Widget build(BuildContext context) {
