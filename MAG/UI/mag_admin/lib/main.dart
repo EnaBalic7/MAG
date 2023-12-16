@@ -8,8 +8,10 @@ import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/qa_category_provider.dart';
 import 'package:mag_admin/providers/qa_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
+import 'package:mag_admin/providers/role_provider.dart';
 import 'package:mag_admin/providers/user_profile_picture_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
+import 'package:mag_admin/providers/user_role_provider.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/text_field.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +32,8 @@ void main() {
     ChangeNotifierProvider(create: (_) => PostProvider()),
     ChangeNotifierProvider(create: (_) => CommentProvider()),
     ChangeNotifierProvider(create: (_) => ClubProvider()),
+    ChangeNotifierProvider(create: (_) => RoleProvider()),
+    ChangeNotifierProvider(create: (_) => UserRoleProvider()),
   ], child: const MyMaterialApp()));
 }
 

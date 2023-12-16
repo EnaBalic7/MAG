@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:mag_admin/utils/icons.dart';
 
 import '../utils/colors.dart';
 
@@ -58,8 +59,10 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
           },
           name: widget.name!,
           decoration: InputDecoration(
-            suffixIcon: Icon(Icons.date_range_rounded,
-                size: 24, color: Palette.lightPurple),
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(right: 8.0),
+              child: buildCalendarIcon(24),
+            ),
             fillColor: widget.fillColor,
             labelText: widget.labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -69,6 +72,7 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
               color: Palette.lightPurple,
             ),
             border: OutlineInputBorder(
+              borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(widget.borderRadius!),
             ),
           ),

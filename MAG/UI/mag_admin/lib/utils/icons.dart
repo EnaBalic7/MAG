@@ -145,3 +145,90 @@ Icon buildCommentIcon(double size, {Color? color}) {
     size: size,
   );
 }
+
+Stack buildSnowflakeIcon(double size, {Color? color}) {
+  return Stack(
+    children: [
+      Icon(
+        IconData(0xe922, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco1,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe923, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco1,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe924, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco1,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe925, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe926, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe927, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe928, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe929, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe92a, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe92b, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe92c, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe92d, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe92e, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe92f, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe930, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+      Icon(
+        IconData(0xe931, fontFamily: 'icomoon'),
+        color: color ?? Palette.snowflakeIco2,
+        size: size,
+      ),
+    ],
+  );
+}

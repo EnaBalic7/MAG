@@ -1,13 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_admin/providers/role_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
+import 'package:mag_admin/providers/user_role_provider.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
+import 'package:mag_admin/widgets/form_builder_dropdown.dart';
+import 'package:mag_admin/widgets/form_builder_switch.dart';
+import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
+import '../models/role.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
 import '../models/user_profile_picture.dart';
+import '../models/user_role.dart';
 import '../providers/user_profile_picture_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -26,19 +36,32 @@ class _UsersScreenState extends State<UsersScreen> {
   late Future<SearchResult<User>> _userFuture;
   late UserProfilePictureProvider _userProfilePictureProvider;
   TextEditingController _userController = TextEditingController();
+  final _userRoleFormKey = GlobalKey<FormBuilderState>();
+  late RoleProvider _roleProvider;
+  late Future<SearchResult<Role>> _roleFuture;
+  late UserRoleProvider _userRoleProvider;
+  late Future<SearchResult<UserRole>> _userRoleFuture;
+  Map<String, dynamic> _userRoleInitialValue = {};
 
   @override
   void initState() {
     _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
+
+    _userProvider = context.read<UserProvider>();
+    _userFuture = _userProvider.get();
+
+    _roleProvider = context.read<RoleProvider>();
+    _roleFuture = _roleProvider.get();
+
+    _userRoleProvider = context.read<UserRoleProvider>();
+    _userRoleFuture = _userRoleProvider.get();
+
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    _userProvider = context.read<UserProvider>();
-    _userFuture = _userProvider.get();
   }
 
   @override
@@ -203,6 +226,164 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
+  void _showOverlayForm(
+      BuildContext context, User user, UserProfilePicture picture) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 1,
+          //width: MediaQuery.of(context).size.width * 1,
+          child: Stack(
+            children: [
+              _buildOverlayForm(context, user, picture),
+              Positioned(
+                left: 190,
+                top: 25,
+                child: Image.asset(
+                  "assets/images/animeWitch.png",
+                  width: 400,
+                ),
+              ),
+              Positioned(
+                right: 350,
+                bottom: 40,
+                child: Image.asset(
+                  "assets/images/cauldron.png",
+                  width: 200,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildOverlayForm(
+      BuildContext context, User user, UserProfilePicture picture) {
+    return Positioned.fill(
+      child: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
+              color: Palette.darkPurple,
+            ),
+            padding: EdgeInsets.all(16.0),
+            width: 500.0,
+            height: 650.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Icon(Icons.close_rounded)),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.memory(
+                        imageFromBase64String(picture.profilePicture!),
+                        width: 300,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                      ),
+                    ),
+                    Text("${user.username}", style: TextStyle(fontSize: 20)),
+                  ],
+                ),
+                FormBuilder(
+                  key: _userRoleFormKey,
+                  initialValue: _userRoleInitialValue,
+                  child: Column(
+                    children: [
+                      MyFormBuilderDropdown(
+                        name: "roleId",
+                        labelText: "Role",
+                        fillColor: Palette.lightPurple.withOpacity(0.1),
+                        dropdownColor: Palette.disabledControl,
+                        height: 50,
+                        borderRadius: 50,
+                        items: [
+                          DropdownMenuItem(
+                              value: '1', child: Text('Administrator')),
+                          DropdownMenuItem(value: '2', child: Text('User')),
+                        ],
+                      ),
+                      MyFormBuilderSwitch(
+                        name: "canParticipateInClubs",
+                        title: Text(
+                          "Club participation",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        subtitle: Text(
+                          "Allows the user to create clubs, make posts and comments",
+                          style: TextStyle(
+                              color: Palette.lightPurple.withOpacity(0.5)),
+                        ),
+                      ),
+                      MyFormBuilderSwitch(
+                        name: "canReview",
+                        title: Text(
+                          "Reviewing",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        subtitle: Text(
+                          "Allows the user to leave reviews for anime series",
+                          style: TextStyle(
+                              color: Palette.lightPurple.withOpacity(0.5)),
+                        ),
+                      ),
+                      MyFormBuilderSwitch(
+                        name: "canAskQuestions",
+                        title: Text(
+                          "Help section participation",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        subtitle: Text(
+                          "Allows the user to ask administrator(s) questions",
+                          style: TextStyle(
+                              color: Palette.lightPurple.withOpacity(0.5)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                GradientButton(
+                  width: 100,
+                  height: 30,
+                  borderRadius: 50,
+                  gradient: Palette.buttonGradient,
+                  onPressed: () {},
+                  child: Text(
+                    'Save',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildPopupMenu(User user, UserProfilePicture picture) {
     return PopupMenuButton<String>(
       tooltip: "Actions",
@@ -212,6 +393,7 @@ class _UsersScreenState extends State<UsersScreen> {
       ),
       icon: Icon(Icons.more_vert_rounded),
       splashRadius: 1,
+      constraints: BoxConstraints(minWidth: 10),
       padding: EdgeInsets.zero,
       color: Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -222,9 +404,9 @@ class _UsersScreenState extends State<UsersScreen> {
             hoverColor: Palette.lightPurple.withOpacity(0.1),
             leading:
                 Icon(Icons.text_snippet_rounded, color: Palette.lightPurple),
-            title: Text('See details',
+            title: Text("See details",
                 style: TextStyle(color: Palette.lightPurple)),
-            subtitle: Text('See more information about this user',
+            subtitle: Text("See more information about this user",
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -237,10 +419,35 @@ class _UsersScreenState extends State<UsersScreen> {
           padding: EdgeInsets.zero,
           child: ListTile(
             visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightPurple.withOpacity(0.1),
+            leading: Icon(
+              Icons.settings_suggest_rounded,
+              color: Palette.lightPurple,
+              size: 24,
+            ),
+            title: Text("User permissions",
+                style: TextStyle(color: Palette.lightPurple)),
+            subtitle: Text("Manage user's role and permissions",
+                style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
+            onTap: () {
+              _userRoleInitialValue = {
+                "canReview": true,
+                "canAskQuestions": true,
+                "canParticipateInClubs": true,
+                "roleId": "1"
+              };
+              _showOverlayForm(context, user, picture);
+            },
+          ),
+        ),
+        PopupMenuItem<String>(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),
-            title: Text('Delete', style: TextStyle(color: Palette.lightRed)),
-            subtitle: Text('Delete permanently',
+            title: Text("Delete", style: TextStyle(color: Palette.lightRed)),
+            subtitle: Text("Delete permanently",
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
               showConfirmationDialog(

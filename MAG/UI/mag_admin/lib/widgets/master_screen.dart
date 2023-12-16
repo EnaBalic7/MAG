@@ -86,8 +86,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         //   Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
         buildListTile(context, 'Anime', buildAnimeIcon(24), AnimeScreen()),
         buildListTile(context, 'Users', buildUsersIcon(24), UsersScreen()),
-        buildListTile(context, 'Analytics', buildAnalyticsIcon(), LoginPage()),
-        buildListTile(context, 'Clubs', buildClubsIcon(), LoginPage()),
+        buildListTile(
+            context, 'Analytics', buildAnalyticsIcon(), AnimeScreen()),
+        buildListTile(context, 'Clubs', buildClubsIcon(), AnimeScreen()),
         buildListTile(context, 'Help', buildHelpIcon(24), HelpScreen())
       ])),
       body: Stack(children: [

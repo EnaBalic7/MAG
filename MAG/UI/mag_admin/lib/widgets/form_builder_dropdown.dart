@@ -10,6 +10,7 @@ class MyFormBuilderDropdown extends StatefulWidget {
   String name;
   String? labelText;
   Color? fillColor;
+  Color? dropdownColor;
   double? width;
   double? height;
   double? borderRadius;
@@ -26,6 +27,7 @@ class MyFormBuilderDropdown extends StatefulWidget {
     required this.name,
     this.labelText,
     this.fillColor,
+    this.dropdownColor,
     this.width,
     this.height,
     this.borderRadius,
@@ -57,7 +59,7 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
         height: widget.height,
         child: FormBuilderDropdown(
           icon: widget.icon,
-          dropdownColor: Palette.darkPurple,
+          dropdownColor: widget.dropdownColor ?? Palette.darkPurple,
           items: widget.items,
           onChanged: widget.onChanged,
           name: widget.name,
@@ -72,6 +74,7 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
             ),
             fillColor: widget.fillColor,
             border: OutlineInputBorder(
+              borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
             ),
           ),

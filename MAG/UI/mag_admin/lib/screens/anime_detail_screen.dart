@@ -225,10 +225,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                                     DropdownMenuItem(
                                         value: 'Winter', child: Text('Winter')),
                                   ],
-                                  icon: Icon(
-                                    Icons.sunny_snowing,
-                                    color: Palette.lightPurple,
-                                  ),
+                                  icon: buildSnowflakeIcon(24),
                                   //initialValue: _initialValue['season'],
                                 ),
                                 MyFormBuilderTextField(
