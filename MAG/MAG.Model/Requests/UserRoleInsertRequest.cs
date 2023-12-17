@@ -16,5 +16,7 @@ namespace MAG.Model.Requests
         public bool CanReview { get; set; }
 
         public bool CanAskQuestions { get; set; }
+
+        public bool CanParticipateInClubs { get; set; }
     }
 }

@@ -230,6 +230,7 @@ class _UsersScreenState extends State<UsersScreen> {
       BuildContext context, User user, UserProfilePicture picture) {
     showCupertinoModalPopup(
       context: context,
+      barrierColor: Palette.black.withOpacity(0.5),
       builder: (BuildContext context) {
         return Container(
           height: MediaQuery.of(context).size.height * 1,
@@ -282,14 +283,11 @@ class _UsersScreenState extends State<UsersScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: Icon(Icons.close_rounded)),
-                    )
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.close_rounded))
                   ],
                 ),
                 Column(
@@ -312,19 +310,40 @@ class _UsersScreenState extends State<UsersScreen> {
                   initialValue: _userRoleInitialValue,
                   child: Column(
                     children: [
-                      MyFormBuilderDropdown(
-                        name: "roleId",
-                        labelText: "Role",
-                        fillColor: Palette.lightPurple.withOpacity(0.1),
-                        dropdownColor: Palette.disabledControl,
-                        height: 50,
-                        borderRadius: 50,
-                        items: [
-                          DropdownMenuItem(
-                              value: '1', child: Text('Administrator')),
-                          DropdownMenuItem(value: '2', child: Text('User')),
-                        ],
-                      ),
+                      FutureBuilder<SearchResult<Role>>(
+                          future: _roleFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData ||
+                                snapshot.data == null) {
+                              return Text('No roles available');
+                            } else {
+                              // Data loaded successfully
+                              var roles = snapshot.data!;
+
+                              List<DropdownMenuItem<String>> dropdownItems =
+                                  roles.result
+                                      .map((role) => DropdownMenuItem<String>(
+                                            value: role.id.toString(),
+                                            child: Text(role.name!),
+                                          ))
+                                      .toList();
+
+                              return MyFormBuilderDropdown(
+                                  name: "roleId",
+                                  labelText: "Role",
+                                  fillColor:
+                                      Palette.lightPurple.withOpacity(0.1),
+                                  dropdownColor: Palette.disabledControl,
+                                  height: 50,
+                                  borderRadius: 50,
+                                  items: dropdownItems);
+                            }
+                          }),
                       MyFormBuilderSwitch(
                         name: "canParticipateInClubs",
                         title: Text(
@@ -370,7 +389,27 @@ class _UsersScreenState extends State<UsersScreen> {
                   height: 30,
                   borderRadius: 50,
                   gradient: Palette.buttonGradient,
-                  onPressed: () {},
+                  onPressed: () async {
+                    _userRoleFormKey.currentState?.saveAndValidate();
+                    var request =
+                        Map.from(_userRoleFormKey.currentState!.value);
+                    try {
+                      var userRole = await _userRoleProvider
+                          .get(filter: {"UserId": "${user.id}"});
+                      await _userRoleProvider.update(userRole.result.single.id!,
+                          request: request);
+                      showInfoDialog(
+                          context,
+                          Icon(Icons.task_alt,
+                              color: Palette.lightPurple, size: 50),
+                          Text(
+                            "Updated successfully!",
+                            textAlign: TextAlign.center,
+                          ));
+                    } on Exception catch (e) {
+                      showErrorDialog(context, e);
+                    }
+                  },
                   child: Text(
                     'Save',
                     style: TextStyle(fontWeight: FontWeight.w500),
@@ -429,14 +468,38 @@ class _UsersScreenState extends State<UsersScreen> {
                 style: TextStyle(color: Palette.lightPurple)),
             subtitle: Text("Manage user's role and permissions",
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
-            onTap: () {
-              _userRoleInitialValue = {
-                "canReview": true,
-                "canAskQuestions": true,
-                "canParticipateInClubs": true,
-                "roleId": "1"
-              };
-              _showOverlayForm(context, user, picture);
+            onTap: () async {
+              try {
+                // Show loading indicator while fetching data
+                showDialog(
+                  context: context,
+                  builder: (context) => Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+
+                SearchResult<UserRole> result = await _userRoleProvider.get(
+                  filter: {"UserId": "${user.id}", "RoleIncluded": "true"},
+                );
+
+                Navigator.pop(context); //Closes loading indicator dialog
+
+                if (result.result.isEmpty) {
+                } else {
+                  UserRole userRole = result.result.single;
+
+                  _userRoleInitialValue = {
+                    "canReview": userRole.canReview,
+                    "canAskQuestions": userRole.canAskQuestions,
+                    "canParticipateInClubs": userRole.canParticipateInClubs,
+                    "roleId": "${userRole.roleId}"
+                  };
+
+                  _showOverlayForm(context, user, picture);
+                }
+              } on Exception catch (e) {
+                showErrorDialog(context, e);
+              }
             },
           ),
         ),

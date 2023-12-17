@@ -9,8 +9,12 @@ namespace MAG.Model.Requests
 {
     public class UserRoleUpdateRequest
     {
+        public int RoleId { get; set; }
+
         public bool CanReview { get; set; }
 
         public bool CanAskQuestions { get; set; }
+
+        public bool CanParticipateInClubs { get; set; }
     }
 }

@@ -20,6 +20,16 @@ namespace MAG.Services
             _context = context;
         }
 
+        public override IQueryable<Database.UserRole> AddFilter(IQueryable<Database.UserRole> query, UserRoleSearchObject? search = null)
+        {
+            if(search?.UserId != null)
+            {
+                query = query.Where(x => x.UserId == search.UserId);
+            }
+            
+            return base.AddFilter(query, search);
+        }
+
         public override IQueryable<Database.UserRole> AddInclude(IQueryable<Database.UserRole> query, UserRoleSearchObject? search = null)
         {
             if(search.RoleIncluded == true)

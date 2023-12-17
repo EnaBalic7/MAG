@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -28,11 +29,8 @@ class AnimeDetailScreen extends StatefulWidget {
   State<AnimeDetailScreen> createState() => _AnimeDetailScreenState();
 }
 
-class _AnimeDetailScreenState extends State<AnimeDetailScreen>
-    with AutomaticKeepAliveClientMixin {
+class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   @override
-  bool get wantKeepAlive => true;
-
   final _animeFormKey = GlobalKey<FormBuilderState>();
   final _genreFormKey = GlobalKey<FormBuilderState>();
   final GlobalKey<_AnimeDetailScreenState> key =
@@ -46,7 +44,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
   Map<String, dynamic> _initialValue = {};
   bool? showGenresForm;
   ScrollController _scrollController = ScrollController();
-  double _currentScrollPosition = 0.0;
 
   @override
   void initState() {
@@ -69,7 +66,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
     _genreProvider = context.read<GenreProvider>();
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
     _genreFuture = _genreProvider.get();
-    showGenresForm = false;
 
     context.read<GenreProvider>().addListener(() {
       _reloadGenresList();
@@ -84,15 +80,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
         _genreFuture = context.read<GenreProvider>().get();
       });
     }
-
-    _scrollController.addListener(() {
-      _currentScrollPosition = _scrollController.position.pixels;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return MasterScreenWidget(
       floatingButtonOnPressed: () async {
         await _saveAnimeData(context);
@@ -354,9 +345,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                         padding: const EdgeInsets.only(left: 10),
                         child: GradientButton(
                           onPressed: () {
-                            setState(() {
-                              showGenresForm = true;
-                            });
+                            _showOverlayForm(context);
                           },
                           width: 75,
                           height: 30,
@@ -368,7 +357,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
                       )
                     ],
                   ),
-                  _buildGenresForm(),
                 ],
               ),
             ),
@@ -378,103 +366,130 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
     );
   }
 
-  Visibility _buildGenresForm() {
-    return Visibility(
-      visible: showGenresForm!,
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Palette.darkPurple,
-            borderRadius: BorderRadius.circular(10),
+  void _showOverlayForm(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      barrierColor: Palette.black.withOpacity(0.5),
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 1,
+          //width: MediaQuery.of(context).size.width * 1,
+          child: Stack(
+            children: [
+              _buildOverlayForm(context),
+              Positioned(
+                left: 170,
+                top: 25,
+                child: Image.asset(
+                  "assets/images/mikasa.png",
+                  width: 400,
+                ),
+              ),
+              Positioned(
+                right: 350,
+                bottom: 40,
+                child: Image.asset(
+                  "assets/images/eren.png",
+                  width: 300,
+                ),
+              ),
+            ],
           ),
-          width: 600,
-          child: FormBuilder(
-            key: _genreFormKey,
-            child: Column(children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: FutureBuilder<SearchResult<Genre>>(
-                      future: _genreFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Loading state
-                        } else if (snapshot.hasError) {
-                          return Text(
-                              'Error: ${snapshot.error}'); // Error state
-                        } else {
-                          var genreList = snapshot.data!.result;
+        );
+      },
+    );
+  }
 
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scrollController.animateTo(
-                              _scrollController.position.maxScrollExtent,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                            );
-                          });
+  Widget _buildOverlayForm(BuildContext context) {
+    return Positioned.fill(
+      child: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
+              color: Palette.darkPurple,
+            ),
+            padding: EdgeInsets.all(16.0),
+            width: 500.0,
+            height: 250.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.close_rounded))
+                  ],
+                ),
+                FormBuilder(
+                  key: _genreFormKey,
+                  child: FutureBuilder<SearchResult<Genre>>(
+                    future: _genreFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // Loading state
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}'); // Error state
+                      } else {
+                        var genreList = snapshot.data!.result;
 
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    MyFormBuilderTextField(
-                                      name: "name",
-                                      labelText: "Genre name",
-                                      fillColor: Palette.disabledControl,
-                                      width: 300,
-                                      height: 50,
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  MyFormBuilderTextField(
+                                    name: "name",
+                                    labelText: "Genre name",
+                                    fillColor: Palette.disabledControl,
+                                    width: 300,
+                                    height: 50,
+                                    borderRadius: 50,
+                                    validator: FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(context),
+                                    ]),
+                                  ),
+                                  SizedBox(width: 5),
+                                  GradientButton(
+                                      onPressed: () {
+                                        _saveGenre(context);
+                                      },
+                                      width: 80,
+                                      height: 30,
                                       borderRadius: 50,
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(context),
-                                      ]),
-                                    ),
-                                    SizedBox(width: 5),
-                                    GradientButton(
-                                        onPressed: () {
-                                          _saveGenre(context);
-                                        },
-                                        width: 80,
-                                        height: 30,
-                                        borderRadius: 50,
-                                        gradient: Palette.buttonGradient,
-                                        child: Text("Add",
-                                            style: TextStyle(
-                                                color: Palette.white,
-                                                fontWeight: FontWeight.w500))),
-                                  ],
+                                      gradient: Palette.buttonGradient,
+                                      child: Text("Add",
+                                          style: TextStyle(
+                                              color: Palette.white,
+                                              fontWeight: FontWeight.w500))),
+                                ],
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Wrap(
+                                    children: _buildGenres(genreList),
+                                  ),
                                 ),
-                                Wrap(
-                                  children: _buildGenres(genreList),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.close_rounded,
-                                      color: Palette.lightPurple, size: 24),
-                                  onPressed: () {
-                                    setState(() {
-                                      showGenresForm = false;
-                                      _scrollController.animateTo(
-                                        200,
-                                        duration: Duration(milliseconds: 500),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
-                ],
-              )
-            ]),
+                ),
+              ],
+            ),
           ),
         ),
       ),
