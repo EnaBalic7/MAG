@@ -175,6 +175,16 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     ],
                   ),
                 ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    buildStarIcon(15),
+                    SizedBox(width: 3),
+                    Text("${rating.ratingValue.toString()}/10",
+                        style:
+                            TextStyle(color: Palette.starYellow, fontSize: 13)),
+                  ],
+                ),
                 _buildPopupMenu()
               ],
             ),

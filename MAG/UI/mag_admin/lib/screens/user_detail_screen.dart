@@ -568,6 +568,21 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                     ],
                   ),
                 ),
+                Visibility(
+                  visible: rating != null && object is Rating,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      buildStarIcon(15),
+                      SizedBox(width: 3),
+                      rating != null
+                          ? Text("${rating!.ratingValue.toString()}/10",
+                              style: TextStyle(
+                                  color: Palette.starYellow, fontSize: 13))
+                          : Text(""),
+                    ],
+                  ),
+                ),
                 _buildPopupMenu()
               ],
             ),

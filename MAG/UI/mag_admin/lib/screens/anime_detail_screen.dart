@@ -413,7 +413,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             ),
             padding: EdgeInsets.all(16.0),
             width: 500.0,
-            height: 250.0,
+            height: 450.0,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -440,48 +440,55 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                       } else {
                         var genreList = snapshot.data!.result;
 
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  MyFormBuilderTextField(
-                                    name: "name",
-                                    labelText: "Genre name",
-                                    fillColor: Palette.disabledControl,
-                                    width: 300,
-                                    height: 50,
-                                    borderRadius: 50,
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(context),
-                                    ]),
-                                  ),
-                                  SizedBox(width: 5),
-                                  GradientButton(
-                                      onPressed: () {
-                                        _saveGenre(context);
-                                      },
-                                      width: 80,
-                                      height: 30,
+                        return Expanded(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    MyFormBuilderTextField(
+                                      name: "name",
+                                      labelText: "Genre name",
+                                      fillColor: Palette.disabledControl,
+                                      width: 300,
+                                      height: 50,
                                       borderRadius: 50,
-                                      gradient: Palette.buttonGradient,
-                                      child: Text("Add",
-                                          style: TextStyle(
-                                              color: Palette.white,
-                                              fontWeight: FontWeight.w500))),
-                                ],
-                              ),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  child: Wrap(
-                                    children: _buildGenres(genreList),
-                                  ),
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(context),
+                                      ]),
+                                    ),
+                                    SizedBox(width: 5),
+                                    GradientButton(
+                                        onPressed: () {
+                                          _saveGenre(context);
+                                        },
+                                        width: 80,
+                                        height: 30,
+                                        borderRadius: 50,
+                                        gradient: Palette.buttonGradient,
+                                        child: Text("Add",
+                                            style: TextStyle(
+                                                color: Palette.white,
+                                                fontWeight: FontWeight.w500))),
+                                  ],
                                 ),
-                              )
-                            ],
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Container(
+                                      child: Wrap(
+                                        children: _buildGenres(genreList),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       }
