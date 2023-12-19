@@ -16,5 +16,6 @@ namespace MAG.Model.Requests
         public string? Email { get; set; }
 
         public int ProfilePictureId { get; set; }
+
     }
 }

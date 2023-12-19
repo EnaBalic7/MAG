@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MAG.Model.SearchObjects
 {
-    public class ClubSearchObject : BaseSearchObject
+    public class ClubCoverSearchObject : BaseSearchObject
     {
-        public string? Name { get; set; }
 
-        public bool? CoverIncluded { get; set; }
     }
 }

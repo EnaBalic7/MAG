@@ -4,8 +4,10 @@ import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
+import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/screens/help_screen.dart';
 import 'package:mag_admin/screens/users_screen.dart';
+import '../screens/clubs_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import './/main.dart';
@@ -88,7 +90,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         buildListTile(context, 'Users', buildUsersIcon(24), UsersScreen()),
         buildListTile(
             context, 'Analytics', buildAnalyticsIcon(), AnimeScreen()),
-        buildListTile(context, 'Clubs', buildClubsIcon(), AnimeScreen()),
+        buildListTile(context, 'Clubs', buildClubsIcon(24), ClubsScreen()),
         buildListTile(context, 'Help', buildHelpIcon(24), HelpScreen())
       ])),
       body: Stack(children: [

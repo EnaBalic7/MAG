@@ -22,13 +22,13 @@ namespace MAG.Services
 
         public override IQueryable<Database.User> AddInclude(IQueryable<Database.User> query, UserSearchObject? search = null)
         {
-            if (search.RolesIncluded == true)
+            if (search?.RolesIncluded == true)
             {
                 query = query.Include(user => user.UserRoles)
                              .ThenInclude(userRole => userRole.Role);
             }
 
-            if (search.WatchlistsIncluded == true)
+            if (search?.WatchlistsIncluded == true)
             {
                 query = query.Include(watchlist => watchlist.Watchlists)
                             .ThenInclude(watchlists => watchlists.AnimeWatchlists);

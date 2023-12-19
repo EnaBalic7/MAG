@@ -23,6 +23,8 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Club> Clubs { get; set; }
 
+    public virtual DbSet<ClubCover> ClubCovers { get; set; }
+
     public virtual DbSet<ClubUser> ClubUsers { get; set; }
 
     public virtual DbSet<Comment> Comments { get; set; }
@@ -128,14 +130,26 @@ public partial class MagContext : DbContext
             entity.ToTable("Club");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CoverId).HasColumnName("CoverID");
             entity.Property(e => e.DateCreated).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.OwnerId).HasColumnName("OwnerID");
+
+            entity.HasOne(d => d.Cover).WithMany(p => p.Clubs)
+                .HasForeignKey(d => d.CoverId)
+                .HasConstraintName("FK_Club_ClubCover");
 
             entity.HasOne(d => d.Owner).WithMany(p => p.Clubs)
                 .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Club_User");
+        });
+
+        modelBuilder.Entity<ClubCover>(entity =>
+        {
+            entity.ToTable("ClubCover");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
         });
 
         modelBuilder.Entity<ClubUser>(entity =>

@@ -42,7 +42,7 @@ namespace MAG.Services
 
             CreateMap<Database.Club, Model.Club>();
             CreateMap<ClubInsertRequest, Database.Club>();
-            // CreateMap<ClubUpdateRequest, Database.Club>();
+            CreateMap<ClubUpdateRequest, Database.Club>();
 
             CreateMap<Database.ClubUser, Model.ClubUser>();
             CreateMap<ClubUserInsertRequest, Database.ClubUser>();
@@ -87,6 +87,10 @@ namespace MAG.Services
             CreateMap<Database.UserProfilePicture, Model.UserProfilePicture>();
             CreateMap<UserProfilePictureInsertRequest, Database.UserProfilePicture>();
             CreateMap<UserProfilePictureUpdateRequest, Database.UserProfilePicture>();
+
+            CreateMap<Database.ClubCover, Model.ClubCover>();
+            CreateMap<ClubCoverInsertRequest, Database.ClubCover>();
+            CreateMap<ClubCoverUpdateRequest, Database.ClubCover>();
         }
     }
 }

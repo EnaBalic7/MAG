@@ -17,7 +17,11 @@ public partial class Club
 
     public DateTime DateCreated { get; set; }
 
+    public int? CoverId { get; set; }
+
     public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
+
+    public virtual ClubCover? Cover { get; set; }
 
     public virtual User Owner { get; set; } = null!;
 

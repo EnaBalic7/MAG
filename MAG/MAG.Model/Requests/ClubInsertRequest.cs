@@ -17,5 +17,7 @@ namespace MAG.Model.Requests
         public int MemberCount { get; set; }
 
         public DateTime DateCreated { get; set; }
+
+        public int CoverId { get; set; }
     }
 }

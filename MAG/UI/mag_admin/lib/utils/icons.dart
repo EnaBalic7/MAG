@@ -80,9 +80,9 @@ Icon buildHelpIcon(double size) {
       color: Palette.lightPurple, size: size);
 }
 
-Icon buildClubsIcon() {
+Icon buildClubsIcon(double size) {
   return Icon(IconData(0xe900, fontFamily: 'icomoon'),
-      color: Palette.lightPurple);
+      color: Palette.lightPurple, size: size);
 }
 
 Icon buildAnalyticsIcon() {

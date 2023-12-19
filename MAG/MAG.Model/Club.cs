@@ -20,6 +20,10 @@ namespace MAG.Model
 
         public DateTime DateCreated { get; set; }
 
+        public int? CoverId { get; set; }
+
+        public virtual ClubCover? Cover { get; set; }
+
         //public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
 
         public virtual User Owner { get; set; } = null!;
