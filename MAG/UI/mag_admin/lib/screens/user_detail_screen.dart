@@ -5,6 +5,7 @@ import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
+import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/screens/reviews_screen.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/separator.dart';
@@ -24,10 +25,8 @@ import 'package:intl/intl.dart';
 import 'anime_detail_screen.dart';
 
 class UserDetailScreen extends StatefulWidget {
-  User? user;
-  String? profilePicture;
-  UserDetailScreen({Key? key, this.user, this.profilePicture})
-      : super(key: key);
+  User user;
+  UserDetailScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<UserDetailScreen> createState() => _UserDetailScreenState();
@@ -47,9 +46,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: widget.user != null
-          ? Text("User details: ${widget.user!.username}")
-          : Text(""),
+      title_widget: Text("User details: ${widget.user.username}"),
       showBackArrow: true,
       child: Center(
         child: Row(children: [
@@ -94,7 +91,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: Image.memory(
-                            imageFromBase64String(widget.profilePicture!),
+                            imageFromBase64String(
+                                widget.user.profilePicture!.profilePicture!),
                             width: 360,
                             height: 330,
                             fit: BoxFit.cover,
@@ -110,7 +108,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user!.username}"),
+                            title: Text("${widget.user.username}"),
                             subtitle: Text("Username",
                                 style: TextStyle(
                                     color:
@@ -132,7 +130,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user!.firstName}"),
+                            title: Text("${widget.user.firstName}"),
                             subtitle: Text("First name",
                                 style: TextStyle(
                                     color:
@@ -154,7 +152,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user!.lastName}"),
+                            title: Text("${widget.user.lastName}"),
                             subtitle: Text("Last name",
                                 style: TextStyle(
                                     color:
@@ -176,7 +174,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user!.email}"),
+                            title: Text("${widget.user.email}"),
                             subtitle: Text("E-mail",
                                 style: TextStyle(
                                     color:
@@ -199,7 +197,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           ListTile(
                             horizontalTitleGap: 25,
                             title: Text(DateFormat('MMM d, y')
-                                .format(widget.user!.dateJoined!)),
+                                .format(widget.user.dateJoined!)),
                             subtitle: Text("Date joined",
                                 style: TextStyle(
                                     color:
@@ -288,7 +286,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   FutureBuilder<SearchResult<Comment>> _commentFutureBuilder() {
     return FutureBuilder<SearchResult<Comment>>(
         future: _commentProvider.get(filter: {
-          "UserId": "${widget.user!.id}",
+          "UserId": "${widget.user.id}",
           "NewestFirst": "true",
           "Page": "0",
           "PageSize": "1"
@@ -321,7 +319,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   FutureBuilder<SearchResult<Post>> _postFutureBuilder() {
     return FutureBuilder<SearchResult<Post>>(
         future: _postProvider.get(filter: {
-          "UserId": "${widget.user!.id}",
+          "UserId": "${widget.user.id}",
           "NewestFirst": "true",
           "Page": "0",
           "PageSize": "1"
@@ -356,7 +354,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   FutureBuilder<SearchResult<Rating>> _ratingFutureBuilder() {
     return FutureBuilder<SearchResult<Rating>>(
         future: _ratingProvider.get(filter: {
-          "UserId": "${widget.user!.id}",
+          "UserId": "${widget.user.id}",
           "NewestFirst": "true",
           "Page": "0",
           "PageSize": "1"
@@ -382,8 +380,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               Visibility(
                 visible: rating != null,
                 child: _buildSeeMoreButton(ReviewsScreen(
-                  widget.user!,
-                  profilePicture: widget.profilePicture,
+                  user: widget.user,
                 )),
               ),
             ],
@@ -458,7 +455,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: Image.memory(
-                            imageFromBase64String(widget.profilePicture!),
+                            imageFromBase64String(
+                                widget.user.profilePicture!.profilePicture!),
                             width: 43,
                             height: 43,
                             fit: BoxFit.cover,
@@ -469,7 +467,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              "${widget.user!.firstName} ${widget.user!.lastName}",
+                              "${widget.user.firstName} ${widget.user.lastName}",
                               style: TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold)),
                           Visibility(
@@ -515,9 +513,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           ),
                           Visibility(
                             visible: post != null && object is Post,
-                            child: FutureBuilder<Club>(
+                            child: FutureBuilder<SearchResult<Club>>(
                                 future: post != null
-                                    ? _clubProvider.getById(post!.clubId!)
+                                    ? _clubProvider.get(filter: {
+                                        "Id": "${post!.clubId!}",
+                                        "CoverIncluded": "true"
+                                      })
                                     : null,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
@@ -529,9 +530,21 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                   } else {
                                     // Data loaded successfully
 
-                                    Club? tmp = snapshot.data;
+                                    Club? tmp = snapshot.data!.result.first;
                                     if (tmp != null) {
-                                      return Text("${tmp.name}");
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ClubDetailScreen(club: tmp),
+                                            ),
+                                          );
+                                        },
+                                        child: MouseRegion(
+                                            cursor: SystemMouseCursors.click,
+                                            child: Text("${tmp.name}")),
+                                      );
                                     } else {
                                       return Text("Club not found");
                                     }

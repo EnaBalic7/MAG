@@ -24,6 +24,8 @@ namespace MAG.Model
 
         public int ProfilePictureId { get; set; }
 
+        public virtual UserProfilePicture ProfilePicture { get; set; } = null!;
+
         public DateTime DateJoined { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();

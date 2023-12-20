@@ -15,6 +15,16 @@ namespace MAG.Services
     {
         public ClubService(MagContext context, IMapper mapper) : base(context, mapper)
         {
+            var clubs = context.Clubs.ToList();
+
+            foreach (var club in clubs)
+            {
+                var memberCount = context.ClubUsers.Count(cu => cu.ClubId == club.Id);
+
+                club.MemberCount = memberCount;
+            }
+
+            context.SaveChanges();
 
         }
 

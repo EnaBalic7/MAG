@@ -34,7 +34,6 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   late UserProvider _userProvider;
   late Future<SearchResult<User>> _userFuture;
-  late UserProfilePictureProvider _userProfilePictureProvider;
   TextEditingController _userController = TextEditingController();
   final _userRoleFormKey = GlobalKey<FormBuilderState>();
   late RoleProvider _roleProvider;
@@ -45,10 +44,8 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   void initState() {
-    _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
-
     _userProvider = context.read<UserProvider>();
-    _userFuture = _userProvider.get();
+    _userFuture = _userProvider.get(filter: {"ProfilePictureIncluded": "true"});
 
     _roleProvider = context.read<RoleProvider>();
     _roleFuture = _roleProvider.get();
@@ -101,7 +98,10 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   void _search(String searchText) async {
-    var data = _userProvider.get(filter: {'fts': _userController.text});
+    var data = _userProvider.get(filter: {
+      "FTS": _userController.text,
+      "ProfilePictureIncluded": "true"
+    });
 
     setState(() {
       _userFuture = data;
@@ -122,112 +122,90 @@ class _UsersScreenState extends State<UsersScreen> {
       margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
-      child: FutureBuilder<UserProfilePicture>(
-          future: _userProfilePictureProvider.getById(user.profilePictureId!),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData || snapshot.data == null) {
-              return Text('No profile picture available');
-            } else {
-              // Data loaded successfully
-              var profilePicture = snapshot.data!;
-
-              return Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
-                    child: Image.memory(
-                      imageFromBase64String(profilePicture.profilePicture!),
-                      width: 200,
-                      height: 170,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            child: Image.memory(
+              imageFromBase64String(user.profilePicture!.profilePicture!),
+              width: 200,
+              height: 170,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 10, left: 35, right: 0, top: 5),
+                    child: Text(
+                      user.username!,
+                      overflow: TextOverflow.clip,
+                      textAlign: TextAlign.left,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 10, left: 35, right: 0, top: 5),
-                            child: Text(
-                              user.username!,
-                              overflow: TextOverflow.clip,
-                              textAlign: TextAlign.left,
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
+                child: _buildPopupMenu(user),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              child: SingleChildScrollView(
+                controller: ScrollController(),
+                child: Column(
+                  children: [
+                    Container(
+                      margin:
+                          EdgeInsets.only(top: 8, left: 0, right: 0, bottom: 0),
+                      child: Row(
+                        children: [
+                          Icon(Icons.person,
+                              size: 20, color: Palette.lightPurple),
+                          SizedBox(width: 3),
+                          Text("${user.firstName} ${user.lastName}",
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 0, left: 0, right: 0, bottom: 0),
-                        child: _buildPopupMenu(user, profilePicture),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10),
-                      child: SingleChildScrollView(
-                        controller: ScrollController(),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: 8, left: 0, right: 0, bottom: 0),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person,
-                                      size: 20, color: Palette.lightPurple),
-                                  SizedBox(width: 3),
-                                  Text("${user.firstName} ${user.lastName}",
-                                      style: TextStyle(
-                                          color: Palette.lightPurple,
-                                          fontSize: 16)),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: 5, left: 0, right: 0, bottom: 0),
-                              child: Row(
-                                children: [
-                                  buildCalendarIcon(20),
-                                  SizedBox(width: 3),
-                                  Text(
-                                      DateFormat('MMM d, y')
-                                          .format(user.dateJoined!),
-                                      style: TextStyle(
-                                          color: Palette.lightPurple,
-                                          fontSize: 16)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                                  color: Palette.lightPurple, fontSize: 16)),
+                        ],
                       ),
                     ),
-                  )
-                ],
-              );
-            }
-          }),
+                    Container(
+                      margin:
+                          EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 0),
+                      child: Row(
+                        children: [
+                          buildCalendarIcon(20),
+                          SizedBox(width: 3),
+                          Text(DateFormat('MMM d, y').format(user.dateJoined!),
+                              style: TextStyle(
+                                  color: Palette.lightPurple, fontSize: 16)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  void _showOverlayForm(
-      BuildContext context, User user, UserProfilePicture picture) {
+  void _showOverlayForm(BuildContext context, User user) {
     showCupertinoModalPopup(
       context: context,
       barrierColor: Palette.black.withOpacity(0.5),
@@ -237,7 +215,7 @@ class _UsersScreenState extends State<UsersScreen> {
           //width: MediaQuery.of(context).size.width * 1,
           child: Stack(
             children: [
-              _buildOverlayForm(context, user, picture),
+              _buildOverlayForm(context, user),
               Positioned(
                 left: 190,
                 top: 25,
@@ -261,8 +239,7 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
-  Widget _buildOverlayForm(
-      BuildContext context, User user, UserProfilePicture picture) {
+  Widget _buildOverlayForm(BuildContext context, User user) {
     return Positioned.fill(
       child: Material(
         color: Colors.transparent,
@@ -295,7 +272,8 @@ class _UsersScreenState extends State<UsersScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.memory(
-                        imageFromBase64String(picture.profilePicture!),
+                        imageFromBase64String(
+                            user.profilePicture!.profilePicture!),
                         width: 300,
                         height: 200,
                         fit: BoxFit.cover,
@@ -423,7 +401,7 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
-  Widget _buildPopupMenu(User user, UserProfilePicture picture) {
+  Widget _buildPopupMenu(User user) {
     return PopupMenuButton<String>(
       tooltip: "Actions",
       shape: RoundedRectangleBorder(
@@ -449,8 +427,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => UserDetailScreen(
-                      user: user, profilePicture: picture.profilePicture)));
+                  builder: (context) => UserDetailScreen(user: user)));
             },
           ),
         ),
@@ -495,7 +472,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     "roleId": "${userRole.roleId}"
                   };
 
-                  _showOverlayForm(context, user, picture);
+                  _showOverlayForm(context, user);
                 }
               } on Exception catch (e) {
                 showErrorDialog(context, e);

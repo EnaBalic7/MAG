@@ -34,6 +34,11 @@ namespace MAG.Services
                             .ThenInclude(watchlists => watchlists.AnimeWatchlists);
             }
 
+            if (search?.ProfilePictureIncluded == true)
+            {
+                query = query.Include(profilePicture => profilePicture.ProfilePicture);
+            }
+
 
             return base.AddInclude(query, search);
         }
@@ -108,7 +113,12 @@ namespace MAG.Services
                 query = query.Where(x => (x.FirstName + " " + x.LastName).Contains(search.FTS) || (x.LastName + " " + x.FirstName).Contains(search.FTS) || x.Username.Contains(search.FTS));
             }
 
-            return base.AddFilter(query, search);
+            if (search?.Id != null)
+            {
+                query = query.Where(x => x.Id == search.Id);
+            }
+
+                return base.AddFilter(query, search);
         }
     }
 }

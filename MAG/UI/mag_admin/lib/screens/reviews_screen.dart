@@ -17,12 +17,10 @@ import 'anime_detail_screen.dart';
 
 class ReviewsScreen extends StatefulWidget {
   User user;
-  String? profilePicture;
 
-  ReviewsScreen(
-    this.user, {
+  ReviewsScreen({
+    required this.user,
     Key? key,
-    this.profilePicture,
   }) : super(key: key);
 
   @override
@@ -46,11 +44,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     return MasterScreenWidget(
       title_widget: Row(
         children: [
-          widget.profilePicture != null
+          widget.user.profilePicture!.profilePicture != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Image.memory(
-                    imageFromBase64String(widget.profilePicture!),
+                    imageFromBase64String(
+                        widget.user.profilePicture!.profilePicture!),
                     width: 25,
                     height: 25,
                     fit: BoxFit.cover,
@@ -120,7 +119,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: Image.memory(
-                            imageFromBase64String(widget.profilePicture!),
+                            imageFromBase64String(
+                                widget.user.profilePicture!.profilePicture!),
                             width: 43,
                             height: 43,
                             fit: BoxFit.cover,

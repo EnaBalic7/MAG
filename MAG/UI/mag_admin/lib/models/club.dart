@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+
+import 'club_cover.dart';
 part 'club.g.dart';
 
 @JsonSerializable()
@@ -9,6 +11,7 @@ class Club {
   String? description;
   int? memberCount;
   DateTime? dateCreated;
+  ClubCover? cover;
 
   Club(
     this.id,
@@ -17,6 +20,7 @@ class Club {
     this.description,
     this.memberCount,
     this.dateCreated,
+    this.cover,
   );
 
   factory Club.fromJson(Map<String, dynamic> json) => _$ClubFromJson(json);
