@@ -33,6 +33,7 @@ class _HelpScreenState extends State<HelpScreen> {
   final _QAFormKey = GlobalKey<FormBuilderState>();
   final _QAfilterFormKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
+  TextEditingController _qaController = TextEditingController();
 
   @override
   void initState() {
@@ -111,6 +112,9 @@ class _HelpScreenState extends State<HelpScreen> {
             Text("Help"),
           ],
         ),
+        showSearch: true,
+        onSubmitted: _search,
+        controller: _qaController,
         child: Center(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,6 +284,10 @@ class _HelpScreenState extends State<HelpScreen> {
             ],
           ),
         ));
+  }
+
+  void _search(String searchText) async {
+    _filterQA(_selectedQAFilter["QAfilter"], searchText: searchText);
   }
 
   List<Widget> _buildQACards(List<QA> qaList) {
@@ -522,13 +530,14 @@ class _HelpScreenState extends State<HelpScreen> {
     }
   }
 
-  void _filterQA(String filter) {
+  void _filterQA(String filter, {String? searchText}) {
     if (filter == "All") {
       setState(() {
         _qaFuture = _qaProvider.get(filter: {
           "UserIncluded": "true",
           "CategoryIncluded": "true",
           "NewestFirst": "true",
+          if (searchText != null) "FTS": searchText,
         });
       });
     } else if (filter == "Unanswered") {
@@ -537,7 +546,8 @@ class _HelpScreenState extends State<HelpScreen> {
           "UserIncluded": "true",
           "CategoryIncluded": "true",
           "NewestFirst": "true",
-          "UnansweredOnly": "true"
+          "UnansweredOnly": "true",
+          if (searchText != null) "FTS": searchText,
         });
       });
     } else if (filter == "Hidden") {
@@ -546,7 +556,8 @@ class _HelpScreenState extends State<HelpScreen> {
           "UserIncluded": "true",
           "CategoryIncluded": "true",
           "NewestFirst": "true",
-          "HiddenOnly": "true"
+          "HiddenOnly": "true",
+          if (searchText != null) "FTS": searchText,
         });
       });
     } else if (filter == "Displayed") {
@@ -555,7 +566,8 @@ class _HelpScreenState extends State<HelpScreen> {
           "UserIncluded": "true",
           "CategoryIncluded": "true",
           "NewestFirst": "true",
-          "DisplayedOnly": "true"
+          "DisplayedOnly": "true",
+          if (searchText != null) "FTS": searchText,
         });
       });
     }

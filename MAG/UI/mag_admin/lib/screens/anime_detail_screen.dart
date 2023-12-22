@@ -262,7 +262,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingBottom: 50,
                                   borderRadius: 50,
                                   validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(context),
                                     FormBuilderValidators.url(context),
                                   ]),
                                 ),

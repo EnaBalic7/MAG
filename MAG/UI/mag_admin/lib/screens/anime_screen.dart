@@ -96,7 +96,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
   }
 
   void _search(String searchText) async {
-    var data = _animeProvider.get(filter: {'fts': _animeController.text});
+    var data = _animeProvider.get(filter: {'FTS': _animeController.text});
 
     setState(() {
       _animeFuture = data;
@@ -180,7 +180,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
               child: Image.network(
                 anime.imageUrl!,
                 width: 300,
-                height: 250,
+                height: 300,
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
