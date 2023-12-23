@@ -9,8 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/club.dart';
+import '../models/post.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
+import '../providers/post_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -27,10 +29,12 @@ class ClubDetailScreen extends StatefulWidget {
 class _ClubDetailScreenState extends State<ClubDetailScreen> {
   ScrollController _scrollController = ScrollController();
   late UserProvider _userProvider;
+  late PostProvider _postProvider;
 
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
+    _postProvider = context.read<PostProvider>();
 
     super.initState();
   }
@@ -177,9 +181,23 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                       ),
                     ],
                   ),
-                  _buildPost(),
-                  //_buildPost(),
-                  //_buildPost(),
+                  FutureBuilder<SearchResult<Post>>(
+                    future: _postProvider.get(filter: {
+                      "NewestFirst": "true",
+                      "ClubId": "${widget.club.id}"
+                    }),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // Loading state
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}'); // Error state
+                      } else {
+                        // Data loaded successfully
+                        var postList = snapshot.data!.result;
+                        return Column(children: _buildPosts(postList));
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -189,7 +207,14 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
     );
   }
 
-  Widget _buildPost() {
+  List<Widget> _buildPosts(List<Post> postList) {
+    return List.generate(
+      postList.length,
+      (index) => _buildPost(postList[index]),
+    );
+  }
+
+  Widget _buildPost(Post post) {
     return Padding(
       padding: EdgeInsets.only(
         top: 10,
@@ -204,26 +229,50 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
             children: [
               Row(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.asset("assets/images/blackClover.jpg",
-                                width: 70, height: 70, fit: BoxFit.cover)),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Celeste_27",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 18)),
-                          Text("Aug 30, 2023", style: TextStyle(fontSize: 12))
-                        ],
-                      )
-                    ],
+                  FutureBuilder<SearchResult<User>>(
+                    future: _userProvider.get(filter: {
+                      "Id": "${post.userId}",
+                      "ProfilePictureIncluded": "true"
+                    }),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // Loading state
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}'); // Error state
+                      } else {
+                        // Data loaded successfully
+                        User user = snapshot.data!.result.first;
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.memory(
+                                      imageFromBase64String(
+                                          user.profilePicture!.profilePicture!),
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover)),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${user.username}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18)),
+                                Text(
+                                    DateFormat('MMM d, y')
+                                        .format(post.datePosted!),
+                                    style: TextStyle(fontSize: 12)),
+                              ],
+                            )
+                          ],
+                        );
+                      }
+                    },
                   )
                 ],
               ),
@@ -236,7 +285,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                       height: 100,
                       child: SingleChildScrollView(
                         child: Text(
-                          "Do you think that maybe Julius was the enemy all along? I mean, think about it, there were so many moments everyone could have died in the Spade arc, but everything kept working out right at the very last moment. Let’s not forget the clock that was shown so many times, with its time never making any sense. It seems like there’s time magic at play here. What do you guys think?Do you think that maybe Julius was the enemy all along? I mean, think about it, there were so many moments everyone could have died in the Spade arc, but everything kept working out right at the very last moment. Let’s not forget the clock that was shown so many times, with its time never making any sense. It seems like there’s time magic at play here. What do you guys think?",
+                          "${post.content}",
                           overflow: TextOverflow.clip,
                         ),
                       ),
@@ -249,22 +298,22 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.only(right: 20),
                       child: Row(
                         children: [
                           Icon(Icons.thumb_up_rounded),
                           SizedBox(width: 5),
-                          Text("25")
+                          Text("${post.likesCount}")
                         ],
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.only(right: 20),
                       child: Row(
                         children: [
                           Icon(Icons.thumb_down_rounded),
                           SizedBox(width: 5),
-                          Text("2")
+                          Text("${post.dislikesCount}")
                         ],
                       ),
                     ),

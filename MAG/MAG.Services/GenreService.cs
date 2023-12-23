@@ -16,5 +16,15 @@ namespace MAG.Services
         {
 
         }
+
+        public override IQueryable<Genre> AddFilter(IQueryable<Genre> query, GenreSearchObject? search = null)
+        {
+            if(search?.SortAlphabetically == true)
+            {
+                query = query.OrderBy(x => x.Name);
+            }
+            
+            return base.AddFilter(query, search);
+        }
     }
 }

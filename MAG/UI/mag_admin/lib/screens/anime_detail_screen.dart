@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -65,7 +67,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _animeProvider = context.read<AnimeProvider>();
     _genreProvider = context.read<GenreProvider>();
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
-    _genreFuture = _genreProvider.get();
+    _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
 
     context.read<GenreProvider>().addListener(() {
       _reloadGenresList();
@@ -217,7 +219,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                         value: 'Winter', child: Text('Winter')),
                                   ],
                                   icon: buildSnowflakeIcon(24),
-                                  //initialValue: _initialValue['season'],
                                 ),
                                 MyFormBuilderTextField(
                                   name: "studio",
@@ -570,6 +571,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     try {
       if (widget.anime == null) {
         response = await _animeProvider.insert(request);
+        setState(() {
+          widget.anime = response;
+        });
         showInfoDialog(
             context,
             Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
