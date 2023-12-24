@@ -79,7 +79,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   void _reloadGenresList() {
     if (mounted) {
       setState(() {
-        _genreFuture = context.read<GenreProvider>().get();
+        _genreFuture =
+            _genreProvider.get(filter: {"SortAlphabetically": "true"});
       });
     }
   }
@@ -386,7 +387,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                 ),
               ),
               Positioned(
-                right: 350,
+                right: 270,
                 bottom: 40,
                 child: Image.asset(
                   "assets/images/eren.png",
@@ -464,6 +465,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                     GradientButton(
                                         onPressed: () {
                                           _saveGenre(context);
+
+                                          Navigator.of(context).pop();
                                         },
                                         width: 80,
                                         height: 30,
@@ -534,6 +537,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           await _genreAnimeProvider
                               .deleteByGenreId(genreList[index].id!);
                           _genreProvider.delete(genreList[index].id!);
+                          Navigator.of(context).pop();
                         });
                       },
                       child: MouseRegion(

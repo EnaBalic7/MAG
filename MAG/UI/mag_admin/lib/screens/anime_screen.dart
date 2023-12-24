@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../models/anime.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
+import '../widgets/gradient_button.dart';
 import 'anime_detail_screen.dart';
 
 class AnimeScreen extends StatefulWidget {
@@ -23,6 +24,13 @@ class _AnimeScreenState extends State<AnimeScreen> {
   SearchResult<Anime>? result;
   late Future<SearchResult<Anime>> _animeFuture;
   TextEditingController _animeController = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+
+  List<Anime> animeList = [];
+  int page = 0;
+  int pageSize = 8;
+  int totalItems = 0;
+  bool isSearching = false;
 
   @override
   void initState() {
@@ -32,26 +40,37 @@ class _AnimeScreenState extends State<AnimeScreen> {
     context.read<GenreAnimeProvider>().addListener(() {
       _reloadAnimeList();
     });
+
+    _animeProvider = context.read<AnimeProvider>();
+    _animeFuture = _animeProvider.get(filter: {
+      "GenresIncluded": "true",
+      "Page": "$page",
+      "PageSize": "$pageSize"
+    });
+
+    setTotalItems();
+    _genreAnimeProvider = context.read<GenreAnimeProvider>();
+
     super.initState();
+  }
+
+  void setTotalItems() async {
+    var animeResult = await _animeFuture;
+    setState(() {
+      totalItems = animeResult.count;
+    });
   }
 
   void _reloadAnimeList() {
     if (mounted) {
       setState(() {
-        _animeFuture = context
-            .read<AnimeProvider>()
-            .get(filter: {"GenresIncluded": "true"});
+        _animeFuture = context.read<AnimeProvider>().get(filter: {
+          "GenresIncluded": "true",
+          "Page": "$page",
+          "PageSize": "$pageSize"
+        });
       });
     }
-  }
-
-  @override
-  void didChangeDependencies() {
-    _animeProvider = context.read<AnimeProvider>();
-    _animeFuture = _animeProvider.get(filter: {"GenresIncluded": "true"});
-    _genreAnimeProvider = context.read<GenreAnimeProvider>();
-
-    super.didChangeDependencies();
   }
 
   @override
@@ -73,34 +92,99 @@ class _AnimeScreenState extends State<AnimeScreen> {
       onSubmitted: _search,
       controller: _animeController,
       child: FutureBuilder<SearchResult<Anime>>(
-        future: _animeFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}'); // Error state
-          } else {
-            // Data loaded successfully
-            var animeList = snapshot.data!.result;
-            return SingleChildScrollView(
-              child: Center(
-                child: Wrap(
-                  children: _buildAnimeCards(animeList),
+          future: _animeFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Loading state
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // Error state
+            } else {
+              // Data loaded successfully
+              var animeList = snapshot.data!.result;
+              return SingleChildScrollView(
+                controller: _scrollController,
+                child: Center(
+                  child: Column(
+                    children: [
+                      Wrap(
+                        children: _buildAnimeCards(animeList),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: ElevatedButton(
+                                onPressed:
+                                    page > 0 ? () => fetchPage(page - 1) : null,
+                                child: Icon(Icons.arrow_back_ios_rounded),
+                              ),
+                            ),
+                            Text(
+                                'Page ${page + 1} of ${(totalItems / 8).round()}'),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: ElevatedButton(
+                                onPressed: page + 1 == (totalItems / 8).round()
+                                    ? null
+                                    : () => fetchPage(page + 1),
+                                child: Icon(Icons.arrow_forward_ios_rounded),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-        },
-      ),
+              );
+            }
+          }),
     );
   }
 
-  void _search(String searchText) async {
-    var data = _animeProvider.get(filter: {'FTS': _animeController.text});
+  Future<void> fetchPage(int requestedPage) async {
+    try {
+      var result = await _animeProvider.get(
+        filter: {
+          "FTS": isSearching ? _animeController.text : null,
+          "GenresIncluded": "true",
+          "Page": "$requestedPage",
+          "PageSize": "$pageSize",
+        },
+      );
 
-    setState(() {
-      _animeFuture = data;
-    });
+      setState(() {
+        animeList = result.result;
+        _animeFuture = Future.value(result);
+        page = requestedPage;
+        isSearching = false;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
+  }
+
+  void _search(String searchText) async {
+    try {
+      var result = await _animeProvider.get(filter: {
+        "FTS": searchText,
+        "GenresIncluded": "true",
+        "Page": "0",
+        "PageSize": "$pageSize",
+      });
+
+      setState(() {
+        _animeFuture = Future.value(result);
+        animeList = result.result;
+        page = 0;
+        isSearching = true;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   List<Widget> _buildAnimeCards(List<Anime> animeList) {
