@@ -23,13 +23,32 @@ class ClubsScreen extends StatefulWidget {
 class _ClubsScreenState extends State<ClubsScreen> {
   late ClubProvider _clubProvider;
   late Future<SearchResult<Club>> _clubFuture;
+  TextEditingController _clubController = TextEditingController();
+
+  int page = 0;
+  int pageSize = 8;
+  int totalItems = 0;
+  bool isSearching = false;
 
   @override
   void initState() {
     _clubProvider = context.read<ClubProvider>();
-    _clubFuture = _clubProvider.get(filter: {"CoverIncluded": "true"});
+    _clubFuture = _clubProvider.get(filter: {
+      "CoverIncluded": "true",
+      "Page": "$page",
+      "PageSize": "$pageSize"
+    });
+
+    setTotalItems();
 
     super.initState();
+  }
+
+  void setTotalItems() async {
+    var clubResult = await _clubFuture;
+    setState(() {
+      totalItems = clubResult.count;
+    });
   }
 
   @override
@@ -43,6 +62,8 @@ class _ClubsScreenState extends State<ClubsScreen> {
         ],
       ),
       showSearch: true,
+      onSubmitted: _search,
+      controller: _clubController,
       child: FutureBuilder<SearchResult<Club>>(
         future: _clubFuture,
         builder: (context, snapshot) {
@@ -55,8 +76,13 @@ class _ClubsScreenState extends State<ClubsScreen> {
             var clubList = snapshot.data!.result;
             return SingleChildScrollView(
               child: Center(
-                child: Wrap(
-                  children: _buildClubCards(clubList),
+                child: Column(
+                  children: [
+                    Wrap(
+                      children: _buildClubCards(clubList),
+                    ),
+                    _buildPaginationButtons(),
+                  ],
                 ),
               ),
             );
@@ -64,6 +90,74 @@ class _ClubsScreenState extends State<ClubsScreen> {
         },
       ),
     );
+  }
+
+  Padding _buildPaginationButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ElevatedButton(
+              onPressed: page > 0 ? () => fetchPage(page - 1) : null,
+              child: Icon(Icons.arrow_back_ios_rounded),
+            ),
+          ),
+          Text('Page ${page + 1} of ${(totalItems / pageSize).ceil()}'),
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: ElevatedButton(
+              onPressed: page + 1 == (totalItems / pageSize).ceil()
+                  ? null
+                  : () => fetchPage(page + 1),
+              child: Icon(Icons.arrow_forward_ios_rounded),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> fetchPage(int requestedPage) async {
+    try {
+      var result = await _clubProvider.get(
+        filter: {
+          "Name": isSearching ? _clubController.text : null,
+          "CoverIncluded": "true",
+          "Page": "$requestedPage",
+          "PageSize": "$pageSize",
+        },
+      );
+
+      setState(() {
+        _clubFuture = Future.value(result);
+        page = requestedPage;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
+  }
+
+  void _search(String searchText) async {
+    try {
+      var result = await _clubProvider.get(filter: {
+        "Name": searchText,
+        "CoverIncluded": "true",
+        "Page": "0",
+        "PageSize": "$pageSize",
+      });
+
+      setState(() {
+        _clubFuture = Future.value(result);
+        isSearching = true;
+        totalItems = result.count;
+        page = 0;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   List<Widget> _buildClubCards(List<Club> clubList) {

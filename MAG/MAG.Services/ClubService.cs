@@ -28,6 +28,16 @@ namespace MAG.Services
 
         }
 
+        public override IQueryable<Club> AddFilter(IQueryable<Club> query, ClubSearchObject? search = null)
+        {
+            if(search?.Name != null)
+            {
+                query = query.Where(club => club.Name.Contains(search.Name));
+            }
+            
+            return base.AddFilter(query, search);
+        }
+
         public override IQueryable<Club> AddInclude(IQueryable<Club> query, ClubSearchObject? search = null)
         {
             if(search?.CoverIncluded == true)

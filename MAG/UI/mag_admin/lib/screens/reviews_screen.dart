@@ -29,14 +29,34 @@ class ReviewsScreen extends StatefulWidget {
 
 class _ReviewsScreenState extends State<ReviewsScreen> {
   late RatingProvider _ratingProvider;
+  late Future<SearchResult<Rating>> _ratingFuture;
+
   late AnimeProvider _animeProvider;
+
+  int page = 0;
+  int pageSize = 8;
+  int totalItems = 0;
 
   @override
   void initState() {
     _ratingProvider = context.read<RatingProvider>();
+    _ratingFuture = _ratingProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "Page": "$page",
+      "PageSize": "$pageSize"
+    });
+
+    setTotalItems();
     _animeProvider = context.read<AnimeProvider>();
 
     super.initState();
+  }
+
+  void setTotalItems() async {
+    var ratingResult = await _ratingFuture;
+    setState(() {
+      totalItems = ratingResult.count;
+    });
   }
 
   @override
@@ -66,7 +86,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       ),
       showBackArrow: true,
       child: FutureBuilder<SearchResult<Rating>>(
-        future: _ratingProvider.get(filter: {"UserId": "${widget.user.id}"}),
+        future: _ratingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator(); // Loading state
@@ -77,8 +97,13 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             var ratingList = snapshot.data!.result;
             return SingleChildScrollView(
               child: Center(
-                child: Wrap(
-                  children: _buildReviewCards(ratingList),
+                child: Column(
+                  children: [
+                    Wrap(
+                      children: _buildReviewCards(ratingList),
+                    ),
+                    _buildPaginationButtons(),
+                  ],
                 ),
               ),
             );
@@ -86,6 +111,53 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         },
       ),
     );
+  }
+
+  Padding _buildPaginationButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ElevatedButton(
+              onPressed: page > 0 ? () => fetchPage(page - 1) : null,
+              child: Icon(Icons.arrow_back_ios_rounded),
+            ),
+          ),
+          Text('Page ${page + 1} of ${(totalItems / pageSize).ceil()}'),
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: ElevatedButton(
+              onPressed: page + 1 == (totalItems / pageSize).ceil()
+                  ? null
+                  : () => fetchPage(page + 1),
+              child: Icon(Icons.arrow_forward_ios_rounded),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> fetchPage(int requestedPage) async {
+    try {
+      var result = await _ratingProvider.get(
+        filter: {
+          "UserId": "${widget.user.id}",
+          "Page": "$requestedPage",
+          "PageSize": "$pageSize",
+        },
+      );
+
+      setState(() {
+        _ratingFuture = Future.value(result);
+        page = requestedPage;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   List<Widget> _buildReviewCards(List<Rating> ratingList) {

@@ -19,6 +19,9 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? title_widget;
   TextEditingController? controller;
   void Function(String)? onSubmitted;
+  void Function()? onClosed;
+  void Function(String)? onChanged;
+  void Function()? onCleared;
   void Function()? floatingButtonOnPressed;
   bool? showBackArrow;
   bool? showSearch;
@@ -32,6 +35,9 @@ class MasterScreenWidget extends StatefulWidget {
     this.title_widget,
     this.controller,
     this.onSubmitted,
+    this.onClosed,
+    this.onChanged,
+    this.onCleared,
     this.showBackArrow,
     this.showSearch,
     this.showFloatingActionButton = false,
@@ -59,8 +65,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     return Scaffold(
       floatingActionButton: _buildFloatingActionButton(),
       appBar: AppBarWithSearchSwitch(
-        closeOnSubmit: false,
+        //closeOnSubmit: false,
         onSubmitted: widget.onSubmitted,
+        onClosed: widget.onClosed,
+        onChanged: widget.onChanged,
+        onCleared: widget.onCleared,
         customTextEditingController: widget.controller,
         titleTextStyle: TextStyle(fontSize: 16),
         centerTitle: true,

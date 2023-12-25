@@ -1,3 +1,4 @@
+import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:mag_admin/providers/genre_anime_provider.dart';
@@ -26,7 +27,6 @@ class _AnimeScreenState extends State<AnimeScreen> {
   TextEditingController _animeController = TextEditingController();
   ScrollController _scrollController = ScrollController();
 
-  List<Anime> animeList = [];
   int page = 0;
   int pageSize = 8;
   int totalItems = 0;
@@ -109,39 +109,41 @@ class _AnimeScreenState extends State<AnimeScreen> {
                       Wrap(
                         children: _buildAnimeCards(animeList),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: ElevatedButton(
-                                onPressed:
-                                    page > 0 ? () => fetchPage(page - 1) : null,
-                                child: Icon(Icons.arrow_back_ios_rounded),
-                              ),
-                            ),
-                            Text(
-                                'Page ${page + 1} of ${(totalItems / 8).round()}'),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: ElevatedButton(
-                                onPressed: page + 1 == (totalItems / 8).round()
-                                    ? null
-                                    : () => fetchPage(page + 1),
-                                child: Icon(Icons.arrow_forward_ios_rounded),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      _buildPaginationButtons(),
                     ],
                   ),
                 ),
               );
             }
           }),
+    );
+  }
+
+  Padding _buildPaginationButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ElevatedButton(
+              onPressed: page > 0 ? () => fetchPage(page - 1) : null,
+              child: Icon(Icons.arrow_back_ios_rounded),
+            ),
+          ),
+          Text('Page ${page + 1} of ${(totalItems / pageSize).ceil()}'),
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: ElevatedButton(
+              onPressed: page + 1 == (totalItems / pageSize).ceil()
+                  ? null
+                  : () => fetchPage(page + 1),
+              child: Icon(Icons.arrow_forward_ios_rounded),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -157,10 +159,8 @@ class _AnimeScreenState extends State<AnimeScreen> {
       );
 
       setState(() {
-        animeList = result.result;
         _animeFuture = Future.value(result);
         page = requestedPage;
-        isSearching = false;
       });
     } on Exception catch (e) {
       showErrorDialog(context, e);
@@ -178,9 +178,9 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
       setState(() {
         _animeFuture = Future.value(result);
-        animeList = result.result;
-        page = 0;
         isSearching = true;
+        totalItems = result.count;
+        page = 0;
       });
     } on Exception catch (e) {
       showErrorDialog(context, e);

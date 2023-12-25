@@ -42,11 +42,20 @@ class _UsersScreenState extends State<UsersScreen> {
   late Future<SearchResult<UserRole>> _userRoleFuture;
   Map<String, dynamic> _userRoleInitialValue = {};
 
+  int page = 0;
+  int pageSize = 18;
+  int totalItems = 0;
+  bool isSearching = false;
+
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
-    _userFuture = _userProvider.get(filter: {"ProfilePictureIncluded": "true"});
-
+    _userFuture = _userProvider.get(filter: {
+      "ProfilePictureIncluded": "true",
+      "Page": "$page",
+      "PageSize": "$pageSize"
+    });
+    setTotalItems();
     _roleProvider = context.read<RoleProvider>();
     _roleFuture = _roleProvider.get();
 
@@ -54,6 +63,13 @@ class _UsersScreenState extends State<UsersScreen> {
     _userRoleFuture = _userRoleProvider.get();
 
     super.initState();
+  }
+
+  void setTotalItems() async {
+    var userResult = await _userFuture;
+    setState(() {
+      totalItems = userResult.count;
+    });
   }
 
   @override
@@ -86,8 +102,15 @@ class _UsersScreenState extends State<UsersScreen> {
             var userList = snapshot.data!.result;
             return SingleChildScrollView(
               child: Center(
-                child: Wrap(
-                  children: _buildUserCards(userList),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Wrap(
+                      children: _buildUserCards(userList),
+                    ),
+                    _buildPaginationButtons(),
+                  ],
                 ),
               ),
             );
@@ -97,15 +120,72 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
-  void _search(String searchText) async {
-    var data = _userProvider.get(filter: {
-      "FTS": _userController.text,
-      "ProfilePictureIncluded": "true"
-    });
+  Padding _buildPaginationButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ElevatedButton(
+              onPressed: page > 0 ? () => fetchPage(page - 1) : null,
+              child: Icon(Icons.arrow_back_ios_rounded),
+            ),
+          ),
+          Text('Page ${page + 1} of ${(totalItems / pageSize).ceil()}'),
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: ElevatedButton(
+              onPressed: page + 1 == (totalItems / pageSize).ceil()
+                  ? null
+                  : () => fetchPage(page + 1),
+              child: Icon(Icons.arrow_forward_ios_rounded),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-    setState(() {
-      _userFuture = data;
-    });
+  Future<void> fetchPage(int requestedPage) async {
+    try {
+      var result = await _userProvider.get(
+        filter: {
+          "FTS": isSearching ? _userController.text : null,
+          "ProfilePictureIncluded": "true",
+          "Page": "$requestedPage",
+          "PageSize": "$pageSize",
+        },
+      );
+
+      setState(() {
+        _userFuture = Future.value(result);
+        page = requestedPage;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
+  }
+
+  void _search(String searchText) async {
+    try {
+      var result = await _userProvider.get(filter: {
+        "FTS": searchText,
+        "ProfilePictureIncluded": "true",
+        "Page": "0",
+        "PageSize": "$pageSize",
+      });
+
+      setState(() {
+        _userFuture = Future.value(result);
+        isSearching = true;
+        totalItems = result.count;
+        page = 0;
+      });
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   List<Widget> _buildUserCards(List<User> userList) {
