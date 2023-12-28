@@ -583,20 +583,67 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 ),
                 Visibility(
                   visible: rating != null && object is Rating,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  child: Column(
                     children: [
-                      buildStarIcon(15),
-                      SizedBox(width: 3),
-                      rating != null
-                          ? Text("${rating!.ratingValue.toString()}/10",
-                              style: TextStyle(
-                                  color: Palette.starYellow, fontSize: 13))
-                          : Text(""),
+                      Padding(
+                        padding: EdgeInsets.only(top: 1),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            buildStarIcon(15),
+                            SizedBox(width: 3),
+                            rating != null
+                                ? Text("${rating!.ratingValue.toString()}/10",
+                                    style: TextStyle(
+                                        color: Palette.starYellow,
+                                        fontSize: 13))
+                                : Text(""),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 4),
+                        child: rating != null
+                            ? Text(
+                                DateFormat('MMM d, y').format(
+                                  rating!.dateAdded!,
+                                ),
+                                style: TextStyle(fontSize: 13),
+                              )
+                            : Text(""),
+                      ),
                     ],
                   ),
                 ),
-                _buildPopupMenu()
+                Visibility(
+                  visible: post != null && object is Post,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 1),
+                    child: post != null
+                        ? Text(
+                            DateFormat('MMM d, y').format(
+                              post!.datePosted!,
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          )
+                        : Text(""),
+                  ),
+                ),
+                Visibility(
+                  visible: comment != null && object is Comment,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 1),
+                    child: comment != null
+                        ? Text(
+                            DateFormat('MMM d, y').format(
+                              comment!.dateCommented!,
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          )
+                        : Text(""),
+                  ),
+                ),
+                SizedBox(width: 10)
               ],
             ),
             Padding(
@@ -636,74 +683,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               ),
             ),
           ]),
-        ),
-      ),
-    );
-  }
-
-  ConstrainedBox _buildPopupMenu() {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 23),
-      child: Container(
-        padding: EdgeInsets.zero,
-        child: Row(
-          children: [
-            /* IconButton(
-              constraints: BoxConstraints(maxHeight: 24, maxWidth: 24),
-              alignment: Alignment.topCenter,
-              tooltip: "Hide from viewers",
-              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-              padding: EdgeInsets.zero,
-              splashRadius: 0.1,
-              onPressed: () {},
-              icon: Icon(
-                Icons.visibility_off_outlined,
-                size: 24,
-              ),
-            ),*/
-            PopupMenuButton<String>(
-              tooltip: "More actions",
-              offset: Offset(195, 0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
-              ),
-              icon: Icon(Icons.more_vert_rounded),
-              splashRadius: 1,
-              padding: EdgeInsets.zero,
-              color: Color.fromRGBO(50, 48, 90, 1),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  padding: EdgeInsets.zero,
-                  child: ListTile(
-                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                    leading: Icon(Icons.text_snippet_rounded,
-                        color: Palette.lightPurple),
-                    title: Text('See details',
-                        style: TextStyle(color: Palette.lightPurple)),
-                    subtitle: Text('See more information about this',
-                        style: TextStyle(
-                            color: Palette.lightPurple.withOpacity(0.5))),
-                    hoverColor: Palette.lightPurple.withOpacity(0.1),
-                    onTap: () async {},
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  padding: EdgeInsets.zero,
-                  child: ListTile(
-                    hoverColor: Palette.lightRed.withOpacity(0.1),
-                    leading: buildTrashIcon(24),
-                    title: Text('Delete',
-                        style: TextStyle(color: Palette.lightRed)),
-                    subtitle: Text('Delete permanently',
-                        style: TextStyle(
-                            color: Palette.lightRed.withOpacity(0.5))),
-                    onTap: () async {},
-                  ),
-                ),
-              ],
-            ),
-          ],
         ),
       ),
     );

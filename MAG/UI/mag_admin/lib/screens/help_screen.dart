@@ -8,6 +8,7 @@ import 'package:mag_admin/widgets/form_builder_dropdown.dart';
 import 'package:mag_admin/widgets/form_builder_text_field.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
@@ -35,14 +36,23 @@ class _HelpScreenState extends State<HelpScreen> {
   Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
   TextEditingController _qaController = TextEditingController();
 
+  int page = 0;
+  int pageSize = 2;
+  int totalItems = 0;
+  bool isSearching = false;
+
   @override
   void initState() {
     _qaProvider = context.read<QAProvider>();
     _qaFuture = _qaProvider.get(filter: {
       "UserIncluded": "true",
       "CategoryIncluded": "true",
-      "NewestFirst": "true"
+      "NewestFirst": "true",
+      "Page": "$page",
+      "PageSize": "$pageSize"
     });
+
+    setTotalItems();
 
     _initialValue = {
       "answer": "",
@@ -56,6 +66,13 @@ class _HelpScreenState extends State<HelpScreen> {
     super.initState();
   }
 
+  void setTotalItems() async {
+    var qaResult = await _qaFuture;
+    setState(() {
+      totalItems = qaResult.count;
+    });
+  }
+
   void _reloadQAList() {
     if (mounted) {
       if (_selectedQAFilter["QAfilter"] == "All") {
@@ -63,7 +80,9 @@ class _HelpScreenState extends State<HelpScreen> {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
-            "NewestFirst": "true"
+            "NewestFirst": "true",
+            "Page": "$page",
+            "PageSize": "$pageSize"
           });
         });
       } else if (_selectedQAFilter["QAfilter"] == "Unanswered") {
@@ -72,7 +91,9 @@ class _HelpScreenState extends State<HelpScreen> {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
             "NewestFirst": "true",
-            "UnansweredOnly": "true"
+            "UnansweredOnly": "true",
+            "Page": "$page",
+            "PageSize": "$pageSize"
           });
         });
       } else if (_selectedQAFilter["QAfilter"] == "Hidden") {
@@ -81,7 +102,9 @@ class _HelpScreenState extends State<HelpScreen> {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
             "NewestFirst": "true",
-            "HiddenOnly": "true"
+            "HiddenOnly": "true",
+            "Page": "$page",
+            "PageSize": "$pageSize"
           });
         });
       } else if (_selectedQAFilter["QAfilter"] == "Displayed") {
@@ -90,16 +113,13 @@ class _HelpScreenState extends State<HelpScreen> {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
             "NewestFirst": "true",
-            "DisplayedOnly": "true"
+            "DisplayedOnly": "true",
+            "Page": "$page",
+            "PageSize": "$pageSize"
           });
         });
       }
     }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 
   @override
@@ -268,10 +288,20 @@ class _HelpScreenState extends State<HelpScreen> {
                                   opacity: 0.5,
                                 );
                               }),
-                              Wrap(
-                                children: _buildQACards(qaList),
-                                crossAxisAlignment: WrapCrossAlignment.start,
-                                alignment: WrapAlignment.start,
+                              Column(
+                                children: [
+                                  Wrap(
+                                    children: _buildQACards(qaList),
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.start,
+                                    alignment: WrapAlignment.start,
+                                  ),
+                                  MyPaginationButtons(
+                                      page: page,
+                                      pageSize: pageSize,
+                                      totalItems: totalItems,
+                                      fetchPage: fetchPage),
+                                ],
                               ),
                             ],
                           );
@@ -287,7 +317,18 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   void _search(String searchText) async {
+    setState(() {
+      isSearching = true;
+    });
     _filterQA(_selectedQAFilter["QAfilter"], searchText: searchText);
+  }
+
+  Future<void> fetchPage(int requestedPage) async {
+    _filterQA(_selectedQAFilter["QAfilter"], requestedPage: requestedPage);
+
+    setState(() {
+      page = requestedPage;
+    });
   }
 
   List<Widget> _buildQACards(List<QA> qaList) {
@@ -530,46 +571,78 @@ class _HelpScreenState extends State<HelpScreen> {
     }
   }
 
-  void _filterQA(String filter, {String? searchText}) {
-    if (filter == "All") {
-      setState(() {
-        _qaFuture = _qaProvider.get(filter: {
-          "UserIncluded": "true",
-          "CategoryIncluded": "true",
-          "NewestFirst": "true",
-          if (searchText != null) "FTS": searchText,
+  void _filterQA(String filter,
+      {String? searchText, int? requestedPage}) async {
+    setState(() {
+      page = 0;
+    });
+    try {
+      if (filter == "All") {
+        setState(() {
+          _qaFuture = _qaProvider.get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            if (isSearching == true) "FTS": _qaController.text,
+            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+            "PageSize": "$pageSize"
+          });
         });
-      });
-    } else if (filter == "Unanswered") {
-      setState(() {
-        _qaFuture = _qaProvider.get(filter: {
-          "UserIncluded": "true",
-          "CategoryIncluded": "true",
-          "NewestFirst": "true",
-          "UnansweredOnly": "true",
-          if (searchText != null) "FTS": searchText,
+        var result = await _qaFuture;
+        setState(() {
+          totalItems = result.count;
         });
-      });
-    } else if (filter == "Hidden") {
-      setState(() {
-        _qaFuture = _qaProvider.get(filter: {
-          "UserIncluded": "true",
-          "CategoryIncluded": "true",
-          "NewestFirst": "true",
-          "HiddenOnly": "true",
-          if (searchText != null) "FTS": searchText,
+      } else if (filter == "Unanswered") {
+        setState(() {
+          _qaFuture = _qaProvider.get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            "UnansweredOnly": "true",
+            if (isSearching == true) "FTS": _qaController.text,
+            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+            "PageSize": "$pageSize"
+          });
         });
-      });
-    } else if (filter == "Displayed") {
-      setState(() {
-        _qaFuture = _qaProvider.get(filter: {
-          "UserIncluded": "true",
-          "CategoryIncluded": "true",
-          "NewestFirst": "true",
-          "DisplayedOnly": "true",
-          if (searchText != null) "FTS": searchText,
+        var result = await _qaFuture;
+        setState(() {
+          totalItems = result.count;
         });
-      });
+      } else if (filter == "Hidden") {
+        setState(() {
+          _qaFuture = _qaProvider.get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            "HiddenOnly": "true",
+            if (isSearching == true) "FTS": _qaController.text,
+            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+            "PageSize": "$pageSize"
+          });
+        });
+        var result = await _qaFuture;
+        setState(() {
+          totalItems = result.count;
+        });
+      } else if (filter == "Displayed") {
+        setState(() {
+          _qaFuture = _qaProvider.get(filter: {
+            "UserIncluded": "true",
+            "CategoryIncluded": "true",
+            "NewestFirst": "true",
+            "DisplayedOnly": "true",
+            if (isSearching == true) "FTS": _qaController.text,
+            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+            "PageSize": "$pageSize"
+          });
+        });
+        var result = await _qaFuture;
+        setState(() {
+          totalItems = result.count;
+        });
+      }
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
     }
   }
 }

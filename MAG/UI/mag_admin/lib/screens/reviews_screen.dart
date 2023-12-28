@@ -5,6 +5,7 @@ import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
 import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
@@ -14,6 +15,7 @@ import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 import 'anime_detail_screen.dart';
+import 'package:intl/intl.dart';
 
 class ReviewsScreen extends StatefulWidget {
   User user;
@@ -34,7 +36,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   late AnimeProvider _animeProvider;
 
   int page = 0;
-  int pageSize = 8;
+  int pageSize = 6;
   int totalItems = 0;
 
   @override
@@ -42,6 +44,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     _ratingProvider = context.read<RatingProvider>();
     _ratingFuture = _ratingProvider.get(filter: {
       "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
       "Page": "$page",
       "PageSize": "$pageSize"
     });
@@ -102,7 +105,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     Wrap(
                       children: _buildReviewCards(ratingList),
                     ),
-                    _buildPaginationButtons(),
+                    MyPaginationButtons(
+                        page: page,
+                        pageSize: pageSize,
+                        totalItems: totalItems,
+                        fetchPage: fetchPage),
                   ],
                 ),
               ),
@@ -113,39 +120,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
   }
 
-  Padding _buildPaginationButtons() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: ElevatedButton(
-              onPressed: page > 0 ? () => fetchPage(page - 1) : null,
-              child: Icon(Icons.arrow_back_ios_rounded),
-            ),
-          ),
-          Text('Page ${page + 1} of ${(totalItems / pageSize).ceil()}'),
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: ElevatedButton(
-              onPressed: page + 1 == (totalItems / pageSize).ceil()
-                  ? null
-                  : () => fetchPage(page + 1),
-              child: Icon(Icons.arrow_forward_ios_rounded),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> fetchPage(int requestedPage) async {
     try {
       var result = await _ratingProvider.get(
         filter: {
           "UserId": "${widget.user.id}",
+          "NewestFirst": "true",
           "Page": "$requestedPage",
           "PageSize": "$pageSize",
         },
@@ -247,17 +227,33 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     ],
                   ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                Column(
                   children: [
-                    buildStarIcon(15),
-                    SizedBox(width: 3),
-                    Text("${rating.ratingValue.toString()}/10",
-                        style:
-                            TextStyle(color: Palette.starYellow, fontSize: 13)),
+                    Padding(
+                      padding: EdgeInsets.only(top: 1),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          buildStarIcon(15),
+                          SizedBox(width: 3),
+                          Text("${rating.ratingValue.toString()}/10",
+                              style: TextStyle(
+                                  color: Palette.starYellow, fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        DateFormat('MMM d, y').format(
+                          rating.dateAdded!,
+                        ),
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
                   ],
                 ),
-                _buildPopupMenu()
+                _buildPopupMenu(rating)
               ],
             ),
             Padding(
@@ -285,7 +281,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
   }
 
-  ConstrainedBox _buildPopupMenu() {
+  ConstrainedBox _buildPopupMenu(Rating rating) {
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: 23),
       child: Container(
@@ -314,7 +310,16 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     subtitle: Text('Delete permanently',
                         style: TextStyle(
                             color: Palette.lightRed.withOpacity(0.5))),
-                    onTap: () async {},
+                    onTap: () async {
+                      showConfirmationDialog(
+                          context,
+                          Icon(Icons.warning_rounded,
+                              color: Palette.lightRed, size: 55),
+                          Text("Are you sure you want to delete this review?"),
+                          () async {
+                        await _ratingProvider.delete(rating.id!);
+                      });
+                    },
                   ),
                 ),
               ],

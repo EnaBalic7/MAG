@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
 
 import '../models/club.dart';
@@ -81,41 +82,17 @@ class _ClubsScreenState extends State<ClubsScreen> {
                     Wrap(
                       children: _buildClubCards(clubList),
                     ),
-                    _buildPaginationButtons(),
+                    MyPaginationButtons(
+                        page: page,
+                        pageSize: pageSize,
+                        totalItems: totalItems,
+                        fetchPage: fetchPage),
                   ],
                 ),
               ),
             );
           }
         },
-      ),
-    );
-  }
-
-  Padding _buildPaginationButtons() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: ElevatedButton(
-              onPressed: page > 0 ? () => fetchPage(page - 1) : null,
-              child: Icon(Icons.arrow_back_ios_rounded),
-            ),
-          ),
-          Text('Page ${page + 1} of ${(totalItems / pageSize).ceil()}'),
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: ElevatedButton(
-              onPressed: page + 1 == (totalItems / pageSize).ceil()
-                  ? null
-                  : () => fetchPage(page + 1),
-              child: Icon(Icons.arrow_forward_ios_rounded),
-            ),
-          ),
-        ],
       ),
     );
   }

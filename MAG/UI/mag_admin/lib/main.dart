@@ -86,7 +86,8 @@ class MyMaterialApp extends StatelessWidget {
               filled: true,
               fillColor: Palette.darkPurple,
               labelStyle: TextStyle(color: Palette.lightPurple),
-              helperStyle: TextStyle(color: Palette.lightPurple))),
+              helperStyle: TextStyle(color: Palette.lightPurple)),
+          indicatorColor: Palette.lightPurple),
       home: LoginPage(),
     );
   }
