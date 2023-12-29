@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../models/anime.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
+import '../widgets/circular_progress_indicator.dart';
 import '../widgets/gradient_button.dart';
 import 'anime_detail_screen.dart';
 
@@ -96,7 +97,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
           future: _animeFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Loading state
+              return MyProgressIndicator(); // Loading state
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // Error state
             } else {
@@ -195,6 +196,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
             subtitle: Text('See more information about this anime',
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () {
+              Navigator.pop(context);
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => AnimeDetailScreen(anime: anime)));
             },
@@ -210,6 +212,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
             subtitle: Text('Delete permanently',
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
+              Navigator.pop(context);
               showConfirmationDialog(
                   context,
                   Icon(Icons.warning_rounded,

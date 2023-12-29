@@ -45,49 +45,49 @@ class MyMaterialApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Anime Galaxy',
       darkTheme: ThemeData(
-          primarySwatch: generateMaterialColor(Palette.darkPurple),
-          scaffoldBackgroundColor: Palette.midnightPurple,
-          textTheme: Theme.of(context).textTheme.apply(
-                bodyColor: Palette.lightPurple,
-                displayColor: Color.fromARGB(255, 90, 83, 155),
-                decorationColor: Palette.lightPurple,
-              ),
-          chipTheme: ChipThemeData(
-            padding: EdgeInsets.all(10),
-            selectedColor: Palette.teal,
-            checkmarkColor: Palette.midnightPurple,
-            backgroundColor: Palette.textFieldPurple,
-          ),
-          textSelectionTheme: TextSelectionThemeData(
-              cursorColor: Palette.lightPurple,
-              selectionColor: Palette.midnightPurple,
-              selectionHandleColor: Palette.midnightPurple),
-          appBarTheme: AppBarTheme(
-              titleTextStyle: TextStyle(
-                  color: Palette.lightPurple,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500)),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                  primary: Palette.teal.withOpacity(0.5),
-                  textStyle: TextStyle(color: Palette.white))),
-          drawerTheme: DrawerThemeData(
-            backgroundColor: Palette.midnightPurple,
-            scrimColor: Palette.black.withOpacity(0.3),
-          ),
-          iconTheme: IconThemeData(color: Palette.lightPurple),
-          scrollbarTheme: ScrollbarThemeData(
-              crossAxisMargin: -10,
-              thickness: MaterialStateProperty.all(7),
-              trackBorderColor: MaterialStateProperty.all(Palette.white),
-              thumbColor: MaterialStateProperty.all(
-                  Palette.lightPurple.withOpacity(0.5))),
-          inputDecorationTheme: InputDecorationTheme(
-              filled: true,
-              fillColor: Palette.darkPurple,
-              labelStyle: TextStyle(color: Palette.lightPurple),
-              helperStyle: TextStyle(color: Palette.lightPurple)),
-          indicatorColor: Palette.lightPurple),
+        primarySwatch: generateMaterialColor(Palette.darkPurple),
+        scaffoldBackgroundColor: Palette.midnightPurple,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Palette.lightPurple,
+              displayColor: Color.fromARGB(255, 90, 83, 155),
+              decorationColor: Palette.lightPurple,
+            ),
+        chipTheme: ChipThemeData(
+          padding: EdgeInsets.all(10),
+          selectedColor: Palette.teal,
+          checkmarkColor: Palette.midnightPurple,
+          backgroundColor: Palette.textFieldPurple,
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+            cursorColor: Palette.lightPurple,
+            selectionColor: Palette.midnightPurple,
+            selectionHandleColor: Palette.midnightPurple),
+        appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+                color: Palette.lightPurple,
+                fontSize: 20,
+                fontWeight: FontWeight.w500)),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+                primary: Palette.teal.withOpacity(0.5),
+                textStyle: TextStyle(color: Palette.white))),
+        drawerTheme: DrawerThemeData(
+          backgroundColor: Palette.midnightPurple,
+          scrimColor: Palette.black.withOpacity(0.3),
+        ),
+        iconTheme: IconThemeData(color: Palette.lightPurple),
+        scrollbarTheme: ScrollbarThemeData(
+            crossAxisMargin: -10,
+            thickness: MaterialStateProperty.all(7),
+            trackBorderColor: MaterialStateProperty.all(Palette.white),
+            thumbColor: MaterialStateProperty.all(
+                Palette.lightPurple.withOpacity(0.5))),
+        inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Palette.darkPurple,
+            labelStyle: TextStyle(color: Palette.lightPurple),
+            helperStyle: TextStyle(color: Palette.lightPurple)),
+      ),
       home: LoginPage(),
     );
   }

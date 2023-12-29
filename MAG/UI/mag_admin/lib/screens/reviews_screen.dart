@@ -14,6 +14,7 @@ import '../models/search_result.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
+import '../widgets/circular_progress_indicator.dart';
 import 'anime_detail_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -92,7 +93,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         future: _ratingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
+            return MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -194,7 +195,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return CircularProgressIndicator(); // Loading state
+                                  return MyProgressIndicator(); // Loading state
                                 } else if (snapshot.hasError) {
                                   return Text(
                                       'Error: ${snapshot.error}'); // Error state
@@ -311,6 +312,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                         style: TextStyle(
                             color: Palette.lightRed.withOpacity(0.5))),
                     onTap: () async {
+                      Navigator.pop(context);
                       showConfirmationDialog(
                           context,
                           Icon(Icons.warning_rounded,

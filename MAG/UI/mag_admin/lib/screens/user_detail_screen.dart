@@ -22,6 +22,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/circular_progress_indicator.dart';
 import 'anime_detail_screen.dart';
 
 class UserDetailScreen extends StatefulWidget {
@@ -293,7 +294,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
+            return MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -326,7 +327,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
+            return MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -361,7 +362,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
+            return MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -482,7 +483,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator(); // Loading state
+                                    return MyProgressIndicator(); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state
@@ -523,7 +524,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator(); // Loading state
+                                    return MyProgressIndicator(); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state
@@ -560,7 +561,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator(); // Loading state
+                                    return MyProgressIndicator(); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state

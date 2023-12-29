@@ -16,6 +16,7 @@ import '../models/qa.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
+import '../widgets/circular_progress_indicator.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _HelpScreenState extends State<HelpScreen> {
   TextEditingController _qaController = TextEditingController();
 
   int page = 0;
-  int pageSize = 2;
+  int pageSize = 6;
   int totalItems = 0;
   bool isSearching = false;
 
@@ -233,7 +234,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator(); // Loading state
+                          return MyProgressIndicator(); // Loading state
                         } else if (snapshot.hasError) {
                           return Text(
                               'Error: ${snapshot.error}'); // Error state
@@ -253,6 +254,7 @@ class _HelpScreenState extends State<HelpScreen> {
                                   height: 50,
                                   borderRadius: 15,
                                   paddingRight: 15,
+                                  dropdownColor: Palette.disabledControl,
                                   onChanged: (filter) {
                                     setState(() {
                                       _selectedQAFilter["QAfilter"] =
@@ -409,6 +411,7 @@ class _HelpScreenState extends State<HelpScreen> {
                                 title: _buildHideTitle(qa),
                                 subtitle: _buildHideSubtitle(qa),
                                 onTap: () async {
+                                  Navigator.pop(context);
                                   await _hideOrShowQA(qa, context);
                                 },
                               ),
@@ -424,8 +427,17 @@ class _HelpScreenState extends State<HelpScreen> {
                                     style: TextStyle(
                                         color:
                                             Palette.lightRed.withOpacity(0.5))),
-                                onTap: () async {
-                                  await _deleteQA(qa, context);
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  showConfirmationDialog(
+                                      context,
+                                      Icon(Icons.warning_rounded,
+                                          color: Palette.lightRed, size: 55),
+                                      Text(
+                                          "Are you sure you want to delete this question?"),
+                                      () async {
+                                    await _deleteQA(qa, context);
+                                  });
                                 },
                               ),
                             ),
@@ -561,10 +573,15 @@ class _HelpScreenState extends State<HelpScreen> {
         showInfoDialog(
             context,
             Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            Text(
-              "Question has been hidden.",
-              textAlign: TextAlign.center,
-            ));
+            (qa.displayed == true)
+                ? Text(
+                    "Question has been hidden.",
+                    textAlign: TextAlign.center,
+                  )
+                : Text(
+                    "Question has been shown.",
+                    textAlign: TextAlign.center,
+                  ));
       }
     } on Exception catch (e) {
       showErrorDialog(context, e);

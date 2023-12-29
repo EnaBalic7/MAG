@@ -13,6 +13,7 @@ import '../providers/club_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
+import '../widgets/circular_progress_indicator.dart';
 
 class ClubsScreen extends StatefulWidget {
   const ClubsScreen({Key? key}) : super(key: key);
@@ -69,7 +70,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
         future: _clubFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
+            return MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -247,6 +248,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
             subtitle: Text('See more information about this club',
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () {
+              Navigator.pop(context);
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ClubDetailScreen(club: club)));
             },
@@ -262,6 +264,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
             subtitle: Text('Delete permanently',
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
+              Navigator.pop(context);
               showConfirmationDialog(
                   context,
                   Icon(Icons.warning_rounded,

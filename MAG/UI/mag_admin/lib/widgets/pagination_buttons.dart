@@ -63,8 +63,8 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
             child: Stack(
               children: [
                 Positioned(
-                  //top: 100,
-                  // left: 50,
+                  top: 130,
+                  left: 105,
                   child: Text(
                     "No results found.",
                     style: TextStyle(
@@ -72,12 +72,12 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
                         color: Palette.lightPurple.withOpacity(0.6)),
                   ),
                 ),
-                /*Opacity(
-                    opacity: 0.6,
+                Opacity(
+                    opacity: 0.8,
                     child: Image.asset(
                       "assets/images/starFrame.png",
-                      width: 300,
-                    )),*/
+                      width: 400,
+                    )),
               ],
             )),
       ],

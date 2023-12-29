@@ -16,6 +16,7 @@ import '../providers/post_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../widgets/circular_progress_indicator.dart';
 
 class ClubDetailScreen extends StatefulWidget {
   Club club;
@@ -118,7 +119,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return CircularProgressIndicator(); // Loading state
+                                      return MyProgressIndicator(); // Loading state
                                     } else if (snapshot.hasError) {
                                       return Text(
                                           'Error: ${snapshot.error}'); // Error state
@@ -188,7 +189,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                     }),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // Loading state
+                        return MyProgressIndicator(); // Loading state
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}'); // Error state
                       } else {
@@ -236,7 +237,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                     }),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // Loading state
+                        return MyProgressIndicator(); // Loading state
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}'); // Error state
                       } else {

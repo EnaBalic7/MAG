@@ -19,6 +19,7 @@ import '../models/search_result.dart';
 import '../providers/anime_provider.dart';
 import '../providers/genre_provider.dart';
 import '../utils/colors.dart';
+import '../widgets/circular_progress_indicator.dart';
 import '../widgets/form_builder_filter_chip.dart';
 import '../widgets/form_builder_text_field.dart';
 import '../widgets/gradient_button.dart';
@@ -46,6 +47,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   Map<String, dynamic> _initialValue = {};
   bool? showGenresForm;
   ScrollController _scrollController = ScrollController();
+
+  double _savedScrollPosition = 0.0;
 
   @override
   void initState() {
@@ -209,6 +212,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  dropdownColor: Palette.disabledControl,
                                   items: [
                                     DropdownMenuItem(
                                         value: 'Spring', child: Text('Spring')),
@@ -220,6 +224,14 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                         value: 'Winter', child: Text('Winter')),
                                   ],
                                   icon: buildSnowflakeIcon(24),
+                                  onTap: () {
+                                    _savedScrollPosition =
+                                        _scrollController.position.pixels;
+                                  },
+                                  onChanged: (x) {
+                                    _scrollController
+                                        .jumpTo(_savedScrollPosition);
+                                  },
                                 ),
                                 MyFormBuilderTextField(
                                   name: "studio",
@@ -304,7 +316,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator(); // Loading state
+                              return MyProgressIndicator(); // Loading state
                             } else if (snapshot.hasError) {
                               return Text(
                                   'Error: ${snapshot.error}'); // Error state
@@ -435,7 +447,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                     future: _genreFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // Loading state
+                        return MyProgressIndicator(); // Loading state
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}'); // Error state
                       } else {

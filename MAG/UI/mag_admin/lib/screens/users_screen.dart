@@ -25,6 +25,8 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/circular_progress_indicator.dart';
+
 class UsersScreen extends StatefulWidget {
   const UsersScreen({Key? key}) : super(key: key);
 
@@ -95,7 +97,7 @@ class _UsersScreenState extends State<UsersScreen> {
         future: _userFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Loading state
+            return MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -350,7 +352,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator();
+                              return MyProgressIndicator();
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else if (!snapshot.hasData ||
@@ -483,6 +485,7 @@ class _UsersScreenState extends State<UsersScreen> {
             subtitle: Text("See more information about this user",
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () {
+              Navigator.pop(context);
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => UserDetailScreen(user: user)));
             },
@@ -503,12 +506,13 @@ class _UsersScreenState extends State<UsersScreen> {
             subtitle: Text("Manage user's role and permissions",
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
             onTap: () async {
+              Navigator.pop(context);
               try {
                 // Show loading indicator while fetching data
                 showDialog(
                   context: context,
                   builder: (context) => Center(
-                    child: CircularProgressIndicator(),
+                    child: MyProgressIndicator(),
                   ),
                 );
 
@@ -547,6 +551,7 @@ class _UsersScreenState extends State<UsersScreen> {
             subtitle: Text("Delete permanently",
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
+              Navigator.pop(context);
               showConfirmationDialog(
                   context,
                   Icon(Icons.warning_rounded,
