@@ -8,6 +8,8 @@ namespace MAG.Model.SearchObjects
 {
     public class PostSearchObject : BaseSearchObject
     {
+        public int? Id { get; set; }
+
         public string? FTS { get; set; }
 
         public int? ClubId { get; set; }
@@ -15,5 +17,7 @@ namespace MAG.Model.SearchObjects
         public int? UserId { get; set; }
 
         public bool? NewestFirst { get; set; }
+
+        public bool? CommentsIncluded { get; set; }
     }
 }

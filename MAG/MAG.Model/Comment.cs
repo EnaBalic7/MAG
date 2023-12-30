@@ -22,7 +22,7 @@ namespace MAG.Model
 
         public DateTime DateCommented { get; set; }
 
-        public virtual Post Post { get; set; } = null!;
+        //public virtual Post Post { get; set; } = null!;
 
         public virtual User User { get; set; } = null!;
     }

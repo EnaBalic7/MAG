@@ -40,6 +40,7 @@ dependencies:
   app_bar_with_search_switch: ^1.6.0
   flutter_form_builder: ^6.1.0
   form_builder_validators: ^8.4.0
+  intl: ^0.17.0
 
 dev_dependencies:
   json_serializable: ^6.2.0

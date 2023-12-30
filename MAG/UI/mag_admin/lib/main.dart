@@ -96,8 +96,8 @@ class MyMaterialApp extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
-  TextEditingController _usernameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   late AnimeProvider _animeProvider;
 
   @override

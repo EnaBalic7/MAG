@@ -16,6 +16,9 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       json['datePosted'] == null
           ? null
           : DateTime.parse(json['datePosted'] as String),
+      (json['comments'] as List<dynamic>?)
+          ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
@@ -26,4 +29,5 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'likesCount': instance.likesCount,
       'dislikesCount': instance.dislikesCount,
       'datePosted': instance.datePosted?.toIso8601String(),
+      'comments': instance.comments,
     };

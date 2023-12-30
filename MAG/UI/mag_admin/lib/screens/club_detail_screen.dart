@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
@@ -28,9 +27,10 @@ class ClubDetailScreen extends StatefulWidget {
 }
 
 class _ClubDetailScreenState extends State<ClubDetailScreen> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   late UserProvider _userProvider;
   late PostProvider _postProvider;
+  User? owner;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
       title_widget: Row(
         children: [
           buildClubsIcon(22),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
           Text("${widget.club.name}"),
         ],
       ),
@@ -59,7 +59,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
           controller: _scrollController,
           child: Center(
             child: Container(
-              constraints: BoxConstraints(maxWidth: 874),
+              constraints: const BoxConstraints(maxWidth: 874),
               child: Column(
                 children: [
                   (widget.club.cover != null)
@@ -76,23 +76,23 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                   Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("${widget.club.name}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 35, fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 0, bottom: 15),
+                        padding: const EdgeInsets.only(top: 0, bottom: 15),
                         child: Row(
                           children: [
                             Container(
-                              constraints:
-                                  BoxConstraints(maxHeight: 150, maxWidth: 874),
+                              constraints: const BoxConstraints(
+                                  maxHeight: 150, maxWidth: 874),
                               child: SingleChildScrollView(
                                 controller: ScrollController(),
                                 child: Text("${widget.club.description}"),
@@ -109,8 +109,8 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Icon(Icons.person_rounded, size: 27),
-                                SizedBox(width: 10),
+                                const Icon(Icons.person_rounded, size: 27),
+                                const SizedBox(width: 10),
                                 FutureBuilder<SearchResult<User>>(
                                   future: _userProvider.get(filter: {
                                     "Id": "${widget.club.ownerId!}",
@@ -119,7 +119,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return MyProgressIndicator(); // Loading state
+                                      return const MyProgressIndicator(); // Loading state
                                     } else if (snapshot.hasError) {
                                       return Text(
                                           'Error: ${snapshot.error}'); // Error state
@@ -127,6 +127,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                       // Data loaded successfully
                                       var clubOwner =
                                           snapshot.data!.result.single;
+                                      owner = clubOwner;
                                       return GestureDetector(
                                         onTap: () {
                                           Navigator.of(context).push(
@@ -138,7 +139,8 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                         child: MouseRegion(
                                           cursor: SystemMouseCursors.click,
                                           child: Text("${clubOwner.username}",
-                                              style: TextStyle(fontSize: 20)),
+                                              style: const TextStyle(
+                                                  fontSize: 20)),
                                         ),
                                       );
                                     }
@@ -153,9 +155,9 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 buildUsersIcon(27),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text("${widget.club.memberCount}",
-                                    style: TextStyle(fontSize: 20)),
+                                    style: const TextStyle(fontSize: 20)),
                               ],
                             ),
                           ),
@@ -164,11 +166,11 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                             child: Row(
                               children: [
                                 buildCalendarIcon(25),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text(
                                     DateFormat('MMM d, y')
                                         .format(widget.club.dateCreated!),
-                                    style: TextStyle(fontSize: 20)),
+                                    style: const TextStyle(fontSize: 20)),
                               ],
                             ),
                           ),
@@ -185,11 +187,12 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                   FutureBuilder<SearchResult<Post>>(
                     future: _postProvider.get(filter: {
                       "NewestFirst": "true",
-                      "ClubId": "${widget.club.id}"
+                      "ClubId": "${widget.club.id}",
+                      "CommentsIncluded": "true",
                     }),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return MyProgressIndicator(); // Loading state
+                        return const MyProgressIndicator(); // Loading state
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}'); // Error state
                       } else {
@@ -217,7 +220,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
   Widget _buildPost(Post post) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 10,
       ),
       child: Container(
@@ -225,10 +228,12 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
         decoration: BoxDecoration(
             color: Palette.darkPurple, borderRadius: BorderRadius.circular(15)),
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FutureBuilder<SearchResult<User>>(
                     future: _userProvider.get(filter: {
@@ -237,7 +242,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                     }),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return MyProgressIndicator(); // Loading state
+                        return const MyProgressIndicator(); // Loading state
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}'); // Error state
                       } else {
@@ -247,7 +252,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(right: 10),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
                                   child: Image.memory(
@@ -260,27 +265,52 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${user.username}",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18)),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserDetailScreen(
+                                                        user: user)));
+                                      },
+                                      child: MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: Text("${user.username}",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Visibility(
+                                        visible:
+                                            user.username == owner?.username,
+                                        child: Tooltip(
+                                            message: "Club owner",
+                                            child: buildCrownIcon(15))),
+                                  ],
+                                ),
                                 Text(
                                     DateFormat('MMM d, y')
                                         .format(post.datePosted!),
-                                    style: TextStyle(fontSize: 12)),
+                                    style: const TextStyle(fontSize: 12)),
                               ],
-                            )
+                            ),
                           ],
                         );
                       }
                     },
-                  )
+                  ),
+                  _buildPopupMenu(post),
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10),
                 child: Row(
                   children: [
+                    // ignore: sized_box_for_whitespace
                     Container(
                       width: 844,
                       height: 100,
@@ -295,33 +325,44 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10),
                 child: Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.only(right: 20),
                       child: Row(
                         children: [
-                          Icon(Icons.thumb_up_rounded),
-                          SizedBox(width: 5),
+                          const Icon(Icons.thumb_up_rounded),
+                          const SizedBox(width: 5),
                           Text("${post.likesCount}")
                         ],
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.only(right: 20),
                       child: Row(
                         children: [
-                          Icon(Icons.thumb_down_rounded),
-                          SizedBox(width: 5),
+                          const Icon(Icons.thumb_down_rounded),
+                          const SizedBox(width: 5),
                           Text("${post.dislikesCount}")
                         ],
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.only(right: 8),
                       child: Row(
-                        children: [Text("12 replies")],
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        PostDetailScreen(post: post)));
+                              },
+                              child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child:
+                                      Text("${post.comments?.length} replies")))
+                        ],
                       ),
                     ),
                   ],
@@ -331,6 +372,44 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPopupMenu(Post post) {
+    return PopupMenuButton<String>(
+      tooltip: "Actions",
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+      ),
+      icon: Icon(Icons.more_vert_rounded),
+      splashRadius: 1,
+      padding: EdgeInsets.zero,
+      color: Color.fromRGBO(50, 48, 90, 1),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          padding: EdgeInsets.zero,
+          child: ListTile(
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightRed.withOpacity(0.1),
+            leading: buildTrashIcon(24),
+            title: Text('Delete', style: TextStyle(color: Palette.lightRed)),
+            subtitle: Text('Delete permanently',
+                style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
+            onTap: () {
+              Navigator.pop(context);
+              showConfirmationDialog(
+                  context,
+                  Icon(Icons.warning_rounded,
+                      color: Palette.lightRed, size: 55),
+                  Text("Are you sure you want to delete this post?"), () async {
+                /*await _genreAnimeProvider.deleteByAnimeId(anime.id!);
+                _animeProvider.delete(anime.id!);*/
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }

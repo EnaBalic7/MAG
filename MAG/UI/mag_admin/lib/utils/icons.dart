@@ -232,3 +232,11 @@ Stack buildSnowflakeIcon(double size, {Color? color}) {
     ],
   );
 }
+
+Icon buildCrownIcon(double size, {Color? color}) {
+  return Icon(
+    IconData(0xe932, fontFamily: 'icomoon'),
+    color: color ?? Palette.starYellow,
+    size: size,
+  );
+}

@@ -11,7 +11,6 @@ import '../models/anime.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
 import '../widgets/circular_progress_indicator.dart';
-import '../widgets/gradient_button.dart';
 import 'anime_detail_screen.dart';
 
 class AnimeScreen extends StatefulWidget {

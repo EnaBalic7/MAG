@@ -24,7 +24,8 @@ namespace MAG.Model
         public DateTime DatePosted { get; set; }
 
         public virtual Club Club { get; set; } = null!;
-        //public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
         public virtual User User { get; set; } = null!;
     }
