@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:mag_admin/utils/util.dart';
+import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/separator.dart';
 import 'package:intl/intl.dart';
@@ -27,21 +28,71 @@ class ClubDetailScreen extends StatefulWidget {
 }
 
 class _ClubDetailScreenState extends State<ClubDetailScreen> {
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController =
+      ScrollController(keepScrollOffset: true);
   late UserProvider _userProvider;
   late PostProvider _postProvider;
+  late Future<SearchResult<Post>> _postFuture;
   User? owner;
+
+  int page = 0;
+  int pageSize = 2;
+  int totalItems = 0;
+
+  double _savedScrollPosition = 0.0;
+  bool _needsScroll = false;
 
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
     _postProvider = context.read<PostProvider>();
+    _postFuture = _postProvider.get(filter: {
+      "NewestFirst": "true",
+      "ClubId": "${widget.club.id}",
+      "CommentsIncluded": "true",
+      "Page": "$page",
+      "PageSize": "$pageSize"
+    });
+
+    setTotalItems();
+
+    _scrollController.addListener(() {
+      _savedScrollPosition = _scrollController.position.pixels;
+    });
+    //_scrollController.addListener(scrollListener);
 
     super.initState();
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _savedScrollPosition = _scrollController.position.pixels;
+      //print("Reached max scroll position.");
+    }
+  }
+
+  void setTotalItems() async {
+    var postResult = await _postFuture;
+    setState(() {
+      totalItems = postResult.count;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("Building ClubDetailScreen");
+    if (_needsScroll) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
+      print("Calling _scrollToEnd method");
+      _needsScroll = false;
+    }
     return MasterScreenWidget(
       title_widget: Row(
         children: [
@@ -51,164 +102,201 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
         ],
       ),
       showBackArrow: true,
-      child: Scrollbar(
-        thumbVisibility: true,
-        trackVisibility: true,
+      child: SingleChildScrollView(
         controller: _scrollController,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 874),
-              child: Column(
-                children: [
-                  (widget.club.cover != null)
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.memory(
-                            imageFromBase64String(widget.club.cover!.cover!),
-                            width: 874,
-                            height: 400,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Container(),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("${widget.club.name}",
-                                style: const TextStyle(
-                                    fontSize: 35, fontWeight: FontWeight.w600)),
-                          ],
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 874),
+            child: Column(
+              children: [
+                (widget.club.cover != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.memory(
+                          imageFromBase64String(widget.club.cover!.cover!),
+                          width: 874,
+                          height: 400,
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0, bottom: 15),
-                        child: Row(
-                          children: [
-                            Container(
-                              constraints: const BoxConstraints(
-                                  maxHeight: 150, maxWidth: 874),
-                              child: SingleChildScrollView(
-                                controller: ScrollController(),
-                                child: Text("${widget.club.description}"),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      )
+                    : Container(),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Tooltip(
-                            message: "Club owner",
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                const Icon(Icons.person_rounded, size: 27),
-                                const SizedBox(width: 10),
-                                FutureBuilder<SearchResult<User>>(
-                                  future: _userProvider.get(filter: {
-                                    "Id": "${widget.club.ownerId!}",
-                                    "ProfilePictureIncluded": "true"
-                                  }),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const MyProgressIndicator(); // Loading state
-                                    } else if (snapshot.hasError) {
-                                      return Text(
-                                          'Error: ${snapshot.error}'); // Error state
-                                    } else {
-                                      // Data loaded successfully
-                                      var clubOwner =
-                                          snapshot.data!.result.single;
-                                      owner = clubOwner;
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      UserDetailScreen(
-                                                          user: clubOwner)));
-                                        },
-                                        child: MouseRegion(
-                                          cursor: SystemMouseCursors.click,
-                                          child: Text("${clubOwner.username}",
-                                              style: const TextStyle(
-                                                  fontSize: 20)),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Tooltip(
-                            message: "Number of club members",
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                buildUsersIcon(27),
-                                const SizedBox(width: 10),
-                                Text("${widget.club.memberCount}",
-                                    style: const TextStyle(fontSize: 20)),
-                              ],
-                            ),
-                          ),
-                          Tooltip(
-                            message: "Date created",
-                            child: Row(
-                              children: [
-                                buildCalendarIcon(25),
-                                const SizedBox(width: 10),
-                                Text(
-                                    DateFormat('MMM d, y')
-                                        .format(widget.club.dateCreated!),
-                                    style: const TextStyle(fontSize: 20)),
-                              ],
-                            ),
-                          ),
+                          Text("${widget.club.name}",
+                              style: const TextStyle(
+                                  fontSize: 35, fontWeight: FontWeight.w600)),
                         ],
                       ),
-                      MySeparator(
-                        width: 874,
-                        borderRadius: 100,
-                        paddingTop: 10,
-                        opacity: 0.5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0, bottom: 15),
+                      child: Row(
+                        children: [
+                          Container(
+                            constraints: const BoxConstraints(
+                                maxHeight: 150, maxWidth: 874),
+                            child: SingleChildScrollView(
+                              controller: ScrollController(),
+                              child: Text("${widget.club.description}"),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                  FutureBuilder<SearchResult<Post>>(
-                    future: _postProvider.get(filter: {
-                      "NewestFirst": "true",
-                      "ClubId": "${widget.club.id}",
-                      "CommentsIncluded": "true",
-                    }),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const MyProgressIndicator(); // Loading state
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}'); // Error state
-                      } else {
-                        // Data loaded successfully
-                        var postList = snapshot.data!.result;
-                        return Column(children: _buildPosts(postList));
-                      }
-                    },
-                  ),
-                ],
-              ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Tooltip(
+                          message: "Club owner",
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Icon(Icons.person_rounded, size: 27),
+                              const SizedBox(width: 10),
+                              FutureBuilder<SearchResult<User>>(
+                                future: _userProvider.get(filter: {
+                                  "Id": "${widget.club.ownerId!}",
+                                  "ProfilePictureIncluded": "true"
+                                }),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const MyProgressIndicator(); // Loading state
+                                  } else if (snapshot.hasError) {
+                                    return Text(
+                                        'Error: ${snapshot.error}'); // Error state
+                                  } else {
+                                    // Data loaded successfully
+                                    var clubOwner =
+                                        snapshot.data!.result.single;
+                                    owner = clubOwner;
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserDetailScreen(
+                                                        user: clubOwner)));
+                                      },
+                                      child: MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: Text("${clubOwner.username}",
+                                            style:
+                                                const TextStyle(fontSize: 20)),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tooltip(
+                          message: "Number of club members",
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              buildUsersIcon(27),
+                              const SizedBox(width: 10),
+                              Text("${widget.club.memberCount}",
+                                  style: const TextStyle(fontSize: 20)),
+                            ],
+                          ),
+                        ),
+                        Tooltip(
+                          message: "Date created",
+                          child: Row(
+                            children: [
+                              buildCalendarIcon(25),
+                              const SizedBox(width: 10),
+                              Text(
+                                  DateFormat('MMM d, y')
+                                      .format(widget.club.dateCreated!),
+                                  style: const TextStyle(fontSize: 20)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    MySeparator(
+                      width: 874,
+                      borderRadius: 100,
+                      paddingTop: 10,
+                      opacity: 0.5,
+                    ),
+                  ],
+                ),
+                FutureBuilder<SearchResult<Post>>(
+                  future: _postFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const MyProgressIndicator(); // Loading state
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}'); // Error state
+                    } else {
+                      // Data loaded successfully
+                      var postList = snapshot.data!.result;
+                      return Column(
+                        children: [
+                          Column(children: _buildPosts(postList)),
+                          GradientButton(
+                            onPressed: () {
+                              pageSize++;
+
+                              fetchPage();
+                            },
+                            width: 120,
+                            height: 30,
+                            paddingTop: 10,
+                            paddingBottom: 10,
+                            gradient: Palette.buttonGradient,
+                            borderRadius: 50,
+                            child: Text("See more posts",
+                                style: TextStyle(fontWeight: FontWeight.w500)),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  _scrollToEnd() async {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        curve: Curves.easeInOut, duration: Duration(milliseconds: 200));
+  }
+
+  Future<void> fetchPage() async {
+    try {
+      var result = await _postProvider.get(
+        filter: {
+          "NewestFirst": "true",
+          "ClubId": "${widget.club.id}",
+          "CommentsIncluded": "true",
+          "Page": "$page",
+          "PageSize": "$pageSize",
+        },
+      );
+
+      setState(() {
+        _postFuture = Future.value(result);
+        _needsScroll = true;
+      });
+      _scrollToEnd();
+    } on Exception catch (e) {
+      showErrorDialog(context, e);
+    }
   }
 
   List<Widget> _buildPosts(List<Post> postList) {
@@ -355,8 +443,10 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                           GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        PostDetailScreen(post: post)));
+                                    builder: (context) => PostDetailScreen(
+                                          post: post,
+                                          clubOwner: owner!,
+                                        )));
                               },
                               child: MouseRegion(
                                   cursor: SystemMouseCursors.click,

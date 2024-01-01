@@ -73,6 +73,7 @@ namespace MAG.Services
 
         public async Task<Model.User> Login(string username, string password)
         {
+
             var entity = await _context.Users.Include("UserRoles.Role").FirstOrDefaultAsync(x => x.Username == username);
 
             if (entity == null)

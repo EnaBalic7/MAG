@@ -17,7 +17,12 @@ import '../widgets/circular_progress_indicator.dart';
 
 class PostDetailScreen extends StatefulWidget {
   Post post;
-  PostDetailScreen({Key? key, required this.post}) : super(key: key);
+  User clubOwner;
+  PostDetailScreen({
+    Key? key,
+    required this.post,
+    required this.clubOwner,
+  }) : super(key: key);
 
   @override
   State<PostDetailScreen> createState() => _PostDetailScreenState();
@@ -129,20 +134,32 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserDetailScreen(user: user)));
-                                  },
-                                  child: MouseRegion(
-                                    cursor: SystemMouseCursors.click,
-                                    child: Text("${user.username}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18)),
-                                  ),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserDetailScreen(
+                                                        user: user)));
+                                      },
+                                      child: MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: Text("${user.username}",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Visibility(
+                                        visible: user.username ==
+                                            widget.clubOwner.username,
+                                        child: Tooltip(
+                                            message: "Club owner",
+                                            child: buildCrownIcon(15))),
+                                  ],
                                 ),
                                 Text(
                                     DateFormat('MMM d, y')
@@ -258,20 +275,32 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserDetailScreen(user: user)));
-                                  },
-                                  child: MouseRegion(
-                                    cursor: SystemMouseCursors.click,
-                                    child: Text("${user.username}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18)),
-                                  ),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserDetailScreen(
+                                                        user: user)));
+                                      },
+                                      child: MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: Text("${user.username}",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Visibility(
+                                        visible: user.username ==
+                                            widget.clubOwner.username,
+                                        child: Tooltip(
+                                            message: "Club owner",
+                                            child: buildCrownIcon(15))),
+                                  ],
                                 ),
                                 Text(
                                     DateFormat('MMM d, y')
