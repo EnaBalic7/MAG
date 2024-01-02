@@ -4,6 +4,7 @@ import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
+import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:mag_admin/widgets/separator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -28,19 +29,15 @@ class ClubDetailScreen extends StatefulWidget {
 }
 
 class _ClubDetailScreenState extends State<ClubDetailScreen> {
-  final ScrollController _scrollController =
-      ScrollController(keepScrollOffset: true);
+  final ScrollController _scrollController = ScrollController();
   late UserProvider _userProvider;
   late PostProvider _postProvider;
   late Future<SearchResult<Post>> _postFuture;
   User? owner;
 
   int page = 0;
-  int pageSize = 2;
+  int pageSize = 3;
   int totalItems = 0;
-
-  double _savedScrollPosition = 0.0;
-  bool _needsScroll = false;
 
   @override
   void initState() {
@@ -56,26 +53,12 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
     setTotalItems();
 
-    _scrollController.addListener(() {
+    /*_scrollController.addListener(() {
       _savedScrollPosition = _scrollController.position.pixels;
-    });
+    });*/
     //_scrollController.addListener(scrollListener);
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _savedScrollPosition = _scrollController.position.pixels;
-      //print("Reached max scroll position.");
-    }
   }
 
   void setTotalItems() async {
@@ -87,12 +70,6 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building ClubDetailScreen");
-    if (_needsScroll) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
-      print("Calling _scrollToEnd method");
-      _needsScroll = false;
-    }
     return MasterScreenWidget(
       title_widget: Row(
         children: [
@@ -140,10 +117,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                           Container(
                             constraints: const BoxConstraints(
                                 maxHeight: 150, maxWidth: 874),
-                            child: SingleChildScrollView(
-                              controller: ScrollController(),
-                              child: Text("${widget.club.description}"),
-                            ),
+                            child: Text("${widget.club.description}"),
                           )
                         ],
                       ),
@@ -244,21 +218,11 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                       return Column(
                         children: [
                           Column(children: _buildPosts(postList)),
-                          GradientButton(
-                            onPressed: () {
-                              pageSize++;
-
-                              fetchPage();
-                            },
-                            width: 120,
-                            height: 30,
-                            paddingTop: 10,
-                            paddingBottom: 10,
-                            gradient: Palette.buttonGradient,
-                            borderRadius: 50,
-                            child: Text("See more posts",
-                                style: TextStyle(fontWeight: FontWeight.w500)),
-                          ),
+                          MyPaginationButtons(
+                              page: page,
+                              pageSize: pageSize,
+                              totalItems: totalItems,
+                              fetchPage: fetchPage)
                         ],
                       );
                     }
@@ -272,28 +236,22 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
     );
   }
 
-  _scrollToEnd() async {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-        curve: Curves.easeInOut, duration: Duration(milliseconds: 200));
-  }
-
-  Future<void> fetchPage() async {
+  Future<void> fetchPage(int requestedPage) async {
     try {
       var result = await _postProvider.get(
         filter: {
           "NewestFirst": "true",
           "ClubId": "${widget.club.id}",
           "CommentsIncluded": "true",
-          "Page": "$page",
+          "Page": "$requestedPage",
           "PageSize": "$pageSize",
         },
       );
 
       setState(() {
         _postFuture = Future.value(result);
-        _needsScroll = true;
+        page = requestedPage;
       });
-      _scrollToEnd();
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
@@ -403,6 +361,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                       width: 844,
                       height: 100,
                       child: SingleChildScrollView(
+                        controller: ScrollController(),
                         child: Text(
                           "${post.content}",
                           overflow: TextOverflow.clip,
