@@ -10,7 +10,7 @@ namespace MAG.Services
 {
     public interface IPostService : ICRUDService<Model.Post, PostSearchObject, PostInsertRequest, PostUpdateRequest>
     {
+     
 
-          
     }
 }

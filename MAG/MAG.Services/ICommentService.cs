@@ -11,5 +11,6 @@ namespace MAG.Services
 {
     public interface ICommentService : ICRUDService<Model.Comment, CommentSearchObject, CommentInsertRequest, CommentUpdateRequest>
     {
+        public Task<bool> DeleteAllCommentsByPostId(int postId);
     }
 }

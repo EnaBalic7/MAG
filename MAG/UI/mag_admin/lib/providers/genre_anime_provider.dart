@@ -12,41 +12,17 @@ class GenreAnimeProvider extends BaseProvider<GenreAnime> {
     return GenreAnime.fromJson(data);
   }
 
-  Future<void> saveGenresForAnime(int animeId, List<String> genreIds) async {
-    await deleteByAnimeId(animeId);
-
-    for (var genreId in genreIds) {
-      await insert(GenreAnime(null, int.parse(genreId), animeId));
-    }
-  }
-
-  Future<bool> deleteByAnimeId(int animeId) async {
-    var url = "${BaseProvider.baseUrl}$_endpoint/DeleteByAnimeId/$animeId";
+  Future<bool> updateGenresForAnime(
+      int animeId, List<GenreAnime> newGenres) async {
+    var url = "${BaseProvider.baseUrl}$_endpoint/$animeId";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var response = await http!.delete(uri, headers: headers);
+    var jsonRequest = jsonEncode(newGenres);
+    var response = await http!.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
-      if (response.body == "true") {
-        //var data = jsonDecode(response.body);
-        notifyListeners();
-        return true;
-      }
-      return true;
-    } else {
-      throw Exception("Unknown error");
-    }
-  }
-
-  Future<bool> deleteByGenreId(int genreId) async {
-    var url = "${BaseProvider.baseUrl}$_endpoint/DeleteByGenreId/$genreId";
-    var uri = Uri.parse(url);
-    var headers = createHeaders();
-
-    var response = await http!.delete(uri, headers: headers);
-
-    if (isValidResponse(response)) {
+      notifyListeners();
       return true;
     } else {
       throw Exception("Unknown error");

@@ -13,8 +13,12 @@ namespace MAG.Services
 {
     public class PostService : BaseCRUDService<Model.Post, Database.Post, PostSearchObject, PostInsertRequest, PostUpdateRequest>, IPostService
     {
-        public PostService(MagContext context, IMapper mapper) : base(context, mapper)
+
+        protected ICommentService _commentService;
+
+        public PostService(MagContext context, IMapper mapper, ICommentService commentService) : base(context, mapper)
         {
+            _commentService = commentService;
         }
 
         public override IQueryable<Post> AddInclude(IQueryable<Post> query, PostSearchObject? search = null)
@@ -52,5 +56,11 @@ namespace MAG.Services
 
             return base.AddFilter(query, search);
         }
+
+        public override async Task BeforeDelete(Post entity)
+        {
+           await _commentService.DeleteAllCommentsByPostId(entity.Id);
+        }
+
     }
 }

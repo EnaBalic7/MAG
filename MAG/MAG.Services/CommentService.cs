@@ -12,6 +12,8 @@ namespace MAG.Services
 {
     public class CommentService : BaseCRUDService<Model.Comment, Database.Comment, CommentSearchObject, CommentInsertRequest, CommentUpdateRequest>, ICommentService
     {
+
+
         public CommentService(MagContext context, IMapper mapper) : base(context, mapper)
         {
         }
@@ -37,5 +39,18 @@ namespace MAG.Services
 
             return base.AddFilter(query, search);
         }
+
+        public async Task<bool> DeleteAllCommentsByPostId(int postId)
+        {
+            var comments = _context.Comments.Where(x => x.PostId == postId).ToList();
+
+            _context.RemoveRange(comments);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+
     }
 }

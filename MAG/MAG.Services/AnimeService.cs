@@ -14,9 +14,12 @@ namespace MAG.Services
 {
     public class AnimeService : BaseCRUDService<Model.Anime, Database.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>, IAnimeService
     {
-        public AnimeService(MagContext context, IMapper mapper) : base(context, mapper)
-        {
 
+        protected IGenreAnimeService _genreAnimeService;
+
+        public AnimeService(MagContext context, IMapper mapper, IGenreAnimeService genreAnimeService) : base(context, mapper)
+        {
+            _genreAnimeService = genreAnimeService;
         }
 
         public override IQueryable<Database.Anime> AddFilter(IQueryable<Database.Anime> query, AnimeSearchObject? search = null)
@@ -56,5 +59,11 @@ namespace MAG.Services
 
             return base.AddInclude(query, search);
         }
+
+        public override async Task BeforeDelete(Database.Anime entity)
+        {
+            await _genreAnimeService.DeleteByAnimeId(entity.Id);
+        }
+
     }
 }

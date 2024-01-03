@@ -218,7 +218,6 @@ class _AnimeScreenState extends State<AnimeScreen> {
                       color: Palette.lightRed, size: 55),
                   Text("Are you sure you want to delete this anime?"),
                   () async {
-                await _genreAnimeProvider.deleteByAnimeId(anime.id!);
                 _animeProvider.delete(anime.id!);
               });
             },

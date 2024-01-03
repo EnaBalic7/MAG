@@ -21,16 +21,10 @@ namespace MAG.Controllers
             return base.Update(id, update);
         }
 
-        [HttpDelete("DeleteByAnimeId/{animeId}")]
-        public async Task<bool> DeleteByAnimeId(int animeId)
+        [HttpPut("{{animeId}}")]
+        public async Task<bool> UpdateGenresForAnime(int animeId, List<GenreAnimeInsertRequest> newGenres)
         {
-           return await _service.DeleteByAnimeId(animeId);
-        }
-
-        [HttpDelete("DeleteByGenreId/{genreId}")]
-        public async Task<bool> DeleteByGenreId(int genreId)
-        {
-            return await _service.DeleteByGenreId(genreId);
+            return await _service.UpdateGenresForAnime(animeId, newGenres);
         }
 
     }

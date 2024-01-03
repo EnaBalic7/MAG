@@ -12,5 +12,6 @@ namespace MAG.Services
     {
         Task<bool> DeleteByAnimeId(int animeId);
         Task<bool> DeleteByGenreId(int genreId);
+        Task<bool> UpdateGenresForAnime(int animeId, List<GenreAnimeInsertRequest> newGenres);
     }
 }

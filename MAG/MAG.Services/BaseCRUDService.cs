@@ -27,6 +27,7 @@ namespace MAG.Services
             var set = _context.Set<TDb>();
 
             TDb entity = _mapper.Map<TDb>(insert);
+
             set.Add(entity);
 
             await BeforeInsert(entity, insert);
@@ -56,6 +57,10 @@ namespace MAG.Services
             return _mapper.Map<T>(entity);
         }
 
+        public virtual async Task BeforeDelete(TDb entity)
+        {
+        }
+
         public virtual async Task<T> Delete(int id)
         {
             var set = _context.Set<TDb>();
@@ -70,6 +75,8 @@ namespace MAG.Services
             {
                 throw new UserException($"There is no entity in table [{set.GetType().ToString().Split('[', ']')[1]}] with provided ID [{id}]");
             }
+
+            await BeforeDelete(entity);
 
             await _context.SaveChangesAsync();
 

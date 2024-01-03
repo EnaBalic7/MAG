@@ -39,8 +39,8 @@ namespace MAG.Services
             }
 
             return false;
-
         }
+
         public async Task<bool> DeleteByGenreId(int genreId)
         {
             var set = _context.Set<Database.GenreAnime>();
@@ -58,6 +58,20 @@ namespace MAG.Services
 
             return false;
         }
-        
+
+        public async Task<bool> UpdateGenresForAnime(int animeId, List<GenreAnimeInsertRequest> newGenres)
+        {
+            await DeleteByAnimeId(animeId);
+
+            var entities = newGenres.Select(insert => _mapper.Map<Database.GenreAnime>(insert));
+
+            _context.GenreAnimes.AddRange(entities);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+
     }
 }

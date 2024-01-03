@@ -22,6 +22,7 @@ namespace MAG.Services
             _context = context;
             _mapper = mapper;
         }
+
         public virtual async Task<PagedResult<T>> Get(TSearch? search  = null)
         {
             var query = _context.Set<TDb>().AsQueryable();
@@ -55,6 +56,7 @@ namespace MAG.Services
         {
             return query;
         }
+
         public virtual async Task<T> GetById(int id)
         {
             var set = _context.Set<TDb>();

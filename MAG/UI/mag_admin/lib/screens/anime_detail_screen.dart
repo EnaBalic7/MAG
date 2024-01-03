@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
 import '../models/genre.dart';
+import '../models/genre_anime.dart';
 import '../models/search_result.dart';
 import '../providers/anime_provider.dart';
 import '../providers/genre_provider.dart';
@@ -546,9 +547,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 color: Palette.lightRed, size: 55),
                             Text("Are you sure you want to delete this genre?"),
                             () async {
-                          await _genreAnimeProvider
-                              .deleteByGenreId(genreList[index].id!);
-                          _genreProvider.delete(genreList[index].id!);
+                          await _genreProvider.delete(genreList[index].id!);
                           Navigator.of(context).pop();
                         });
                       },
@@ -608,9 +607,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             ));
       }
 
-      if (widget.anime == null && response != null) {
+      /* if (widget.anime == null && response != null) {
         widget.anime = response;
-      }
+      }*/
 
       var selectedGenres =
           (_animeFormKey.currentState?.value['genres'] as List?)
@@ -618,8 +617,19 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   .toList() ??
               [];
 
-      await _genreAnimeProvider.saveGenresForAnime(
-          widget.anime!.id!, selectedGenres);
+      List<GenreAnime> genreAnimeInsertList = [];
+
+      for (var genreId in selectedGenres) {
+        genreAnimeInsertList
+            .add(GenreAnime(null, int.parse(genreId), widget.anime!.id!));
+      }
+
+      await _genreAnimeProvider.updateGenresForAnime(
+          widget.anime!.id!, genreAnimeInsertList);
+
+      /*await _genreAnimeProvider.saveGenresForAnime(
+          widget.anime!.id!, selectedGenres);*/
+
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
