@@ -14,7 +14,7 @@ class GenreAnimeProvider extends BaseProvider<GenreAnime> {
 
   Future<bool> updateGenresForAnime(
       int animeId, List<GenreAnime> newGenres) async {
-    var url = "${BaseProvider.baseUrl}$_endpoint/$animeId";
+    var url = "${BaseProvider.baseUrl}$_endpoint/UpdateGenres/$animeId";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 

@@ -68,6 +68,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         width: widget.width,
         height: widget.height ?? null,
         child: FormBuilderTextField(
+          focusNode: FocusNode(),
           initialValue: widget.initialValue,
           minLines: widget.minLines,
           autovalidateMode: AutovalidateMode.always,
@@ -77,7 +78,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           keyboardType: widget.keyboardType ?? TextInputType.text,
           readOnly: widget.readOnly ?? false,
           name: widget.name,
-          style: TextStyle(color: Palette.lightPurple),
+          style: const TextStyle(color: Palette.lightPurple),
           obscuringCharacter: '✮',
           obscureText: widget.obscureText ?? false,
           decoration: InputDecoration(
@@ -89,15 +90,15 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Palette.lightRed),
+                borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),
-            errorStyle: TextStyle(color: Palette.lightRed),
+            errorStyle: const TextStyle(color: Palette.lightRed),
             errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Palette.lightRed),
+                borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),
             labelText: widget.labelText ?? "",
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Palette.lightPurple,

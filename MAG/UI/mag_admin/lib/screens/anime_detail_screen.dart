@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/genre_anime_provider.dart';
+import 'package:mag_admin/screens/genres_screen.dart';
 import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/utils/util.dart';
 import 'package:mag_admin/widgets/form_builder_datetime_picker.dart';
@@ -36,7 +35,7 @@ class AnimeDetailScreen extends StatefulWidget {
 class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   @override
   final _animeFormKey = GlobalKey<FormBuilderState>();
-  final _genreFormKey = GlobalKey<FormBuilderState>();
+
   final GlobalKey<_AnimeDetailScreenState> key =
       GlobalKey<_AnimeDetailScreenState>();
   Image? _image;
@@ -73,11 +72,31 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
 
-    context.read<GenreProvider>().addListener(() {
+    _genreProvider.addListener(() {
       _reloadGenresList();
+      if (widget.anime != null) {
+        _updateAnimeGenres();
+      }
     });
 
     super.initState();
+  }
+
+  void _updateAnimeGenres() async {
+    var anime = await _animeProvider.get(filter: {
+      "Id": "${widget.anime!.id!}",
+      "GenresIncluded": "true",
+    });
+
+    var genreAnimeList = await _genreAnimeProvider
+        .get(filter: {"AnimeId": "${widget.anime!.id!}"});
+
+    if (mounted) {
+      setState(() {
+        //widget.anime = anime.result.first;
+        widget.anime!.genreAnimes = genreAnimeList.result;
+      });
+    }
   }
 
   void _reloadGenresList() {
@@ -359,7 +378,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                         padding: const EdgeInsets.only(left: 10),
                         child: GradientButton(
                           onPressed: () {
-                            _showOverlayForm(context);
+                            //_showOverlayForm(context);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: ((context) => GenresScreen())));
                           },
                           width: 75,
                           height: 30,
@@ -378,204 +399,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         ),
       ),
     );
-  }
-
-  void _showOverlayForm(BuildContext context) {
-    showCupertinoModalPopup(
-      context: context,
-      barrierColor: Palette.black.withOpacity(0.5),
-      builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 1,
-          //width: MediaQuery.of(context).size.width * 1,
-          child: Stack(
-            children: [
-              _buildOverlayForm(context),
-              Positioned(
-                left: 170,
-                top: 25,
-                child: Image.asset(
-                  "assets/images/mikasa.png",
-                  width: 400,
-                ),
-              ),
-              Positioned(
-                right: 270,
-                bottom: 40,
-                child: Image.asset(
-                  "assets/images/eren.png",
-                  width: 300,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildOverlayForm(BuildContext context) {
-    return Positioned.fill(
-      child: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
-              color: Palette.darkPurple,
-            ),
-            padding: EdgeInsets.all(16.0),
-            width: 500.0,
-            height: 450.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(Icons.close_rounded))
-                  ],
-                ),
-                FormBuilder(
-                  key: _genreFormKey,
-                  child: FutureBuilder<SearchResult<Genre>>(
-                    future: _genreFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return MyProgressIndicator(); // Loading state
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}'); // Error state
-                      } else {
-                        var genreList = snapshot.data!.result;
-
-                        return Expanded(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    MyFormBuilderTextField(
-                                      name: "name",
-                                      labelText: "Genre name",
-                                      fillColor: Palette.disabledControl,
-                                      width: 300,
-                                      height: 50,
-                                      borderRadius: 50,
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(context),
-                                      ]),
-                                    ),
-                                    SizedBox(width: 5),
-                                    GradientButton(
-                                        onPressed: () {
-                                          _saveGenre(context);
-
-                                          Navigator.of(context).pop();
-                                        },
-                                        width: 80,
-                                        height: 30,
-                                        borderRadius: 50,
-                                        gradient: Palette.buttonGradient,
-                                        child: Text("Add",
-                                            style: TextStyle(
-                                                color: Palette.white,
-                                                fontWeight: FontWeight.w500))),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: Container(
-                                      child: Wrap(
-                                        children: _buildGenres(genreList),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _buildGenres(List<Genre> genreList) {
-    return List.generate(
-      genreList.length,
-      (index) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-              //width: 100,
-              height: 30,
-              padding: EdgeInsets.all(5.4),
-              decoration: BoxDecoration(
-                  color: Palette.textFieldPurple.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(50)),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("${genreList[index].name}",
-                      style: TextStyle(fontSize: 15)),
-                  GestureDetector(
-                      onTap: () {
-                        showConfirmationDialog(
-                            context,
-                            Icon(Icons.warning_rounded,
-                                color: Palette.lightRed, size: 55),
-                            Text("Are you sure you want to delete this genre?"),
-                            () async {
-                          await _genreProvider.delete(genreList[index].id!);
-                          Navigator.of(context).pop();
-                        });
-                      },
-                      child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: buildTrashIcon(20)))
-                ],
-              )),
-        );
-      },
-    );
-  }
-
-  Future<void> _saveGenre(BuildContext context) async {
-    _genreFormKey.currentState?.saveAndValidate();
-    var request = Map.from(_genreFormKey.currentState!.value);
-    try {
-      await _genreProvider.insert(request);
-      showInfoDialog(
-          context,
-          Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-          Text(
-            "Added successfully!",
-            textAlign: TextAlign.center,
-          ));
-    } on Exception catch (e) {
-      showErrorDialog(context, e);
-    }
   }
 
   Future<void> _saveAnimeData(BuildContext context) async {
@@ -607,29 +430,23 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             ));
       }
 
-      /* if (widget.anime == null && response != null) {
-        widget.anime = response;
-      }*/
-
       var selectedGenres =
           (_animeFormKey.currentState?.value['genres'] as List?)
                   ?.whereType<String>()
                   .toList() ??
               [];
 
-      List<GenreAnime> genreAnimeInsertList = [];
+      if (selectedGenres.isNotEmpty) {
+        List<GenreAnime> genreAnimeInsertList = [];
 
-      for (var genreId in selectedGenres) {
-        genreAnimeInsertList
-            .add(GenreAnime(null, int.parse(genreId), widget.anime!.id!));
+        for (var genreId in selectedGenres) {
+          genreAnimeInsertList
+              .add(GenreAnime(null, int.parse(genreId), widget.anime!.id!));
+        }
+
+        await _genreAnimeProvider.updateGenresForAnime(
+            widget.anime!.id!, genreAnimeInsertList);
       }
-
-      await _genreAnimeProvider.updateGenresForAnime(
-          widget.anime!.id!, genreAnimeInsertList);
-
-      /*await _genreAnimeProvider.saveGenresForAnime(
-          widget.anime!.id!, selectedGenres);*/
-
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

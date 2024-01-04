@@ -45,6 +45,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
     _animeProvider = context.read<AnimeProvider>();
     _animeFuture = _animeProvider.get(filter: {
       "GenresIncluded": "true",
+      "NewestFirst": "true",
       "Page": "$page",
       "PageSize": "$pageSize"
     });
@@ -65,8 +66,9 @@ class _AnimeScreenState extends State<AnimeScreen> {
   void _reloadAnimeList() {
     if (mounted) {
       setState(() {
-        _animeFuture = context.read<AnimeProvider>().get(filter: {
+        _animeFuture = _animeProvider.get(filter: {
           "GenresIncluded": "true",
+          "NewestFirst": "true",
           "Page": "$page",
           "PageSize": "$pageSize"
         });
@@ -130,6 +132,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
         filter: {
           "FTS": isSearching ? _animeController.text : null,
           "GenresIncluded": "true",
+          "NewestFirst": "true",
           "Page": "$requestedPage",
           "PageSize": "$pageSize",
         },
@@ -149,6 +152,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
       var result = await _animeProvider.get(filter: {
         "FTS": searchText,
         "GenresIncluded": "true",
+        "NewestFirst": "true",
         "Page": "0",
         "PageSize": "$pageSize",
       });

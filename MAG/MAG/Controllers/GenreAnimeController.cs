@@ -21,8 +21,8 @@ namespace MAG.Controllers
             return base.Update(id, update);
         }
 
-        [HttpPut("{{animeId}}")]
-        public async Task<bool> UpdateGenresForAnime(int animeId, List<GenreAnimeInsertRequest> newGenres)
+        [HttpPut("UpdateGenres/{animeId}")]
+        public async Task<bool> UpdateGenresForAnime(int animeId, [FromBody] List<GenreAnimeInsertRequest> newGenres)
         {
             return await _service.UpdateGenresForAnime(animeId, newGenres);
         }

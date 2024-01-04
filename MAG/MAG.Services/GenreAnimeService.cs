@@ -72,6 +72,15 @@ namespace MAG.Services
             return true;
         }
 
+        public override IQueryable<Database.GenreAnime> AddFilter(IQueryable<Database.GenreAnime> query, GenreAnimeSearchObject? search = null)
+        {
 
+            if(search?.AnimeId != null)
+            { 
+                query = query.Where(genreAnime => genreAnime.AnimeId == search.AnimeId);
+            }
+
+            return base.AddFilter(query, search);
+        }
     }
 }
