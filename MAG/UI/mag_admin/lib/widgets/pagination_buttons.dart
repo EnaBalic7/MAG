@@ -9,12 +9,14 @@ class MyPaginationButtons extends StatefulWidget {
   int pageSize;
   int totalItems;
   Future<void> Function(int) fetchPage;
+  Widget? noResults;
   MyPaginationButtons({
     Key? key,
     required this.page,
     required this.pageSize,
     required this.totalItems,
     required this.fetchPage,
+    this.noResults,
   }) : super(key: key);
 
   @override
@@ -58,29 +60,38 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
             ),
           ),
         ),
-        Visibility(
-            visible: widget.totalItems <= 0,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 130,
-                  left: 105,
-                  child: Text(
-                    "No results found.",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Palette.lightPurple.withOpacity(0.6)),
-                  ),
-                ),
-                Opacity(
-                    opacity: 0.8,
-                    child: Image.asset(
-                      "assets/images/starFrame.png",
-                      width: 400,
-                    )),
-              ],
-            )),
+        _buildNoResults(),
       ],
     );
+  }
+
+  Widget _buildNoResults() {
+    if (widget.noResults != null) {
+      return Visibility(
+        visible: widget.totalItems <= 0,
+        child: widget.noResults!,
+      );
+    }
+    return Visibility(
+        visible: widget.totalItems <= 0,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 130,
+              left: 105,
+              child: Text(
+                "No results found.",
+                style: TextStyle(
+                    fontSize: 25, color: Palette.lightPurple.withOpacity(0.6)),
+              ),
+            ),
+            Opacity(
+                opacity: 0.8,
+                child: Image.asset(
+                  "assets/images/starFrame.png",
+                  width: 400,
+                )),
+          ],
+        ));
   }
 }

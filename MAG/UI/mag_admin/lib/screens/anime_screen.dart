@@ -82,8 +82,8 @@ class _AnimeScreenState extends State<AnimeScreen> {
       title_widget: Row(
         children: [
           buildAnimeIcon(28),
-          SizedBox(width: 5),
-          Text("Anime"),
+          const SizedBox(width: 5),
+          const Text("Anime"),
         ],
       ),
       showFloatingActionButton: true,
@@ -98,7 +98,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
           future: _animeFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return MyProgressIndicator(); // Loading state
+              return const MyProgressIndicator(); // Loading state
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // Error state
             } else {

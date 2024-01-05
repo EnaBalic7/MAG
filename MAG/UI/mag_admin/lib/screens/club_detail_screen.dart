@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:mag_admin/utils/util.dart';
@@ -32,7 +33,9 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   late UserProvider _userProvider;
   late PostProvider _postProvider;
+
   late Future<SearchResult<Post>> _postFuture;
+  late CommentProvider _commentProvider;
   User? owner;
 
   int page = 0;
@@ -51,14 +54,35 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
       "PageSize": "$pageSize"
     });
 
+    _commentProvider = context.read<CommentProvider>();
+
+    _postProvider.addListener(() {
+      _reloadPosts();
+    });
+
+    _commentProvider.addListener(() {
+      _reloadPosts();
+    });
+
     setTotalItems();
 
-    /*_scrollController.addListener(() {
-      _savedScrollPosition = _scrollController.position.pixels;
-    });*/
-    //_scrollController.addListener(scrollListener);
-
     super.initState();
+  }
+
+  void _reloadPosts() {
+    var postList = _postProvider.get(filter: {
+      "NewestFirst": "true",
+      "ClubId": "${widget.club.id}",
+      "CommentsIncluded": "true",
+      "Page": "$page",
+      "PageSize": "$pageSize"
+    });
+
+    if (mounted) {
+      setState(() {
+        _postFuture = postList;
+      });
+    }
   }
 
   void setTotalItems() async {
@@ -452,8 +476,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                   Icon(Icons.warning_rounded,
                       color: Palette.lightRed, size: 55),
                   Text("Are you sure you want to delete this post?"), () async {
-                /*await _genreAnimeProvider.deleteByAnimeId(anime.id!);
-                _animeProvider.delete(anime.id!);*/
+                await _postProvider.delete(post.id!);
               });
             },
           ),

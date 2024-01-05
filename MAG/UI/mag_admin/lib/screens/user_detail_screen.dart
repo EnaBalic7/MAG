@@ -35,6 +35,7 @@ class UserDetailScreen extends StatefulWidget {
 
 class _UserDetailScreenState extends State<UserDetailScreen> {
   late RatingProvider _ratingProvider;
+  late Future<SearchResult<Rating>> _ratingFuture;
   late PostProvider _postProvider;
   late CommentProvider _commentProvider;
   late AnimeProvider _animeProvider;
@@ -61,17 +62,43 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   void initState() {
     _ratingProvider = context.read<RatingProvider>();
+    _ratingFuture = _ratingProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
+      "Page": "0",
+      "PageSize": "1"
+    });
+
     _postProvider = context.read<PostProvider>();
     _commentProvider = context.read<CommentProvider>();
     _animeProvider = context.read<AnimeProvider>();
     _clubProvider = context.read<ClubProvider>();
 
+    _ratingProvider.addListener(() {
+      _reloadReview();
+    });
+
     super.initState();
+  }
+
+  void _reloadReview() {
+    var rating = _ratingProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
+      "Page": "0",
+      "PageSize": "1"
+    });
+
+    if (mounted) {
+      setState(() {
+        _ratingFuture = rating;
+      });
+    }
   }
 
   Padding _buildUserInfo() {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 10,
         left: 60,
       ),
@@ -88,7 +115,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 15),
+                      padding: const EdgeInsets.only(top: 15),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: Image.memory(
@@ -100,7 +127,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                           )),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -122,7 +150,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -144,7 +173,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -166,7 +196,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -188,7 +219,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -222,7 +254,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Expanded _buildUserContent() {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.only(left: 150, top: 0),
+        padding: const EdgeInsets.only(left: 150, top: 0),
         child: SingleChildScrollView(
           controller: ScrollController(),
           child: Column(
@@ -233,9 +265,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Reviews", style: TextStyle(fontSize: 20)),
+                      const Text("Reviews", style: TextStyle(fontSize: 20)),
                       Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: buildStarTrailIcon(22),
                       )
                     ],
@@ -250,9 +282,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Posts", style: TextStyle(fontSize: 20)),
+                      const Text("Posts", style: TextStyle(fontSize: 20)),
                       Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: buildPostIcon(23),
                       )
                     ],
@@ -267,9 +299,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("Comments", style: TextStyle(fontSize: 20)),
+                      const Text("Comments", style: TextStyle(fontSize: 20)),
                       Padding(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: buildCommentIcon(19),
                       )
                     ],
@@ -294,7 +326,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return MyProgressIndicator(); // Loading state
+            return const MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -311,7 +343,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               _buildCard(object: comment),
               Visibility(
                   visible: comment != null,
-                  child: _buildSeeMoreButton(AnimeScreen())),
+                  child: _buildSeeMoreButton(const AnimeScreen())),
             ],
           );
         });
@@ -327,7 +359,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return MyProgressIndicator(); // Loading state
+            return const MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -345,7 +377,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               _buildCard(object: post),
               Visibility(
                 visible: post != null,
-                child: _buildSeeMoreButton(AnimeScreen()),
+                child: _buildSeeMoreButton(const AnimeScreen()),
               ),
             ],
           );
@@ -354,15 +386,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
   FutureBuilder<SearchResult<Rating>> _ratingFutureBuilder() {
     return FutureBuilder<SearchResult<Rating>>(
-        future: _ratingProvider.get(filter: {
-          "UserId": "${widget.user.id}",
-          "NewestFirst": "true",
-          "Page": "0",
-          "PageSize": "1"
-        }),
+        future: _ratingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return MyProgressIndicator(); // Loading state
+            return const MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -412,11 +439,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
+          const Text(
             "See more",
             style: TextStyle(fontSize: 16),
           ),
-          Icon(Icons.arrow_forward_ios_rounded, size: 16)
+          const Icon(Icons.arrow_forward_ios_rounded, size: 16)
         ],
       ),
     );
@@ -425,18 +452,17 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   //Adjust this part
   Widget _buildCard({dynamic object}) {
     if (object == null) {
-      return Container(
-          child: Text("No content to show",
-              style: TextStyle(
-                fontSize: 15,
-                fontStyle: FontStyle.italic,
-                color: Palette.lightPurple.withOpacity(0.5),
-              )));
+      return Text("No content to show",
+          style: TextStyle(
+            fontSize: 15,
+            fontStyle: FontStyle.italic,
+            color: Palette.lightPurple.withOpacity(0.5),
+          ));
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 0, right: 0),
       child: Container(
-        constraints: BoxConstraints(minHeight: 100, maxHeight: 200),
+        constraints: const BoxConstraints(minHeight: 100, maxHeight: 200),
         height: 194,
         width: 600,
         decoration: BoxDecoration(
@@ -452,7 +478,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   child: Row(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.only(right: 10),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: Image.memory(
@@ -469,7 +495,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         children: [
                           Text(
                               "${widget.user.firstName} ${widget.user.lastName}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold)),
                           Visibility(
                             visible: rating != null && object is Rating,
@@ -483,7 +509,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return MyProgressIndicator(); // Loading state
+                                    return const MyProgressIndicator(); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state
@@ -507,7 +533,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                         ),
                                       );
                                     } else {
-                                      return Text("Anime not found");
+                                      return const Text("Anime not found");
                                     }
                                   }
                                 }),
@@ -524,14 +550,14 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return MyProgressIndicator(); // Loading state
+                                    return const MyProgressIndicator(); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state
                                   } else {
                                     // Data loaded successfully
 
-                                    Club? tmp = snapshot.data!.result.first;
+                                    Club? tmp = snapshot.data?.result.first;
                                     if (tmp != null) {
                                       return GestureDetector(
                                         onTap: () {
@@ -547,7 +573,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                             child: Text("${tmp.name}")),
                                       );
                                     } else {
-                                      return Text("Club not found");
+                                      return const Text("Club not found");
                                     }
                                   }
                                 }),
@@ -561,7 +587,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return MyProgressIndicator(); // Loading state
+                                    return const MyProgressIndicator(); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state
@@ -572,7 +598,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                     if (tmp != null) {
                                       return Text("Post #${tmp.id}");
                                     } else {
-                                      return Text("Club not found");
+                                      return const Text("Club not found");
                                     }
                                   }
                                 }),
@@ -587,31 +613,31 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 1),
+                        padding: const EdgeInsets.only(top: 1),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             buildStarIcon(15),
-                            SizedBox(width: 3),
+                            const SizedBox(width: 3),
                             rating != null
                                 ? Text("${rating!.ratingValue.toString()}/10",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Palette.starYellow,
                                         fontSize: 13))
-                                : Text(""),
+                                : const Text(""),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.only(top: 4),
                         child: rating != null
                             ? Text(
                                 DateFormat('MMM d, y').format(
                                   rating!.dateAdded!,
                                 ),
-                                style: TextStyle(fontSize: 13),
+                                style: const TextStyle(fontSize: 13),
                               )
-                            : Text(""),
+                            : const Text(""),
                       ),
                     ],
                   ),
@@ -619,39 +645,40 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 Visibility(
                   visible: post != null && object is Post,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 1),
+                    padding: const EdgeInsets.only(top: 1),
                     child: post != null
                         ? Text(
                             DateFormat('MMM d, y').format(
                               post!.datePosted!,
                             ),
-                            style: TextStyle(fontSize: 13),
+                            style: const TextStyle(fontSize: 13),
                           )
-                        : Text(""),
+                        : const Text(""),
                   ),
                 ),
                 Visibility(
                   visible: comment != null && object is Comment,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 1),
+                    padding: const EdgeInsets.only(top: 1),
                     child: comment != null
                         ? Text(
                             DateFormat('MMM d, y').format(
                               comment!.dateCommented!,
                             ),
-                            style: TextStyle(fontSize: 13),
+                            style: const TextStyle(fontSize: 13),
                           )
-                        : Text(""),
+                        : const Text(""),
                   ),
                 ),
-                SizedBox(width: 10)
+                const SizedBox(width: 10)
               ],
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Container(
                 alignment: Alignment.topLeft,
-                constraints: BoxConstraints(minHeight: 30, maxHeight: 100),
+                constraints:
+                    const BoxConstraints(minHeight: 30, maxHeight: 100),
                 //height: 100,
                 child: SingleChildScrollView(
                   controller: ScrollController(),
@@ -661,21 +688,21 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         visible: object is Rating,
                         child: Text(
                           "${rating?.reviewText}",
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ),
                       Visibility(
                         visible: object is Post,
                         child: Text(
                           "${post?.content}",
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ),
                       Visibility(
                         visible: object is Comment,
                         child: Text(
                           "${comment?.content}",
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ),
                     ],
