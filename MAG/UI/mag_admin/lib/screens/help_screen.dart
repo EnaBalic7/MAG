@@ -67,9 +67,11 @@ class _HelpScreenState extends State<HelpScreen> {
 
   void setTotalItems() async {
     var qaResult = await _qaFuture;
-    setState(() {
-      totalItems = qaResult.count;
-    });
+    if (mounted) {
+      setState(() {
+        totalItems = qaResult.count;
+      });
+    }
   }
 
   void _reloadQAList() {
@@ -254,10 +256,13 @@ class _HelpScreenState extends State<HelpScreen> {
                                   paddingRight: 15,
                                   dropdownColor: Palette.disabledControl,
                                   onChanged: (filter) {
-                                    setState(() {
-                                      _selectedQAFilter["QAfilter"] =
-                                          filter.toString();
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        _selectedQAFilter["QAfilter"] =
+                                            filter.toString();
+                                      });
+                                    }
+
                                     _filterQA(filter!);
                                   },
                                   icon: const Icon(Icons.filter_alt,
@@ -317,18 +322,23 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   void _search(String searchText) async {
-    setState(() {
-      isSearching = true;
-    });
+    if (mounted) {
+      setState(() {
+        isSearching = true;
+      });
+    }
+
     _filterQA(_selectedQAFilter["QAfilter"], searchText: searchText);
   }
 
   Future<void> fetchPage(int requestedPage) async {
     _filterQA(_selectedQAFilter["QAfilter"], requestedPage: requestedPage);
 
-    setState(() {
-      page = requestedPage;
-    });
+    if (mounted) {
+      setState(() {
+        page = requestedPage;
+      });
+    }
   }
 
   List<Widget> _buildQACards(List<QA> qaList) {
@@ -374,14 +384,16 @@ class _HelpScreenState extends State<HelpScreen> {
                             padding: EdgeInsets.zero,
                             splashRadius: 0.1,
                             onPressed: () {
-                              setState(() {
-                                _initialValue["question"] =
-                                    qa.question.toString();
-                                qaID = qa.id;
-                                _questionTitle = qa.question.toString();
-                                _qAFormKey.currentState!.fields["answer"]!
-                                    .didChange(qa.answer.toString());
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  _initialValue["question"] =
+                                      qa.question.toString();
+                                  qaID = qa.id;
+                                  _questionTitle = qa.question.toString();
+                                  _qAFormKey.currentState!.fields["answer"]!
+                                      .didChange(qa.answer.toString());
+                                });
+                              }
                             },
                             icon: buildEditIcon(24)),
                         PopupMenuButton<String>(
@@ -532,9 +544,11 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   Future<void> _deleteQA(QA qa, BuildContext context) async {
-    setState(() {
-      qaID = qa.id;
-    });
+    if (mounted) {
+      setState(() {
+        qaID = qa.id;
+      });
+    }
 
     try {
       if (qaID != null) {
@@ -560,9 +574,12 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   Future<void> _hideOrShowQA(QA qa, BuildContext context) async {
-    setState(() {
-      qaID = qa.id;
-    });
+    if (mounted) {
+      setState(() {
+        qaID = qa.id;
+      });
+    }
+
     var request = {
       "answer": qa.answer.toString(),
       "question": qa.question.toString(),
@@ -592,73 +609,100 @@ class _HelpScreenState extends State<HelpScreen> {
 
   void _filterQA(String filter,
       {String? searchText, int? requestedPage}) async {
-    setState(() {
-      page = 0;
-    });
+    if (mounted) {
+      setState(() {
+        page = 0;
+      });
+    }
+
     try {
       if (filter == "All") {
-        setState(() {
-          _qaFuture = _qaProvider.get(filter: {
-            "UserIncluded": "true",
-            "CategoryIncluded": "true",
-            "NewestFirst": "true",
-            if (isSearching == true) "FTS": _qaController.text,
-            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
-            "PageSize": "$pageSize"
+        if (mounted) {
+          setState(() {
+            _qaFuture = _qaProvider.get(filter: {
+              "UserIncluded": "true",
+              "CategoryIncluded": "true",
+              "NewestFirst": "true",
+              if (isSearching == true) "FTS": _qaController.text,
+              "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+              "PageSize": "$pageSize"
+            });
           });
-        });
+        }
+
         var result = await _qaFuture;
-        setState(() {
-          totalItems = result.count;
-        });
+
+        if (mounted) {
+          setState(() {
+            totalItems = result.count;
+          });
+        }
       } else if (filter == "Unanswered") {
-        setState(() {
-          _qaFuture = _qaProvider.get(filter: {
-            "UserIncluded": "true",
-            "CategoryIncluded": "true",
-            "NewestFirst": "true",
-            "UnansweredOnly": "true",
-            if (isSearching == true) "FTS": _qaController.text,
-            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
-            "PageSize": "$pageSize"
+        if (mounted) {
+          setState(() {
+            _qaFuture = _qaProvider.get(filter: {
+              "UserIncluded": "true",
+              "CategoryIncluded": "true",
+              "NewestFirst": "true",
+              "UnansweredOnly": "true",
+              if (isSearching == true) "FTS": _qaController.text,
+              "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+              "PageSize": "$pageSize"
+            });
           });
-        });
+        }
+
         var result = await _qaFuture;
-        setState(() {
-          totalItems = result.count;
-        });
+
+        if (mounted) {
+          setState(() {
+            totalItems = result.count;
+          });
+        }
       } else if (filter == "Hidden") {
-        setState(() {
-          _qaFuture = _qaProvider.get(filter: {
-            "UserIncluded": "true",
-            "CategoryIncluded": "true",
-            "NewestFirst": "true",
-            "HiddenOnly": "true",
-            if (isSearching == true) "FTS": _qaController.text,
-            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
-            "PageSize": "$pageSize"
+        if (mounted) {
+          setState(() {
+            _qaFuture = _qaProvider.get(filter: {
+              "UserIncluded": "true",
+              "CategoryIncluded": "true",
+              "NewestFirst": "true",
+              "HiddenOnly": "true",
+              if (isSearching == true) "FTS": _qaController.text,
+              "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+              "PageSize": "$pageSize"
+            });
           });
-        });
+        }
+
         var result = await _qaFuture;
-        setState(() {
-          totalItems = result.count;
-        });
+
+        if (mounted) {
+          setState(() {
+            totalItems = result.count;
+          });
+        }
       } else if (filter == "Displayed") {
-        setState(() {
-          _qaFuture = _qaProvider.get(filter: {
-            "UserIncluded": "true",
-            "CategoryIncluded": "true",
-            "NewestFirst": "true",
-            "DisplayedOnly": "true",
-            if (isSearching == true) "FTS": _qaController.text,
-            "Page": (requestedPage != null) ? "$requestedPage" : "$page",
-            "PageSize": "$pageSize"
+        if (mounted) {
+          setState(() {
+            _qaFuture = _qaProvider.get(filter: {
+              "UserIncluded": "true",
+              "CategoryIncluded": "true",
+              "NewestFirst": "true",
+              "DisplayedOnly": "true",
+              if (isSearching == true) "FTS": _qaController.text,
+              "Page": (requestedPage != null) ? "$requestedPage" : "$page",
+              "PageSize": "$pageSize"
+            });
           });
-        });
+        }
+
         var result = await _qaFuture;
-        setState(() {
-          totalItems = result.count;
-        });
+
+        if (mounted) {
+          setState(() {
+            totalItems = result.count;
+          });
+        }
       }
     } on Exception catch (e) {
       showErrorDialog(context, e);

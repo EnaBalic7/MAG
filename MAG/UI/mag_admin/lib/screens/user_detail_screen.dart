@@ -6,6 +6,7 @@ import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
 import 'package:mag_admin/screens/club_detail_screen.dart';
+import 'package:mag_admin/screens/posts_screen.dart';
 import 'package:mag_admin/screens/reviews_screen.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/separator.dart';
@@ -377,7 +378,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               _buildCard(object: post),
               Visibility(
                 visible: post != null,
-                child: _buildSeeMoreButton(const AnimeScreen()),
+                child: _buildSeeMoreButton(PostsScreen(user: widget.user)),
               ),
             ],
           );

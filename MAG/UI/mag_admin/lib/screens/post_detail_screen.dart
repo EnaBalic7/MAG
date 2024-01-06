@@ -36,7 +36,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   late Future<SearchResult<Comment>> _commentFuture;
 
   int page = 0;
-  int pageSize = 2;
+  int pageSize = 15;
   int totalItems = 0;
   int? replies;
 
@@ -178,10 +178,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         },
       );
 
-      setState(() {
-        _commentFuture = Future.value(result);
-        page = requestedPage;
-      });
+      if (mounted) {
+        setState(() {
+          _commentFuture = Future.value(result);
+          page = requestedPage;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

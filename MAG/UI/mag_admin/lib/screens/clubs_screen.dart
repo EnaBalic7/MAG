@@ -45,9 +45,12 @@ class _ClubsScreenState extends State<ClubsScreen> {
 
   void setTotalItems() async {
     var clubResult = await _clubFuture;
-    setState(() {
-      totalItems = clubResult.count;
-    });
+
+    if (mounted) {
+      setState(() {
+        totalItems = clubResult.count;
+      });
+    }
   }
 
   @override
@@ -106,10 +109,12 @@ class _ClubsScreenState extends State<ClubsScreen> {
         },
       );
 
-      setState(() {
-        _clubFuture = Future.value(result);
-        page = requestedPage;
-      });
+      if (mounted) {
+        setState(() {
+          _clubFuture = Future.value(result);
+          page = requestedPage;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
@@ -124,12 +129,14 @@ class _ClubsScreenState extends State<ClubsScreen> {
         "PageSize": "$pageSize",
       });
 
-      setState(() {
-        _clubFuture = Future.value(result);
-        isSearching = true;
-        totalItems = result.count;
-        page = 0;
-      });
+      if (mounted) {
+        setState(() {
+          _clubFuture = Future.value(result);
+          isSearching = true;
+          totalItems = result.count;
+          page = 0;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

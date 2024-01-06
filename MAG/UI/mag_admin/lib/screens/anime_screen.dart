@@ -58,9 +58,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
   void setTotalItems() async {
     var animeResult = await _animeFuture;
-    setState(() {
-      totalItems = animeResult.count;
-    });
+    if (mounted) {
+      setState(() {
+        totalItems = animeResult.count;
+      });
+    }
   }
 
   void _reloadAnimeList() {
@@ -138,10 +140,12 @@ class _AnimeScreenState extends State<AnimeScreen> {
         },
       );
 
-      setState(() {
-        _animeFuture = Future.value(result);
-        page = requestedPage;
-      });
+      if (mounted) {
+        setState(() {
+          _animeFuture = Future.value(result);
+          page = requestedPage;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
@@ -157,12 +161,14 @@ class _AnimeScreenState extends State<AnimeScreen> {
         "PageSize": "$pageSize",
       });
 
-      setState(() {
-        _animeFuture = Future.value(result);
-        isSearching = true;
-        totalItems = result.count;
-        page = 0;
-      });
+      if (mounted) {
+        setState(() {
+          _animeFuture = Future.value(result);
+          isSearching = true;
+          totalItems = result.count;
+          page = 0;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

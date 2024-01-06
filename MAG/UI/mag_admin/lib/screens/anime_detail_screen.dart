@@ -143,10 +143,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingBottom: 50,
                                   borderRadius: 50,
                                   onChanged: (newTitle) {
-                                    setState(() {
-                                      widget.anime?.titleEn = newTitle;
-                                      _title = _buildTitle(title: newTitle!);
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        widget.anime?.titleEn = newTitle;
+                                        _title = _buildTitle(title: newTitle!);
+                                      });
+                                    }
                                   },
                                   validator: FormBuilderValidators.compose([
                                     FormBuilderValidators.required(context),
@@ -269,10 +271,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                     FormBuilderValidators.url(context),
                                   ]),
                                   onChanged: (newValue) {
-                                    setState(() {
-                                      widget.anime?.imageUrl = newValue;
-                                      _image = _buildImage(imageUrl: newValue!);
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        widget.anime?.imageUrl = newValue;
+                                        _image =
+                                            _buildImage(imageUrl: newValue!);
+                                      });
+                                    }
                                   },
                                 ),
                                 MyFormBuilderTextField(
@@ -398,9 +403,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     try {
       if (widget.anime == null) {
         response = await _animeProvider.insert(request);
-        setState(() {
-          widget.anime = response;
-        });
+        if (mounted) {
+          setState(() {
+            widget.anime = response;
+          });
+        }
+
         showInfoDialog(
             context,
             const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),

@@ -7,8 +7,10 @@ class MyProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(
-      color: Palette.lightPurple.withOpacity(0.7),
+    return Center(
+      child: CircularProgressIndicator(
+        color: Palette.lightPurple.withOpacity(0.7),
+      ),
     );
   }
 }

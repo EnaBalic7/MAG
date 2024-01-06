@@ -38,7 +38,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
   User? owner;
 
   int page = 0;
-  int pageSize = 3;
+  int pageSize = 15;
   int totalItems = 0;
 
   @override
@@ -86,9 +86,12 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
   void setTotalItems() async {
     var postResult = await _postFuture;
-    setState(() {
-      totalItems = postResult.count;
-    });
+
+    if (mounted) {
+      setState(() {
+        totalItems = postResult.count;
+      });
+    }
   }
 
   @override
@@ -271,10 +274,12 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
         },
       );
 
-      setState(() {
-        _postFuture = Future.value(result);
-        page = requestedPage;
-      });
+      if (mounted) {
+        setState(() {
+          _postFuture = Future.value(result);
+          page = requestedPage;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

@@ -65,9 +65,12 @@ class _UsersScreenState extends State<UsersScreen> {
 
   void setTotalItems() async {
     var userResult = await _userFuture;
-    setState(() {
-      totalItems = userResult.count;
-    });
+
+    if (mounted) {
+      setState(() {
+        totalItems = userResult.count;
+      });
+    }
   }
 
   @override
@@ -128,10 +131,12 @@ class _UsersScreenState extends State<UsersScreen> {
         },
       );
 
-      setState(() {
-        _userFuture = Future.value(result);
-        page = requestedPage;
-      });
+      if (mounted) {
+        setState(() {
+          _userFuture = Future.value(result);
+          page = requestedPage;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
@@ -146,12 +151,14 @@ class _UsersScreenState extends State<UsersScreen> {
         "PageSize": "$pageSize",
       });
 
-      setState(() {
-        _userFuture = Future.value(result);
-        isSearching = true;
-        totalItems = result.count;
-        page = 0;
-      });
+      if (mounted) {
+        setState(() {
+          _userFuture = Future.value(result);
+          isSearching = true;
+          totalItems = result.count;
+          page = 0;
+        });
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

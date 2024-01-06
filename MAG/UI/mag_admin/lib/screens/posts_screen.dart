@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/providers/anime_provider.dart';
-import 'package:mag_admin/providers/rating_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:mag_admin/providers/club_provider.dart';
+import 'package:mag_admin/providers/post_provider.dart';
+import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
 
-import '../models/anime.dart';
-import '../models/rating.dart';
+import '../models/club.dart';
+import '../models/post.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
-import 'anime_detail_screen.dart';
-import 'package:intl/intl.dart';
+import '../widgets/pagination_buttons.dart';
 
-class ReviewsScreen extends StatefulWidget {
+class PostsScreen extends StatefulWidget {
   User user;
-
-  ReviewsScreen({
-    required this.user,
-    Key? key,
-  }) : super(key: key);
+  PostsScreen({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<ReviewsScreen> createState() => _ReviewsScreenState();
+  State<PostsScreen> createState() => _PostsScreenState();
 }
 
-class _ReviewsScreenState extends State<ReviewsScreen> {
-  late RatingProvider _ratingProvider;
-  late Future<SearchResult<Rating>> _ratingFuture;
-
-  late AnimeProvider _animeProvider;
+class _PostsScreenState extends State<PostsScreen> {
+  late PostProvider _postProvider;
+  late Future<SearchResult<Post>> _postFuture;
+  late ClubProvider _clubProvider;
+  late Future<SearchResult<Post>> _clubFuture;
 
   int page = 0;
   int pageSize = 6;
@@ -40,45 +36,27 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   @override
   void initState() {
-    _ratingProvider = context.read<RatingProvider>();
-    _ratingFuture = _ratingProvider.get(filter: {
+    _postProvider = context.read<PostProvider>();
+    _postFuture = _postProvider.get(filter: {
       "UserId": "${widget.user.id}",
       "NewestFirst": "true",
       "Page": "$page",
       "PageSize": "$pageSize"
     });
 
-    setTotalItems();
-    _animeProvider = context.read<AnimeProvider>();
+    _clubProvider = context.read<ClubProvider>();
 
-    _ratingProvider.addListener(() {
-      _reloadReviews();
-    });
+    setTotalItems();
 
     super.initState();
   }
 
-  void _reloadReviews() {
-    var ratings = _ratingProvider.get(filter: {
-      "UserId": "${widget.user.id}",
-      "NewestFirst": "true",
-      "Page": "$page",
-      "PageSize": "$pageSize"
-    });
-
-    if (mounted) {
-      setState(() {
-        _ratingFuture = ratings;
-      });
-    }
-  }
-
   void setTotalItems() async {
-    var ratingResult = await _ratingFuture;
+    var postResult = await _postFuture;
 
     if (mounted) {
       setState(() {
-        totalItems = ratingResult.count;
+        totalItems = postResult.count;
       });
     }
   }
@@ -104,14 +82,14 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           const SizedBox(width: 5),
           Text("${widget.user.username}: "),
           const SizedBox(width: 5),
-          const Text("Reviews"),
+          const Text("Posts"),
           const SizedBox(width: 5),
-          buildStarTrailIcon(24),
+          buildPostIcon(24),
         ],
       ),
       showBackArrow: true,
-      child: FutureBuilder<SearchResult<Rating>>(
-        future: _ratingFuture,
+      child: FutureBuilder<SearchResult<Post>>(
+        future: _postFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const MyProgressIndicator(); // Loading state
@@ -125,7 +103,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 child: Column(
                   children: [
                     Wrap(
-                      children: _buildReviewCards(ratingList),
+                      children: _buildPostCards(ratingList),
                     ),
                     MyPaginationButtons(
                         page: page,
@@ -144,7 +122,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   Future<void> fetchPage(int requestedPage) async {
     try {
-      var result = await _ratingProvider.get(
+      var result = await _postProvider.get(
         filter: {
           "UserId": "${widget.user.id}",
           "NewestFirst": "true",
@@ -155,7 +133,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
       if (mounted) {
         setState(() {
-          _ratingFuture = Future.value(result);
+          _postFuture = Future.value(result);
           page = requestedPage;
         });
       }
@@ -164,14 +142,14 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     }
   }
 
-  List<Widget> _buildReviewCards(List<Rating> ratingList) {
+  List<Widget> _buildPostCards(List<Post> postList) {
     return List.generate(
-      ratingList.length,
-      (index) => _buildReviewCard(ratingList[index]),
+      postList.length,
+      (index) => _buildPostCard(postList[index]),
     );
   }
 
-  Widget _buildReviewCard(Rating rating) {
+  Widget _buildPostCard(Post post) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 0, right: 20, top: 20),
       child: Container(
@@ -210,10 +188,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                               "${widget.user.firstName} ${widget.user.lastName}",
                               style: const TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold)),
-                          FutureBuilder<SearchResult<Anime>>(
-                              future: _animeProvider.get(filter: {
-                                "Id": "${rating.animeId!}",
-                                "GenresIncluded": "True"
+                          FutureBuilder<SearchResult<Club>>(
+                              future: _clubProvider.get(filter: {
+                                "Id": "${post.clubId!}",
+                                "CoverIncluded": "True"
                               }),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -225,24 +203,24 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                 } else {
                                   // Data loaded successfully
 
-                                  Anime? tmp = snapshot.data?.result.single;
+                                  Club? tmp = snapshot.data?.result.single;
                                   if (tmp != null) {
                                     return GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                AnimeDetailScreen(anime: tmp),
+                                                ClubDetailScreen(club: tmp),
                                           ),
                                         );
                                       },
                                       child: MouseRegion(
                                         cursor: SystemMouseCursors.click,
-                                        child: Text("${tmp.titleEn}"),
+                                        child: Text("${tmp.name}"),
                                       ),
                                     );
                                   } else {
-                                    return const Text("Anime not found");
+                                    return const Text("Club not found");
                                   }
                                 }
                               }),
@@ -254,30 +232,17 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 1),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          buildStarIcon(15),
-                          const SizedBox(width: 3),
-                          Text("${rating.ratingValue.toString()}/10",
-                              style: const TextStyle(
-                                  color: Palette.starYellow, fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         DateFormat('MMM d, y').format(
-                          rating.dateAdded!,
+                          post.datePosted!,
                         ),
                         style: const TextStyle(fontSize: 13),
                       ),
                     ),
                   ],
                 ),
-                _buildPopupMenu(rating)
+                _buildPopupMenu(post)
               ],
             ),
             Padding(
@@ -292,7 +257,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "${rating.reviewText}",
+                        "${post.content}",
                         style: const TextStyle(fontSize: 15),
                       ),
                     ],
@@ -306,7 +271,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
   }
 
-  ConstrainedBox _buildPopupMenu(Rating rating) {
+  ConstrainedBox _buildPopupMenu(Post post) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxHeight: 23),
       child: Container(
@@ -344,7 +309,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                           const Text(
                               "Are you sure you want to delete this review?"),
                           () async {
-                        await _ratingProvider.delete(rating.id!);
+                        await _postProvider.delete(post.id!);
                       });
                     },
                   ),
