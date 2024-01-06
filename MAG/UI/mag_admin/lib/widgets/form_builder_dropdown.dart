@@ -1,10 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/utils/icons.dart';
 import '../utils/colors.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class MyFormBuilderDropdown extends StatefulWidget {
   String name;
@@ -66,11 +62,11 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
           onTap: widget.onTap,
           onChanged: widget.onChanged,
           name: widget.name,
-          style: TextStyle(color: Palette.lightPurple),
+          style: const TextStyle(color: Palette.lightPurple),
           decoration: InputDecoration(
             labelText: widget.labelText ?? "",
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Palette.lightPurple,

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
@@ -49,11 +48,11 @@ class _GenresScreenState extends State<GenresScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: const Text("Genres"),
+      titleWidget: const Text("Genres"),
       showBackArrow: true,
       child: Stack(
         children: [
-          _buildOverlayForm(context),
+          _buildGenresForm(context),
           Positioned(
             left: 120,
             top: 25,
@@ -75,7 +74,7 @@ class _GenresScreenState extends State<GenresScreen> {
     );
   }
 
-  void _showOverlayForm(BuildContext context) {
+  /*void _showOverlayForm(BuildContext context) {
     showCupertinoModalPopup(
       context: context,
       barrierColor: Palette.black.withOpacity(0.5),
@@ -107,9 +106,9 @@ class _GenresScreenState extends State<GenresScreen> {
         );
       },
     );
-  }
+  }*/
 
-  Widget _buildOverlayForm(BuildContext context) {
+  Widget _buildGenresForm(BuildContext context) {
     return Positioned.fill(
       child: Material(
         color: Colors.transparent,
@@ -179,10 +178,8 @@ class _GenresScreenState extends State<GenresScreen> {
                                 ),
                                 Expanded(
                                   child: SingleChildScrollView(
-                                    child: Container(
-                                      child: Wrap(
-                                        children: _buildGenres(genreList),
-                                      ),
+                                    child: Wrap(
+                                      children: _buildGenres(genreList),
                                     ),
                                   ),
                                 )
@@ -251,8 +248,8 @@ class _GenresScreenState extends State<GenresScreen> {
       await _genreProvider.insert(request);
       showInfoDialog(
           context,
-          Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-          Text(
+          const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+          const Text(
             "Added successfully!",
             textAlign: TextAlign.center,
           ));

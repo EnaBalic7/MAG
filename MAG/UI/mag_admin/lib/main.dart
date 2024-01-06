@@ -49,20 +49,20 @@ class MyMaterialApp extends StatelessWidget {
         scaffoldBackgroundColor: Palette.midnightPurple,
         textTheme: Theme.of(context).textTheme.apply(
               bodyColor: Palette.lightPurple,
-              displayColor: Color.fromARGB(255, 90, 83, 155),
+              displayColor: const Color.fromARGB(255, 90, 83, 155),
               decorationColor: Palette.lightPurple,
             ),
-        chipTheme: ChipThemeData(
+        chipTheme: const ChipThemeData(
           padding: EdgeInsets.all(10),
           selectedColor: Palette.teal,
           checkmarkColor: Palette.midnightPurple,
           backgroundColor: Palette.textFieldPurple,
         ),
-        textSelectionTheme: TextSelectionThemeData(
+        textSelectionTheme: const TextSelectionThemeData(
             cursorColor: Palette.lightPurple,
             selectionColor: Palette.midnightPurple,
             selectionHandleColor: Palette.midnightPurple),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
                 color: Palette.lightPurple,
                 fontSize: 20,
@@ -70,19 +70,19 @@ class MyMaterialApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
                 primary: Palette.teal.withOpacity(0.5),
-                textStyle: TextStyle(color: Palette.white))),
+                textStyle: const TextStyle(color: Palette.white))),
         drawerTheme: DrawerThemeData(
           backgroundColor: Palette.midnightPurple,
           scrimColor: Palette.black.withOpacity(0.3),
         ),
-        iconTheme: IconThemeData(color: Palette.lightPurple),
+        iconTheme: const IconThemeData(color: Palette.lightPurple),
         scrollbarTheme: ScrollbarThemeData(
             crossAxisMargin: -10,
             thickness: MaterialStateProperty.all(7),
             trackBorderColor: MaterialStateProperty.all(Palette.white),
             thumbColor: MaterialStateProperty.all(
                 Palette.lightPurple.withOpacity(0.5))),
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: const InputDecorationTheme(
             filled: true,
             fillColor: Palette.darkPurple,
             labelStyle: TextStyle(color: Palette.lightPurple),
@@ -96,9 +96,9 @@ class MyMaterialApp extends StatelessWidget {
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  late AnimeProvider _animeProvider;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  late final AnimeProvider _animeProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +116,15 @@ class LoginPage extends StatelessWidget {
             child: Container(
               width: 518,
               height: 500,
-              constraints: BoxConstraints(maxHeight: 500, maxWidth: 518),
+              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 518),
               decoration: BoxDecoration(
                   color: Palette.darkPurple.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Image.asset("assets/images/logo2.png"),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   MyTextField(
                       hintText: "Username",
                       fillColor: Palette.textFieldPurple.withOpacity(0.9),
@@ -133,7 +133,7 @@ class LoginPage extends StatelessWidget {
                       height: 38,
                       borderRadius: 15,
                       controller: _usernameController),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   MyTextField(
                     hintText: "Password",
                     fillColor: Palette.textFieldPurple.withOpacity(0.9),
@@ -143,7 +143,7 @@ class LoginPage extends StatelessWidget {
                     borderRadius: 15,
                     controller: _passwordController,
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   GradientButton(
                       onPressed: () async {
                         var username = _usernameController.text;
@@ -167,7 +167,7 @@ class LoginPage extends StatelessWidget {
                       height: 35,
                       borderRadius: 50,
                       gradient: Palette.buttonGradient,
-                      child: Text("Log In",
+                      child: const Text("Log In",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w500))),

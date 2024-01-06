@@ -1,22 +1,17 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
-import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/screens/help_screen.dart';
 import 'package:mag_admin/screens/users_screen.dart';
 import '../screens/clubs_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
-import './/main.dart';
 import 'gradient_button.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
   String? title;
-  Widget? title_widget;
+  Widget? titleWidget;
   TextEditingController? controller;
   void Function(String)? onSubmitted;
   void Function()? onClosed;
@@ -32,7 +27,7 @@ class MasterScreenWidget extends StatefulWidget {
     Key? key,
     required this.child,
     this.title,
-    this.title_widget,
+    this.titleWidget,
     this.controller,
     this.onSubmitted,
     this.onClosed,
@@ -71,36 +66,40 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         onChanged: widget.onChanged,
         onCleared: widget.onCleared,
         customTextEditingController: widget.controller,
-        titleTextStyle: TextStyle(fontSize: 16),
+        titleTextStyle: const TextStyle(fontSize: 16),
         centerTitle: true,
         searchInputDecoration: InputDecoration(
-            contentPadding: EdgeInsets.only(top: 5, left: 15),
+            contentPadding: const EdgeInsets.only(top: 5, left: 15),
             hintText: "Search",
-            hintStyle: TextStyle(color: Palette.lightPurple, fontSize: 16),
+            hintStyle:
+                const TextStyle(color: Palette.lightPurple, fontSize: 16),
             fillColor: Palette.searchBar,
-            constraints: BoxConstraints(maxHeight: 40, maxWidth: 500),
+            constraints: const BoxConstraints(maxHeight: 40, maxWidth: 500),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
-        iconTheme: IconThemeData(color: Palette.lightPurple),
+        iconTheme: const IconThemeData(color: Palette.lightPurple),
         appBarBuilder: (context) {
           return AppBar(
               leading: _buildLeading(context),
-              title: widget.title_widget ?? Text(widget.title ?? ""),
+              title: widget.titleWidget ?? Text(widget.title ?? ""),
               actions: _buildActions,
-              iconTheme: IconThemeData(color: Palette.lightPurple));
+              iconTheme: const IconThemeData(color: Palette.lightPurple));
         },
       ),
       drawer: Drawer(
           child: ListView(children: [
-        Container(child: Image.asset('assets/images/logo.png')),
+        Image.asset('assets/images/logo.png'),
         // buildListTile(context, 'Login',
         //   Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
-        buildListTile(context, 'Anime', buildAnimeIcon(24), AnimeScreen()),
-        buildListTile(context, 'Users', buildUsersIcon(24), UsersScreen()),
         buildListTile(
-            context, 'Analytics', buildAnalyticsIcon(), AnimeScreen()),
-        buildListTile(context, 'Clubs', buildClubsIcon(24), ClubsScreen()),
-        buildListTile(context, 'Help', buildHelpIcon(24), HelpScreen())
+            context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
+        buildListTile(
+            context, 'Users', buildUsersIcon(24), const UsersScreen()),
+        buildListTile(
+            context, 'Analytics', buildAnalyticsIcon(), const AnimeScreen()),
+        buildListTile(
+            context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
+        buildListTile(context, 'Help', buildHelpIcon(24), const HelpScreen())
       ])),
       body: Stack(children: [
         Positioned.fill(
@@ -129,7 +128,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         onPressed: widget.floatingButtonOnPressed,
         gradient: Palette.menuGradient,
         child: widget.floatingActionButtonIcon ??
-            Icon(Icons.add_rounded, size: 48, color: Palette.lightPurple));
+            const Icon(Icons.add_rounded,
+                size: 48, color: Palette.lightPurple));
   }
 
   List<Widget> get _buildActions {
@@ -141,9 +141,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         searchActiveIcon: buildSearchIcon(true),
       ));
     }
-    actions.add(SizedBox(width: 10));
+    actions.add(const SizedBox(width: 10));
     actions.add(buildAstronautIcon());
-    actions.add(SizedBox(width: 40));
+    actions.add(const SizedBox(width: 40));
     return actions;
   }
 
@@ -153,14 +153,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back,
             color: Palette.lightPurple,
           ));
     } else {
       return Builder(
           builder: (context) => IconButton(
-                icon: Icon(Icons.menu_rounded),
+                icon: const Icon(Icons.menu_rounded),
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ));
     }
@@ -181,7 +181,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 (hoverStates[title] == true) ? Palette.menuGradient : null,
             borderRadius: BorderRadius.circular(50)),
         child: ListTile(
-          title: Text(title, style: TextStyle(fontSize: 16)),
+          title: Text(title, style: const TextStyle(fontSize: 16)),
           leading: leading,
           onTap: () {
             Navigator.of(context).push(

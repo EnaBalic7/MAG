@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/role_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
@@ -17,9 +14,7 @@ import 'package:provider/provider.dart';
 import '../models/role.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
-import '../models/user_profile_picture.dart';
 import '../models/user_role.dart';
-import '../providers/user_profile_picture_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -37,7 +32,7 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   late UserProvider _userProvider;
   late Future<SearchResult<User>> _userFuture;
-  TextEditingController _userController = TextEditingController();
+  final TextEditingController _userController = TextEditingController();
   final _userRoleFormKey = GlobalKey<FormBuilderState>();
   late RoleProvider _roleProvider;
   late Future<SearchResult<Role>> _roleFuture;
@@ -76,18 +71,13 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Row(
+      titleWidget: Row(
         children: [
           buildUsersIcon(24),
-          SizedBox(width: 5),
-          Text("Users"),
+          const SizedBox(width: 5),
+          const Text("Users"),
         ],
       ),
       showSearch: true,
@@ -97,7 +87,7 @@ class _UsersScreenState extends State<UsersScreen> {
         future: _userFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return MyProgressIndicator(); // Loading state
+            return const MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -178,13 +168,13 @@ class _UsersScreenState extends State<UsersScreen> {
     return Container(
       width: 200,
       height: 280,
-      margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
+      margin: const EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(15), topRight: Radius.circular(15)),
             child: Image.memory(
               imageFromBase64String(user.profilePicture!.profilePicture!),
@@ -207,8 +197,8 @@ class _UsersScreenState extends State<UsersScreen> {
                       user.username!,
                       overflow: TextOverflow.clip,
                       textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -228,28 +218,28 @@ class _UsersScreenState extends State<UsersScreen> {
                 child: Column(
                   children: [
                     Container(
-                      margin:
-                          EdgeInsets.only(top: 8, left: 0, right: 0, bottom: 0),
+                      margin: const EdgeInsets.only(
+                          top: 8, left: 0, right: 0, bottom: 0),
                       child: Row(
                         children: [
-                          Icon(Icons.person,
+                          const Icon(Icons.person,
                               size: 20, color: Palette.lightPurple),
-                          SizedBox(width: 3),
+                          const SizedBox(width: 3),
                           Text("${user.firstName} ${user.lastName}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Palette.lightPurple, fontSize: 16)),
                         ],
                       ),
                     ),
                     Container(
-                      margin:
-                          EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 0),
+                      margin: const EdgeInsets.only(
+                          top: 5, left: 0, right: 0, bottom: 0),
                       child: Row(
                         children: [
                           buildCalendarIcon(20),
-                          SizedBox(width: 3),
+                          const SizedBox(width: 3),
                           Text(DateFormat('MMM d, y').format(user.dateJoined!),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Palette.lightPurple, fontSize: 16)),
                         ],
                       ),
@@ -309,7 +299,7 @@ class _UsersScreenState extends State<UsersScreen> {
               border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
               color: Palette.darkPurple,
             ),
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             width: 500.0,
             height: 650.0,
             child: Column(
@@ -323,7 +313,7 @@ class _UsersScreenState extends State<UsersScreen> {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        icon: Icon(Icons.close_rounded))
+                        icon: const Icon(Icons.close_rounded))
                   ],
                 ),
                 Column(
@@ -339,7 +329,8 @@ class _UsersScreenState extends State<UsersScreen> {
                         alignment: Alignment.center,
                       ),
                     ),
-                    Text("${user.username}", style: TextStyle(fontSize: 20)),
+                    Text("${user.username}",
+                        style: const TextStyle(fontSize: 20)),
                   ],
                 ),
                 FormBuilder(
@@ -352,12 +343,12 @@ class _UsersScreenState extends State<UsersScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return MyProgressIndicator();
+                              return const MyProgressIndicator();
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else if (!snapshot.hasData ||
                                 snapshot.data == null) {
-                              return Text('No roles available');
+                              return const Text('No roles available');
                             } else {
                               // Data loaded successfully
                               var roles = snapshot.data!;
@@ -383,7 +374,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           }),
                       MyFormBuilderSwitch(
                         name: "canParticipateInClubs",
-                        title: Text(
+                        title: const Text(
                           "Club participation",
                           style: TextStyle(fontSize: 15),
                         ),
@@ -395,7 +386,7 @@ class _UsersScreenState extends State<UsersScreen> {
                       ),
                       MyFormBuilderSwitch(
                         name: "canReview",
-                        title: Text(
+                        title: const Text(
                           "Reviewing",
                           style: TextStyle(fontSize: 15),
                         ),
@@ -407,7 +398,7 @@ class _UsersScreenState extends State<UsersScreen> {
                       ),
                       MyFormBuilderSwitch(
                         name: "canAskQuestions",
-                        title: Text(
+                        title: const Text(
                           "Help section participation",
                           style: TextStyle(fontSize: 15),
                         ),
@@ -420,7 +411,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 GradientButton(
                   width: 100,
                   height: 30,
@@ -437,9 +428,9 @@ class _UsersScreenState extends State<UsersScreen> {
                           request: request);
                       showInfoDialog(
                           context,
-                          Icon(Icons.task_alt,
+                          const Icon(Icons.task_alt,
                               color: Palette.lightPurple, size: 50),
-                          Text(
+                          const Text(
                             "Updated successfully!",
                             textAlign: TextAlign.center,
                           ));
@@ -447,7 +438,7 @@ class _UsersScreenState extends State<UsersScreen> {
                       showErrorDialog(context, e);
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     'Save',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
@@ -467,20 +458,20 @@ class _UsersScreenState extends State<UsersScreen> {
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
       ),
-      icon: Icon(Icons.more_vert_rounded),
+      icon: const Icon(Icons.more_vert_rounded),
       splashRadius: 1,
-      constraints: BoxConstraints(minWidth: 10),
+      constraints: const BoxConstraints(minWidth: 10),
       padding: EdgeInsets.zero,
-      color: Color.fromRGBO(50, 48, 90, 1),
+      color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
-            leading:
-                Icon(Icons.text_snippet_rounded, color: Palette.lightPurple),
-            title: Text("See details",
+            leading: const Icon(Icons.text_snippet_rounded,
+                color: Palette.lightPurple),
+            title: const Text("See details",
                 style: TextStyle(color: Palette.lightPurple)),
             subtitle: Text("See more information about this user",
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
@@ -494,14 +485,14 @@ class _UsersScreenState extends State<UsersScreen> {
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
-            leading: Icon(
+            leading: const Icon(
               Icons.settings_suggest_rounded,
               color: Palette.lightPurple,
               size: 24,
             ),
-            title: Text("User permissions",
+            title: const Text("User permissions",
                 style: TextStyle(color: Palette.lightPurple)),
             subtitle: Text("Manage user's role and permissions",
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
@@ -511,7 +502,7 @@ class _UsersScreenState extends State<UsersScreen> {
                 // Show loading indicator while fetching data
                 showDialog(
                   context: context,
-                  builder: (context) => Center(
+                  builder: (context) => const Center(
                     child: MyProgressIndicator(),
                   ),
                 );
@@ -544,19 +535,21 @@ class _UsersScreenState extends State<UsersScreen> {
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),
-            title: Text("Delete", style: TextStyle(color: Palette.lightRed)),
+            title:
+                const Text("Delete", style: TextStyle(color: Palette.lightRed)),
             subtitle: Text("Delete permanently",
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
               Navigator.pop(context);
               showConfirmationDialog(
                   context,
-                  Icon(Icons.warning_rounded,
+                  const Icon(Icons.warning_rounded,
                       color: Palette.lightRed, size: 55),
-                  Text("Are you sure you want to delete this user?"), () async {
+                  const Text("Are you sure you want to delete this user?"),
+                  () async {
                 //Implement user delete
                 /*await _genreAnimeProvider.deleteByAnimeId(anime.id!);
                 _animeProvider.delete(anime.id!);*/

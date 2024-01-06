@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/genre_anime_provider.dart';
@@ -33,9 +30,7 @@ class AnimeDetailScreen extends StatefulWidget {
 }
 
 class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
-  @override
   final _animeFormKey = GlobalKey<FormBuilderState>();
-
   final GlobalKey<_AnimeDetailScreenState> key =
       GlobalKey<_AnimeDetailScreenState>();
   Image? _image;
@@ -46,7 +41,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late Future<SearchResult<Genre>> _genreFuture;
   Map<String, dynamic> _initialValue = {};
   bool? showGenresForm;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   double _savedScrollPosition = 0.0;
 
@@ -83,17 +78,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   }
 
   void _updateAnimeGenres() async {
-    var anime = await _animeProvider.get(filter: {
-      "Id": "${widget.anime!.id!}",
-      "GenresIncluded": "true",
-    });
-
     var genreAnimeList = await _genreAnimeProvider
         .get(filter: {"AnimeId": "${widget.anime!.id!}"});
 
     if (mounted) {
       setState(() {
-        //widget.anime = anime.result.first;
         widget.anime!.genreAnimes = genreAnimeList.result;
       });
     }
@@ -116,9 +105,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       },
       showFloatingActionButton: true,
       floatingActionButtonIcon:
-          Icon(Icons.save_rounded, size: 48, color: Palette.lightPurple),
+          const Icon(Icons.save_rounded, size: 48, color: Palette.lightPurple),
       showBackArrow: true,
-      title_widget: _title,
+      titleWidget: _title,
       child: SingleChildScrollView(
         controller: _scrollController,
         child: Center(
@@ -233,7 +222,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingBottom: 50,
                                   borderRadius: 50,
                                   dropdownColor: Palette.disabledControl,
-                                  items: [
+                                  items: const [
                                     DropdownMenuItem(
                                         value: 'Spring', child: Text('Spring')),
                                     DropdownMenuItem(
@@ -336,7 +325,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return MyProgressIndicator(); // Loading state
+                              return const MyProgressIndicator(); // Loading state
                             } else if (snapshot.hasError) {
                               return Text(
                                   'Error: ${snapshot.error}'); // Error state
@@ -353,7 +342,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                         (genre) => FormBuilderFieldOption(
                                           value: genre.id.toString(),
                                           child: Text(genre.name!,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color:
                                                       Palette.midnightPurple)),
                                         ),
@@ -380,13 +369,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           onPressed: () {
                             //_showOverlayForm(context);
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: ((context) => GenresScreen())));
+                                builder: ((context) => const GenresScreen())));
                           },
                           width: 75,
                           height: 30,
                           gradient: Palette.buttonGradient,
                           borderRadius: 50,
-                          child: Icon(Icons.add_rounded,
+                          child: const Icon(Icons.add_rounded,
                               size: 20, color: Palette.white),
                         ),
                       )
@@ -414,8 +403,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         });
         showInfoDialog(
             context,
-            Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            Text(
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Text(
               "Added successfully!",
               textAlign: TextAlign.center,
             ));
@@ -423,8 +412,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         await _animeProvider.update(widget.anime!.id!, request: request);
         showInfoDialog(
             context,
-            Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            Text(
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Text(
               "Updated successfully!",
               textAlign: TextAlign.center,
             ));
@@ -455,12 +444,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   Text _buildTitle({String title = ""}) {
     if (title.isEmpty) {
       if (widget.anime?.titleEn?.isEmpty ?? true) {
-        return Text("Untitled");
+        return const Text("Untitled");
       } else {
         return Text("${widget.anime?.titleEn}");
       }
     } else {
-      return Text("$title");
+      return Text(title);
     }
   }
 

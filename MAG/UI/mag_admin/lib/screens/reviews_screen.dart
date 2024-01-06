@@ -82,7 +82,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Row(
+      titleWidget: Row(
         children: [
           widget.user.profilePicture!.profilePicture != null
               ? ClipRRect(

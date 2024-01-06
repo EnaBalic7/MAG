@@ -1,4 +1,3 @@
-import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:mag_admin/providers/genre_anime_provider.dart';
@@ -25,8 +24,8 @@ class _AnimeScreenState extends State<AnimeScreen> {
   late GenreAnimeProvider _genreAnimeProvider;
   SearchResult<Anime>? result;
   late Future<SearchResult<Anime>> _animeFuture;
-  TextEditingController _animeController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _animeController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   int page = 0;
   int pageSize = 8;
@@ -35,14 +34,16 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
   @override
   void initState() {
-    context.read<AnimeProvider>().addListener(() {
+    _animeProvider = context.read<AnimeProvider>();
+    _genreAnimeProvider = context.read<GenreAnimeProvider>();
+
+    _animeProvider.addListener(() {
       _reloadAnimeList();
     });
-    context.read<GenreAnimeProvider>().addListener(() {
+    _genreAnimeProvider.addListener(() {
       _reloadAnimeList();
     });
 
-    _animeProvider = context.read<AnimeProvider>();
     _animeFuture = _animeProvider.get(filter: {
       "GenresIncluded": "true",
       "NewestFirst": "true",
@@ -51,7 +52,6 @@ class _AnimeScreenState extends State<AnimeScreen> {
     });
 
     setTotalItems();
-    _genreAnimeProvider = context.read<GenreAnimeProvider>();
 
     super.initState();
   }
@@ -79,7 +79,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Row(
+      titleWidget: Row(
         children: [
           buildAnimeIcon(28),
           const SizedBox(width: 5),
@@ -182,19 +182,19 @@ class _AnimeScreenState extends State<AnimeScreen> {
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
       ),
-      icon: Icon(Icons.more_vert_rounded),
+      icon: const Icon(Icons.more_vert_rounded),
       splashRadius: 1,
       padding: EdgeInsets.zero,
-      color: Color.fromRGBO(50, 48, 90, 1),
+      color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
-            leading:
-                Icon(Icons.text_snippet_rounded, color: Palette.lightPurple),
-            title: Text('See details',
+            leading: const Icon(Icons.text_snippet_rounded,
+                color: Palette.lightPurple),
+            title: const Text('See details',
                 style: TextStyle(color: Palette.lightPurple)),
             subtitle: Text('See more information about this anime',
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
@@ -208,19 +208,20 @@ class _AnimeScreenState extends State<AnimeScreen> {
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),
-            title: Text('Delete', style: TextStyle(color: Palette.lightRed)),
+            title:
+                const Text('Delete', style: TextStyle(color: Palette.lightRed)),
             subtitle: Text('Delete permanently',
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
               Navigator.pop(context);
               showConfirmationDialog(
                   context,
-                  Icon(Icons.warning_rounded,
+                  const Icon(Icons.warning_rounded,
                       color: Palette.lightRed, size: 55),
-                  Text("Are you sure you want to delete this anime?"),
+                  const Text("Are you sure you want to delete this anime?"),
                   () async {
                 _animeProvider.delete(anime.id!);
               });
@@ -235,13 +236,13 @@ class _AnimeScreenState extends State<AnimeScreen> {
     return Container(
         width: 300,
         height: 453,
-        margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
+        margin: const EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
         child: Column(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Image.network(
                 anime.imageUrl!,
@@ -255,14 +256,14 @@ class _AnimeScreenState extends State<AnimeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin:
-                      EdgeInsets.only(top: 10, left: 10, right: 0, bottom: 13),
+                  margin: const EdgeInsets.only(
+                      top: 10, left: 10, right: 0, bottom: 13),
                   child: Row(
                     children: [
                       buildStarIcon(17),
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       Text(anime.score.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Palette.starYellow, fontSize: 13)),
                     ],
                   ),
@@ -277,7 +278,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
                         anime.titleEn!,
                         overflow: TextOverflow.clip,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),

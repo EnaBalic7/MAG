@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/qa_provider.dart';
 import 'package:mag_admin/utils/icons.dart';
@@ -32,10 +30,10 @@ class _HelpScreenState extends State<HelpScreen> {
   Map<String, dynamic> _initialValue = {};
   int? qaID;
   String? _questionTitle = "";
-  final _QAFormKey = GlobalKey<FormBuilderState>();
-  final _QAfilterFormKey = GlobalKey<FormBuilderState>();
+  final _qAFormKey = GlobalKey<FormBuilderState>();
+  final _qAfilterFormKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
-  TextEditingController _qaController = TextEditingController();
+  final TextEditingController _qaController = TextEditingController();
 
   int page = 0;
   int pageSize = 6;
@@ -126,11 +124,11 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-        title_widget: Row(
+        titleWidget: Row(
           children: [
             buildHelpIcon(21),
-            SizedBox(width: 5),
-            Text("Help"),
+            const SizedBox(width: 5),
+            const Text("Help"),
           ],
         ),
         showSearch: true,
@@ -147,10 +145,10 @@ class _HelpScreenState extends State<HelpScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: 400),
+                      constraints: const BoxConstraints(maxWidth: 400),
                       child: Text(
                         _questionTitle!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 17,
                           color: Palette.teal,
                           fontWeight: FontWeight.bold,
@@ -161,10 +159,10 @@ class _HelpScreenState extends State<HelpScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 40, top: 20),
                     child: FormBuilder(
-                      key: _QAFormKey,
+                      key: _qAFormKey,
                       initialValue: _initialValue,
                       child: Container(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                           minHeight: 200,
                           maxHeight: 400,
                           minWidth: 500,
@@ -190,7 +188,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     height: 30,
                     borderRadius: 50,
                     gradient: Palette.buttonGradient,
-                    child: Text(
+                    child: const Text(
                       "Save",
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -198,8 +196,8 @@ class _HelpScreenState extends State<HelpScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      _QAFormKey.currentState?.saveAndValidate();
-                      var tmp = Map.from(_QAFormKey.currentState!.value);
+                      _qAFormKey.currentState?.saveAndValidate();
+                      var tmp = Map.from(_qAFormKey.currentState!.value);
                       var request = {
                         "answer": tmp["answer"].toString(),
                         "question": _initialValue["question"].toString(),
@@ -210,9 +208,9 @@ class _HelpScreenState extends State<HelpScreen> {
                           await _qaProvider.update(qaID!, request: request);
                           showInfoDialog(
                               context,
-                              Icon(Icons.task_alt,
+                              const Icon(Icons.task_alt,
                                   color: Palette.lightPurple, size: 50),
-                              Text(
+                              const Text(
                                 "Answered successfully!",
                                 textAlign: TextAlign.center,
                               ));
@@ -234,7 +232,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return MyProgressIndicator(); // Loading state
+                          return const MyProgressIndicator(); // Loading state
                         } else if (snapshot.hasError) {
                           return Text(
                               'Error: ${snapshot.error}'); // Error state
@@ -246,7 +244,7 @@ class _HelpScreenState extends State<HelpScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               FormBuilder(
-                                key: _QAfilterFormKey,
+                                key: _qAfilterFormKey,
                                 initialValue: _selectedQAFilter,
                                 child: MyFormBuilderDropdown(
                                   name: "QAfilter",
@@ -262,9 +260,9 @@ class _HelpScreenState extends State<HelpScreen> {
                                     });
                                     _filterQA(filter!);
                                   },
-                                  icon: Icon(Icons.filter_alt,
+                                  icon: const Icon(Icons.filter_alt,
                                       color: Palette.lightPurple),
-                                  items: [
+                                  items: const [
                                     DropdownMenuItem(
                                         value: 'All', child: Text('All')),
                                     DropdownMenuItem(
@@ -293,10 +291,10 @@ class _HelpScreenState extends State<HelpScreen> {
                               Column(
                                 children: [
                                   Wrap(
-                                    children: _buildQACards(qaList),
                                     crossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     alignment: WrapAlignment.start,
+                                    children: _buildQACards(qaList),
                                   ),
                                   MyPaginationButtons(
                                       page: page,
@@ -344,7 +342,7 @@ class _HelpScreenState extends State<HelpScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15, right: 15),
       child: Container(
-        constraints: BoxConstraints(minHeight: 100, maxHeight: 200),
+        constraints: const BoxConstraints(minHeight: 100, maxHeight: 200),
         width: 450,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
@@ -357,22 +355,22 @@ class _HelpScreenState extends State<HelpScreen> {
               children: [
                 Expanded(
                   child: Text(qa.question.toString(),
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.bold)),
                 ),
                 ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 23),
+                  constraints: const BoxConstraints(maxHeight: 23),
                   child: Container(
                     padding: EdgeInsets.zero,
                     child: Row(
                       children: [
                         IconButton(
-                            constraints:
-                                BoxConstraints(maxHeight: 24, maxWidth: 24),
+                            constraints: const BoxConstraints(
+                                maxHeight: 24, maxWidth: 24),
                             alignment: Alignment.topCenter,
                             tooltip: "Add or edit answer",
-                            visualDensity:
-                                VisualDensity(horizontal: -4, vertical: -4),
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
                             padding: EdgeInsets.zero,
                             splashRadius: 0.1,
                             onPressed: () {
@@ -381,30 +379,30 @@ class _HelpScreenState extends State<HelpScreen> {
                                     qa.question.toString();
                                 qaID = qa.id;
                                 _questionTitle = qa.question.toString();
-                                _QAFormKey.currentState!.fields["answer"]!
+                                _qAFormKey.currentState!.fields["answer"]!
                                     .didChange(qa.answer.toString());
                               });
                             },
                             icon: buildEditIcon(24)),
                         PopupMenuButton<String>(
                           tooltip: "More actions",
-                          offset: Offset(195, 0),
+                          offset: const Offset(195, 0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             side: BorderSide(
                                 color: Palette.lightPurple.withOpacity(0.3)),
                           ),
-                          icon: Icon(Icons.more_vert_rounded),
+                          icon: const Icon(Icons.more_vert_rounded),
                           splashRadius: 1,
                           padding: EdgeInsets.zero,
-                          color: Color.fromRGBO(50, 48, 90, 1),
+                          color: const Color.fromRGBO(50, 48, 90, 1),
                           itemBuilder: (BuildContext context) =>
                               <PopupMenuEntry<String>>[
                             PopupMenuItem<String>(
                               padding: EdgeInsets.zero,
                               child: ListTile(
-                                visualDensity:
-                                    VisualDensity(horizontal: -4, vertical: -4),
+                                visualDensity: const VisualDensity(
+                                    horizontal: -4, vertical: -4),
                                 hoverColor:
                                     Palette.lightPurple.withOpacity(0.1),
                                 leading: _buildHideIcon(qa),
@@ -421,7 +419,7 @@ class _HelpScreenState extends State<HelpScreen> {
                               child: ListTile(
                                 hoverColor: Palette.lightRed.withOpacity(0.1),
                                 leading: buildTrashIcon(24),
-                                title: Text('Delete',
+                                title: const Text('Delete',
                                     style: TextStyle(color: Palette.lightRed)),
                                 subtitle: Text('Delete permanently',
                                     style: TextStyle(
@@ -431,9 +429,9 @@ class _HelpScreenState extends State<HelpScreen> {
                                   Navigator.pop(context);
                                   showConfirmationDialog(
                                       context,
-                                      Icon(Icons.warning_rounded,
+                                      const Icon(Icons.warning_rounded,
                                           color: Palette.lightRed, size: 55),
-                                      Text(
+                                      const Text(
                                           "Are you sure you want to delete this question?"),
                                       () async {
                                     await _deleteQA(qa, context);
@@ -459,9 +457,9 @@ class _HelpScreenState extends State<HelpScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.person_rounded,
+                            const Icon(Icons.person_rounded,
                                 size: 19, color: Palette.lightPurple),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(qa.user!.username.toString()),
                           ],
                         ),
@@ -474,7 +472,7 @@ class _HelpScreenState extends State<HelpScreen> {
                             gradient: Palette.menuGradient,
                             child: Text(
                               qa.category!.name.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 12,
                                   color: Palette.lightPurple,
                                   fontWeight: FontWeight.w500),
@@ -488,13 +486,14 @@ class _HelpScreenState extends State<HelpScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Container(
-                constraints: BoxConstraints(minHeight: 30, maxHeight: 100),
+                constraints:
+                    const BoxConstraints(minHeight: 30, maxHeight: 100),
                 //height: 100,
                 child: SingleChildScrollView(
                   controller: ScrollController(),
                   child: Text(
                     qa.answer.toString(),
-                    style: TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   ),
                 ),
               ),
@@ -507,9 +506,10 @@ class _HelpScreenState extends State<HelpScreen> {
 
   Icon _buildHideIcon(QA qa) {
     if (qa.displayed == true) {
-      return Icon(Icons.visibility_off_outlined, color: Palette.lightPurple);
+      return const Icon(Icons.visibility_off_outlined,
+          color: Palette.lightPurple);
     } else {
-      return Icon(Icons.visibility_outlined, color: Palette.lightPurple);
+      return const Icon(Icons.visibility_outlined, color: Palette.lightPurple);
     }
   }
 
@@ -525,9 +525,9 @@ class _HelpScreenState extends State<HelpScreen> {
 
   Text _buildHideTitle(QA qa) {
     if (qa.displayed == true) {
-      return Text('Hide', style: TextStyle(color: Palette.lightPurple));
+      return const Text('Hide', style: TextStyle(color: Palette.lightPurple));
     } else {
-      return Text('Show', style: TextStyle(color: Palette.lightPurple));
+      return const Text('Show', style: TextStyle(color: Palette.lightPurple));
     }
   }
 
@@ -540,13 +540,15 @@ class _HelpScreenState extends State<HelpScreen> {
       if (qaID != null) {
         showConfirmationDialog(
             context,
-            Icon(Icons.warning_rounded, color: Palette.lightRed, size: 55),
-            Text("Are you sure you want to delete this question?"), () async {
+            const Icon(Icons.warning_rounded,
+                color: Palette.lightRed, size: 55),
+            const Text("Are you sure you want to delete this question?"),
+            () async {
           await _qaProvider.delete(qaID!);
           showInfoDialog(
               context,
-              Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-              Text(
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
                 "Question has been deleted.",
                 textAlign: TextAlign.center,
               ));
@@ -572,13 +574,13 @@ class _HelpScreenState extends State<HelpScreen> {
         await _qaProvider.update(qaID!, request: request);
         showInfoDialog(
             context,
-            Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
             (qa.displayed == true)
-                ? Text(
+                ? const Text(
                     "Question has been hidden.",
                     textAlign: TextAlign.center,
                   )
-                : Text(
+                : const Text(
                     "Question has been shown.",
                     textAlign: TextAlign.center,
                   ));

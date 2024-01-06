@@ -4,7 +4,7 @@ import '../models/genre_anime.dart';
 import 'dart:convert';
 
 class GenreAnimeProvider extends BaseProvider<GenreAnime> {
-  String _endpoint = "GenreAnime";
+  final String _endpoint = "GenreAnime";
   GenreAnimeProvider() : super("GenreAnime");
 
   @override

@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/utils/icons.dart';
 
 import '../utils/colors.dart';
 
@@ -66,7 +63,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           bottom: widget.paddingBottom!),
       child: SizedBox(
         width: widget.width,
-        height: widget.height ?? null,
+        height: widget.height,
         child: FormBuilderTextField(
           focusNode: FocusNode(),
           initialValue: widget.initialValue,

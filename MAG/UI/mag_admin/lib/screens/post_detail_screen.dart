@@ -95,7 +95,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Row(
+      titleWidget: Row(
         children: [
           buildPostIcon(22),
           const SizedBox(width: 5),
@@ -468,7 +468,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: Row(
-                        children: [Text("${replies} replies")],
+                        children: [Text("$replies replies")],
                       ),
                     ),
                   ],

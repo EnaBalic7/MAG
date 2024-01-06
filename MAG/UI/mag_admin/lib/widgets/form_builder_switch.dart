@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
@@ -27,8 +25,8 @@ class _MyFormBuilderSwitchState extends State<MyFormBuilderSwitch> {
     return FormBuilderSwitch(
       name: widget.name,
       title: widget.title,
-      subtitle: widget.subtitle ?? Text(""),
-      decoration: InputDecoration(
+      subtitle: widget.subtitle ?? const Text(""),
+      decoration: const InputDecoration(
         border: InputBorder.none,
       ),
       activeColor: Palette.teal,

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:mag_admin/screens/club_detail_screen.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +22,7 @@ class ClubsScreen extends StatefulWidget {
 class _ClubsScreenState extends State<ClubsScreen> {
   late ClubProvider _clubProvider;
   late Future<SearchResult<Club>> _clubFuture;
-  TextEditingController _clubController = TextEditingController();
+  final TextEditingController _clubController = TextEditingController();
 
   int page = 0;
   int pageSize = 8;
@@ -56,11 +53,11 @@ class _ClubsScreenState extends State<ClubsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Row(
+      titleWidget: Row(
         children: [
           buildClubsIcon(22),
-          SizedBox(width: 5),
-          Text("Clubs"),
+          const SizedBox(width: 5),
+          const Text("Clubs"),
         ],
       ),
       showSearch: true,
@@ -70,7 +67,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
         future: _clubFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return MyProgressIndicator(); // Loading state
+            return const MyProgressIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -149,14 +146,14 @@ class _ClubsScreenState extends State<ClubsScreen> {
     return Container(
         width: 300,
         height: 453,
-        margin: EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
+        margin: const EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
         child: Column(
           children: [
             (club.cover != null)
                 ? ClipRRect(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(15),
                         topRight: Radius.circular(15)),
                     child: Image.memory(
@@ -172,14 +169,14 @@ class _ClubsScreenState extends State<ClubsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin:
-                      EdgeInsets.only(top: 10, left: 10, right: 0, bottom: 13),
+                  margin: const EdgeInsets.only(
+                      top: 10, left: 10, right: 0, bottom: 13),
                   child: Row(
                     children: [
                       buildUsersIcon(17),
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       Text("${club.memberCount}",
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Palette.lightPurple, fontSize: 13)),
                     ],
                   ),
@@ -194,7 +191,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                         club.name!,
                         overflow: TextOverflow.clip,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -231,19 +228,19 @@ class _ClubsScreenState extends State<ClubsScreen> {
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
       ),
-      icon: Icon(Icons.more_vert_rounded),
+      icon: const Icon(Icons.more_vert_rounded),
       splashRadius: 1,
       padding: EdgeInsets.zero,
-      color: Color.fromRGBO(50, 48, 90, 1),
+      color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
-            leading:
-                Icon(Icons.text_snippet_rounded, color: Palette.lightPurple),
-            title: Text('See details',
+            leading: const Icon(Icons.text_snippet_rounded,
+                color: Palette.lightPurple),
+            title: const Text('See details',
                 style: TextStyle(color: Palette.lightPurple)),
             subtitle: Text('See more information about this club',
                 style: TextStyle(color: Palette.lightPurple.withOpacity(0.5))),
@@ -257,19 +254,21 @@ class _ClubsScreenState extends State<ClubsScreen> {
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),
-            title: Text('Delete', style: TextStyle(color: Palette.lightRed)),
+            title:
+                const Text('Delete', style: TextStyle(color: Palette.lightRed)),
             subtitle: Text('Delete permanently',
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
               Navigator.pop(context);
               showConfirmationDialog(
                   context,
-                  Icon(Icons.warning_rounded,
+                  const Icon(Icons.warning_rounded,
                       color: Palette.lightRed, size: 55),
-                  Text("Are you sure you want to delete this club?"), () async {
+                  const Text("Are you sure you want to delete this club?"),
+                  () async {
                 await _clubProvider.delete(club.id!);
               });
             },

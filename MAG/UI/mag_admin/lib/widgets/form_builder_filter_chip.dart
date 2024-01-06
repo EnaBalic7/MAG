@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
@@ -35,7 +33,7 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
       decoration: InputDecoration(
         labelText: widget.labelText ?? "",
         fillColor: Colors.transparent,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
           color: Palette.lightPurple,

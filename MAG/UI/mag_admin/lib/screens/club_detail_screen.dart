@@ -3,7 +3,6 @@ import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:mag_admin/utils/util.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:mag_admin/widgets/separator.dart';
@@ -95,7 +94,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Row(
+      titleWidget: Row(
         children: [
           buildClubsIcon(22),
           const SizedBox(width: 5),
@@ -455,27 +454,29 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
         borderRadius: BorderRadius.circular(10.0),
         side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
       ),
-      icon: Icon(Icons.more_vert_rounded),
+      icon: const Icon(Icons.more_vert_rounded),
       splashRadius: 1,
       padding: EdgeInsets.zero,
-      color: Color.fromRGBO(50, 48, 90, 1),
+      color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           padding: EdgeInsets.zero,
           child: ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),
-            title: Text('Delete', style: TextStyle(color: Palette.lightRed)),
+            title:
+                const Text('Delete', style: TextStyle(color: Palette.lightRed)),
             subtitle: Text('Delete permanently',
                 style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
             onTap: () {
               Navigator.pop(context);
               showConfirmationDialog(
                   context,
-                  Icon(Icons.warning_rounded,
+                  const Icon(Icons.warning_rounded,
                       color: Palette.lightRed, size: 55),
-                  Text("Are you sure you want to delete this post?"), () async {
+                  const Text("Are you sure you want to delete this post?"),
+                  () async {
                 await _postProvider.delete(post.id!);
               });
             },

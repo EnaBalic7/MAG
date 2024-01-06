@@ -52,18 +52,18 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
                   borderRadius: BorderRadius.circular(15)),
               actionsAlignment: MainAxisAlignment.center,
               backgroundColor: Palette.darkPurple,
-              title: Text("Error"),
+              title: const Text("Error"),
               content: Text(e.toString()),
               actions: [
                 Padding(
-                    padding: EdgeInsets.only(bottom: 10, top: 5),
+                    padding: const EdgeInsets.only(bottom: 10, top: 5),
                     child: GradientButton(
                         onPressed: () => Navigator.pop(context),
                         width: 85,
                         height: 28,
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
-                        child: Text("OK",
+                        child: const Text("OK",
                             style: TextStyle(fontWeight: FontWeight.w500)))),
               ]));
 }
@@ -81,14 +81,14 @@ Future<void> showInfoDialog(
               content: content,
               actions: [
                 Padding(
-                    padding: EdgeInsets.only(bottom: 10, top: 5),
+                    padding: const EdgeInsets.only(bottom: 10, top: 5),
                     child: GradientButton(
                         onPressed: () => Navigator.pop(context),
                         width: 85,
                         height: 28,
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
-                        child: Text("OK",
+                        child: const Text("OK",
                             style: TextStyle(fontWeight: FontWeight.w500)))),
               ]));
 }
@@ -107,7 +107,7 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
         content: content,
         actions: <Widget>[
           Padding(
-              padding: EdgeInsets.only(left: 16, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10),
               child: GradientButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -116,9 +116,9 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   height: 28,
                   borderRadius: 15,
                   gradient: Palette.buttonGradient2,
-                  child: Text("No"))),
+                  child: const Text("No"))),
           Padding(
-              padding: EdgeInsets.only(right: 16, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(right: 16, bottom: 10, top: 10),
               child: GradientButton(
                   onPressed: () {
                     onPressedYes();
@@ -128,7 +128,7 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   height: 28,
                   borderRadius: 15,
                   gradient: Palette.buttonGradient,
-                  child: Text("Yes",
+                  child: const Text("Yes",
                       style: TextStyle(fontWeight: FontWeight.w500)))),
         ],
       );

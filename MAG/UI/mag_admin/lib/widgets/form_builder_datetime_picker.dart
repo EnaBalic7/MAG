@@ -1,5 +1,3 @@
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -60,13 +58,13 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
           name: widget.name!,
           decoration: InputDecoration(
             suffixIcon: Padding(
-              padding: EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.only(right: 8.0),
               child: buildCalendarIcon(24),
             ),
             fillColor: widget.fillColor,
             labelText: widget.labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Palette.lightPurple,

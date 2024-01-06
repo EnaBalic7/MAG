@@ -48,7 +48,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("User details: ${widget.user.username}"),
+      titleWidget: Text("User details: ${widget.user.username}"),
       showBackArrow: true,
       child: Center(
         child: Row(children: [
@@ -438,12 +438,12 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          const Text(
+        children: const [
+          Text(
             "See more",
             style: TextStyle(fontSize: 16),
           ),
-          const Icon(Icons.arrow_forward_ios_rounded, size: 16)
+          Icon(Icons.arrow_forward_ios_rounded, size: 16)
         ],
       ),
     );
