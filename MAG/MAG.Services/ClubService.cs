@@ -34,7 +34,12 @@ namespace MAG.Services
             {
                 query = query.Where(club => club.Name.Contains(search.Name));
             }
-            
+
+            if (search?.ClubId != null)
+            {
+                query = query.Where(club => club.Id == search.ClubId);
+            }
+
             return base.AddFilter(query, search);
         }
 

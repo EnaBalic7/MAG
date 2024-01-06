@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_admin/providers/club_provider.dart';
 import 'package:mag_admin/providers/post_provider.dart';
+import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/screens/club_detail_screen.dart';
+import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:mag_admin/utils/icons.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +31,9 @@ class _PostsScreenState extends State<PostsScreen> {
   late Future<SearchResult<Post>> _postFuture;
   late ClubProvider _clubProvider;
   late Future<SearchResult<Post>> _clubFuture;
+  late UserProvider _userProvider;
+  int? ownerId;
+  User? owner;
 
   int page = 0;
   int pageSize = 6;
@@ -40,11 +45,13 @@ class _PostsScreenState extends State<PostsScreen> {
     _postFuture = _postProvider.get(filter: {
       "UserId": "${widget.user.id}",
       "NewestFirst": "true",
+      "CommentsIncluded": "true",
       "Page": "$page",
       "PageSize": "$pageSize"
     });
 
     _clubProvider = context.read<ClubProvider>();
+    _userProvider = context.read<UserProvider>();
 
     setTotalItems();
 
@@ -153,8 +160,8 @@ class _PostsScreenState extends State<PostsScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 0, right: 20, top: 20),
       child: Container(
-        constraints: const BoxConstraints(minHeight: 100, maxHeight: 200),
-        height: 194,
+        constraints: const BoxConstraints(minHeight: 100, maxHeight: 300),
+        height: 218,
         width: 600,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
@@ -203,8 +210,10 @@ class _PostsScreenState extends State<PostsScreen> {
                                 } else {
                                   // Data loaded successfully
 
-                                  Club? tmp = snapshot.data?.result.single;
+                                  Club? tmp = snapshot.data?.result.first;
+
                                   if (tmp != null) {
+                                    ownerId = tmp.ownerId;
                                     return GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).push(
@@ -265,6 +274,57 @@ class _PostsScreenState extends State<PostsScreen> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.thumb_up_rounded),
+                        const SizedBox(width: 5),
+                        Text("${post.likesCount}")
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.thumb_down_rounded),
+                        const SizedBox(width: 5),
+                        Text("${post.dislikesCount}")
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                            onTap: () async {
+                              if (ownerId != null) {
+                                var tmp = await _userProvider.getById(ownerId!);
+                                owner = tmp;
+                              }
+
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PostDetailScreen(
+                                        post: post,
+                                        clubOwner: owner!,
+                                      )));
+                            },
+                            child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child:
+                                    Text("${post.comments?.length} replies")))
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
           ]),
         ),
       ),
