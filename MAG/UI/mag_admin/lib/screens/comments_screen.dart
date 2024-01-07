@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_admin/providers/club_provider.dart';
-import 'package:mag_admin/providers/post_provider.dart';
-import 'package:mag_admin/providers/user_provider.dart';
-import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/screens/post_detail_screen.dart';
-import 'package:mag_admin/utils/icons.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
-
-import '../models/club.dart';
 import '../models/post.dart';
+import '../providers/comment_provider.dart';
+import '../providers/post_provider.dart';
+import '../providers/user_provider.dart';
+import '../utils/colors.dart';
+import '../widgets/master_screen.dart';
+import '../models/comment.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
-import '../utils/colors.dart';
+import '../utils/icons.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
 
-class PostsScreen extends StatefulWidget {
+class CommentsScreen extends StatefulWidget {
   User user;
-  PostsScreen({Key? key, required this.user}) : super(key: key);
+  CommentsScreen({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<PostsScreen> createState() => _PostsScreenState();
+  State<CommentsScreen> createState() => _CommentsScreenState();
 }
 
-class _PostsScreenState extends State<PostsScreen> {
+class _CommentsScreenState extends State<CommentsScreen> {
+  late CommentProvider _commentProvider;
+  late Future<SearchResult<Comment>> _commentFuture;
   late PostProvider _postProvider;
-  late Future<SearchResult<Post>> _postFuture;
-  late ClubProvider _clubProvider;
-  late Future<SearchResult<Post>> _clubFuture;
   late UserProvider _userProvider;
   int? ownerId;
   User? owner;
@@ -41,16 +38,15 @@ class _PostsScreenState extends State<PostsScreen> {
 
   @override
   void initState() {
-    _postProvider = context.read<PostProvider>();
-    _postFuture = _postProvider.get(filter: {
+    _commentProvider = context.read<CommentProvider>();
+    _commentFuture = _commentProvider.get(filter: {
       "UserId": "${widget.user.id}",
       "NewestFirst": "true",
-      "CommentsIncluded": "true",
       "Page": "$page",
       "PageSize": "$pageSize"
     });
 
-    _clubProvider = context.read<ClubProvider>();
+    _postProvider = context.read<PostProvider>();
     _userProvider = context.read<UserProvider>();
 
     setTotalItems();
@@ -59,11 +55,11 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   void setTotalItems() async {
-    var postResult = await _postFuture;
+    var commentResult = await _commentFuture;
 
     if (mounted) {
       setState(() {
-        totalItems = postResult.count;
+        totalItems = commentResult.count;
       });
     }
   }
@@ -89,14 +85,14 @@ class _PostsScreenState extends State<PostsScreen> {
           const SizedBox(width: 5),
           Text("${widget.user.username}: "),
           const SizedBox(width: 5),
-          const Text("Posts"),
-          const SizedBox(width: 5),
-          buildPostIcon(24),
+          const Text("Comments"),
+          const SizedBox(width: 8),
+          buildCommentIcon(20),
         ],
       ),
       showBackArrow: true,
-      child: FutureBuilder<SearchResult<Post>>(
-        future: _postFuture,
+      child: FutureBuilder<SearchResult<Comment>>(
+        future: _commentFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const MyProgressIndicator(); // Loading state
@@ -104,13 +100,13 @@ class _PostsScreenState extends State<PostsScreen> {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
             // Data loaded successfully
-            var postList = snapshot.data!.result;
+            var commentList = snapshot.data!.result;
             return SingleChildScrollView(
               child: Center(
                 child: Column(
                   children: [
                     Wrap(
-                      children: _buildPostCards(postList),
+                      children: _buildCommentCards(commentList),
                     ),
                     MyPaginationButtons(
                         page: page,
@@ -129,11 +125,10 @@ class _PostsScreenState extends State<PostsScreen> {
 
   Future<void> fetchPage(int requestedPage) async {
     try {
-      var result = await _postProvider.get(
+      var result = await _commentProvider.get(
         filter: {
           "UserId": "${widget.user.id}",
           "NewestFirst": "true",
-          "CommentsIncluded": "true",
           "Page": "$requestedPage",
           "PageSize": "$pageSize",
         },
@@ -141,7 +136,7 @@ class _PostsScreenState extends State<PostsScreen> {
 
       if (mounted) {
         setState(() {
-          _postFuture = Future.value(result);
+          _commentFuture = Future.value(result);
           page = requestedPage;
         });
       }
@@ -150,14 +145,14 @@ class _PostsScreenState extends State<PostsScreen> {
     }
   }
 
-  List<Widget> _buildPostCards(List<Post> postList) {
+  List<Widget> _buildCommentCards(List<Comment> commentList) {
     return List.generate(
-      postList.length,
-      (index) => _buildPostCard(postList[index]),
+      commentList.length,
+      (index) => _buildCommentCard(commentList[index]),
     );
   }
 
-  Widget _buildPostCard(Post post) {
+  Widget _buildCommentCard(Comment comment) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 0, right: 20, top: 20),
       child: Container(
@@ -196,10 +191,10 @@ class _PostsScreenState extends State<PostsScreen> {
                               "${widget.user.firstName} ${widget.user.lastName}",
                               style: const TextStyle(
                                   fontSize: 17, fontWeight: FontWeight.bold)),
-                          FutureBuilder<SearchResult<Club>>(
-                              future: _clubProvider.get(filter: {
-                                "Id": "${post.clubId!}",
-                                "CoverIncluded": "True"
+                          FutureBuilder<SearchResult<Post>>(
+                              future: _postProvider.get(filter: {
+                                "Id": "${comment.postId!}",
+                                "CommentsIncluded": "True"
                               }),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -215,26 +210,33 @@ class _PostsScreenState extends State<PostsScreen> {
                                 } else {
                                   // Data loaded successfully
 
-                                  Club? tmp = snapshot.data?.result.first;
+                                  Post? tmp = snapshot.data?.result.first;
 
                                   if (tmp != null) {
-                                    ownerId = tmp.ownerId;
+                                    ownerId = tmp.userId;
                                     return GestureDetector(
-                                      onTap: () {
+                                      onTap: () async {
+                                        if (ownerId != null) {
+                                          var tmp = await _userProvider
+                                              .getById(ownerId!);
+                                          owner = tmp;
+                                        }
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                ClubDetailScreen(club: tmp),
+                                                PostDetailScreen(
+                                                    post: tmp,
+                                                    clubOwner: owner!),
                                           ),
                                         );
                                       },
                                       child: MouseRegion(
                                         cursor: SystemMouseCursors.click,
-                                        child: Text("${tmp.name}"),
+                                        child: Text("Post #${tmp.id}"),
                                       ),
                                     );
                                   } else {
-                                    return const Text("Club not found");
+                                    return const Text("Post not found");
                                   }
                                 }
                               }),
@@ -249,14 +251,14 @@ class _PostsScreenState extends State<PostsScreen> {
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         DateFormat('MMM d, y').format(
-                          post.datePosted!,
+                          comment.dateCommented!,
                         ),
                         style: const TextStyle(fontSize: 13),
                       ),
                     ),
                   ],
                 ),
-                _buildPopupMenu(post)
+                _buildPopupMenu(comment)
               ],
             ),
             Padding(
@@ -271,7 +273,7 @@ class _PostsScreenState extends State<PostsScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "${post.content}",
+                        "${comment.content}",
                         style: const TextStyle(fontSize: 15),
                       ),
                     ],
@@ -291,7 +293,7 @@ class _PostsScreenState extends State<PostsScreen> {
                         children: [
                           const Icon(Icons.thumb_up_rounded),
                           const SizedBox(width: 5),
-                          Text("${post.likesCount}")
+                          Text("${comment.likesCount}")
                         ],
                       ),
                     ),
@@ -301,32 +303,7 @@ class _PostsScreenState extends State<PostsScreen> {
                         children: [
                           const Icon(Icons.thumb_down_rounded),
                           const SizedBox(width: 5),
-                          Text("${post.dislikesCount}")
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                              onTap: () async {
-                                if (ownerId != null) {
-                                  var tmp =
-                                      await _userProvider.getById(ownerId!);
-                                  owner = tmp;
-                                }
-
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => PostDetailScreen(
-                                          post: post,
-                                          clubOwner: owner!,
-                                        )));
-                              },
-                              child: MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child:
-                                      Text("${post.comments?.length} replies")))
+                          Text("${comment.dislikesCount}")
                         ],
                       ),
                     ),
@@ -340,7 +317,7 @@ class _PostsScreenState extends State<PostsScreen> {
     );
   }
 
-  ConstrainedBox _buildPopupMenu(Post post) {
+  ConstrainedBox _buildPopupMenu(Comment comment) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxHeight: 23),
       child: Container(
@@ -376,9 +353,9 @@ class _PostsScreenState extends State<PostsScreen> {
                           const Icon(Icons.warning_rounded,
                               color: Palette.lightRed, size: 55),
                           const Text(
-                              "Are you sure you want to delete this post?"),
+                              "Are you sure you want to delete this comment?"),
                           () async {
-                        await _postProvider.delete(post.id!);
+                        await _commentProvider.delete(comment.id!);
                       });
                     },
                   ),

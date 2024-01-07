@@ -111,7 +111,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               width: 824,
               opacity: 0.5,
               paddingTop: 20,
-              paddingBottom: 20,
+              paddingBottom: 5,
             ),
             const Padding(
               padding: EdgeInsets.only(bottom: 10),
