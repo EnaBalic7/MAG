@@ -161,7 +161,7 @@ class _PostsScreenState extends State<PostsScreen> {
       padding: const EdgeInsets.only(bottom: 0, right: 20, top: 20),
       child: Container(
         constraints: const BoxConstraints(minHeight: 100, maxHeight: 300),
-        height: 218,
+        height: 215,
         width: 600,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
@@ -203,7 +203,11 @@ class _PostsScreenState extends State<PostsScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const MyProgressIndicator(); // Loading state
+                                  return const MyProgressIndicator(
+                                    width: 10,
+                                    height: 10,
+                                    strokeWidth: 2,
+                                  ); // Loading state
                                 } else if (snapshot.hasError) {
                                   return Text(
                                       'Error: ${snapshot.error}'); // Error state
@@ -274,55 +278,59 @@ class _PostsScreenState extends State<PostsScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.thumb_up_rounded),
-                        const SizedBox(width: 5),
-                        Text("${post.likesCount}")
-                      ],
+            Container(
+              constraints: const BoxConstraints(maxHeight: 30),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.thumb_up_rounded),
+                          const SizedBox(width: 5),
+                          Text("${post.likesCount}")
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.thumb_down_rounded),
-                        const SizedBox(width: 5),
-                        Text("${post.dislikesCount}")
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.thumb_down_rounded),
+                          const SizedBox(width: 5),
+                          Text("${post.dislikesCount}")
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                            onTap: () async {
-                              if (ownerId != null) {
-                                var tmp = await _userProvider.getById(ownerId!);
-                                owner = tmp;
-                              }
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                              onTap: () async {
+                                if (ownerId != null) {
+                                  var tmp =
+                                      await _userProvider.getById(ownerId!);
+                                  owner = tmp;
+                                }
 
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => PostDetailScreen(
-                                        post: post,
-                                        clubOwner: owner!,
-                                      )));
-                            },
-                            child: MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child:
-                                    Text("${post.comments?.length} replies")))
-                      ],
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PostDetailScreen(
+                                          post: post,
+                                          clubOwner: owner!,
+                                        )));
+                              },
+                              child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child:
+                                      Text("${post.comments?.length} replies")))
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           ]),

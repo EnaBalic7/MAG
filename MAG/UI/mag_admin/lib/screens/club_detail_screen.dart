@@ -154,7 +154,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                         Tooltip(
                           message: "Club owner",
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(Icons.person_rounded, size: 27),
                               const SizedBox(width: 10),
@@ -166,7 +166,11 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return const MyProgressIndicator(); // Loading state
+                                    return const MyProgressIndicator(
+                                      width: 10,
+                                      height: 10,
+                                      strokeWidth: 2.5,
+                                    ); // Loading state
                                   } else if (snapshot.hasError) {
                                     return Text(
                                         'Error: ${snapshot.error}'); // Error state

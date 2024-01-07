@@ -41,7 +41,7 @@ namespace MAG.Services
 
             if (search?.NewestFirst == true)
             {
-                query = query.OrderByDescending(x => x.Id);
+                query = query.OrderByDescending(x => x.DateAdded);
             }
 
             return base.AddFilter(query, search);
