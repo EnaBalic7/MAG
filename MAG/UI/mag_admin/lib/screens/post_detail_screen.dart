@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_admin/models/comment.dart';
+import 'package:mag_admin/providers/club_provider.dart';
 import 'package:mag_admin/providers/comment_provider.dart';
+import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/club.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
+import '../providers/post_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -19,11 +23,11 @@ import '../widgets/circular_progress_indicator.dart';
 
 class PostDetailScreen extends StatefulWidget {
   Post post;
-  User clubOwner;
+  int ownerId;
   PostDetailScreen({
     Key? key,
     required this.post,
-    required this.clubOwner,
+    required this.ownerId,
   }) : super(key: key);
 
   @override
@@ -34,6 +38,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   late UserProvider _userProvider;
   late CommentProvider _commentProvider;
   late Future<SearchResult<Comment>> _commentFuture;
+  late PostProvider _postProvider;
+  late ClubProvider _clubProvider;
 
   int page = 0;
   int pageSize = 15;
@@ -50,12 +56,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       "Page": "$page",
       "PageSize": "$pageSize",
     });
+    _postProvider = context.read<PostProvider>();
 
     _commentProvider.addListener(() {
       _reloadComments();
       setTotalItems();
     });
 
+    _clubProvider = context.read<ClubProvider>();
     replies = widget.post.comments!.length;
     setTotalItems();
 
@@ -262,12 +270,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 5),
-                                    Visibility(
-                                        visible: user.username ==
-                                            widget.clubOwner.username,
-                                        child: Tooltip(
-                                            message: "Club owner",
-                                            child: buildCrownIcon(15))),
+                                    _buildClubOwnerIconForComment(user),
                                   ],
                                 ),
                                 Text(
@@ -337,6 +340,31 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
+  FutureBuilder<SearchResult<User>> _buildClubOwnerIconForComment(User user) {
+    return FutureBuilder<SearchResult<User>>(
+        future: _userProvider.get(filter: {
+          "Id": "${widget.ownerId}",
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(
+              width: 10,
+              height: 10,
+              strokeWidth: 2,
+            ); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            User clubOwnerObj = snapshot.data!.result.first;
+            return Visibility(
+                visible: user.username == clubOwnerObj.username,
+                child:
+                    Tooltip(message: "Club owner", child: buildCrownIcon(15)));
+          }
+        });
+  }
+
   Widget _buildPost(Post post) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -403,20 +431,46 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 5),
-                                    Visibility(
-                                        visible: user.username ==
-                                            widget.clubOwner.username,
-                                        child: Tooltip(
-                                            message: "Club owner",
-                                            child: buildCrownIcon(15))),
+                                    _buildClubOwnerIconForPost(user),
                                   ],
                                 ),
+                                FutureBuilder<SearchResult<Club>>(
+                                    future: _clubProvider.get(filter: {
+                                      "Id": "${post.clubId}",
+                                      "CoverIncluded": "true",
+                                    }),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const MyProgressIndicator(); // Loading state
+                                      } else if (snapshot.hasError) {
+                                        return Text(
+                                            'Error: ${snapshot.error}'); // Error state
+                                      } else {
+                                        // Data loaded successfully
+                                        Club club = snapshot.data!.result.first;
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (builder) =>
+                                                        ClubDetailScreen(
+                                                            club: club)));
+                                          },
+                                          child: MouseRegion(
+                                              cursor: SystemMouseCursors.click,
+                                              child: Text(
+                                                "${club.name}",
+                                              )),
+                                        );
+                                      }
+                                    }),
                                 Text(
                                     DateFormat('MMM d, y')
                                         .format(post.datePosted!),
                                     style: const TextStyle(fontSize: 12)),
                               ],
-                            )
+                            ),
                           ],
                         );
                       }
@@ -483,6 +537,31 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
+  FutureBuilder<SearchResult<User>> _buildClubOwnerIconForPost(User user) {
+    return FutureBuilder<SearchResult<User>>(
+        future: _userProvider.get(filter: {
+          "Id": "${widget.ownerId}",
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(
+              width: 10,
+              height: 10,
+              strokeWidth: 2,
+            ); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            User clubOwner = snapshot.data!.result.first;
+            return Visibility(
+                visible: user.username == clubOwner.username,
+                child:
+                    Tooltip(message: "Club owner", child: buildCrownIcon(15)));
+          }
+        });
+  }
+
   Widget _buildPopupMenu(Object object) {
     return PopupMenuButton<String>(
       tooltip: "Actions",
@@ -514,8 +593,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           color: Palette.lightRed, size: 55),
                       const Text("Are you sure you want to delete this post?"),
                       () async {
-                      /*await _genreAnimeProvider.deleteByAnimeId(anime.id!);
-                _animeProvider.delete(anime.id!);*/
+                      Navigator.pop(context);
+                      await _postProvider.delete((object as Post).id!);
+                      showInfoDialog(
+                          context,
+                          const Icon(Icons.task_alt,
+                              color: Palette.lightPurple, size: 50),
+                          const Text(
+                            "Post has been deleted.",
+                            textAlign: TextAlign.center,
+                          ));
                     })
                   : showConfirmationDialog(
                       context,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:provider/provider.dart';
+import '../models/club.dart';
 import '../models/post.dart';
+import '../providers/club_provider.dart';
 import '../providers/comment_provider.dart';
 import '../providers/post_provider.dart';
 import '../providers/user_provider.dart';
@@ -29,8 +31,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
   late Future<SearchResult<Comment>> _commentFuture;
   late PostProvider _postProvider;
   late UserProvider _userProvider;
+  int? clubId;
   int? ownerId;
-  User? owner;
+  late ClubProvider _clubProvider;
+  Post? post;
 
   int page = 0;
   int pageSize = 6;
@@ -48,6 +52,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
     _postProvider = context.read<PostProvider>();
     _userProvider = context.read<UserProvider>();
+    _clubProvider = context.read<ClubProvider>();
 
     setTotalItems();
 
@@ -210,29 +215,27 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                 } else {
                                   // Data loaded successfully
 
-                                  Post? tmp = snapshot.data?.result.first;
+                                  Post? postObj = snapshot.data?.result.first;
 
-                                  if (tmp != null) {
-                                    ownerId = tmp.userId;
+                                  if (postObj != null) {
+                                    clubId = postObj.clubId;
+                                    post = postObj;
+                                    _getClubOwner();
                                     return GestureDetector(
                                       onTap: () async {
-                                        if (ownerId != null) {
-                                          var tmp = await _userProvider
-                                              .getById(ownerId!);
-                                          owner = tmp;
-                                        }
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 PostDetailScreen(
-                                                    post: tmp,
-                                                    clubOwner: owner!),
+                                              post: postObj,
+                                              ownerId: ownerId!,
+                                            ),
                                           ),
                                         );
                                       },
                                       child: MouseRegion(
                                         cursor: SystemMouseCursors.click,
-                                        child: Text("Post #${tmp.id}"),
+                                        child: Text("Post #${postObj.id}"),
                                       ),
                                     );
                                   } else {
@@ -366,5 +369,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
         ),
       ),
     );
+  }
+
+  void _getClubOwner() async {
+    Club club = await _clubProvider.getById(post!.clubId!);
+    ownerId = club.ownerId;
   }
 }

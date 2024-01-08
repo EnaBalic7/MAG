@@ -4,9 +4,9 @@ import 'package:mag_admin/providers/club_provider.dart';
 import 'package:mag_admin/providers/comment_provider.dart';
 import 'package:mag_admin/providers/post_provider.dart';
 import 'package:mag_admin/providers/rating_provider.dart';
-import 'package:mag_admin/screens/anime_screen.dart';
 import 'package:mag_admin/screens/club_detail_screen.dart';
 import 'package:mag_admin/screens/comments_screen.dart';
+import 'package:mag_admin/screens/post_detail_screen.dart';
 import 'package:mag_admin/screens/posts_screen.dart';
 import 'package:mag_admin/screens/reviews_screen.dart';
 import 'package:mag_admin/widgets/master_screen.dart';
@@ -19,6 +19,7 @@ import '../models/post.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
+import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -42,6 +43,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   late CommentProvider _commentProvider;
   late AnimeProvider _animeProvider;
   late ClubProvider _clubProvider;
+  int? clubId;
+  int? ownerId;
+  late UserProvider _userProvider;
 
   Rating? rating;
   Post? post;
@@ -75,6 +79,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     _commentProvider = context.read<CommentProvider>();
     _animeProvider = context.read<AnimeProvider>();
     _clubProvider = context.read<ClubProvider>();
+    _userProvider = context.read<UserProvider>();
 
     _ratingProvider.addListener(() {
       _reloadReview();
@@ -609,11 +614,30 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                   } else {
                                     // Data loaded successfully
 
-                                    Post? tmp = snapshot.data;
-                                    if (tmp != null) {
-                                      return Text("Post #${tmp.id}");
+                                    Post? post = snapshot.data;
+
+                                    if (post != null) {
+                                      clubId = post.clubId;
+                                      _getClubOwnerId();
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PostDetailScreen(
+                                                post: post,
+                                                ownerId: ownerId!,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: Text("Post #${post.id}"),
+                                        ),
+                                      );
                                     } else {
-                                      return const Text("Club not found");
+                                      return const Text("Post not found");
                                     }
                                   }
                                 }),
@@ -729,5 +753,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         ),
       ),
     );
+  }
+
+  void _getClubOwnerId() async {
+    Club club = await _clubProvider.getById(post!.clubId!);
+    ownerId = club.ownerId;
   }
 }

@@ -33,7 +33,6 @@ class _PostsScreenState extends State<PostsScreen> {
   late Future<SearchResult<Post>> _clubFuture;
   late UserProvider _userProvider;
   int? ownerId;
-  User? owner;
 
   int page = 0;
   int pageSize = 6;
@@ -311,16 +310,10 @@ class _PostsScreenState extends State<PostsScreen> {
                         children: [
                           GestureDetector(
                               onTap: () async {
-                                if (ownerId != null) {
-                                  var tmp =
-                                      await _userProvider.getById(ownerId!);
-                                  owner = tmp;
-                                }
-
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PostDetailScreen(
                                           post: post,
-                                          clubOwner: owner!,
+                                          ownerId: ownerId!,
                                         )));
                               },
                               child: MouseRegion(

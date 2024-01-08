@@ -35,7 +35,6 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
   late Future<SearchResult<Post>> _postFuture;
   late CommentProvider _commentProvider;
-  User? owner;
 
   int page = 0;
   int pageSize = 15;
@@ -178,7 +177,6 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                     // Data loaded successfully
                                     var clubOwner =
                                         snapshot.data!.result.single;
-                                    owner = clubOwner;
                                     return GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).push(
@@ -313,73 +311,73 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder<SearchResult<User>>(
-                    future: _userProvider.get(filter: {
-                      "Id": "${post.userId}",
-                      "ProfilePictureIncluded": "true"
-                    }),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const MyProgressIndicator(); // Loading state
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}'); // Error state
-                      } else {
-                        // Data loaded successfully
-                        User user = snapshot.data!.result.first;
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.memory(
-                                      imageFromBase64String(
-                                          user.profilePicture!.profilePicture!),
-                                      width: 70,
-                                      height: 70,
-                                      fit: BoxFit.cover)),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    UserDetailScreen(
-                                                        user: user)));
-                                      },
-                                      child: MouseRegion(
-                                        cursor: SystemMouseCursors.click,
-                                        child: Text("${user.username}",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 18)),
+                  Visibility(
+                    child: FutureBuilder<SearchResult<User>>(
+                      future: _userProvider.get(filter: {
+                        "Id": "${post.userId}",
+                        "ProfilePictureIncluded": "true"
+                      }),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const MyProgressIndicator(); // Loading state
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Error state
+                        } else {
+                          // Data loaded successfully
+                          User user = snapshot.data!.result.first;
+
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Image.memory(
+                                        imageFromBase64String(user
+                                            .profilePicture!.profilePicture!),
+                                        width: 70,
+                                        height: 70,
+                                        fit: BoxFit.cover)),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserDetailScreen(
+                                                          user: user)));
+                                        },
+                                        child: MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: Text("${user.username}",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 18)),
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Visibility(
-                                        visible:
-                                            user.username == owner?.username,
-                                        child: Tooltip(
-                                            message: "Club owner",
-                                            child: buildCrownIcon(15))),
-                                  ],
-                                ),
-                                Text(
-                                    DateFormat('MMM d, y')
-                                        .format(post.datePosted!),
-                                    style: const TextStyle(fontSize: 12)),
-                              ],
-                            ),
-                          ],
-                        );
-                      }
-                    },
+                                      const SizedBox(width: 5),
+                                      _buildOwnerIco(user),
+                                    ],
+                                  ),
+                                  Text(
+                                      DateFormat('MMM d, y')
+                                          .format(post.datePosted!),
+                                      style: const TextStyle(fontSize: 12)),
+                                ],
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
                   ),
                   _buildPopupMenu(post),
                 ],
@@ -436,7 +434,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PostDetailScreen(
                                           post: post,
-                                          clubOwner: owner!,
+                                          ownerId: widget.club.ownerId!,
                                         )));
                               },
                               child: MouseRegion(
@@ -454,6 +452,35 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
         ),
       ),
     );
+  }
+
+  FutureBuilder<SearchResult<User>> _buildOwnerIco(User user) {
+    return FutureBuilder<SearchResult<User>>(
+        future: _userProvider.get(filter: {
+          "Id": "${widget.club.ownerId!}",
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(
+              width: 10,
+              height: 10,
+              strokeWidth: 2.5,
+            ); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            User clubOwner = snapshot.data!.result.first;
+
+            return Visibility(
+              visible: user.username == clubOwner.username,
+              child: Tooltip(
+                message: "Club owner",
+                child: buildCrownIcon(15),
+              ),
+            );
+          }
+        });
   }
 
   Widget _buildPopupMenu(Post post) {
