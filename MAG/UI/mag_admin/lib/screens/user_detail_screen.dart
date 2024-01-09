@@ -756,7 +756,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   }
 
   void _getClubOwnerId() async {
-    Club club = await _clubProvider.getById(post!.clubId!);
-    ownerId = club.ownerId;
+    if (post != null) {
+      Club club = await _clubProvider.getById(post!.clubId!);
+      ownerId = club.ownerId;
+      return;
+    } else if (comment != null) {
+      Comment cmt = await _commentProvider.getById(comment!.id!);
+      Post pst = await _postProvider.getById(cmt.postId!);
+      Club club = await _clubProvider.getById(pst.clubId!);
+      ownerId = club.ownerId;
+    }
   }
 }

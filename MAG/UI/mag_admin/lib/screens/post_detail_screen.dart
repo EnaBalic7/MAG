@@ -442,7 +442,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return const MyProgressIndicator(); // Loading state
+                                        return const MyProgressIndicator(
+                                          width: 10,
+                                          height: 10,
+                                          strokeWidth: 2,
+                                        ); // Loading state
                                       } else if (snapshot.hasError) {
                                         return Text(
                                             'Error: ${snapshot.error}'); // Error state

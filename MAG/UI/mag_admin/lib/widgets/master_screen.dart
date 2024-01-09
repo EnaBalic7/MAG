@@ -2,10 +2,16 @@ import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
 import 'package:mag_admin/screens/help_screen.dart';
+import 'package:mag_admin/screens/profile_screen.dart';
 import 'package:mag_admin/screens/users_screen.dart';
+import 'package:provider/provider.dart';
+import '../main.dart';
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 import '../screens/clubs_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/util.dart';
 import 'gradient_button.dart';
 
 class MasterScreenWidget extends StatefulWidget {
@@ -23,6 +29,7 @@ class MasterScreenWidget extends StatefulWidget {
   bool? showFloatingActionButton;
   Widget? floatingActionButtonIcon;
   GradientButton? gradientButton;
+  bool? showProfileIcon;
   MasterScreenWidget({
     Key? key,
     required this.child,
@@ -39,6 +46,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.floatingActionButtonIcon,
     this.gradientButton,
     this.floatingButtonOnPressed,
+    this.showProfileIcon = true,
   }) : super(key: key);
 
   @override
@@ -47,6 +55,7 @@ class MasterScreenWidget extends StatefulWidget {
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool? removeAppBar;
+  late UserProvider _userProvider;
   Map<String, bool> hoverStates = {
     'Login': false,
     'Anime': false,
@@ -55,6 +64,13 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     'Clubs': false,
     'Help': false
   };
+
+  @override
+  void initState() {
+    _userProvider = context.read<UserProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,20 +103,39 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         },
       ),
       drawer: Drawer(
-          child: ListView(children: [
-        Image.asset('assets/images/logo.png'),
-        // buildListTile(context, 'Login',
-        //   Icon(Icons.login, color: Palette.lightPurple), LoginPage()),
-        buildListTile(
-            context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
-        buildListTile(
-            context, 'Users', buildUsersIcon(24), const UsersScreen()),
-        buildListTile(
-            context, 'Analytics', buildAnalyticsIcon(), const AnimeScreen()),
-        buildListTile(
-            context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
-        buildListTile(context, 'Help', buildHelpIcon(24), const HelpScreen())
-      ])),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 30),
+                  child: Image.asset('assets/images/logo.png'),
+                ),
+                buildListTile(
+                    context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
+                buildListTile(
+                    context, 'Users', buildUsersIcon(24), const UsersScreen()),
+                buildListTile(context, 'Analytics', buildAnalyticsIcon(),
+                    const AnimeScreen()),
+                buildListTile(
+                    context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
+                buildListTile(
+                    context, 'Help', buildHelpIcon(24), const HelpScreen()),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: buildListTile(
+                  context,
+                  'Log out',
+                  const Icon(
+                    Icons.logout_rounded,
+                    color: Palette.lightPurple,
+                  ),
+                  LoginPage()),
+            )
+          ])),
       body: Stack(children: [
         Positioned.fill(
           child: Opacity(
@@ -142,7 +177,29 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       ));
     }
     actions.add(const SizedBox(width: 10));
-    actions.add(buildAstronautIcon());
+    if (widget.showProfileIcon == true) {
+      actions.add(GestureDetector(
+          onTap: () async {
+            var userTmp = await _userProvider.get(filter: {
+              "Username": "${Authorization.username}",
+              "ProfilePictureIncluded": "true"
+            });
+            if (userTmp.count == 1) {
+              User user = userTmp.result.first;
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(user: user),
+                ),
+              );
+            }
+          },
+          child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Tooltip(
+                  message: "View profile", child: buildAstronautIcon()))));
+    }
+
     actions.add(const SizedBox(width: 40));
     return actions;
   }
@@ -184,11 +241,21 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           title: Text(title, style: const TextStyle(fontSize: 16)),
           leading: leading,
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => screen,
-              ),
-            );
+            if (title == 'Log out') {
+              Authorization.username = "";
+              Authorization.password = "";
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => screen,
+                ),
+              );
+            } else {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => screen,
+                ),
+              );
+            }
           },
         ),
       ),
