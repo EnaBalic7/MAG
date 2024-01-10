@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/role_provider.dart';
+import 'package:mag_admin/providers/user_profile_picture_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/providers/user_role_provider.dart';
 import 'package:mag_admin/screens/user_detail_screen.dart';
@@ -39,6 +40,7 @@ class _UsersScreenState extends State<UsersScreen> {
   late UserRoleProvider _userRoleProvider;
   late Future<SearchResult<UserRole>> _userRoleFuture;
   Map<String, dynamic> _userRoleInitialValue = {};
+  late UserProfilePictureProvider _userProfilePictureProvider;
 
   int page = 0;
   int pageSize = 18;
@@ -60,7 +62,24 @@ class _UsersScreenState extends State<UsersScreen> {
     _userRoleProvider = context.read<UserRoleProvider>();
     _userRoleFuture = _userRoleProvider.get();
 
+    _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
+    _userProfilePictureProvider.addListener(() {
+      _reloadUsers();
+    });
+
     super.initState();
+  }
+
+  void _reloadUsers() {
+    if (mounted) {
+      setState(() {
+        _userFuture = _userProvider.get(filter: {
+          "ProfilePictureIncluded": "true",
+          "Page": "$page",
+          "PageSize": "$pageSize"
+        });
+      });
+    }
   }
 
   void setTotalItems() async {
