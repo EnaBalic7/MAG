@@ -12,10 +12,8 @@ import 'package:mag_admin/providers/role_provider.dart';
 import 'package:mag_admin/providers/user_profile_picture_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/providers/user_role_provider.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
-import 'package:mag_admin/widgets/text_field.dart';
+import 'package:mag_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
-import './screens/anime_screen.dart';
 import './utils/colors.dart';
 import './utils/util.dart';
 
@@ -88,95 +86,7 @@ class MyMaterialApp extends StatelessWidget {
             labelStyle: TextStyle(color: Palette.lightPurple),
             helperStyle: TextStyle(color: Palette.lightPurple)),
       ),
-      home: LoginPage(),
-    );
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
-
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  late final AnimeProvider _animeProvider;
-
-  @override
-  Widget build(BuildContext context) {
-    _animeProvider = context.read<AnimeProvider>();
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.9,
-              child: Image.asset('assets/images/bg.png', fit: BoxFit.cover),
-            ),
-          ),
-          Center(
-            child: Container(
-              width: 518,
-              height: 500,
-              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 518),
-              decoration: BoxDecoration(
-                  color: Palette.darkPurple.withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
-                  Image.asset("assets/images/logo2.png"),
-                  const SizedBox(height: 40),
-                  MyTextField(
-                      hintText: "Username",
-                      fillColor: Palette.textFieldPurple.withOpacity(0.9),
-                      obscureText: false,
-                      width: 417,
-                      height: 38,
-                      borderRadius: 15,
-                      controller: _usernameController),
-                  const SizedBox(height: 20),
-                  MyTextField(
-                    hintText: "Password",
-                    fillColor: Palette.textFieldPurple.withOpacity(0.9),
-                    obscureText: true,
-                    width: 417,
-                    height: 38,
-                    borderRadius: 15,
-                    controller: _passwordController,
-                  ),
-                  const SizedBox(height: 40),
-                  GradientButton(
-                      onPressed: () async {
-                        var username = _usernameController.text;
-                        var password = _passwordController.text;
-                        print("Login proceed: $username $password");
-
-                        Authorization.username = username;
-                        Authorization.password = password;
-
-                        try {
-                          await _animeProvider.get();
-
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const AnimeScreen()));
-                        } on Exception catch (e) {
-                          showErrorDialog(context, e);
-                        }
-                      },
-                      width: 110,
-                      height: 35,
-                      borderRadius: 50,
-                      gradient: Palette.buttonGradient,
-                      child: const Text("Log In",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500))),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+      home: LoginScreen(),
     );
   }
 }

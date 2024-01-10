@@ -9,6 +9,7 @@ import '../main.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
 import '../screens/clubs_screen.dart';
+import '../screens/login_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -133,7 +134,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     Icons.logout_rounded,
                     color: Palette.lightPurple,
                   ),
-                  LoginPage()),
+                  LoginScreen()),
             )
           ])),
       body: Stack(children: [
