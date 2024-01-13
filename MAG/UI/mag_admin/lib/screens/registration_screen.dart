@@ -21,6 +21,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,70 +35,133 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           Center(
             child: Container(
-              width: 518,
-              height: 500,
-              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 518),
+              width: 618,
+              height: 520,
+              constraints: const BoxConstraints(maxHeight: 600, maxWidth: 918),
               decoration: BoxDecoration(
                   color: Palette.darkPurple.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(15)),
               child: Column(
                 children: [
+                  Image.asset(
+                    "assets/images/logo2.png",
+                    width: 155,
+                  ),
+                  const SizedBox(height: 20),
                   FormBuilder(
-                      child: Column(
-                    children: [
-                      MyFormBuilderTextField(
-                        name: "username",
-                        labelText: "Username",
-                        fillColor: Palette.textFieldPurple.withOpacity(0.4),
-                        width: 400,
-                        height: 50,
-                        paddingBottom: 25,
-                        borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
-                        ]),
-                      ),
-                      MyFormBuilderTextField(
-                        name: "firstName",
-                        labelText: "First name",
-                        fillColor: Palette.textFieldPurple.withOpacity(0.4),
-                        width: 400,
-                        height: 50,
-                        paddingBottom: 25,
-                        borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
-                        ]),
-                      ),
-                      MyFormBuilderTextField(
-                        name: "lastName",
-                        labelText: "Last name",
-                        fillColor: Palette.textFieldPurple.withOpacity(0.4),
-                        width: 400,
-                        height: 50,
-                        paddingBottom: 25,
-                        borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
-                        ]),
-                      ),
-                    ],
-                  )),
+                      key: _formKey,
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          MyFormBuilderTextField(
+                            name: "username",
+                            labelText: "Username",
+                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            width: 250,
+                            height: 40,
+                            paddingBottom: 25,
+                            borderRadius: 50,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context),
+                            ]),
+                          ),
+                          const SizedBox(width: 40),
+                          MyFormBuilderTextField(
+                            name: "email",
+                            labelText: "E-mail",
+                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            width: 250,
+                            height: 40,
+                            paddingBottom: 25,
+                            borderRadius: 50,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context),
+                            ]),
+                          ),
+                          MyFormBuilderTextField(
+                            name: "firstName",
+                            labelText: "First name",
+                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            width: 250,
+                            height: 40,
+                            paddingBottom: 25,
+                            borderRadius: 50,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context),
+                            ]),
+                          ),
+                          const SizedBox(width: 40),
+                          MyFormBuilderTextField(
+                            name: "lastName",
+                            labelText: "Last name",
+                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            width: 250,
+                            height: 40,
+                            paddingBottom: 25,
+                            borderRadius: 50,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context),
+                            ]),
+                          ),
+                          MyFormBuilderTextField(
+                            name: "password",
+                            labelText: "Password",
+                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            width: 400,
+                            height: 40,
+                            paddingBottom: 25,
+                            borderRadius: 50,
+                            obscureText: true,
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length < 8) {
+                                return 'Password is too short.';
+                              } else if (containsNumbers(val) == false) {
+                                return 'Password must contain at least one number';
+                              } else if (containsUppercase(val) == false) {
+                                return 'Password must contain at least one uppercase letter.';
+                              } else if (containsLowercase(val) == false) {
+                                return 'Password must contain at least one lowercase letter.';
+                              }
+                              return null;
+                            },
+                          ),
+                          MyFormBuilderTextField(
+                            name: "passwordConfirmation",
+                            labelText: "Repeat password",
+                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            width: 400,
+                            height: 40,
+                            paddingBottom: 25,
+                            borderRadius: 50,
+                            obscureText: true,
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (_formKey.currentState
+                                      ?.fields['password']?.value !=
+                                  val) {
+                                return "Passwords do not match.";
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      )),
                   GradientButton(
                       onPressed: () async {
-                        try {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const AnimeScreen()));
-                        } on Exception catch (e) {
-                          showErrorDialog(context, e);
+                        if (_formKey.currentState?.saveAndValidate() == true) {
+                          print("No validation errors.");
+                        } else {
+                          print("There are validation errors.");
                         }
                       },
                       width: 110,
                       height: 35,
                       borderRadius: 50,
                       gradient: Palette.buttonGradient,
-                      child: const Text("Log In",
+                      child: const Text("Register",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w500))),

@@ -139,3 +139,15 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
 Uint8List imageFromBase64String(String base64Image) {
   return base64Decode(base64Image);
 }
+
+bool containsNumbers(String text) {
+  return RegExp(r'[0-9]').hasMatch(text);
+}
+
+bool containsUppercase(String text) {
+  return RegExp(r'[A-Z]').hasMatch(text);
+}
+
+bool containsLowercase(String text) {
+  return RegExp(r'[a-z]').hasMatch(text);
+}

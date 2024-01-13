@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -65,6 +67,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderTextField(
+          textAlignVertical: TextAlignVertical.top,
           focusNode: FocusNode(),
           initialValue: widget.initialValue,
           minLines: widget.minLines,
@@ -75,7 +78,9 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           keyboardType: widget.keyboardType ?? TextInputType.text,
           readOnly: widget.readOnly ?? false,
           name: widget.name,
-          style: const TextStyle(color: Palette.lightPurple),
+          style: const TextStyle(
+            color: Palette.lightPurple,
+          ),
           obscuringCharacter: '✮',
           obscureText: widget.obscureText ?? false,
           decoration: InputDecoration(
@@ -89,7 +94,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
             focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),
-            errorStyle: const TextStyle(color: Palette.lightRed),
+            errorStyle: const TextStyle(color: Palette.lightRed, height: 0.5),
             errorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),
