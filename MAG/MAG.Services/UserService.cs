@@ -96,7 +96,7 @@ namespace MAG.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Username))
             {
-                query = query.Where(x => x.Username.StartsWith(search.Username));
+                query = query.Where(x => x.Username == search.Username);
             }
 
             if (!string.IsNullOrWhiteSpace(search?.FirstName))

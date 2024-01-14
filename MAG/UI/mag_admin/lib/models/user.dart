@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mag_admin/models/user_profile_picture.dart';
+import 'package:mag_admin/models/user_role.dart';
 
 part 'user.g.dart';
 
@@ -13,6 +14,7 @@ class User {
   int? profilePictureId;
   DateTime? dateJoined;
   UserProfilePicture? profilePicture;
+  List<UserRole>? userRoles;
 
   User(
     this.id,
@@ -23,6 +25,7 @@ class User {
     this.profilePictureId,
     this.dateJoined,
     this.profilePicture,
+    this.userRoles,
   );
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

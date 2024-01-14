@@ -20,6 +20,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           ? null
           : UserProfilePicture.fromJson(
               json['profilePicture'] as Map<String, dynamic>),
+      (json['userRoles'] as List<dynamic>?)
+          ?.map((e) => UserRole.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -31,4 +34,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'profilePictureId': instance.profilePictureId,
       'dateJoined': instance.dateJoined?.toIso8601String(),
       'profilePicture': instance.profilePicture,
+      'userRoles': instance.userRoles,
     };

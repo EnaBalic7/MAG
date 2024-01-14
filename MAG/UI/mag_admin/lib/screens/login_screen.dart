@@ -3,6 +3,7 @@ import 'package:mag_admin/screens/registration_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/anime_provider.dart';
+import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/gradient_button.dart';
@@ -15,10 +16,13 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late AnimeProvider _animeProvider;
+  late UserProvider _userProvider;
 
   @override
   Widget build(BuildContext context) {
     _animeProvider = context.read<AnimeProvider>();
+    _userProvider = context.read<UserProvider>();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -71,10 +75,15 @@ class LoginScreen extends StatelessWidget {
 
                         try {
                           await _animeProvider.get();
-
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const AnimeScreen()));
+                          var admin = await _userProvider.get(filter: {
+                            "RolesIncluded": "true",
+                            "Username": username
+                          });
+                          if (admin.result.first.userRoles!.first.roleId == 1) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const AnimeScreen()));
+                          }
                         } on Exception catch (e) {
                           showErrorDialog(context, e);
                         }

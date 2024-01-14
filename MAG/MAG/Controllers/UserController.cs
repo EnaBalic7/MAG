@@ -2,6 +2,7 @@ using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services;
+using MAG.Services.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,15 +13,19 @@ namespace MAG.Controllers
     {
         public UserController(IUserService service) : base(service)
         {
-
         }
 
         [AllowAnonymous]
-        public override Task<User> Insert([FromBody] UserInsertRequest insert)
+        public override Task<Model.User> Insert([FromBody] UserInsertRequest insert)
         {
             return base.Insert(insert);
         }
 
+        [AllowAnonymous]
+        public override Task<PagedResult<Model.User>> Get([FromQuery] UserSearchObject? search = null)
+        {
+            return base.Get(search);
+        }
 
     }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/user_profile_picture_provider.dart';
+import 'package:mag_admin/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/anime_provider.dart';
@@ -22,6 +23,29 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
+  late UserProvider _userProvider;
+  bool usernameTaken = false;
+
+  @override
+  void initState() {
+    _userProvider = context.read<UserProvider>();
+
+    super.initState();
+  }
+
+  Future<void> checkUsernameAvailability(String val) async {
+    try {
+      var tmp = await _userProvider.get(filter: {"Username": val});
+      if (mounted) {
+        setState(() {
+          usernameTaken = tmp.count > 0;
+        });
+      }
+    } catch (error) {
+      print('Error checking username availability: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,9 +85,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
+                            onChanged: (val) async {
+                              if (val != null) {
+                                await checkUsernameAvailability(val);
+                              }
+                            },
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 20) {
+                                return 'Username can contain 20 characters max.';
+                              } else if (usernameTaken == true) {
+                                return 'This username is taken.';
+                              } else if (isValidUsername(val) == false) {
+                                return 'Use only letters, numbers, and underscore.';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(width: 40),
                           MyFormBuilderTextField(
@@ -74,9 +112,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 25) {
+                                return 'Email can contain 25 characters max.';
+                              } else if (isValidEmail(val) == false) {
+                                return 'Invalid email.';
+                              }
+                              return null;
+                            },
                           ),
                           MyFormBuilderTextField(
                             name: "firstName",
@@ -86,9 +131,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 20) {
+                                return 'First name can contain 20 characters max.';
+                              } else if (isValidName(val) == false) {
+                                return 'Use only letters.';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(width: 40),
                           MyFormBuilderTextField(
@@ -99,9 +151,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 20) {
+                                return 'Last name can contain 20 characters max.';
+                              } else if (isValidName(val) == false) {
+                                return 'Use only letters.';
+                              }
+                              return null;
+                            },
                           ),
                           MyFormBuilderTextField(
                             name: "password",
@@ -152,9 +211,52 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   GradientButton(
                       onPressed: () async {
                         if (_formKey.currentState?.saveAndValidate() == true) {
-                          print("No validation errors.");
+                          _formKey.currentState?.saveAndValidate();
+                          var userInsertRequest =
+                              Map.from(_formKey.currentState!.value);
+
+                          userInsertRequest["dateJoined"] =
+                              DateTime.now().toIso8601String();
+
+                          userInsertRequest["profilePictureId"] = 1;
+                          bool success = false;
+
+                          await _userProvider
+                              .insert(userInsertRequest)
+                              .then((_) {
+                            success = true;
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.task_alt,
+                                    color: Palette.lightPurple, size: 50),
+                                const Text(
+                                  "Successfully registered.",
+                                  textAlign: TextAlign.center,
+                                ));
+                          }).catchError((error) {
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.warning_rounded,
+                                    color: Palette.lightRed, size: 55),
+                                Text(
+                                  error.toString(),
+                                  textAlign: TextAlign.center,
+                                ));
+                          });
+
+                          if (success) {
+                            await Future.delayed(const Duration(seconds: 3));
+                            Navigator.of(context).pop();
+                          }
                         } else {
-                          print("There are validation errors.");
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.warning_rounded,
+                                  color: Palette.lightRed, size: 55),
+                              const Text(
+                                "There are validation errors.",
+                                textAlign: TextAlign.center,
+                              ));
                         }
                       },
                       width: 110,

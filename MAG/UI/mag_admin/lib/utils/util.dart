@@ -52,8 +52,9 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
                   borderRadius: BorderRadius.circular(15)),
               actionsAlignment: MainAxisAlignment.center,
               backgroundColor: Palette.darkPurple,
-              title: const Text("Error"),
-              content: Text(e.toString()),
+              title: const Icon(Icons.warning_rounded,
+                  color: Palette.lightRed, size: 55),
+              content: Text(e.toString(), textAlign: TextAlign.center),
               actions: [
                 Padding(
                     padding: const EdgeInsets.only(bottom: 10, top: 5),
@@ -150,4 +151,18 @@ bool containsUppercase(String text) {
 
 bool containsLowercase(String text) {
   return RegExp(r'[a-z]').hasMatch(text);
+}
+
+bool isValidUsername(String text) {
+  return RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(text);
+}
+
+bool isValidName(String text) {
+  return RegExp(r'^[a-zA-Z]+$').hasMatch(text);
+}
+
+bool isValidEmail(String text) {
+  return RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  ).hasMatch(text);
 }
