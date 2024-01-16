@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user_profile_picture.dart';
 import '../providers/user_profile_picture_provider.dart';
 import '../utils/icons.dart';
 import '../widgets/gradient_button.dart';
@@ -215,6 +216,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _formKey.currentState?.saveAndValidate();
     var request = Map.from(_formKey.currentState!.value);
 
+    UserProfilePicture pic;
+
     Map<dynamic, dynamic> userData = {
       "firstName": request["firstName"],
       "lastName": request["lastName"],
@@ -224,20 +227,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Map<dynamic, dynamic> profilePic = {"profilePicture": _base64Image};
 
     try {
-      await _userProvider.update(widget.user.id!, request: userData);
-
       if (_base64Image != widget.user.profilePicture!.profilePicture) {
-        await _userProfilePictureProvider.update(widget.user.profilePictureId!,
-            request: profilePic);
+        if (widget.user.profilePictureId == 1) {
+          pic = await _userProfilePictureProvider.insert(profilePic);
+          userData["profilePictureId"] = pic.id;
+        } else {
+          await _userProfilePictureProvider
+              .update(widget.user.profilePictureId!, request: profilePic);
+          userData["profilePictureId"] = widget.user.profilePictureId!;
+        }
       }
 
-      showInfoDialog(
-          context,
-          const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-          const Text(
-            "Updated successfully!",
-            textAlign: TextAlign.center,
-          ));
+      await _userProvider.update(widget.user.id!, request: userData).then((_) {
+        showInfoDialog(
+            context,
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Text(
+              "Updated successfully!",
+              textAlign: TextAlign.center,
+            ));
+      }).catchError((error) {
+        showInfoDialog(
+            context,
+            const Icon(Icons.warning_rounded,
+                color: Palette.lightRed, size: 55),
+            Text(
+              error.toString(),
+              textAlign: TextAlign.center,
+            ));
+      });
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

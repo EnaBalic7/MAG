@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/user_profile_picture_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
+import 'package:mag_admin/providers/user_role_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user.dart';
+import '../models/user_role.dart';
 import '../providers/anime_provider.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
@@ -25,10 +28,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late UserProvider _userProvider;
   bool usernameTaken = false;
+  late UserRoleProvider _userRoleProvider;
 
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
+    _userRoleProvider = context.read<UserRoleProvider>();
 
     super.initState();
   }
@@ -220,10 +225,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                           userInsertRequest["profilePictureId"] = 1;
                           bool success = false;
+                          User? admin;
 
                           await _userProvider
                               .insert(userInsertRequest)
-                              .then((_) {
+                              .then((response) {
+                            admin = response;
                             success = true;
                             showInfoDialog(
                                 context,
@@ -243,6 +250,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   textAlign: TextAlign.center,
                                 ));
                           });
+
+                          if (admin != null) {
+                            Map<dynamic, dynamic> userRole = {
+                              "userId": "${admin!.id}",
+                              "roleId": 1,
+                              "canReview": true,
+                              "canAskQuestions": true,
+                              "canParticipateInClubs": true
+                            };
+                            await _userRoleProvider.insert(userRole);
+                          }
 
                           if (success) {
                             await Future.delayed(const Duration(seconds: 3));

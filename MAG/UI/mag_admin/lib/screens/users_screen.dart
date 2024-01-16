@@ -192,8 +192,8 @@ class _UsersScreenState extends State<UsersScreen> {
 
   Widget _buildUserCard(User user) {
     return Container(
-      width: 200,
-      height: 280,
+      width: 230,
+      height: 300,
       margin: const EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
@@ -202,13 +202,15 @@ class _UsersScreenState extends State<UsersScreen> {
           ClipRRect(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-            child: Image.memory(
-              imageFromBase64String(user.profilePicture!.profilePicture!),
-              width: 200,
-              height: 170,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-            ),
+            child: (user.profilePicture != null)
+                ? Image.memory(
+                    imageFromBase64String(user.profilePicture!.profilePicture!),
+                    width: 230,
+                    height: 190,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                  )
+                : Container(),
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,

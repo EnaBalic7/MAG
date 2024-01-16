@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mag_admin/screens/registration_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user_role.dart';
 import '../providers/anime_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/colors.dart';
@@ -79,13 +80,39 @@ class LoginScreen extends StatelessWidget {
                             "RolesIncluded": "true",
                             "Username": username
                           });
-                          if (admin.result.first.userRoles!.first.roleId == 1) {
+                          List<UserRole> userRoles =
+                              admin.result.first.userRoles!;
+
+                          if (userRoles
+                              .any((userRole) => userRole.roleId == 1)) {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) => const AnimeScreen()));
+                          } else {
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.warning_rounded,
+                                    color: Palette.lightRed, size: 55),
+                                const SizedBox(
+                                  width: 300,
+                                  child: Text(
+                                    "User is registered but does not have administrator privileges.",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ));
                           }
                         } on Exception catch (e) {
-                          showErrorDialog(context, e);
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.warning_rounded,
+                                  color: Palette.lightRed, size: 55),
+                              SizedBox(
+                                width: 300,
+                                child: Text(
+                                  "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ));
                         }
                       },
                       width: 110,
@@ -101,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (builder) => RegistrationScreen()));
+                            builder: (builder) => const RegistrationScreen()));
                       },
                       child: const Text("Not registered?",
                           style: TextStyle(

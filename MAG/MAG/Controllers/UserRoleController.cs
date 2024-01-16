@@ -1,6 +1,8 @@
+using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MAG.Controllers
@@ -12,7 +14,11 @@ namespace MAG.Controllers
         {
 
         }
-        
-        
+
+        [AllowAnonymous]
+        public override Task<UserRole> Insert([FromBody] UserRoleInsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
     }
 }
