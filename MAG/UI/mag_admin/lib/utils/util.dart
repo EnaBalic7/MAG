@@ -70,9 +70,11 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
 }
 
 Future<void> showInfoDialog(
-    BuildContext context, Widget? title, Widget? content) async {
+    BuildContext context, Widget? title, Widget? content,
+    {void Function()? onPressed, barrierDismissible = true}) async {
   showDialog(
       context: context,
+      barrierDismissible: barrierDismissible,
       builder: (BuildContext context) => AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
@@ -84,7 +86,7 @@ Future<void> showInfoDialog(
                 Padding(
                     padding: const EdgeInsets.only(bottom: 10, top: 5),
                     child: GradientButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: onPressed ?? () => Navigator.pop(context),
                         width: 85,
                         height: 28,
                         borderRadius: 15,

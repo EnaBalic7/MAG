@@ -150,9 +150,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                       });
                                     }
                                   },
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(context),
-                                  ]),
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return "This field cannot be empty.";
+                                    }
+                                    return null;
+                                  },
                                 ),
                                 MyFormBuilderTextField(
                                   name: "titleJp",
@@ -163,9 +166,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(context),
-                                  ]),
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return "This field cannot be empty.";
+                                    }
+                                    return null;
+                                  },
                                 ),
                                 MyFormBuilderTextField(
                                   name: "episodesNumber",
@@ -177,10 +183,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingBottom: 50,
                                   borderRadius: 50,
                                   keyboardType: TextInputType.number,
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(context),
-                                    FormBuilderValidators.integer(context),
-                                  ]),
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return "This field cannot be empty.";
+                                    } else if (val.isNotEmpty == true &&
+                                        int.tryParse(val) == null) {
+                                      return "This field may only contain numbers.";
+                                    }
+                                    return null;
+                                  },
                                 ),
                                 MyFormBuilderTextField(
                                   name: "score",
@@ -253,9 +264,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(context),
-                                  ]),
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return "This field cannot be empty.";
+                                    }
+                                    return null;
+                                  },
                                 ),
                                 MyFormBuilderTextField(
                                   name: "imageUrl",

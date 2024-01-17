@@ -67,6 +67,10 @@ class _UsersScreenState extends State<UsersScreen> {
       _reloadUsers();
     });
 
+    _userProvider.addListener(() {
+      _reloadUsers();
+    });
+
     super.initState();
   }
 
@@ -210,7 +214,10 @@ class _UsersScreenState extends State<UsersScreen> {
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                   )
-                : Container(),
+                : Container(
+                    width: 230,
+                    height: 190,
+                  ),
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,

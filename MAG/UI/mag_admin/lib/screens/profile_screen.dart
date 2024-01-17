@@ -222,6 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       "firstName": request["firstName"],
       "lastName": request["lastName"],
       "email": request["email"],
+      "profilePictureId": widget.user.profilePictureId,
     };
 
     Map<dynamic, dynamic> profilePic = {"profilePicture": _base64Image};

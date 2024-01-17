@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_admin/providers/user_profile_picture_provider.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/providers/user_role_provider.dart';
+import 'package:mag_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -224,14 +225,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               DateTime.now().toIso8601String();
 
                           userInsertRequest["profilePictureId"] = 1;
-                          bool success = false;
                           User? admin;
 
                           await _userProvider
                               .insert(userInsertRequest)
                               .then((response) {
                             admin = response;
-                            success = true;
+
                             showInfoDialog(
                                 context,
                                 const Icon(Icons.task_alt,
@@ -239,7 +239,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 const Text(
                                   "Successfully registered.",
                                   textAlign: TextAlign.center,
-                                ));
+                                ), onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            }, barrierDismissible: false);
                           }).catchError((error) {
                             showInfoDialog(
                                 context,
@@ -260,11 +265,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               "canParticipateInClubs": true
                             };
                             await _userRoleProvider.insert(userRole);
-                          }
-
-                          if (success) {
-                            await Future.delayed(const Duration(seconds: 3));
-                            Navigator.of(context).pop();
                           }
                         } else {
                           showInfoDialog(
@@ -295,7 +295,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           style: TextStyle(
                               color: Palette.lightPurple,
                               fontWeight: FontWeight.normal)),
-                      onHover: (x) {},
                     ),
                   ),
                 ],
