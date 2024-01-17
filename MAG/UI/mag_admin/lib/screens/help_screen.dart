@@ -46,7 +46,7 @@ class _HelpScreenState extends State<HelpScreen> {
     _qaFuture = _qaProvider.get(filter: {
       "UserIncluded": "true",
       "CategoryIncluded": "true",
-      "NewestFirst": "true",
+      "UnansweredFirst": "true",
       "Page": "$page",
       "PageSize": "$pageSize"
     });
@@ -81,7 +81,7 @@ class _HelpScreenState extends State<HelpScreen> {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
-            "NewestFirst": "true",
+            "UnansweredFirst": "true",
             "Page": "$page",
             "PageSize": "$pageSize"
           });
@@ -102,7 +102,7 @@ class _HelpScreenState extends State<HelpScreen> {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
-            "NewestFirst": "true",
+            "UnansweredFirst": "true",
             "HiddenOnly": "true",
             "Page": "$page",
             "PageSize": "$pageSize"
@@ -113,7 +113,7 @@ class _HelpScreenState extends State<HelpScreen> {
           _qaFuture = context.read<QAProvider>().get(filter: {
             "UserIncluded": "true",
             "CategoryIncluded": "true",
-            "NewestFirst": "true",
+            "UnansweredFirst": "true",
             "DisplayedOnly": "true",
             "Page": "$page",
             "PageSize": "$pageSize"
@@ -355,7 +355,8 @@ class _HelpScreenState extends State<HelpScreen> {
         constraints: const BoxConstraints(minHeight: 100, maxHeight: 200),
         width: 450,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
+            borderRadius: BorderRadius.circular(15),
+            color: (qa.answer != "") ? Palette.darkPurple : Palette.plumPurple),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(children: [
@@ -622,7 +623,7 @@ class _HelpScreenState extends State<HelpScreen> {
             _qaFuture = _qaProvider.get(filter: {
               "UserIncluded": "true",
               "CategoryIncluded": "true",
-              "NewestFirst": "true",
+              "UnansweredFirst": "true",
               if (isSearching == true) "FTS": _qaController.text,
               "Page": (requestedPage != null) ? "$requestedPage" : "$page",
               "PageSize": "$pageSize"
@@ -665,7 +666,7 @@ class _HelpScreenState extends State<HelpScreen> {
             _qaFuture = _qaProvider.get(filter: {
               "UserIncluded": "true",
               "CategoryIncluded": "true",
-              "NewestFirst": "true",
+              "UnansweredFirst": "true",
               "HiddenOnly": "true",
               if (isSearching == true) "FTS": _qaController.text,
               "Page": (requestedPage != null) ? "$requestedPage" : "$page",
@@ -687,7 +688,7 @@ class _HelpScreenState extends State<HelpScreen> {
             _qaFuture = _qaProvider.get(filter: {
               "UserIncluded": "true",
               "CategoryIncluded": "true",
-              "NewestFirst": "true",
+              "UnansweredFirst": "true",
               "DisplayedOnly": "true",
               if (isSearching == true) "FTS": _qaController.text,
               "Page": (requestedPage != null) ? "$requestedPage" : "$page",

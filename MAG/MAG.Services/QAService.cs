@@ -44,6 +44,11 @@ namespace MAG.Services
                 query = query.Where(x => x.Displayed == true);
             }
 
+            if (search?.UnansweredFirst == true)
+            {
+                query = query.OrderByDescending(x => string.IsNullOrEmpty(x.Answer)).ThenByDescending(y => y.Id);
+            }
+
             return base.AddFilter(query, search);
         }
 

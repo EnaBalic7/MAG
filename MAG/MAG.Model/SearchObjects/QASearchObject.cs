@@ -22,5 +22,7 @@ namespace MAG.Model.SearchObjects
 
         public bool? DisplayedOnly { get; set; }
 
+        public bool? UnansweredFirst { get; set; }
+
     }
 }

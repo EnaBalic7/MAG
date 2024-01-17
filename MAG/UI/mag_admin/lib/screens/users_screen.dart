@@ -41,6 +41,9 @@ class _UsersScreenState extends State<UsersScreen> {
   late Future<SearchResult<UserRole>> _userRoleFuture;
   Map<String, dynamic> _userRoleInitialValue = {};
   late UserProfilePictureProvider _userProfilePictureProvider;
+  bool? adminRoleSelected;
+  bool? userRoleSelected;
+  bool userSwitchEnabled = true;
 
   int page = 0;
   int pageSize = 18;
@@ -60,7 +63,6 @@ class _UsersScreenState extends State<UsersScreen> {
     _roleFuture = _roleProvider.get();
 
     _userRoleProvider = context.read<UserRoleProvider>();
-    _userRoleFuture = _userRoleProvider.get();
 
     _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
     _userProfilePictureProvider.addListener(() {
@@ -273,9 +275,14 @@ class _UsersScreenState extends State<UsersScreen> {
                         children: [
                           buildCalendarIcon(20),
                           const SizedBox(width: 3),
-                          Text(DateFormat('MMM d, y').format(user.dateJoined!),
-                              style: const TextStyle(
-                                  color: Palette.lightPurple, fontSize: 16)),
+                          Tooltip(
+                            message: "Date joined",
+                            verticalOffset: 15,
+                            child: Text(
+                                DateFormat('MMM d, y').format(user.dateJoined!),
+                                style: const TextStyle(
+                                    color: Palette.lightPurple, fontSize: 16)),
+                          ),
                         ],
                       ),
                     ),
@@ -310,7 +317,7 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
               Positioned(
                 right: 350,
-                bottom: 40,
+                bottom: 30,
                 child: Image.asset(
                   "assets/images/cauldron.png",
                   width: 200,
@@ -336,7 +343,7 @@ class _UsersScreenState extends State<UsersScreen> {
             ),
             padding: const EdgeInsets.all(16.0),
             width: 500.0,
-            height: 650.0,
+            height: 715.0,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -370,11 +377,13 @@ class _UsersScreenState extends State<UsersScreen> {
                 ),
                 FormBuilder(
                   key: _userRoleFormKey,
-                  initialValue: _userRoleInitialValue,
                   child: Column(
                     children: [
-                      FutureBuilder<SearchResult<Role>>(
-                          future: _roleFuture,
+                      FutureBuilder<SearchResult<UserRole>>(
+                          future: _userRoleProvider.get(filter: {
+                            "userId": "${user.id}",
+                            "RoleIncluded": "true"
+                          }),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -386,63 +395,128 @@ class _UsersScreenState extends State<UsersScreen> {
                               return const Text('No roles available');
                             } else {
                               // Data loaded successfully
-                              var roles = snapshot.data!;
+                              var userRoles = snapshot.data!.result;
+                              bool adminRoleValue = false;
+                              bool userRoleValue = false;
 
-                              List<DropdownMenuItem<String>> dropdownItems =
-                                  roles.result
-                                      .map((role) => DropdownMenuItem<String>(
-                                            value: role.id.toString(),
-                                            child: Text(role.name!),
-                                          ))
-                                      .toList();
+                              if (userRoles
+                                  .any((userRole) => userRole.roleId == 1)) {
+                                adminRoleValue = true;
+                              }
+                              if (userRoles
+                                  .any((userRole) => userRole.roleId == 2)) {
+                                userRoleValue = true;
+                              }
 
-                              return MyFormBuilderDropdown(
-                                  name: "roleId",
-                                  labelText: "Role",
-                                  fillColor:
-                                      Palette.lightPurple.withOpacity(0.1),
-                                  dropdownColor: Palette.disabledControl,
-                                  height: 50,
-                                  borderRadius: 50,
-                                  items: dropdownItems);
+                              adminRoleSelected = adminRoleValue;
+                              userRoleSelected = userRoleValue;
+
+                              return Column(
+                                children: [
+                                  MyFormBuilderSwitch(
+                                    initialValue: adminRoleValue,
+                                    name: "administrator",
+                                    title: const Text(
+                                      "Administrator role",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    subtitle: Text(
+                                      "Gives user administrator privileges.",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple
+                                              .withOpacity(0.5)),
+                                    ),
+                                  ),
+                                  MyFormBuilderSwitch(
+                                    initialValue: userRoleValue,
+                                    name: "user",
+                                    title: const Text(
+                                      "User role",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    subtitle: Text(
+                                      "Gives user basic privileges.",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple
+                                              .withOpacity(0.5)),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        userSwitchEnabled = value!;
+                                        if (!value) {
+                                          _userRoleFormKey.currentState?.fields
+                                              .forEach((key, field) {
+                                            if (key != 'user' &&
+                                                key != 'administrator') {
+                                              field.didChange(false);
+                                            }
+                                          });
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  MyFormBuilderSwitch(
+                                    initialValue: userRoles
+                                        .where(
+                                            (userRole) => userRole.roleId == 2)
+                                        .any((element) =>
+                                            element.canParticipateInClubs ==
+                                            true),
+                                    enabled: userSwitchEnabled,
+                                    name: "canParticipateInClubs",
+                                    title: const Text(
+                                      "Club participation",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    subtitle: Text(
+                                      "Allows the user to create clubs, make posts and comments.",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple
+                                              .withOpacity(0.5)),
+                                    ),
+                                  ),
+                                  MyFormBuilderSwitch(
+                                    initialValue: userRoles
+                                        .where(
+                                            (userRole) => userRole.roleId == 2)
+                                        .any((element) =>
+                                            element.canReview == true),
+                                    enabled: userSwitchEnabled,
+                                    name: "canReview",
+                                    title: const Text(
+                                      "Reviewing",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    subtitle: Text(
+                                      "Allows the user to leave reviews for anime series.",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple
+                                              .withOpacity(0.5)),
+                                    ),
+                                  ),
+                                  MyFormBuilderSwitch(
+                                    initialValue: userRoles
+                                        .where(
+                                            (userRole) => userRole.roleId == 2)
+                                        .any((element) =>
+                                            element.canAskQuestions == true),
+                                    enabled: userSwitchEnabled,
+                                    name: "canAskQuestions",
+                                    title: const Text(
+                                      "Help section participation",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    subtitle: Text(
+                                      "Allows the user to ask administrator(s) questions.",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple
+                                              .withOpacity(0.5)),
+                                    ),
+                                  ),
+                                ],
+                              );
                             }
                           }),
-                      MyFormBuilderSwitch(
-                        name: "canParticipateInClubs",
-                        title: const Text(
-                          "Club participation",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        subtitle: Text(
-                          "Allows the user to create clubs, make posts and comments",
-                          style: TextStyle(
-                              color: Palette.lightPurple.withOpacity(0.5)),
-                        ),
-                      ),
-                      MyFormBuilderSwitch(
-                        name: "canReview",
-                        title: const Text(
-                          "Reviewing",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        subtitle: Text(
-                          "Allows the user to leave reviews for anime series",
-                          style: TextStyle(
-                              color: Palette.lightPurple.withOpacity(0.5)),
-                        ),
-                      ),
-                      MyFormBuilderSwitch(
-                        name: "canAskQuestions",
-                        title: const Text(
-                          "Help section participation",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        subtitle: Text(
-                          "Allows the user to ask administrator(s) questions",
-                          style: TextStyle(
-                              color: Palette.lightPurple.withOpacity(0.5)),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -550,7 +624,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
                 if (result.result.isEmpty) {
                 } else {
-                  UserRole userRole = result.result.single;
+                  UserRole userRole = result.result.first;
 
                   _userRoleInitialValue = {
                     "canReview": userRole.canReview,
@@ -564,31 +638,6 @@ class _UsersScreenState extends State<UsersScreen> {
               } on Exception catch (e) {
                 showErrorDialog(context, e);
               }
-            },
-          ),
-        ),
-        PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
-          child: ListTile(
-            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-            hoverColor: Palette.lightRed.withOpacity(0.1),
-            leading: buildTrashIcon(24),
-            title:
-                const Text("Delete", style: TextStyle(color: Palette.lightRed)),
-            subtitle: Text("Delete permanently",
-                style: TextStyle(color: Palette.lightRed.withOpacity(0.5))),
-            onTap: () {
-              Navigator.pop(context);
-              showConfirmationDialog(
-                  context,
-                  const Icon(Icons.warning_rounded,
-                      color: Palette.lightRed, size: 55),
-                  const Text("Are you sure you want to delete this user?"),
-                  () async {
-                //Implement user delete
-                /*await _genreAnimeProvider.deleteByAnimeId(anime.id!);
-                _animeProvider.delete(anime.id!);*/
-              });
             },
           ),
         ),
