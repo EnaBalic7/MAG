@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/providers/role_provider.dart';
-import 'package:mag_admin/providers/user_profile_picture_provider.dart';
-import 'package:mag_admin/providers/user_provider.dart';
-import 'package:mag_admin/providers/user_role_provider.dart';
-import 'package:mag_admin/screens/user_detail_screen.dart';
-import 'package:mag_admin/widgets/form_builder_dropdown.dart';
-import 'package:mag_admin/widgets/form_builder_switch.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+
+import '../providers/role_provider.dart';
+import '../providers/user_profile_picture_provider.dart';
+import '../providers/user_provider.dart';
+import '../providers/user_role_provider.dart';
+import '../screens/user_detail_screen.dart';
+import '../widgets/form_builder_switch.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/pagination_buttons.dart';
+import '../widgets/separator.dart';
+import '../widgets/circular_progress_indicator.dart';
 import '../models/role.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
@@ -19,9 +22,6 @@ import '../models/user_role.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
-import 'package:intl/intl.dart';
-
-import '../widgets/circular_progress_indicator.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({Key? key}) : super(key: key);
@@ -43,7 +43,6 @@ class _UsersScreenState extends State<UsersScreen> {
   late UserProfilePictureProvider _userProfilePictureProvider;
   bool? adminRoleSelected;
   bool? userRoleSelected;
-  bool userSwitchEnabled = true;
 
   int page = 0;
   int pageSize = 18;
@@ -317,7 +316,7 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
               Positioned(
                 right: 350,
-                bottom: 30,
+                bottom: 20,
                 child: Image.asset(
                   "assets/images/cauldron.png",
                   width: 200,
@@ -335,229 +334,390 @@ class _UsersScreenState extends State<UsersScreen> {
       child: Material(
         color: Colors.transparent,
         child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
-              color: Palette.darkPurple,
-            ),
-            padding: const EdgeInsets.all(16.0),
-            width: 500.0,
-            height: 715.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(Icons.close_rounded))
-                  ],
-                ),
-                Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.memory(
-                        imageFromBase64String(
-                            user.profilePicture!.profilePicture!),
-                        width: 300,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                    Text("${user.username}",
-                        style: const TextStyle(fontSize: 20)),
-                  ],
-                ),
-                FormBuilder(
-                  key: _userRoleFormKey,
-                  child: Column(
+          child: SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
+                color: Palette.darkPurple,
+              ),
+              padding: const EdgeInsets.only(
+                  top: 5, bottom: 16, left: 16, right: 16),
+              width: 500.0,
+              // height: 815.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FutureBuilder<SearchResult<UserRole>>(
-                          future: _userRoleProvider.get(filter: {
-                            "userId": "${user.id}",
-                            "RoleIncluded": "true"
-                          }),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const MyProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (!snapshot.hasData ||
-                                snapshot.data == null) {
-                              return const Text('No roles available');
-                            } else {
-                              // Data loaded successfully
-                              var userRoles = snapshot.data!.result;
-                              bool adminRoleValue = false;
-                              bool userRoleValue = false;
-
-                              if (userRoles
-                                  .any((userRole) => userRole.roleId == 1)) {
-                                adminRoleValue = true;
-                              }
-                              if (userRoles
-                                  .any((userRole) => userRole.roleId == 2)) {
-                                userRoleValue = true;
-                              }
-
-                              adminRoleSelected = adminRoleValue;
-                              userRoleSelected = userRoleValue;
-
-                              return Column(
-                                children: [
-                                  MyFormBuilderSwitch(
-                                    initialValue: adminRoleValue,
-                                    name: "administrator",
-                                    title: const Text(
-                                      "Administrator role",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    subtitle: Text(
-                                      "Gives user administrator privileges.",
-                                      style: TextStyle(
-                                          color: Palette.lightPurple
-                                              .withOpacity(0.5)),
-                                    ),
-                                  ),
-                                  MyFormBuilderSwitch(
-                                    initialValue: userRoleValue,
-                                    name: "user",
-                                    title: const Text(
-                                      "User role",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    subtitle: Text(
-                                      "Gives user basic privileges.",
-                                      style: TextStyle(
-                                          color: Palette.lightPurple
-                                              .withOpacity(0.5)),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        userSwitchEnabled = value!;
-                                        if (!value) {
-                                          _userRoleFormKey.currentState?.fields
-                                              .forEach((key, field) {
-                                            if (key != 'user' &&
-                                                key != 'administrator') {
-                                              field.didChange(false);
-                                            }
-                                          });
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  MyFormBuilderSwitch(
-                                    initialValue: userRoles
-                                        .where(
-                                            (userRole) => userRole.roleId == 2)
-                                        .any((element) =>
-                                            element.canParticipateInClubs ==
-                                            true),
-                                    enabled: userSwitchEnabled,
-                                    name: "canParticipateInClubs",
-                                    title: const Text(
-                                      "Club participation",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    subtitle: Text(
-                                      "Allows the user to create clubs, make posts and comments.",
-                                      style: TextStyle(
-                                          color: Palette.lightPurple
-                                              .withOpacity(0.5)),
-                                    ),
-                                  ),
-                                  MyFormBuilderSwitch(
-                                    initialValue: userRoles
-                                        .where(
-                                            (userRole) => userRole.roleId == 2)
-                                        .any((element) =>
-                                            element.canReview == true),
-                                    enabled: userSwitchEnabled,
-                                    name: "canReview",
-                                    title: const Text(
-                                      "Reviewing",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    subtitle: Text(
-                                      "Allows the user to leave reviews for anime series.",
-                                      style: TextStyle(
-                                          color: Palette.lightPurple
-                                              .withOpacity(0.5)),
-                                    ),
-                                  ),
-                                  MyFormBuilderSwitch(
-                                    initialValue: userRoles
-                                        .where(
-                                            (userRole) => userRole.roleId == 2)
-                                        .any((element) =>
-                                            element.canAskQuestions == true),
-                                    enabled: userSwitchEnabled,
-                                    name: "canAskQuestions",
-                                    title: const Text(
-                                      "Help section participation",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    subtitle: Text(
-                                      "Allows the user to ask administrator(s) questions.",
-                                      style: TextStyle(
-                                          color: Palette.lightPurple
-                                              .withOpacity(0.5)),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          }),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(Icons.close_rounded))
                     ],
                   ),
-                ),
-                const SizedBox(height: 20.0),
-                GradientButton(
-                  width: 100,
-                  height: 30,
-                  borderRadius: 50,
-                  gradient: Palette.buttonGradient,
-                  onPressed: () async {
-                    _userRoleFormKey.currentState?.saveAndValidate();
-                    var request =
-                        Map.from(_userRoleFormKey.currentState!.value);
-                    try {
-                      var userRole = await _userRoleProvider
-                          .get(filter: {"UserId": "${user.id}"});
-                      await _userRoleProvider.update(userRole.result.single.id!,
-                          request: request);
-                      showInfoDialog(
-                          context,
-                          const Icon(Icons.task_alt,
-                              color: Palette.lightPurple, size: 50),
-                          const Text(
-                            "Updated successfully!",
-                            textAlign: TextAlign.center,
-                          ));
-                    } on Exception catch (e) {
-                      showErrorDialog(context, e);
-                    }
-                  },
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                  Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.memory(
+                          imageFromBase64String(
+                              user.profilePicture!.profilePicture!),
+                          width: 300,
+                          height: 200,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                      Text("${user.username}",
+                          style: const TextStyle(fontSize: 20)),
+                    ],
                   ),
-                ),
-              ],
+                  FormBuilder(
+                    key: _userRoleFormKey,
+                    child: Column(
+                      children: [
+                        StatefulBuilder(
+                          builder: ((context, setState) {
+                            return _buildSwitches(user);
+                          }),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  GradientButton(
+                    width: 100,
+                    height: 30,
+                    borderRadius: 50,
+                    gradient: Palette.buttonGradient,
+                    onPressed: () async {
+                      _userRoleFormKey.currentState?.saveAndValidate();
+                      var request =
+                          Map.from(_userRoleFormKey.currentState!.value);
+                      if (_userRoleFormKey.currentState?.saveAndValidate() ==
+                          true) {
+                        try {
+                          var userRoles = await _userRoleProvider
+                              .get(filter: {"UserId": "${user.id}"});
+
+// if userRole list has userRole with RoleId = 1 (Admin) and admin isn't selected -> delete userRole.id -> TESTED, WORKS
+                          if (userRoles.result
+                                  .any((userRole) => userRole.roleId == 1) &&
+                              _userRoleFormKey.currentState
+                                      ?.fields["administrator"]?.value ==
+                                  false) {
+                            await _userRoleProvider.delete(userRoles.result
+                                .where((element) => element.roleId == 1)
+                                .first
+                                .id!);
+                          }
+// if userRole list doesn't have userRole with RoleId = 1 (Admin) and admin is selected -> add userRole with roleId 1 -> TESTED, WORKS
+                          if (userRoles.result
+                                  .every((userRole) => userRole.roleId != 1) &&
+                              _userRoleFormKey.currentState
+                                      ?.fields["administrator"]?.value ==
+                                  true) {
+                            Map<dynamic, dynamic> userRole = {
+                              "userId": "${user.id}",
+                              "roleId": 1,
+                              "canReview": false,
+                              "canAskQuestions": false,
+                              "canParticipateInClubs": false
+                            };
+                            await _userRoleProvider.insert(userRole);
+                          }
+
+// if userRole list has userRole with RoleId = 1 (Admin) and admin is selected -> do nothing
+
+// if userRole list doesn't have userRole with RoleId = 1 (Admin) and admin isn't selected -> do nothing
+
+// if userRole list has userRole with RoleId = 2 (User) and User isn't selected -> delete userRole.id
+                          if (userRoles.result
+                                  .any((userRole) => userRole.roleId == 2) &&
+                              _userRoleFormKey
+                                      .currentState?.fields["user"]?.value ==
+                                  false) {
+                            await _userRoleProvider.delete(userRoles.result
+                                .where((element) => element.roleId == 2)
+                                .first
+                                .id!);
+                          }
+
+// if userRole list has userRole with RoleId = 2 (User) and User is selected -> update userRole.id with appropriate permissions -> TESTED, WORKS
+                          if (userRoles.result
+                                  .any((userRole) => userRole.roleId == 2) &&
+                              _userRoleFormKey
+                                      .currentState?.fields["user"]?.value ==
+                                  true) {
+                            Map<dynamic, dynamic> userRole = {
+                              "userId": "${user.id}",
+                              "roleId": 2,
+                              "canReview": _userRoleFormKey
+                                  .currentState?.fields["canReview"]?.value,
+                              "canAskQuestions": _userRoleFormKey.currentState
+                                  ?.fields["canAskQuestions"]?.value,
+                              "canParticipateInClubs": _userRoleFormKey
+                                  .currentState
+                                  ?.fields["canParticipateInClubs"]
+                                  ?.value
+                            };
+                            await _userRoleProvider.update(
+                                userRoles.result
+                                    .where((element) => element.roleId == 2)
+                                    .first
+                                    .id!,
+                                request: userRole);
+                          }
+
+// if userRole list doesn+t have userRole with RoleId = 2 (User) and User isn't selected -> do nothing
+// if userRole list doesn+t have userRole with RoleId = 2 (User) and User is selected -> add new userRole with appropriate permissions
+                          if (userRoles.result
+                                  .every((userRole) => userRole.roleId != 2) &&
+                              _userRoleFormKey
+                                      .currentState?.fields["user"]?.value ==
+                                  true) {
+                            Map<dynamic, dynamic> userRole = {
+                              "userId": "${user.id}",
+                              "roleId": 2,
+                              "canReview": _userRoleFormKey
+                                  .currentState?.fields["canReview"]?.value,
+                              "canAskQuestions": _userRoleFormKey.currentState
+                                  ?.fields["canAskQuestions"]?.value,
+                              "canParticipateInClubs": _userRoleFormKey
+                                  .currentState
+                                  ?.fields["canParticipateInClubs"]
+                                  ?.value
+                            };
+                            await _userRoleProvider.insert(userRole);
+                          }
+
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Updated successfully!",
+                                textAlign: TextAlign.center,
+                              ));
+                        } on Exception catch (e) {
+                          showErrorDialog(context, e);
+                        }
+                      } else {
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.warning_rounded,
+                                color: Palette.lightRed, size: 55),
+                            const Text(
+                              "There are validation errors.",
+                              textAlign: TextAlign.center,
+                            ));
+                      }
+                    },
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  FutureBuilder<SearchResult<UserRole>> _buildSwitches(User user) {
+    return FutureBuilder<SearchResult<UserRole>>(
+        future: _userRoleProvider.get(filter: {"userId": "${user.id}"}),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return const Text('No roles available');
+          } else {
+            // Data loaded successfully
+            var userRoles = snapshot.data!.result;
+            bool adminRoleValue = false;
+            bool userRoleValue = false;
+
+            if (userRoles.any((userRole) => userRole.roleId == 1)) {
+              adminRoleValue = true;
+            }
+            if (userRoles.any((userRole) => userRole.roleId == 2)) {
+              userRoleValue = true;
+            }
+
+            adminRoleSelected = adminRoleValue;
+            userRoleSelected = userRoleValue;
+
+            return Column(
+              children: [
+                MyFormBuilderSwitch(
+                  initialValue: adminRoleValue,
+                  name: "administrator",
+                  title: const Text(
+                    "Administrator role",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    "Gives user administrator privileges.",
+                    style:
+                        TextStyle(color: Palette.lightPurple.withOpacity(0.5)),
+                  ),
+                  onChanged: (val) {
+                    _userRoleFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    if (val == null) {
+                      return "This field cannot be empty.";
+                    } else if (val == false &&
+                        _userRoleFormKey.currentState?.fields['user']?.value ==
+                            false) {
+                      return "Must have either Administrator or User role turned on.";
+                    }
+                    return null;
+                  },
+                ),
+                MySeparator(
+                  width: 420,
+                  opacity: 0.3,
+                ),
+                MyFormBuilderSwitch(
+                  initialValue: userRoleValue,
+                  name: "user",
+                  title: const Text(
+                    "User role",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    "Gives user basic privileges.",
+                    style:
+                        TextStyle(color: Palette.lightPurple.withOpacity(0.5)),
+                  ),
+                  onChanged: (value) {
+                    //setState(() {
+                    _userRoleFormKey.currentState?.saveAndValidate();
+                    if (value != null) {
+                      if (!value) {
+                        _userRoleFormKey.currentState?.fields
+                            .forEach((key, field) {
+                          if (key != 'user' && key != 'administrator') {
+                            field.didChange(false);
+                          }
+                        });
+                      }
+                    }
+                    // });
+                  },
+                  validator: (val) {
+                    if (val == null) {
+                      return "This field cannot be empty.";
+                    } else if (val == false &&
+                        _userRoleFormKey
+                                .currentState?.fields['administrator']?.value ==
+                            false) {
+                      return "Must have either Administrator or User role turned on.";
+                    }
+                    return null;
+                  },
+                ),
+                MyFormBuilderSwitch(
+                  initialValue: userRoles
+                      .where((userRole) => userRole.roleId == 2)
+                      .any((element) => element.canParticipateInClubs == true),
+                  name: "canParticipateInClubs",
+                  title: const Text(
+                    "Club participation",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    "Allows the user to create clubs, make posts and comments.",
+                    style:
+                        TextStyle(color: Palette.lightPurple.withOpacity(0.5)),
+                  ),
+                  onChanged: (val) {
+                    _userRoleFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    if (val == null) {
+                      return "This field cannot be empty.";
+                    } else if (val == true &&
+                        _userRoleFormKey.currentState?.fields['user']?.value ==
+                            false) {
+                      return "Must have User role turned on.";
+                    }
+                    return null;
+                  },
+                ),
+                MyFormBuilderSwitch(
+                  initialValue: userRoles
+                      .where((userRole) => userRole.roleId == 2)
+                      .any((element) => element.canReview == true),
+                  enabled: _userRoleFormKey.currentState?.fields["user"]?.value,
+                  name: "canReview",
+                  title: const Text(
+                    "Reviewing",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    "Allows the user to leave reviews for anime series.",
+                    style:
+                        TextStyle(color: Palette.lightPurple.withOpacity(0.5)),
+                  ),
+                  onChanged: (val) {
+                    _userRoleFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    if (val == null) {
+                      return "This field cannot be empty.";
+                    } else if (val == true &&
+                        _userRoleFormKey.currentState?.fields['user']?.value ==
+                            false) {
+                      return "Must have User role turned on.";
+                    }
+                    return null;
+                  },
+                ),
+                MyFormBuilderSwitch(
+                  initialValue: userRoles
+                      .where((userRole) => userRole.roleId == 2)
+                      .any((element) => element.canAskQuestions == true),
+                  //enabled: _userRoleFormKey.currentState?.fields["user"]?.value,
+                  name: "canAskQuestions",
+                  title: const Text(
+                    "Help section participation",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    "Allows the user to ask administrator(s) questions.",
+                    style:
+                        TextStyle(color: Palette.lightPurple.withOpacity(0.5)),
+                  ),
+                  onChanged: (val) {
+                    _userRoleFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    if (val == null) {
+                      return "This field cannot be empty.";
+                    } else if (val == true &&
+                        _userRoleFormKey.currentState?.fields['user']?.value ==
+                            false) {
+                      return "Must have User role turned on.";
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            );
+          }
+        });
   }
 
   Widget _buildPopupMenu(User user) {
@@ -632,6 +792,13 @@ class _UsersScreenState extends State<UsersScreen> {
                     "canParticipateInClubs": userRole.canParticipateInClubs,
                     "roleId": "${userRole.roleId}"
                   };
+
+                  /* Navigator.of(context).push(MaterialPageRoute(
+                      builder: (builder) => UserRoleForm(
+                          context: context,
+                          user: user,
+                          userRoleFormKey: _userRoleFormKey,
+                          userRoleProvider: _userRoleProvider)));*/
 
                   _showOverlayForm(context, user);
                 }

@@ -10,6 +10,7 @@ class MyFormBuilderSwitch extends StatefulWidget {
   bool? initialValue;
   bool? enabled;
   void Function(bool?)? onChanged;
+  String? Function(bool?)? validator;
 
   MyFormBuilderSwitch({
     Key? key,
@@ -19,6 +20,7 @@ class MyFormBuilderSwitch extends StatefulWidget {
     this.initialValue,
     this.enabled,
     this.onChanged,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -37,8 +39,13 @@ class _MyFormBuilderSwitchState extends State<MyFormBuilderSwitch> {
       subtitle: widget.subtitle ?? const Text(""),
       decoration: const InputDecoration(
         border: InputBorder.none,
+        errorStyle: TextStyle(
+          color: Palette.lightRed,
+          height: 0.1,
+        ),
       ),
       activeColor: Palette.teal,
+      validator: widget.validator,
     );
   }
 }
