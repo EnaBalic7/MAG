@@ -28,6 +28,11 @@ class Palette {
     Color.fromRGBO(155, 108, 249, 0.8),
     Color.fromRGBO(0, 255, 255, 0.8)
   ]);
+  static const LinearGradient buttonGradientReverse = LinearGradient(colors: [
+    Color.fromRGBO(0, 255, 255, 1),
+    Color.fromRGBO(155, 108, 249, 1)
+  ]);
+
   static const LinearGradient buttonGradient2 = LinearGradient(
       colors: [Color.fromRGBO(52, 48, 110, 1), Color.fromRGBO(52, 48, 110, 1)]);
   //Detailed icon colors

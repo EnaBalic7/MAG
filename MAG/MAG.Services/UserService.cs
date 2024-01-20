@@ -15,9 +15,11 @@ namespace MAG.Services
 {
     public class UserService : BaseCRUDService<Model.User, Database.User, UserSearchObject, UserInsertRequest, UserUpdateRequest>, IUserService
     {
+        private readonly MagContext _context; 
+
         public UserService(MagContext context, IMapper mapper) : base(context, mapper)
         {
-
+            _context = context;
         }
 
         public override IQueryable<Database.User> AddInclude(IQueryable<Database.User> query, UserSearchObject? search = null)
@@ -121,5 +123,36 @@ namespace MAG.Services
 
                 return base.AddFilter(query, search);
         }
+
+        public async Task<List<UserRegistrationData>> GetUserRegistrations(int days)
+        {
+            DateTime startDate = DateTime.Today.AddDays(-days);
+            DateTime endDate = DateTime.Today;
+
+            var userRegistrations = _context.Users
+                .Where(user => user.DateJoined >= startDate)
+                .ToList();
+
+            var registrationsByDate = new Dictionary<DateTime, int>();
+
+            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                int registrationsCount = userRegistrations
+                    .Count(user => user.DateJoined.Date == date);
+
+                registrationsByDate[date] = registrationsCount;
+            }
+
+            var userRegistrationDataList = registrationsByDate
+                .Select(pair => new UserRegistrationData
+                {
+                    DateJoined = pair.Key,
+                    NumberOfUsers = pair.Value
+                })
+                .ToList();
+
+            return userRegistrationDataList;
+        }
     }
+    
 }

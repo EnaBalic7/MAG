@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mag_admin/screens/anime_screen.dart';
 import 'package:mag_admin/screens/help_screen.dart';
 import 'package:mag_admin/screens/profile_screen.dart';
+import 'package:mag_admin/screens/reports_screen.dart';
 import 'package:mag_admin/screens/users_screen.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
@@ -117,8 +118,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
                 buildListTile(
                     context, 'Users', buildUsersIcon(24), const UsersScreen()),
-                buildListTile(context, 'Analytics', buildAnalyticsIcon(),
-                    const AnimeScreen()),
+                buildListTile(
+                    context, 'Reports', buildReportsIcon(24), ReportsScreen()),
                 buildListTile(
                     context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
                 buildListTile(

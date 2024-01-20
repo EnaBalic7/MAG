@@ -36,12 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.5
   provider: ^6.0.5
-  json_annotation: ^4.7.0
+  json_annotation: ^4.0.1
   app_bar_with_search_switch: ^1.6.0
   flutter_form_builder: ^6.1.0
   form_builder_validators: ^8.4.0
   intl: ^0.17.0
   file_picker: ^4.6.1
+  fl_chart: ^0.62.0
 
 dev_dependencies:
   json_serializable: ^6.2.0

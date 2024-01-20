@@ -86,9 +86,9 @@ Icon buildClubsIcon(double size) {
       color: Palette.lightPurple, size: size);
 }
 
-Icon buildAnalyticsIcon() {
-  return const Icon(IconData(0xe901, fontFamily: 'icomoon'),
-      color: Palette.lightPurple);
+Icon buildReportsIcon(double size) {
+  return Icon(const IconData(0xe901, fontFamily: 'icomoon'),
+      color: Palette.lightPurple, size: size);
 }
 
 Icon buildUsersIcon(double size) {
