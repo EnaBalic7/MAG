@@ -1,5 +1,5 @@
 class UserRegistrationData {
-  final DateTime? date;
+  DateTime? date;
   int? numberOfUsers;
 
   UserRegistrationData({required this.date, this.numberOfUsers = 0});
