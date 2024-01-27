@@ -33,12 +33,15 @@ class _MyTextFieldState extends State<MyTextField> {
       height: widget.height,
       child: TextField(
         controller: widget.controller,
-        style: const TextStyle(color: Palette.darkPurple),
+        style: const TextStyle(color: Palette.lightPurple),
         obscuringCharacter: '✮',
         obscureText: widget.obscureText ?? false,
         decoration: InputDecoration(
             hintText: widget.hintText ?? "",
-            hintStyle: const TextStyle(height: 1, fontWeight: FontWeight.w400),
+            hintStyle: const TextStyle(
+                height: 1,
+                fontWeight: FontWeight.w400,
+                color: Palette.lightPurple),
             fillColor: widget.fillColor,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius ?? 0))),

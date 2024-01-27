@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -11,11 +12,12 @@ import 'package:intl/intl.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/widgets/circular_progress_indicator.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
-import 'package:mag_admin/widgets/line_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../models/registration_data.dart';
+import '../models/search_result.dart';
+import '../models/user.dart';
 import '../utils/colors.dart';
 import '../widgets/master_screen.dart';
 
@@ -30,7 +32,9 @@ class ReportsScreen extends StatefulWidget {
 
 class _ReportsScreenState extends State<ReportsScreen> {
   late Future<List<UserRegistrationData>> userRegistrationDataFuture;
+  late Future<SearchResult<User>> _userFuture;
   late UserProvider _userProvider;
+  int totalUsers = 0;
   int days = 29;
   bool pastYear = false;
   bool pastWeek = false;
@@ -43,9 +47,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
   void initState() {
     _userProvider = context.read<UserProvider>();
     userRegistrationDataFuture = _userProvider.getUserRegistrations(days);
+    _userFuture = _userProvider.get();
+    getTotalusers();
     generateUserChartText();
 
     super.initState();
+  }
+
+  void getTotalusers() async {
+    var users = await _userFuture;
+
+    setState(() {
+      totalUsers = users.count;
+    });
   }
 
   void generateUserChartText() {
@@ -56,7 +70,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     userChartTextForPdf = pw.Text(
         "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         textAlign: pw.TextAlign.justify,
-        style: pw.TextStyle(color: PdfColor.fromHex("#C0B9FF")));
+        style: pw.TextStyle(color: PdfColor.fromHex("#C0B9FF"), fontSize: 11));
   }
 
   Future<void> exportToPdf() async {
@@ -76,17 +90,22 @@ class _ReportsScreenState extends State<ReportsScreen> {
         await capturedImage?.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytes = byteData!.buffer.asUint8List();
 
+    final ByteData logoByteData =
+        await rootBundle.load("assets/images/logoFilled.png");
+    final Uint8List logoBytes = logoByteData.buffer.asUint8List();
+
     final pdf = pw.Document();
 
     pdf.addPage(
       pw.Page(
           pageTheme: pw.PageTheme(
+            pageFormat: PdfPageFormat.a4,
             margin: pw.EdgeInsets.zero,
             buildBackground: (context) {
               return pw.Container(
                 height: double.infinity,
                 width: double.infinity,
-                color: PdfColor.fromHex("#1E1C40"),
+                color: PdfColor.fromHex("#0C0B1E"), // 0C0B1E - midnightPurple
               );
             },
           ),
@@ -94,21 +113,73 @@ class _ReportsScreenState extends State<ReportsScreen> {
             return pw.Center(
               child: pw.Container(
                 width: 700,
-                child: pw.Column(children: [
-                  pw.Image(
-                    pw.MemoryImage(pngBytes),
-                    width: 700,
-                  ),
-                  userChartTextForPdf
-                ]),
+                padding: const pw.EdgeInsets.all(30),
+                child: pw.Column(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Column(children: [
+                        pw.Header(
+                          level: 1,
+                          decoration: pw.BoxDecoration(
+                              border: pw.Border.all(
+                                  width: 0, style: pw.BorderStyle.none)),
+                          child: pw.Column(children: [
+                            pw.Row(children: [
+                              pw.Image(pw.MemoryImage(logoBytes), width: 80),
+                              pw.SizedBox(width: 78),
+                              pw.Text(
+                                  'Report - ${DateFormat('MMM d, y').format(DateTime.now())}',
+                                  style: pw.TextStyle(
+                                      color: PdfColor.fromHex("#C0B9FF"),
+                                      fontSize: 22)),
+                            ]),
+                            pw.Container(
+                                width: 900,
+                                height: 1,
+                                color: PdfColor.fromHex("#C0B9FF")),
+                          ]),
+                        ),
+                        pw.Image(
+                          pw.MemoryImage(pngBytes),
+                          width: 760,
+                        ),
+                        pw.SizedBox(height: 20),
+                        pw.Column(children: [
+                          pw.Text("Total number of registered users:",
+                              style: pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColor.fromHex("#C0B9FF"))),
+                          pw.Text("$totalUsers",
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromHex("#99FFFF"),
+                                  fontSize: 20,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.SizedBox(height: 20),
+                        userChartTextForPdf,
+                      ]),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.end,
+                          children: [
+                            pw.Footer(
+                              title: pw.Text(
+                                "1",
+                                style: pw.TextStyle(
+                                    color: PdfColor.fromHex("#C0B9FF")),
+                              ),
+                            )
+                          ]),
+                    ]),
               ),
             );
           }),
     );
 
     final filePath = await FilePicker.platform.saveFile(
+      dialogTitle: "Choose where to save report",
       fileName: 'Report - ${DateFormat('MMM d, y').format(DateTime.now())}.pdf',
       allowedExtensions: ['pdf'],
+      type: FileType.custom,
     );
 
     if (filePath != null) {
@@ -161,10 +232,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 },
               ),
               const SizedBox(height: 20),
+              buildTotalUsers(),
+              const SizedBox(height: 20),
               buildLineChartInterpretation(),
             ],
           ),
         ));
+  }
+
+  Widget buildTotalUsers() {
+    return Column(
+      children: [
+        const Text("Total number of registered users:",
+            style: TextStyle(fontSize: 20)),
+        Text("$totalUsers",
+            style: const TextStyle(
+                color: Palette.teal, fontSize: 30, fontWeight: FontWeight.bold))
+      ],
+    );
   }
 
   Widget buildLineChartInterpretation() {
@@ -317,7 +402,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                       ),
                       rightTitles: AxisTitles(axisNameWidget: const Text("")),
-                      topTitles: AxisTitles(axisNameWidget: const Text("")),
+                      topTitles: AxisTitles(
+                          axisNameSize: 30,
+                          axisNameWidget: const Text(
+                            "Number of registered users in time",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 18),
+                          )),
                     ),
                     borderData: FlBorderData(
                         show: true,

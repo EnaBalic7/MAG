@@ -74,7 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/logo2.png",
+                    "assets/images/logo.png",
                     width: 155,
                   ),
                   const SizedBox(height: 20),
@@ -86,7 +86,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           MyFormBuilderTextField(
                             name: "username",
                             labelText: "Username",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 250,
                             height: 40,
                             paddingBottom: 25,
@@ -113,7 +113,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           MyFormBuilderTextField(
                             name: "email",
                             labelText: "E-mail",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 250,
                             height: 40,
                             paddingBottom: 25,
@@ -132,7 +132,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           MyFormBuilderTextField(
                             name: "firstName",
                             labelText: "First name",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 250,
                             height: 40,
                             paddingBottom: 25,
@@ -152,7 +152,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           MyFormBuilderTextField(
                             name: "lastName",
                             labelText: "Last name",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 250,
                             height: 40,
                             paddingBottom: 25,
@@ -171,7 +171,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           MyFormBuilderTextField(
                             name: "password",
                             labelText: "Password",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 400,
                             height: 40,
                             paddingBottom: 25,
@@ -195,7 +195,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           MyFormBuilderTextField(
                             name: "passwordConfirmation",
                             labelText: "Repeat password",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.4),
+                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 400,
                             height: 40,
                             paddingBottom: 25,

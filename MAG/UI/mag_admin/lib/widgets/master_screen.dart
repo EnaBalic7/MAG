@@ -115,7 +115,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 30, bottom: 30),
-                  child: Image.asset('assets/images/logo.png'),
+                  child: Image.asset('assets/images/logo.png', width: 220),
                 ),
                 buildListTile(
                     context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
@@ -127,11 +127,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
                 buildListTile(
                     context, 'Help', buildHelpIcon(24), const HelpScreen()),
-                buildListTile(
+                /*buildListTile(
                     context,
                     'Testing',
                     const Icon(Icons.star_rounded, color: Palette.lightPurple),
-                    const TestingGround()),
+                    const TestingGround()),*/
               ],
             ),
             Padding(
