@@ -45,9 +45,9 @@ class Palette {
   static const Color starIco_e919 = white;
   static const Color starIco_e91a = Color.fromRGBO(223, 223, 93, 1);
 
-  static const Color pdfIco_e911 = Color.fromRGBO(96, 87, 173, 1);
-  static const Color pdfIco_e912 = Color.fromRGBO(192, 185, 255, 1);
-  static const Color pdfIco_e913_e914_e915 = Color.fromRGBO(255, 235, 238, 1);
+  static const Color pdfIco_e911 = lightPurple;
+  static const Color pdfIco_e912 = Color.fromRGBO(255, 235, 238, 1);
+  static const Color pdfIco_e913_e914_e915 = Color.fromRGBO(96, 87, 173, 1);
 
   static const Color snowflakeIco1 = Color.fromRGBO(135, 206, 217, 1);
   static const Color snowflakeIco2 = Color.fromRGBO(167, 225, 235, 1);

@@ -1,11 +1,19 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_file.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 import 'package:mag_admin/providers/user_provider.dart';
 import 'package:mag_admin/widgets/circular_progress_indicator.dart';
 import 'package:mag_admin/widgets/gradient_button.dart';
+import 'package:mag_admin/widgets/line_chart.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../models/registration_data.dart';
 import '../utils/colors.dart';
@@ -21,124 +29,224 @@ class ReportsScreen extends StatefulWidget {
 }
 
 class _ReportsScreenState extends State<ReportsScreen> {
-  late Future<List<UserRegistrationData>> _userRegistrationDataFuture;
+  late Future<List<UserRegistrationData>> userRegistrationDataFuture;
   late UserProvider _userProvider;
   int days = 29;
   bool pastYear = false;
+  bool pastWeek = false;
   double? bottomInterval = 1;
+  final ScreenshotController _screenshotController = ScreenshotController();
+  Text userChartText = Text("");
+  pw.Text userChartTextForPdf = pw.Text("");
 
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
-    _userRegistrationDataFuture = _userProvider.getUserRegistrations(days);
-    _getUserRegistrationData();
+    userRegistrationDataFuture = _userProvider.getUserRegistrations(days);
+    generateUserChartText();
 
     super.initState();
   }
 
-  void _getUserRegistrationData() async {}
+  void generateUserChartText() {
+    userChartText = Text(
+      "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      textAlign: TextAlign.justify,
+    );
+    userChartTextForPdf = pw.Text(
+        "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        textAlign: pw.TextAlign.justify,
+        style: pw.TextStyle(color: PdfColor.fromHex("#C0B9FF")));
+  }
+
+  Future<void> exportToPdf() async {
+    //Get font
+    final fontData = await File(
+            'C:\\Users\\Ena\\GitHub\\MAG\\MAG\\UI\\mag_admin\\assets\\fonts\\calibri-regular.ttf')
+        .readAsBytes();
+    final ttfFont = pw.Font.ttf(fontData.buffer.asByteData());
+
+    //Get device pixel ratio
+    double pixelRatio = MediaQuery.of(context).devicePixelRatio;
+
+    //Get user registration chart image
+    ui.Image? capturedImage =
+        await _screenshotController.captureAsUiImage(pixelRatio: pixelRatio);
+    ByteData? byteData =
+        await capturedImage?.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+          pageTheme: pw.PageTheme(
+            margin: pw.EdgeInsets.zero,
+            buildBackground: (context) {
+              return pw.Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: PdfColor.fromHex("#1E1C40"),
+              );
+            },
+          ),
+          build: (pw.Context context) {
+            return pw.Center(
+              child: pw.Container(
+                width: 700,
+                child: pw.Column(children: [
+                  pw.Image(
+                    pw.MemoryImage(pngBytes),
+                    width: 700,
+                  ),
+                  userChartTextForPdf
+                ]),
+              ),
+            );
+          }),
+    );
+
+    final filePath = await FilePicker.platform.saveFile(
+      fileName: 'Report - ${DateFormat('MMM d, y').format(DateTime.now())}.pdf',
+      allowedExtensions: ['pdf'],
+    );
+
+    if (filePath != null) {
+      final file = File(filePath);
+      await file.writeAsBytes(await pdf.save());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      titleWidget: Row(
-        children: [
-          buildReportsIcon(28),
-          const SizedBox(width: 5),
-          const Text("Reports"),
-        ],
-      ),
-      child: Column(
-        children: [
-          FutureBuilder(
-            future: _userRegistrationDataFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const MyProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<UserRegistrationData> data =
-                    (snapshot.data as List<UserRegistrationData>);
-
-                data.forEach((data) {
-                  // Convert dates to local time zone
-                  data.date = data.date?.toLocal();
-                });
-
-                return _buildRegistrationChart(data);
-              }
-            },
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        titleWidget: Row(
+          children: [
+            buildReportsIcon(28),
+            const SizedBox(width: 5),
+            const Text("Reports"),
+          ],
+        ),
+        showFloatingActionButton: true,
+        floatingActionButtonIcon: buildPdfIcon(48),
+        floatingButtonOnPressed: () async {
+          await exportToPdf();
+        },
+        floatingButtonTooltip: "Export to .pdf",
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              GradientButton(
-                onPressed: () {
-                  setState(() {
-                    _userRegistrationDataFuture =
-                        _userProvider.getUserRegistrations(364);
-                    days = 364;
-                    pastYear = true;
-                    bottomInterval = null;
-                  });
+              const SizedBox(height: 20),
+              buildFilterButtons(),
+              FutureBuilder(
+                future: userRegistrationDataFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const MyProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<UserRegistrationData> data =
+                        (snapshot.data as List<UserRegistrationData>);
+
+                    data.forEach((data) {
+                      // Convert dates to local time zone
+                      data.date = data.date?.toLocal();
+                    });
+
+                    return Screenshot(
+                        controller: _screenshotController,
+                        child: buildRegistrationChart(data));
+                  }
                 },
-                width: 150,
-                height: 30,
-                gradient: Palette.buttonGradient,
-                borderRadius: 50,
-                child: const Text("Past year"),
               ),
-              const SizedBox(width: 20),
-              GradientButton(
-                onPressed: () {
-                  setState(() {
-                    _userRegistrationDataFuture =
-                        _userProvider.getUserRegistrations(29);
-                    days = 29;
-                    bottomInterval = 1;
-                    pastYear = false;
-                  });
-                },
-                width: 150,
-                height: 30,
-                gradient: Palette.buttonGradient,
-                borderRadius: 50,
-                child: const Text("Past month"),
-              ),
-              const SizedBox(width: 20),
-              GradientButton(
-                onPressed: () {
-                  setState(() {
-                    _userRegistrationDataFuture =
-                        _userProvider.getUserRegistrations(6);
-                    days = 6;
-                    bottomInterval = 1;
-                    pastYear = false;
-                  });
-                },
-                width: 150,
-                height: 30,
-                gradient: Palette.buttonGradient,
-                borderRadius: 50,
-                child: const Text("Past week"),
-              ),
+              const SizedBox(height: 20),
+              buildLineChartInterpretation(),
             ],
           ),
-        ],
-      ),
+        ));
+  }
+
+  Widget buildLineChartInterpretation() {
+    return Column(
+      children: [
+        SizedBox(width: 900, child: userChartText),
+      ],
     );
   }
 
-  Center _buildRegistrationChart(List<UserRegistrationData> data) {
+  Row buildFilterButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GradientButton(
+          onPressed: () {
+            setState(() {
+              userRegistrationDataFuture =
+                  _userProvider.getUserRegistrations(364, groupByMonths: true);
+              days = 364;
+              pastYear = true;
+              pastWeek = false;
+              bottomInterval = 1;
+            });
+          },
+          width: 110,
+          height: 30,
+          gradient: Palette.buttonGradient,
+          borderRadius: 50,
+          child: const Text("Past year",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+        ),
+        const SizedBox(width: 20),
+        GradientButton(
+          onPressed: () {
+            setState(() {
+              userRegistrationDataFuture =
+                  _userProvider.getUserRegistrations(29);
+              days = 29;
+              bottomInterval = 1;
+              pastYear = false;
+              pastWeek = false;
+            });
+          },
+          width: 110,
+          height: 30,
+          gradient: Palette.buttonGradient,
+          borderRadius: 50,
+          child: const Text("Past month",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+        ),
+        const SizedBox(width: 20),
+        GradientButton(
+          onPressed: () {
+            setState(() {
+              userRegistrationDataFuture =
+                  _userProvider.getUserRegistrations(6);
+              days = 6;
+              bottomInterval = 1;
+              pastYear = false;
+              pastWeek = true;
+            });
+          },
+          width: 110,
+          height: 30,
+          gradient: Palette.buttonGradient,
+          borderRadius: 50,
+          child: const Text("Past week",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+        ),
+      ],
+    );
+  }
+
+  Center buildRegistrationChart(List<UserRegistrationData> data) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(top: 50),
+        padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
             SizedBox(
-              width: 1500,
+              width: 1100,
               height: 500,
               child: LineChart(
                 LineChartData(
@@ -159,7 +267,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                       ),
                       bottomTitles: AxisTitles(
-                        axisNameWidget: Text("Past ${days + 1} day(s)",
+                        axisNameWidget: Text("Past ${days + 1} days",
                             style:
                                 const TextStyle(fontWeight: FontWeight.w500)),
                         axisNameSize: 20,
@@ -175,8 +283,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
                             if (pastYear == true) {
                               timeLabels = data
-                                  .map((element) => DateFormat('MMM', 'en_US')
-                                      .format(element.date!))
+                                  .map((element) =>
+                                      DateFormat('MMM, y', 'en_US')
+                                          .format(element.date!))
+                                  .toList();
+                            }
+
+                            if (pastWeek == true) {
+                              timeLabels = data
+                                  .map((element) =>
+                                      DateFormat('MMM d, y, EEEE', 'en_US')
+                                          .format(element.date!))
                                   .toList();
                             }
 

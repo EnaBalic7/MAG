@@ -4,6 +4,7 @@ import 'package:mag_admin/screens/anime_screen.dart';
 import 'package:mag_admin/screens/help_screen.dart';
 import 'package:mag_admin/screens/profile_screen.dart';
 import 'package:mag_admin/screens/reports_screen.dart';
+import 'package:mag_admin/screens/testing_ground.dart';
 import 'package:mag_admin/screens/users_screen.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
@@ -32,6 +33,7 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? floatingActionButtonIcon;
   GradientButton? gradientButton;
   bool? showProfileIcon;
+  String? floatingButtonTooltip;
   MasterScreenWidget({
     Key? key,
     required this.child,
@@ -49,6 +51,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.gradientButton,
     this.floatingButtonOnPressed,
     this.showProfileIcon = true,
+    this.floatingButtonTooltip,
   }) : super(key: key);
 
   @override
@@ -124,6 +127,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
                 buildListTile(
                     context, 'Help', buildHelpIcon(24), const HelpScreen()),
+                buildListTile(
+                    context,
+                    'Testing',
+                    const Icon(Icons.star_rounded, color: Palette.lightPurple),
+                    const TestingGround()),
               ],
             ),
             Padding(
@@ -158,15 +166,19 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       return Container();
     }
 
-    return GradientButton(
-        width: 90,
-        height: 90,
-        borderRadius: 100,
-        onPressed: widget.floatingButtonOnPressed,
-        gradient: Palette.menuGradient,
-        child: widget.floatingActionButtonIcon ??
-            const Icon(Icons.add_rounded,
-                size: 48, color: Palette.lightPurple));
+    return Tooltip(
+      message: widget.floatingButtonTooltip ?? "",
+      verticalOffset: 50,
+      child: GradientButton(
+          width: 90,
+          height: 90,
+          borderRadius: 100,
+          onPressed: widget.floatingButtonOnPressed,
+          gradient: Palette.menuGradient,
+          child: widget.floatingActionButtonIcon ??
+              const Icon(Icons.add_rounded,
+                  size: 48, color: Palette.lightPurple)),
+    );
   }
 
   List<Widget> get _buildActions {

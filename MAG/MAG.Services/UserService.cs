@@ -124,7 +124,7 @@ namespace MAG.Services
                 return base.AddFilter(query, search);
         }
 
-        public async Task<List<UserRegistrationData>> GetUserRegistrations(int days)
+        public async Task<List<UserRegistrationData>> GetUserRegistrations(int days, bool groupByMonths = false)
         {
             DateTime startDate = DateTime.Today.AddDays(-days);
             DateTime endDate = DateTime.Today;
@@ -135,12 +135,26 @@ namespace MAG.Services
 
             var registrationsByDate = new Dictionary<DateTime, int>();
 
-            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+            if (groupByMonths == false)
             {
-                int registrationsCount = userRegistrations
-                    .Count(user => user.DateJoined.Date == date);
+                for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+                {
+                    int registrationsCount = userRegistrations
+                        .Count(user => user.DateJoined.Date == date);
 
-                registrationsByDate[date] = registrationsCount;
+                    registrationsByDate[date] = registrationsCount;
+                }
+            }
+            else if(groupByMonths == true)
+            {
+                for (DateTime date = startDate; date <= endDate; date = date.AddMonths(1))
+                {
+                    int registrationsCount = userRegistrations
+                 .Count(user => user.DateJoined.Month == date.Month
+                                && user.DateJoined.Year == date.Year);
+
+                    registrationsByDate[date] = registrationsCount;
+                }
             }
 
             var userRegistrationDataList = registrationsByDate

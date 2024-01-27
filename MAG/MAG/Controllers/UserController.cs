@@ -31,9 +31,9 @@ namespace MAG.Controllers
         }
 
         [HttpGet("GetUserRegistrations/{days}")]
-        public async Task<List<UserRegistrationData>> GetUserRegistrations(int days)
+        public async Task<List<UserRegistrationData>> GetUserRegistrations(int days, bool groupByMonths = false)
         {
-            return await _userService.GetUserRegistrations(days);
+            return await _userService.GetUserRegistrations(days, groupByMonths);
         }
 
     }

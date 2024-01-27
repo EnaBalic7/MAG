@@ -12,6 +12,6 @@ namespace MAG.Services
     public interface IUserService : ICRUDService<User, UserSearchObject, UserInsertRequest, UserUpdateRequest>
     {
         public Task<Model.User> Login(string username, string password);
-        public Task<List<UserRegistrationData>> GetUserRegistrations(int days);
+        public Task<List<UserRegistrationData>> GetUserRegistrations(int days, bool groupByMonths = false);
     }
 }

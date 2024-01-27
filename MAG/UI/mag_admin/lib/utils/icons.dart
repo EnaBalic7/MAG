@@ -37,16 +37,18 @@ Stack buildStarIcon(double size) {
   ]);
 }
 
-Stack buildPdfIcon() {
-  return Stack(children: const [
-    Icon(IconData(0xe911, fontFamily: 'icomoon'), color: Palette.pdfIco_e911),
-    Icon(IconData(0xe912, fontFamily: 'icomoon'), color: Palette.pdfIco_e912),
+Stack buildPdfIcon(double size) {
+  return Stack(children: [
+    Icon(IconData(0xe911, fontFamily: 'icomoon'),
+        color: Palette.pdfIco_e911, size: size),
+    Icon(IconData(0xe912, fontFamily: 'icomoon'),
+        color: Palette.pdfIco_e912, size: size),
     Icon(IconData(0xe913, fontFamily: 'icomoon'),
-        color: Palette.pdfIco_e913_e914_e915),
+        color: Palette.pdfIco_e913_e914_e915, size: size),
     Icon(IconData(0xe914, fontFamily: 'icomoon'),
-        color: Palette.pdfIco_e913_e914_e915),
+        color: Palette.pdfIco_e913_e914_e915, size: size),
     Icon(IconData(0xe915, fontFamily: 'icomoon'),
-        color: Palette.pdfIco_e913_e914_e915)
+        color: Palette.pdfIco_e913_e914_e915, size: size)
   ]);
 }
 

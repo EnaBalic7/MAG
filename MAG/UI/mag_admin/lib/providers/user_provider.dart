@@ -14,8 +14,10 @@ class UserProvider extends BaseProvider<User> {
     return User.fromJson(data);
   }
 
-  Future<List<UserRegistrationData>> getUserRegistrations(int days) async {
-    var url = "${BaseProvider.baseUrl}$_endpoint/GetUserRegistrations/$days";
+  Future<List<UserRegistrationData>> getUserRegistrations(int days,
+      {bool? groupByMonths = false}) async {
+    var url =
+        "${BaseProvider.baseUrl}$_endpoint/GetUserRegistrations/$days?groupByMonths=$groupByMonths";
 
     var uri = Uri.parse(url);
     var headers = createHeaders();
