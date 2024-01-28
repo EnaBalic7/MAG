@@ -235,6 +235,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
               buildTotalUsers(),
               const SizedBox(height: 20),
               buildLineChartInterpretation(),
+              const SizedBox(height: 20),
+              buildPopularAnimeChart(),
             ],
           ),
         ));
@@ -322,6 +324,81 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
       ],
     );
+  }
+
+  Widget buildPopularAnimeChart() {
+    final List<String> animeTitles = [
+      'Anime A',
+      'Anime B',
+      'Anime C',
+      'Anime D',
+      'Anime E'
+    ];
+    final List<int> popularityValues = [5, 4, 3, 2, 1];
+    return Center(
+        child: Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(children: [
+        SizedBox(
+          width: 1100,
+          height: 500,
+          child: BarChart(
+            BarChartData(
+              barTouchData: BarTouchData(enabled: false),
+              barGroups: List.generate(
+                5,
+                (index) => BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: popularityValues[index].toDouble(),
+                      gradient: Palette.gradientList[index],
+                      width: 35,
+                    ),
+                  ],
+                ),
+              ),
+              gridData: FlGridData(
+                  show: true, drawVerticalLine: true, verticalInterval: 1),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: AxisTitles(axisNameWidget: const Text("")),
+                leftTitles: AxisTitles(axisNameWidget: const Text("")),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: ((value, meta) {
+                      if (value.toInt() >= 0 &&
+                          value.toInt() < animeTitles.length) {
+                        return Text(animeTitles[value.toInt()]);
+                      }
+                      return Text('');
+                    }),
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  axisNameSize: 30,
+                  axisNameWidget: const Text(
+                    "Top 5 most popular anime",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(
+                    color: Palette.teal.withOpacity(0.5),
+                    width: 2,
+                  )),
+            ),
+
+            swapAnimationDuration:
+                const Duration(milliseconds: 150), // Optional
+            swapAnimationCurve: Curves.linear, // Optional
+          ),
+        ),
+      ]),
+    ));
   }
 
   Center buildRegistrationChart(List<UserRegistrationData> data) {
