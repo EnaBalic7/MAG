@@ -370,7 +370,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     getTitlesWidget: ((value, meta) {
                       if (value.toInt() >= 0 &&
                           value.toInt() < animeTitles.length) {
-                        return Text(animeTitles[value.toInt()]);
+                        return Text(
+                          animeTitles[value.toInt()],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                          ),
+                        );
                       }
                       return Text('');
                     }),

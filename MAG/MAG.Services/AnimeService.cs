@@ -16,10 +16,12 @@ namespace MAG.Services
     {
 
         protected IGenreAnimeService _genreAnimeService;
+        protected MagContext _context;
 
         public AnimeService(MagContext context, IMapper mapper, IGenreAnimeService genreAnimeService) : base(context, mapper)
         {
             _genreAnimeService = genreAnimeService;
+            _context = context;
         }
 
         public override IQueryable<Database.Anime> AddFilter(IQueryable<Database.Anime> query, AnimeSearchObject? search = null)
@@ -65,5 +67,11 @@ namespace MAG.Services
             await _genreAnimeService.DeleteByAnimeId(entity.Id);
         }
 
+        public async Task<List<string>> GetMostPopularAnime()
+        {
+            var animeList = await  _context.Animes.OrderByDescending(anime => anime.Ratings.Count).ThenByDescending(anime => anime.Score).Select(anime => anime.TitleEn).ToListAsync();
+
+            return animeList;
+        }
     }
 }

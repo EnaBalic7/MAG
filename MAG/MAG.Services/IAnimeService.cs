@@ -10,5 +10,6 @@ namespace MAG.Services
 {
     public interface IAnimeService : ICRUDService<Model.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>
     {
+        Task<List<string>> GetMostPopularAnime();
     }
 }
