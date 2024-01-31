@@ -67,11 +67,24 @@ namespace MAG.Services
             await _genreAnimeService.DeleteByAnimeId(entity.Id);
         }
 
-        public async Task<List<string>> GetMostPopularAnime()
+        public async Task<List<PopularAnimeData>> GetMostPopularAnime()
         {
-            var animeList = await  _context.Animes.OrderByDescending(anime => anime.Ratings.Count).ThenByDescending(anime => anime.Score).Select(anime => anime.TitleEn).ToListAsync();
+            var animeList = await _context.Animes.OrderByDescending(anime => anime.Ratings.Count).ThenByDescending(anime => anime.Score).Take(5).ToListAsync();
 
-            return animeList;
+            List<PopularAnimeData> popularAnime = new List<PopularAnimeData>();
+
+            foreach (var anime in animeList)
+            {
+                popularAnime.Add(new PopularAnimeData()
+                {
+                    AnimeTitleEN = anime.TitleEn,
+                    AnimeTitleJP = anime.TitleJp,
+                    Score = anime.Score,
+                    NumberOfRatings = _context.Ratings.Where(rating => rating.AnimeId == anime.Id).Count()
+                });
+            }
+
+            return popularAnime;
         }
     }
 }

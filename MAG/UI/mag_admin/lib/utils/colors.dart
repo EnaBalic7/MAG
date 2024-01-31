@@ -62,7 +62,7 @@ class Palette {
 
   static const LinearGradient barChartGradient4 = LinearGradient(
     colors: [
-      Color.fromRGBO(73, 38, 248, 1),
+      // Color.fromRGBO(73, 38, 248, 1),
       Color.fromRGBO(229, 255, 100, 1),
       Color.fromRGBO(174, 98, 255, 1),
     ],

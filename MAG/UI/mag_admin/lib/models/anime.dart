@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mag_admin/models/genre_anime.dart';
+import '../models/genre_anime.dart';
 part 'anime.g.dart';
 
 // flutter pub run build_runner build --delete-conflicting-outputs -> one time

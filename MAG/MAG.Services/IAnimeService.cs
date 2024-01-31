@@ -1,4 +1,5 @@
-﻿using MAG.Model.Requests;
+﻿using MAG.Model;
+using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace MAG.Services
 {
     public interface IAnimeService : ICRUDService<Model.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>
     {
-        Task<List<string>> GetMostPopularAnime();
+        Task<List<PopularAnimeData>> GetMostPopularAnime();
     }
 }

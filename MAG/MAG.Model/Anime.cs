@@ -16,7 +16,7 @@
 
         public string? TrailerUrl { get; set; }
 
-        public double Score { get; set; }
+        public decimal Score { get; set; }
 
         public DateTime BeginAir { get; set; }
 

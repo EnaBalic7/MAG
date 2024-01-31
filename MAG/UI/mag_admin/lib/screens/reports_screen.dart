@@ -6,6 +6,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_file.dart';
+import 'package:mag_admin/models/popular_anime_data.dart';
+import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
@@ -42,6 +44,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final ScreenshotController _screenshotController = ScreenshotController();
   Text userChartText = Text("");
   pw.Text userChartTextForPdf = pw.Text("");
+  late AnimeProvider _animeProvider;
+  List<String> animeTitles = [];
+  late Future<List<PopularAnimeData>> popularAnimeDataFuture;
+  List<PopularAnimeData> popularAnimeData = [];
 
   @override
   void initState() {
@@ -51,7 +57,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
     getTotalusers();
     generateUserChartText();
 
+    _animeProvider = context.read<AnimeProvider>();
+    getPopularAnimeData();
+
     super.initState();
+  }
+
+  void getPopularAnimeData() async {
+    popularAnimeData = await _animeProvider.getMostPopularAnime();
+    popularAnimeDataFuture = Future.value(popularAnimeData);
+
+    for (var anime in popularAnimeData) {
+      animeTitles.add(anime.animeTitleEN!);
+    }
   }
 
   void getTotalusers() async {
@@ -237,6 +255,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
               buildLineChartInterpretation(),
               const SizedBox(height: 20),
               buildPopularAnimeChart(),
+              const SizedBox(height: 20),
+              buildAnimeBarChartInterpretation(),
             ],
           ),
         ));
@@ -250,6 +270,36 @@ class _ReportsScreenState extends State<ReportsScreen> {
         Text("$totalUsers",
             style: const TextStyle(
                 color: Palette.teal, fontSize: 30, fontWeight: FontWeight.bold))
+      ],
+    );
+  }
+
+  Widget buildAnimeBarChartInterpretation() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 900,
+          child: FutureBuilder<List<PopularAnimeData>>(
+            future: _animeProvider.getMostPopularAnime(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const MyProgressIndicator(); // Loading state
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); // Error state
+              } else {
+                // Data loaded successfully
+                var animeData = snapshot.data!;
+
+                return Text(
+                  "The most popular anime on this app thus far is ${animeData[0].animeTitleEN} (${animeData[0].animeTitleJP}) with a score ${animeData[0].score.toString()} and a total of ${animeData[0].numberOfRatings.toString()} rating(s). \n \n The following are: \n ${animeData[1].animeTitleEN} (${animeData[1].animeTitleJP}) with a score ${animeData[1].score.toString()} and a total of ${animeData[1].numberOfRatings.toString()} rating(s), \n ${animeData[2].animeTitleEN} (${animeData[2].animeTitleJP}) with a score ${animeData[2].score.toString()} and a total of ${animeData[2].numberOfRatings.toString()} rating(s), \n ${animeData[3].animeTitleEN} (${animeData[3].animeTitleJP}) with a score ${animeData[3].score.toString()} and a total of ${animeData[3].numberOfRatings.toString()} rating(s), \n ${animeData[4].animeTitleEN} (${animeData[4].animeTitleJP}) with a score ${animeData[4].score.toString()} and a total of ${animeData[4].numberOfRatings.toString()} rating(s).",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                );
+              }
+            },
+          ),
+        ),
       ],
     );
   }
@@ -327,13 +377,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget buildPopularAnimeChart() {
-    final List<String> animeTitles = [
-      'Anime A',
-      'Anime B',
-      'Anime C',
-      'Anime D',
-      'Anime E'
-    ];
     final List<int> popularityValues = [5, 4, 3, 2, 1];
     return Center(
         child: Padding(
@@ -366,15 +409,28 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 leftTitles: AxisTitles(axisNameWidget: const Text("")),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
+                    reservedSize: 100,
                     showTitles: true,
                     getTitlesWidget: ((value, meta) {
                       if (value.toInt() >= 0 &&
                           value.toInt() < animeTitles.length) {
-                        return Text(
-                          animeTitles[value.toInt()],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
+                        return Container(
+                          width: 150,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  animeTitles[value.toInt()],
+                                  softWrap: true,
+                                  textAlign: ui.TextAlign.center,
+                                  overflow: TextOverflow.clip,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }
