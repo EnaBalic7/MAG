@@ -17,9 +17,11 @@ import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
+import '../models/popular_genres_data.dart';
 import '../models/registration_data.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
+import '../providers/genre_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/master_screen.dart';
 
@@ -44,10 +46,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final ScreenshotController _screenshotController = ScreenshotController();
   Text userChartText = Text("");
   pw.Text userChartTextForPdf = pw.Text("");
+
   late AnimeProvider _animeProvider;
   List<String> animeTitles = [];
   late Future<List<PopularAnimeData>> popularAnimeDataFuture;
   List<PopularAnimeData> popularAnimeData = [];
+
+  late GenreProvider _genreProvider;
+  List<String> genreTitles = [];
+  late Future<List<PopularGenresData>> popularGenresDataFuture;
+  List<PopularGenresData> popularGenresData = [];
 
   @override
   void initState() {
@@ -60,7 +68,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
     _animeProvider = context.read<AnimeProvider>();
     getPopularAnimeData();
 
+    _genreProvider = context.read<GenreProvider>();
+    getPopularGenresData();
+
     super.initState();
+  }
+
+  void getPopularGenresData() async {
+    popularGenresData = await _genreProvider.getMostPopularGenres();
+    popularGenresDataFuture = Future.value(popularGenresData);
+
+    for (var genre in popularGenresData) {
+      genreTitles.add(genre.genreName!);
+    }
   }
 
   void getPopularAnimeData() async {
@@ -257,6 +277,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
               buildPopularAnimeChart(),
               const SizedBox(height: 20),
               buildAnimeBarChartInterpretation(),
+              const SizedBox(height: 20),
+              buildPopularGenresChart(),
+              const SizedBox(height: 20),
+              buildAnimeBarChartInterpretation(),
             ],
           ),
         ));
@@ -272,6 +296,97 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 color: Palette.teal, fontSize: 30, fontWeight: FontWeight.bold))
       ],
     );
+  }
+
+  Widget buildPopularGenresChart() {
+    final List<int> popularityValues = [];
+    for (var item in popularGenresData) {
+      popularityValues.add(item.usersWhoLikeIt!);
+    }
+
+    return Center(
+        child: Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(children: [
+        SizedBox(
+          width: 1100,
+          height: 500,
+          child: BarChart(
+            BarChartData(
+              barTouchData: BarTouchData(enabled: true),
+              barGroups: List.generate(
+                5,
+                (index) => BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: popularityValues[index].toDouble(),
+                      gradient: Palette.gradientList[index],
+                      width: 35,
+                    ),
+                  ],
+                ),
+              ),
+              gridData: FlGridData(
+                  show: true, drawVerticalLine: true, verticalInterval: 1),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: AxisTitles(axisNameWidget: const Text("")),
+                leftTitles: AxisTitles(axisNameWidget: const Text("")),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    reservedSize: 100,
+                    showTitles: true,
+                    getTitlesWidget: ((value, meta) {
+                      if (value.toInt() >= 0 &&
+                          value.toInt() < genreTitles.length) {
+                        return Container(
+                          width: 150,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  genreTitles[value.toInt()],
+                                  softWrap: true,
+                                  textAlign: ui.TextAlign.center,
+                                  overflow: TextOverflow.clip,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return Text('');
+                    }),
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  axisNameSize: 30,
+                  axisNameWidget: const Text(
+                    "Top 5 most popular genres",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(
+                    color: Palette.teal.withOpacity(0.5),
+                    width: 2,
+                  )),
+            ),
+
+            swapAnimationDuration:
+                const Duration(milliseconds: 150), // Optional
+            swapAnimationCurve: Curves.linear, // Optional
+          ),
+        ),
+      ]),
+    ));
   }
 
   Widget buildAnimeBarChartInterpretation() {

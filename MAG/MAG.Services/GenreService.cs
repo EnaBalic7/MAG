@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace MAG.Services
             _genreAnimeService = genreAnimeService;
         }
 
-        public override IQueryable<Genre> AddFilter(IQueryable<Genre> query, GenreSearchObject? search = null)
+        public override IQueryable<Database.Genre> AddFilter(IQueryable<Database.Genre> query, GenreSearchObject? search = null)
         {
             if(search?.SortAlphabetically == true)
             {
@@ -30,9 +32,27 @@ namespace MAG.Services
             return base.AddFilter(query, search);
         }
 
-        public override async Task BeforeDelete(Genre entity)
+        public override async Task BeforeDelete(Database.Genre entity)
         {
             await _genreAnimeService.DeleteByGenreId(entity.Id);
+        }
+
+        public async Task<List<Model.PopularGenresData>> GetMostPopularGenres()
+        {
+            var preferredGenres = await _context.Genres.OrderByDescending(genre => genre.PreferredGenres.Count()).Take(5).ToListAsync();
+
+            List<PopularGenresData> popularGenres = new List<PopularGenresData>();
+
+            foreach(var genre in preferredGenres)
+            {
+                popularGenres.Add(new PopularGenresData
+                {
+                    GenreName = genre.Name,
+                    UsersWhoLikeIt = _context.PreferredGenres.Where(x => x.GenreId == genre.Id).Count(),
+                });
+            }
+
+            return popularGenres;
         }
     }
 }
