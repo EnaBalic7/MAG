@@ -278,7 +278,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         }
                       },
                       width: 110,
-                      height: 35,
+                      height: 30,
                       borderRadius: 50,
                       gradient: Palette.buttonGradient,
                       child: const Text("Register",

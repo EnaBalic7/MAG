@@ -80,10 +80,30 @@ class Palette {
     end: Alignment.topCenter,
   );
 
+  static const LinearGradient barChartGradient6 = LinearGradient(colors: [
+    Color.fromRGBO(251, 248, 166, 1),
+    Color.fromRGBO(236, 87, 129, 1),
+    Color.fromRGBO(214, 26, 176, 1),
+  ], begin: Alignment.topCenter, end: Alignment.bottomCenter);
+
+  static const LinearGradient barChartGradient7 = LinearGradient(colors: [
+    Color.fromRGBO(251, 248, 166, 1),
+    Color.fromRGBO(243, 137, 235, 1),
+    Color.fromRGBO(72, 72, 156, 1),
+  ], begin: Alignment.topCenter, end: Alignment.bottomCenter);
+
   static List<LinearGradient> gradientList = [
     barChartGradient2,
     barChartGradient3,
     barChartGradient5,
+    barChartGradient,
+    barChartGradient4
+  ];
+
+  static List<LinearGradient> gradientList2 = [
+    barChartGradient7,
+    barChartGradient3,
+    barChartGradient6,
     barChartGradient,
     barChartGradient4
   ];

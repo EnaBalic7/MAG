@@ -44,6 +44,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   bool pastWeek = false;
   double? bottomInterval = 1;
   final ScreenshotController _screenshotController = ScreenshotController();
+  final ScreenshotController _screenshotController2 = ScreenshotController();
   Text userChartText = Text("");
   pw.Text userChartTextForPdf = pw.Text("");
 
@@ -101,10 +102,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   void generateUserChartText() {
-    userChartText = Text(
-      "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      textAlign: TextAlign.justify,
-    );
+    userChartText = const Text(
+        "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        textAlign: TextAlign.justify,
+        style: TextStyle(fontSize: 16));
     userChartTextForPdf = pw.Text(
         "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         textAlign: pw.TextAlign.justify,
@@ -131,6 +132,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final ByteData logoByteData =
         await rootBundle.load("assets/images/logoFilled.png");
     final Uint8List logoBytes = logoByteData.buffer.asUint8List();
+
+    //Get anime bar chart image
+    ui.Image? capturedAnimeBarChartImg =
+        await _screenshotController2.captureAsUiImage(pixelRatio: pixelRatio);
+    ByteData? byteDataAnimeBarChart = await capturedAnimeBarChartImg
+        ?.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytesAnimeBarChart =
+        byteDataAnimeBarChart!.buffer.asUint8List();
 
     final pdf = pw.Document();
 
@@ -181,7 +190,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           pw.MemoryImage(pngBytes),
                           width: 760,
                         ),
-                        pw.SizedBox(height: 20),
+                        pw.SizedBox(height: 10),
                         pw.Column(children: [
                           pw.Text("Total number of registered users:",
                               style: pw.TextStyle(
@@ -193,8 +202,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   fontSize: 20,
                                   fontWeight: pw.FontWeight.bold))
                         ]),
-                        pw.SizedBox(height: 20),
+                        pw.SizedBox(height: 10),
                         userChartTextForPdf,
+                        pw.SizedBox(height: 10),
+                        pw.Image(
+                          pw.MemoryImage(pngBytesAnimeBarChart),
+                          width: 760,
+                        ),
                       ]),
                       pw.Row(
                           mainAxisAlignment: pw.MainAxisAlignment.end,
@@ -202,6 +216,90 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             pw.Footer(
                               title: pw.Text(
                                 "1",
+                                style: pw.TextStyle(
+                                    color: PdfColor.fromHex("#C0B9FF")),
+                              ),
+                            )
+                          ]),
+                    ]),
+              ),
+            );
+          }),
+    );
+
+    pdf.addPage(
+      pw.Page(
+          pageTheme: pw.PageTheme(
+            pageFormat: PdfPageFormat.a4,
+            margin: pw.EdgeInsets.zero,
+            buildBackground: (context) {
+              return pw.Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: PdfColor.fromHex("#0C0B1E"), // 0C0B1E - midnightPurple
+              );
+            },
+          ),
+          build: (pw.Context context) {
+            return pw.Center(
+              child: pw.Container(
+                width: 700,
+                padding: const pw.EdgeInsets.all(30),
+                child: pw.Column(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Column(children: [
+                        pw.Header(
+                          level: 1,
+                          decoration: pw.BoxDecoration(
+                              border: pw.Border.all(
+                                  width: 0, style: pw.BorderStyle.none)),
+                          child: pw.Column(children: [
+                            pw.Row(children: [
+                              pw.Image(pw.MemoryImage(logoBytes), width: 80),
+                              pw.SizedBox(width: 78),
+                              pw.Text(
+                                  'Report - ${DateFormat('MMM d, y').format(DateTime.now())}',
+                                  style: pw.TextStyle(
+                                      color: PdfColor.fromHex("#C0B9FF"),
+                                      fontSize: 22)),
+                            ]),
+                            pw.Container(
+                                width: 900,
+                                height: 1,
+                                color: PdfColor.fromHex("#C0B9FF")),
+                          ]),
+                        ),
+                        pw.Image(
+                          pw.MemoryImage(pngBytes),
+                          width: 760,
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Column(children: [
+                          pw.Text("Total number of registered users:",
+                              style: pw.TextStyle(
+                                  fontSize: 14,
+                                  color: PdfColor.fromHex("#C0B9FF"))),
+                          pw.Text("$totalUsers",
+                              style: pw.TextStyle(
+                                  color: PdfColor.fromHex("#99FFFF"),
+                                  fontSize: 20,
+                                  fontWeight: pw.FontWeight.bold))
+                        ]),
+                        pw.SizedBox(height: 10),
+                        userChartTextForPdf,
+                        pw.SizedBox(height: 10),
+                        pw.Image(
+                          pw.MemoryImage(pngBytesAnimeBarChart),
+                          width: 760,
+                        ),
+                      ]),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.end,
+                          children: [
+                            pw.Footer(
+                              title: pw.Text(
+                                "2",
                                 style: pw.TextStyle(
                                     color: PdfColor.fromHex("#C0B9FF")),
                               ),
@@ -274,13 +372,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
               const SizedBox(height: 20),
               buildLineChartInterpretation(),
               const SizedBox(height: 20),
-              buildPopularAnimeChart(),
+              Screenshot(
+                  controller: _screenshotController2,
+                  child: buildPopularAnimeChart()),
               const SizedBox(height: 20),
               buildAnimeBarChartInterpretation(),
               const SizedBox(height: 20),
               buildPopularGenresChart(),
               const SizedBox(height: 20),
-              buildAnimeBarChartInterpretation(),
+              buildGenresBarChartInterpretation(),
             ],
           ),
         ));
@@ -299,94 +399,141 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget buildPopularGenresChart() {
-    final List<int> popularityValues = [];
-    for (var item in popularGenresData) {
-      popularityValues.add(item.usersWhoLikeIt!);
-    }
+    return FutureBuilder<List<PopularGenresData>>(
+        future: _genreProvider.getMostPopularGenres(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var genresData = snapshot.data!;
 
-    return Center(
-        child: Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(children: [
-        SizedBox(
-          width: 1100,
-          height: 500,
-          child: BarChart(
-            BarChartData(
-              barTouchData: BarTouchData(enabled: true),
-              barGroups: List.generate(
-                5,
-                (index) => BarChartGroupData(
-                  x: index,
-                  barRods: [
-                    BarChartRodData(
-                      toY: popularityValues[index].toDouble(),
-                      gradient: Palette.gradientList[index],
-                      width: 35,
-                    ),
-                  ],
-                ),
-              ),
-              gridData: FlGridData(
-                  show: true, drawVerticalLine: true, verticalInterval: 1),
-              titlesData: FlTitlesData(
-                show: true,
-                rightTitles: AxisTitles(axisNameWidget: const Text("")),
-                leftTitles: AxisTitles(axisNameWidget: const Text("")),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    reservedSize: 100,
-                    showTitles: true,
-                    getTitlesWidget: ((value, meta) {
-                      if (value.toInt() >= 0 &&
-                          value.toInt() < genreTitles.length) {
-                        return Container(
-                          width: 150,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  genreTitles[value.toInt()],
-                                  softWrap: true,
-                                  textAlign: ui.TextAlign.center,
-                                  overflow: TextOverflow.clip,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
+            return Center(
+                child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(children: [
+                SizedBox(
+                  width: 1100,
+                  height: 500,
+                  child: BarChart(
+                    BarChartData(
+                      barTouchData: BarTouchData(enabled: true),
+                      barGroups: List.generate(
+                        genresData.length,
+                        (index) => BarChartGroupData(
+                          x: index,
+                          barRods: [
+                            BarChartRodData(
+                              toY: genresData[index].usersWhoLikeIt!.toDouble(),
+                              gradient: Palette.gradientList2[index],
+                              width: 35,
+                            ),
+                          ],
+                        ),
+                      ),
+                      gridData: FlGridData(
+                          show: true,
+                          drawVerticalLine: true,
+                          verticalInterval: 1),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        rightTitles: AxisTitles(axisNameWidget: const Text("")),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: true, interval: 1),
+                          axisNameWidget: const Text(
+                              "Number of users who like the genre",
+                              style: TextStyle(fontWeight: FontWeight.w500)),
+                          axisNameSize: 22,
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            reservedSize: 100,
+                            showTitles: true,
+                            getTitlesWidget: ((value, meta) {
+                              if (value.toInt() >= 0 &&
+                                  value.toInt() < genreTitles.length) {
+                                return Container(
+                                  width: 150,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          genreTitles[value.toInt()],
+                                          softWrap: true,
+                                          textAlign: ui.TextAlign.center,
+                                          overflow: TextOverflow.clip,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
+                                );
+                              }
+                              return Text('');
+                            }),
                           ),
-                        );
-                      }
-                      return Text('');
-                    }),
-                  ),
-                ),
-                topTitles: AxisTitles(
-                  axisNameSize: 30,
-                  axisNameWidget: const Text(
-                    "Top 5 most popular genres",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                ),
-              ),
-              borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(
-                    color: Palette.teal.withOpacity(0.5),
-                    width: 2,
-                  )),
-            ),
+                        ),
+                        topTitles: AxisTitles(
+                          axisNameSize: 30,
+                          axisNameWidget: const Text(
+                            "Top 5 most popular genres",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      borderData: FlBorderData(
+                          show: true,
+                          border: Border.all(
+                            color: Palette.teal.withOpacity(0.5),
+                            width: 2,
+                          )),
+                    ),
 
-            swapAnimationDuration:
-                const Duration(milliseconds: 150), // Optional
-            swapAnimationCurve: Curves.linear, // Optional
+                    swapAnimationDuration:
+                        const Duration(milliseconds: 150), // Optional
+                    swapAnimationCurve: Curves.linear, // Optional
+                  ),
+                ),
+              ]),
+            ));
+          }
+        });
+  }
+
+  Widget buildGenresBarChartInterpretation() {
+    return Column(
+      children: [
+        SizedBox(
+          width: 900,
+          child: FutureBuilder<List<PopularGenresData>>(
+            future: _genreProvider.getMostPopularGenres(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const MyProgressIndicator(); // Loading state
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); // Error state
+              } else {
+                // Data loaded successfully
+                var genresData = snapshot.data!;
+
+                return Text(
+                  "The most popular genre on this app thus far is ${genresData[0].genreName} with a total of ${genresData[0].usersWhoLikeIt} user(s) who selected it as preferred.\n \n The following are:\n ${genresData[1].genreName} with a total of ${genresData[1].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[2].genreName} with a total of ${genresData[2].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[3].genreName} with a total of ${genresData[3].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[4].genreName} with a total of ${genresData[4].usersWhoLikeIt} user(s) who selected it as preferred",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                );
+              }
+            },
           ),
         ),
-      ]),
-    ));
+      ],
+    );
   }
 
   Widget buildAnimeBarChartInterpretation() {

@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                         }
                       },
                       width: 110,
-                      height: 35,
+                      height: 30,
                       borderRadius: 50,
                       gradient: Palette.buttonGradient,
                       child: const Text("Log In",
