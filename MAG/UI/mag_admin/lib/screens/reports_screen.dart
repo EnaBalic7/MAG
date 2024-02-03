@@ -45,6 +45,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
   double? bottomInterval = 1;
   final ScreenshotController _screenshotController = ScreenshotController();
   final ScreenshotController _screenshotController2 = ScreenshotController();
+  final ScreenshotController _screenshotController3 = ScreenshotController();
   Text userChartText = Text("");
   pw.Text userChartTextForPdf = pw.Text("");
 
@@ -57,6 +58,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   List<String> genreTitles = [];
   late Future<List<PopularGenresData>> popularGenresDataFuture;
   List<PopularGenresData> popularGenresData = [];
+  Text genreBarChartText = Text("");
+  Text animeBarChartText = Text("");
 
   @override
   void initState() {
@@ -140,6 +143,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ?.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytesAnimeBarChart =
         byteDataAnimeBarChart!.buffer.asUint8List();
+
+    //Get genre bar chart image
+    ui.Image? capturedGenreBarChartImg =
+        await _screenshotController3.captureAsUiImage(pixelRatio: pixelRatio);
+    ByteData? byteDataGenreBarChart = await capturedGenreBarChartImg
+        ?.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytesGenreBarChart =
+        byteDataGenreBarChart!.buffer.asUint8List();
 
     final pdf = pw.Document();
 
@@ -270,29 +281,21 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 color: PdfColor.fromHex("#C0B9FF")),
                           ]),
                         ),
+                        // add more here
+                        pw.Text(animeBarChartText.data!,
+                            style: pw.TextStyle(
+                                color: PdfColor.fromHex("#C0B9FF"),
+                                fontSize: 11)),
+                        pw.SizedBox(height: 10),
                         pw.Image(
-                          pw.MemoryImage(pngBytes),
+                          pw.MemoryImage(pngBytesGenreBarChart),
                           width: 760,
                         ),
                         pw.SizedBox(height: 10),
-                        pw.Column(children: [
-                          pw.Text("Total number of registered users:",
-                              style: pw.TextStyle(
-                                  fontSize: 14,
-                                  color: PdfColor.fromHex("#C0B9FF"))),
-                          pw.Text("$totalUsers",
-                              style: pw.TextStyle(
-                                  color: PdfColor.fromHex("#99FFFF"),
-                                  fontSize: 20,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.SizedBox(height: 10),
-                        userChartTextForPdf,
-                        pw.SizedBox(height: 10),
-                        pw.Image(
-                          pw.MemoryImage(pngBytesAnimeBarChart),
-                          width: 760,
-                        ),
+                        pw.Text(genreBarChartText.data!,
+                            style: pw.TextStyle(
+                                color: PdfColor.fromHex("#C0B9FF"),
+                                fontSize: 11)),
                       ]),
                       pw.Row(
                           mainAxisAlignment: pw.MainAxisAlignment.end,
@@ -378,7 +381,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
               const SizedBox(height: 20),
               buildAnimeBarChartInterpretation(),
               const SizedBox(height: 20),
-              buildPopularGenresChart(),
+              Screenshot(
+                  controller: _screenshotController3,
+                  child: buildPopularGenresChart()),
               const SizedBox(height: 20),
               buildGenresBarChartInterpretation(),
             ],
@@ -521,13 +526,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
               } else {
                 // Data loaded successfully
                 var genresData = snapshot.data!;
-
-                return Text(
+                genreBarChartText = Text(
                   "The most popular genre on this app thus far is ${genresData[0].genreName} with a total of ${genresData[0].usersWhoLikeIt} user(s) who selected it as preferred.\n \n The following are:\n ${genresData[1].genreName} with a total of ${genresData[1].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[2].genreName} with a total of ${genresData[2].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[3].genreName} with a total of ${genresData[3].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[4].genreName} with a total of ${genresData[4].usersWhoLikeIt} user(s) who selected it as preferred",
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 );
+                return genreBarChartText;
               }
             },
           ),
@@ -551,13 +556,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
               } else {
                 // Data loaded successfully
                 var animeData = snapshot.data!;
-
-                return Text(
+                animeBarChartText = Text(
                   "The most popular anime on this app thus far is ${animeData[0].animeTitleEN} (${animeData[0].animeTitleJP}) with a score ${animeData[0].score.toString()} and a total of ${animeData[0].numberOfRatings.toString()} rating(s). \n \n The following are: \n ${animeData[1].animeTitleEN} (${animeData[1].animeTitleJP}) with a score ${animeData[1].score.toString()} and a total of ${animeData[1].numberOfRatings.toString()} rating(s), \n ${animeData[2].animeTitleEN} (${animeData[2].animeTitleJP}) with a score ${animeData[2].score.toString()} and a total of ${animeData[2].numberOfRatings.toString()} rating(s), \n ${animeData[3].animeTitleEN} (${animeData[3].animeTitleJP}) with a score ${animeData[3].score.toString()} and a total of ${animeData[3].numberOfRatings.toString()} rating(s), \n ${animeData[4].animeTitleEN} (${animeData[4].animeTitleJP}) with a score ${animeData[4].score.toString()} and a total of ${animeData[4].numberOfRatings.toString()} rating(s).",
                   style: TextStyle(
                     fontSize: 16,
                   ),
                 );
+                return animeBarChartText;
               }
             },
           ),
