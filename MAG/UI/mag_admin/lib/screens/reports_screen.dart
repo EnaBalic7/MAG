@@ -348,28 +348,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
             children: [
               const SizedBox(height: 20),
               buildFilterButtons(),
-              FutureBuilder(
-                future: userRegistrationDataFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const MyProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    List<UserRegistrationData> data =
-                        (snapshot.data as List<UserRegistrationData>);
-
-                    data.forEach((data) {
-                      // Convert dates to local time zone
-                      data.date = data.date?.toLocal();
-                    });
-
-                    return Screenshot(
-                        controller: _screenshotController,
-                        child: buildRegistrationChart(data));
-                  }
-                },
-              ),
+              const SizedBox(height: 20),
+              buildRegistrationChart(),
               const SizedBox(height: 20),
               buildTotalUsers(),
               const SizedBox(height: 20),
@@ -558,7 +538,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 var animeData = snapshot.data!;
                 animeBarChartText = Text(
                   "The most popular anime on this app thus far is ${animeData[0].animeTitleEN} (${animeData[0].animeTitleJP}) with a score ${animeData[0].score.toString()} and a total of ${animeData[0].numberOfRatings.toString()} rating(s). \n \n The following are: \n ${animeData[1].animeTitleEN} (${animeData[1].animeTitleJP}) with a score ${animeData[1].score.toString()} and a total of ${animeData[1].numberOfRatings.toString()} rating(s), \n ${animeData[2].animeTitleEN} (${animeData[2].animeTitleJP}) with a score ${animeData[2].score.toString()} and a total of ${animeData[2].numberOfRatings.toString()} rating(s), \n ${animeData[3].animeTitleEN} (${animeData[3].animeTitleJP}) with a score ${animeData[3].score.toString()} and a total of ${animeData[3].numberOfRatings.toString()} rating(s), \n ${animeData[4].animeTitleEN} (${animeData[4].animeTitleJP}) with a score ${animeData[4].score.toString()} and a total of ${animeData[4].numberOfRatings.toString()} rating(s).",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 );
@@ -572,11 +552,49 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Widget buildLineChartInterpretation() {
-    return Column(
-      children: [
-        SizedBox(width: 900, child: userChartText),
-      ],
-    );
+    return FutureBuilder<List<UserRegistrationData>>(
+        future: userRegistrationDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var userData = snapshot.data!;
+
+            UserRegistrationData mostRegistrationsDay = userData
+                .reduce((a, b) => a.numberOfUsers! > b.numberOfUsers! ? a : b);
+
+            double averageRegistrations = userData.isEmpty
+                ? 0
+                : userData
+                        .map((data) => data.numberOfUsers!)
+                        .reduce((a, b) => a + b) /
+                    userData.length;
+
+            return Column(
+              children: [
+                SizedBox(
+                  width: 900,
+                  child: (mostRegistrationsDay.numberOfUsers != 0)
+                      ? Text(
+                          "A day with the most registrations (${mostRegistrationsDay.numberOfUsers} in total) was ${DateFormat('MMMM d, y').format(mostRegistrationsDay.date!)}. \n \n The average number of users registered in selected time period is ${averageRegistrations.toPrecision(2)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        )
+                      : const Text(
+                          "No user registrations in selected time period.",
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                )
+              ],
+            );
+          }
+        });
   }
 
   Row buildFilterButtons() {
@@ -730,128 +748,155 @@ class _ReportsScreenState extends State<ReportsScreen> {
     ));
   }
 
-  Center buildRegistrationChart(List<UserRegistrationData> data) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Column(
-          children: [
-            SizedBox(
-              width: 1100,
-              height: 500,
-              child: LineChart(
-                LineChartData(
-                    gridData: FlGridData(
-                        show: true,
-                        drawVerticalLine: true,
-                        verticalInterval: 1),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      leftTitles: AxisTitles(
-                        axisNameWidget: const Text("Number of registered users",
-                            style: TextStyle(fontWeight: FontWeight.w500)),
-                        axisNameSize: 22,
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 25,
-                          interval: 1,
-                        ),
-                      ),
-                      bottomTitles: AxisTitles(
-                        axisNameWidget: Text("Past ${days + 1} days",
-                            style:
-                                const TextStyle(fontWeight: FontWeight.w500)),
-                        axisNameSize: 20,
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 80,
-                          interval: bottomInterval,
-                          getTitlesWidget: ((value, meta) {
-                            List<String> timeLabels = data
-                                .map((element) => DateFormat('MMM d, y')
-                                    .format(element.date!))
-                                .toList();
+  Widget buildRegistrationChart() {
+    return FutureBuilder(
+      future: userRegistrationDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MyProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          List<UserRegistrationData> data =
+              (snapshot.data as List<UserRegistrationData>);
 
-                            if (pastYear == true) {
-                              timeLabels = data
-                                  .map((element) =>
-                                      DateFormat('MMM, y', 'en_US')
-                                          .format(element.date!))
-                                  .toList();
-                            }
+          data.forEach((data) {
+            // Convert dates to local time zone
+            data.date = data.date?.toLocal();
+          });
 
-                            if (pastWeek == true) {
-                              timeLabels = data
-                                  .map((element) =>
-                                      DateFormat('MMM d, y, EEEE', 'en_US')
-                                          .format(element.date!))
-                                  .toList();
-                            }
-
-                            // Ensure the value is an integer
-                            int index = value.toInt();
-
-                            // Check if the index is within the range of customDates
-                            if (index >= 0 && index < timeLabels.length) {
-                              return RotatedBox(
-                                quarterTurns: 3,
-                                child: Text(
-                                  timeLabels[index],
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 12),
+          return Screenshot(
+            controller: _screenshotController,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 1100,
+                      height: 500,
+                      child: LineChart(
+                        LineChartData(
+                            gridData: FlGridData(
+                                show: true,
+                                drawVerticalLine: true,
+                                verticalInterval: 1),
+                            titlesData: FlTitlesData(
+                              show: true,
+                              leftTitles: AxisTitles(
+                                axisNameWidget: const Text(
+                                    "Number of registered users",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                axisNameSize: 22,
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 25,
+                                  interval: (pastYear == true) ? 10 : null,
                                 ),
-                              );
-                            }
+                              ),
+                              bottomTitles: AxisTitles(
+                                axisNameWidget: Text("Past ${days + 1} days",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500)),
+                                axisNameSize: 20,
+                                sideTitles: SideTitles(
+                                  showTitles: true,
+                                  reservedSize: 80,
+                                  interval: bottomInterval,
+                                  getTitlesWidget: ((value, meta) {
+                                    List<String> timeLabels = data
+                                        .map((element) => DateFormat('MMM d, y')
+                                            .format(element.date!))
+                                        .toList();
 
-                            return Container();
-                          }),
-                        ),
+                                    if (pastYear == true) {
+                                      timeLabels = data
+                                          .map((element) =>
+                                              DateFormat('MMM, y', 'en_US')
+                                                  .format(element.date!))
+                                          .toList();
+                                    }
+
+                                    if (pastWeek == true) {
+                                      timeLabels = data
+                                          .map((element) => DateFormat(
+                                                  'MMM d, y, EEEE', 'en_US')
+                                              .format(element.date!))
+                                          .toList();
+                                    }
+
+                                    // Ensure the value is an integer
+                                    int index = value.toInt();
+
+                                    // Check if the index is within the range of customDates
+                                    if (index >= 0 &&
+                                        index < timeLabels.length) {
+                                      return RotatedBox(
+                                        quarterTurns: 3,
+                                        child: Text(
+                                          timeLabels[index],
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                      );
+                                    }
+
+                                    return Container();
+                                  }),
+                                ),
+                              ),
+                              rightTitles:
+                                  AxisTitles(axisNameWidget: const Text("")),
+                              topTitles: AxisTitles(
+                                  axisNameSize: 30,
+                                  axisNameWidget: const Text(
+                                    "Number of registered users in time",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18),
+                                  )),
+                            ),
+                            borderData: FlBorderData(
+                                show: true,
+                                border: Border.all(
+                                  color: Palette.teal.withOpacity(0.5),
+                                  width: 2,
+                                )),
+                            minX: 0,
+                            maxX: data.length.toDouble() - 1,
+                            minY: 0,
+                            maxY: _getMaxYValue(data),
+                            lineBarsData: [
+                              LineChartBarData(
+                                gradient: Palette.buttonGradientReverse,
+                                spots: _getSpots(data),
+                                isCurved: true,
+                                barWidth: 4,
+                                preventCurveOverShooting: true,
+                                isStrokeCapRound: true,
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  color: Palette.teal.withOpacity(0.3),
+                                ),
+                                shadow: const Shadow(
+                                    color: Palette.teal, blurRadius: 30),
+                                dotData: FlDotData(show: true),
+                              )
+                            ]),
+
+                        swapAnimationDuration:
+                            const Duration(milliseconds: 150), // Optional
+                        swapAnimationCurve: Curves.linear, // Optional
                       ),
-                      rightTitles: AxisTitles(axisNameWidget: const Text("")),
-                      topTitles: AxisTitles(
-                          axisNameSize: 30,
-                          axisNameWidget: const Text(
-                            "Number of registered users in time",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 18),
-                          )),
                     ),
-                    borderData: FlBorderData(
-                        show: true,
-                        border: Border.all(
-                          color: Palette.teal.withOpacity(0.5),
-                          width: 2,
-                        )),
-                    minX: 0,
-                    maxX: data.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: _getMaxYValue(data),
-                    lineBarsData: [
-                      LineChartBarData(
-                        gradient: Palette.buttonGradientReverse,
-                        spots: _getSpots(data),
-                        isCurved: true,
-                        barWidth: 4,
-                        preventCurveOverShooting: true,
-                        isStrokeCapRound: true,
-                        belowBarData: BarAreaData(
-                          show: true,
-                          color: Palette.teal.withOpacity(0.3),
-                        ),
-                        shadow:
-                            const Shadow(color: Palette.teal, blurRadius: 30),
-                        dotData: FlDotData(show: true),
-                      )
-                    ]),
-
-                swapAnimationDuration:
-                    const Duration(milliseconds: 150), // Optional
-                swapAnimationCurve: Curves.linear, // Optional
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 

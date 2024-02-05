@@ -108,21 +108,26 @@ class LoginScreen extends StatelessWidget {
                                   color: Palette.lightRed, size: 55),
                               SizedBox(
                                 width: 300,
-                                child: Text(
-                                  "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
-                                  textAlign: TextAlign.center,
-                                ),
+                                child: (e.toString().contains("Unauthorized"))
+                                    ? Text(
+                                        "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
+                                        textAlign: TextAlign.center,
+                                      )
+                                    : Text(
+                                        e.toString(),
+                                        textAlign: TextAlign.center,
+                                      ),
                               ));
                         }
                       },
                       width: 110,
-                      height: 30,
+                      height: 32,
                       borderRadius: 50,
                       gradient: Palette.buttonGradient,
                       child: const Text("Log In",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500))),
+                              fontSize: 16, fontWeight: FontWeight.w500))),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: TextButton(
@@ -134,7 +139,6 @@ class LoginScreen extends StatelessWidget {
                           style: TextStyle(
                               color: Palette.lightPurple,
                               fontWeight: FontWeight.normal)),
-                      onHover: (x) {},
                     ),
                   ),
                 ],

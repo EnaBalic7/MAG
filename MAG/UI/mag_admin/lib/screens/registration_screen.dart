@@ -278,13 +278,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         }
                       },
                       width: 110,
-                      height: 30,
+                      height: 32,
                       borderRadius: 50,
                       gradient: Palette.buttonGradient,
                       child: const Text("Register",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w500))),
+                              fontSize: 16, fontWeight: FontWeight.w500))),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: TextButton(
