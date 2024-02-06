@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:mag_admin/models/registration_data.dart';
-import 'package:mag_admin/providers/base_provider.dart';
+import '../models/registration_data.dart';
+import '../providers/base_provider.dart';
 
 import '../models/user.dart';
 

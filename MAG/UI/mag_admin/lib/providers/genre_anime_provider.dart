@@ -1,4 +1,4 @@
-import 'package:mag_admin/providers/base_provider.dart';
+import '../providers/base_provider.dart';
 
 import '../models/genre_anime.dart';
 import 'dart:convert';

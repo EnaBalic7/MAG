@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mag_admin/models/role.dart';
+import '../models/role.dart';
 part 'user_role.g.dart';
 
 @JsonSerializable()

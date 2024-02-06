@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mag_admin/models/user_profile_picture.dart';
-import 'package:mag_admin/models/user_role.dart';
+import '../models/user_profile_picture.dart';
+import '../models/user_role.dart';
 
 part 'user.g.dart';
 

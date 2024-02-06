@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mag_admin/providers/base_provider.dart';
+import '../providers/base_provider.dart';
 
 import '../models/genre.dart';
 import '../models/popular_genres_data.dart';

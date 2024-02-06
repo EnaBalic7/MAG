@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mag_admin/models/popular_anime_data.dart';
+import '../models/popular_anime_data.dart';
 
 import '../providers/base_provider.dart';
 import '../models/anime.dart';
