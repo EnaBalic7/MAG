@@ -1,22 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/providers/user_profile_picture_provider.dart';
-import 'package:mag_admin/providers/user_provider.dart';
-import 'package:mag_admin/providers/user_role_provider.dart';
-import 'package:mag_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/user_provider.dart';
+import '../providers/user_role_provider.dart';
+import '../screens/login_screen.dart';
 import '../models/user.dart';
-import '../models/user_role.dart';
-import '../providers/anime_provider.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/form_builder_text_field.dart';
 import '../widgets/gradient_button.dart';
-import '../widgets/text_field.dart';
-import 'anime_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);

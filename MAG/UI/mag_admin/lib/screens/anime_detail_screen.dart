@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/providers/genre_anime_provider.dart';
-import 'package:mag_admin/screens/genres_screen.dart';
-import 'package:mag_admin/utils/icons.dart';
-import 'package:mag_admin/utils/util.dart';
-import 'package:mag_admin/widgets/form_builder_datetime_picker.dart';
-import 'package:mag_admin/widgets/form_builder_dropdown.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/genre_anime_provider.dart';
+import '../screens/genres_screen.dart';
+import '../utils/icons.dart';
+import '../utils/util.dart';
+import '../widgets/form_builder_datetime_picker.dart';
+import '../widgets/form_builder_dropdown.dart';
+import '../widgets/master_screen.dart';
 import '../models/anime.dart';
 import '../models/genre.dart';
 import '../models/genre_anime.dart';

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/providers/qa_provider.dart';
-import 'package:mag_admin/utils/icons.dart';
-import 'package:mag_admin/widgets/form_builder_dropdown.dart';
-import 'package:mag_admin/widgets/form_builder_text_field.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/pagination_buttons.dart';
-import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/qa_provider.dart';
+import '../utils/icons.dart';
+import '../widgets/form_builder_dropdown.dart';
+import '../widgets/form_builder_text_field.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/pagination_buttons.dart';
+import '../widgets/separator.dart';
 import '../models/qa.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';

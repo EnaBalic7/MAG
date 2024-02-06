@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_admin/providers/club_provider.dart';
-import 'package:mag_admin/providers/post_provider.dart';
-import 'package:mag_admin/providers/user_provider.dart';
-import 'package:mag_admin/screens/club_detail_screen.dart';
-import 'package:mag_admin/screens/post_detail_screen.dart';
-import 'package:mag_admin/utils/icons.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/club_provider.dart';
+import '../providers/post_provider.dart';
+import '../providers/user_provider.dart';
+import '../screens/club_detail_screen.dart';
+import '../screens/post_detail_screen.dart';
+import '../utils/icons.dart';
+import '../widgets/master_screen.dart';
 import '../models/club.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';

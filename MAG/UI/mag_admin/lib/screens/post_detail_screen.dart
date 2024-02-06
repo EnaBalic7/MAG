@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_admin/models/comment.dart';
-import 'package:mag_admin/providers/club_provider.dart';
-import 'package:mag_admin/providers/comment_provider.dart';
-import 'package:mag_admin/screens/club_detail_screen.dart';
-import 'package:mag_admin/screens/user_detail_screen.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/pagination_buttons.dart';
-import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/comment.dart';
+import '../providers/club_provider.dart';
+import '../providers/comment_provider.dart';
+import '../screens/club_detail_screen.dart';
+import '../screens/user_detail_screen.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/pagination_buttons.dart';
+import '../widgets/separator.dart';
 import '../models/club.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/providers/anime_provider.dart';
-import 'package:mag_admin/providers/club_provider.dart';
-import 'package:mag_admin/providers/comment_provider.dart';
-import 'package:mag_admin/providers/post_provider.dart';
-import 'package:mag_admin/providers/rating_provider.dart';
-import 'package:mag_admin/screens/club_detail_screen.dart';
-import 'package:mag_admin/screens/comments_screen.dart';
-import 'package:mag_admin/screens/post_detail_screen.dart';
-import 'package:mag_admin/screens/posts_screen.dart';
-import 'package:mag_admin/screens/reviews_screen.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/separator.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+
+import '../providers/anime_provider.dart';
+import '../providers/club_provider.dart';
+import '../providers/comment_provider.dart';
+import '../providers/post_provider.dart';
+import '../providers/rating_provider.dart';
+import '../screens/club_detail_screen.dart';
+import '../screens/comments_screen.dart';
+import '../screens/post_detail_screen.dart';
+import '../screens/posts_screen.dart';
+import '../screens/reviews_screen.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/separator.dart';
 import '../models/anime.dart';
 import '../models/club.dart';
 import '../models/comment.dart';
@@ -23,8 +25,6 @@ import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
-import 'package:intl/intl.dart';
-
 import '../widgets/circular_progress_indicator.dart';
 import 'anime_detail_screen.dart';
 

@@ -4,9 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_admin/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/user_provider.dart';
 import '../models/user_profile_picture.dart';
 import '../providers/user_profile_picture_provider.dart';
 import '../utils/icons.dart';

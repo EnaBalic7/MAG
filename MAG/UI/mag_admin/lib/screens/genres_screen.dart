@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+
 import '../models/genre.dart';
 import '../models/search_result.dart';
 import '../providers/genre_provider.dart';

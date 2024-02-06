@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/providers/anime_provider.dart';
-import 'package:mag_admin/providers/club_provider.dart';
-import 'package:mag_admin/providers/comment_provider.dart';
-import 'package:mag_admin/providers/genre_anime_provider.dart';
-import 'package:mag_admin/providers/genre_provider.dart';
-import 'package:mag_admin/providers/post_provider.dart';
-import 'package:mag_admin/providers/qa_category_provider.dart';
-import 'package:mag_admin/providers/qa_provider.dart';
-import 'package:mag_admin/providers/rating_provider.dart';
-import 'package:mag_admin/providers/role_provider.dart';
-import 'package:mag_admin/providers/user_profile_picture_provider.dart';
-import 'package:mag_admin/providers/user_provider.dart';
-import 'package:mag_admin/providers/user_role_provider.dart';
-import 'package:mag_admin/screens/login_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/anime_provider.dart';
+import '../providers/club_provider.dart';
+import '../providers/comment_provider.dart';
+import '../providers/genre_anime_provider.dart';
+import '../providers/genre_provider.dart';
+import '../providers/post_provider.dart';
+import '../providers/qa_category_provider.dart';
+import '../providers/qa_provider.dart';
+import '../providers/rating_provider.dart';
+import '../providers/role_provider.dart';
+import '../providers/user_profile_picture_provider.dart';
+import '../providers/user_provider.dart';
+import '../providers/user_role_provider.dart';
+import '../screens/login_screen.dart';
 import './utils/colors.dart';
 import './utils/util.dart';
 

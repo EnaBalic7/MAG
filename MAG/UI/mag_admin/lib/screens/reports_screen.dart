@@ -5,18 +5,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:mag_admin/models/popular_anime_data.dart';
-import 'package:mag_admin/providers/anime_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
-import 'package:mag_admin/providers/user_provider.dart';
-import 'package:mag_admin/widgets/circular_progress_indicator.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 
+import '../providers/user_provider.dart';
+import '../widgets/circular_progress_indicator.dart';
+import '../widgets/gradient_button.dart';
+import '../models/popular_anime_data.dart';
+import '../providers/anime_provider.dart';
 import '../models/popular_genres_data.dart';
 import '../models/registration_data.dart';
 import '../models/search_result.dart';
@@ -24,7 +23,6 @@ import '../models/user.dart';
 import '../providers/genre_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/master_screen.dart';
-
 import '../utils/icons.dart';
 
 class ReportsScreen extends StatefulWidget {
@@ -46,7 +44,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final ScreenshotController _screenshotController = ScreenshotController();
   final ScreenshotController _screenshotController2 = ScreenshotController();
   final ScreenshotController _screenshotController3 = ScreenshotController();
-  Text userChartText = Text("");
   pw.Text userChartTextForPdf = pw.Text("");
 
   late AnimeProvider _animeProvider;
@@ -67,7 +64,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     userRegistrationDataFuture = _userProvider.getUserRegistrations(days);
     _userFuture = _userProvider.get();
     getTotalusers();
-    generateUserChartText();
 
     _animeProvider = context.read<AnimeProvider>();
     getPopularAnimeData();
@@ -102,17 +98,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     setState(() {
       totalUsers = users.count;
     });
-  }
-
-  void generateUserChartText() {
-    userChartText = const Text(
-        "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        textAlign: TextAlign.justify,
-        style: TextStyle(fontSize: 16));
-    userChartTextForPdf = pw.Text(
-        "This is where I will interpret above portrayed data. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        textAlign: pw.TextAlign.justify,
-        style: pw.TextStyle(color: PdfColor.fromHex("#C0B9FF"), fontSize: 11));
   }
 
   Future<void> exportToPdf() async {
@@ -459,7 +444,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   ),
                                 );
                               }
-                              return Text('');
+                              return const Text('');
                             }),
                           ),
                         ),
@@ -507,8 +492,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 // Data loaded successfully
                 var genresData = snapshot.data!;
                 genreBarChartText = Text(
-                  "The most popular genre on this app thus far is ${genresData[0].genreName} with a total of ${genresData[0].usersWhoLikeIt} user(s) who selected it as preferred.\n \n The following are:\n ${genresData[1].genreName} with a total of ${genresData[1].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[2].genreName} with a total of ${genresData[2].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[3].genreName} with a total of ${genresData[3].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[4].genreName} with a total of ${genresData[4].usersWhoLikeIt} user(s) who selected it as preferred",
-                  style: TextStyle(
+                  "The most popular genre on this app thus far is ${genresData[0].genreName} with a total of ${genresData[0].usersWhoLikeIt} user(s) who selected it as preferred.\n \n The following are:\n ${genresData[1].genreName} with a total of ${genresData[1].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[2].genreName} with a total of ${genresData[2].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[3].genreName} with a total of ${genresData[3].usersWhoLikeIt} user(s) who selected it as preferred, \n ${genresData[4].genreName} with a total of ${genresData[4].usersWhoLikeIt} user(s) who selected it as preferred.",
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 );
@@ -576,25 +561,80 @@ class _ReportsScreenState extends State<ReportsScreen> {
             return Column(
               children: [
                 SizedBox(
-                  width: 900,
-                  child: (mostRegistrationsDay.numberOfUsers != 0)
-                      ? Text(
-                          "A day with the most registrations (${mostRegistrationsDay.numberOfUsers} in total) was ${DateFormat('MMMM d, y').format(mostRegistrationsDay.date!)}. \n \n The average number of users registered in selected time period is ${averageRegistrations.toPrecision(2)}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        )
-                      : const Text(
-                          "No user registrations in selected time period.",
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                )
+                    width: 900,
+                    child: _buildLineChartInterpretation(
+                        mostRegistrationsDay, averageRegistrations))
               ],
             );
           }
         });
+  }
+
+  Widget _buildLineChartInterpretation(
+      UserRegistrationData mostRegistrationsDay, double averageRegistrations) {
+    Text temp;
+
+    if (mostRegistrationsDay.numberOfUsers == 0) {
+      temp = const Text(
+        "No user registrations in selected time period.",
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      );
+
+      userChartTextForPdf = pw.Text(
+        temp.data!,
+        style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#C0B9FF")),
+      );
+      return temp;
+    }
+    if (pastYear == true) {
+      temp = Text(
+        "A month with the most registrations (${mostRegistrationsDay.numberOfUsers} in total) in the past 365 days was ${DateFormat('MMMM, yyyy').format(mostRegistrationsDay.date!)}. \n \n The average number of users registered in the past 365 days is ${averageRegistrations.toPrecision(2)}",
+        style: const TextStyle(
+          fontSize: 16,
+        ),
+      );
+
+      userChartTextForPdf = pw.Text(
+        temp.data!,
+        style: pw.TextStyle(
+          fontSize: 11,
+          color: PdfColor.fromHex("#C0B9FF"),
+        ),
+      );
+
+      return temp;
+    }
+    if (pastWeek == true) {
+      temp = Text(
+        "A day with the most registrations (${mostRegistrationsDay.numberOfUsers} in total) in the past 7 days was ${DateFormat('MMMM d, y, EEEE').format(mostRegistrationsDay.date!)}. \n \n The average number of users registered in the past 7 days is ${averageRegistrations.toPrecision(2)}",
+        style: const TextStyle(
+          fontSize: 16,
+        ),
+      );
+
+      userChartTextForPdf = pw.Text(
+        temp.data!,
+        style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#C0B9FF")),
+      );
+
+      return temp;
+    }
+
+    temp = Text(
+      "A day with the most registrations (${mostRegistrationsDay.numberOfUsers} in total) in the past 30 days was ${DateFormat('MMMM d, y').format(mostRegistrationsDay.date!)}. \n \n The average number of users registered in the past 30 days is ${averageRegistrations.toPrecision(2)}",
+      style: const TextStyle(
+        fontSize: 16,
+      ),
+    );
+
+    userChartTextForPdf = pw.Text(
+      temp.data!,
+      style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#C0B9FF")),
+    );
+
+    return temp;
   }
 
   Row buildFilterButtons() {
@@ -719,7 +759,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ),
                         );
                       }
-                      return Text('');
+                      return const Text('');
                     }),
                   ),
                 ),

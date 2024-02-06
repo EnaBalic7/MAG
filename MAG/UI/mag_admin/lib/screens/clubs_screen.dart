@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/screens/club_detail_screen.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/club_detail_screen.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/pagination_buttons.dart';
 import '../models/club.dart';
 import '../models/search_result.dart';
 import '../providers/club_provider.dart';

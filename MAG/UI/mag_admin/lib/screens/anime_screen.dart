@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/providers/anime_provider.dart';
-import 'package:mag_admin/providers/genre_anime_provider.dart';
-import 'package:mag_admin/utils/icons.dart';
-import 'package:mag_admin/utils/util.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
-import 'package:mag_admin/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/anime_provider.dart';
+import '../providers/genre_anime_provider.dart';
+import '../utils/icons.dart';
+import '../utils/util.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/pagination_buttons.dart';
 import '../models/anime.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';

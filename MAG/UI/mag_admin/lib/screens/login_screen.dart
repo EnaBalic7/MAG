@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/screens/registration_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/registration_screen.dart';
 import '../models/user_role.dart';
 import '../providers/anime_provider.dart';
 import '../providers/user_provider.dart';

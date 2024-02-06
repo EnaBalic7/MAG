@@ -1,8 +1,8 @@
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:mag_admin/utils/icons.dart';
 
+import '../utils/icons.dart';
 import '../utils/colors.dart';
 
 class MyDateTimePicker extends StatefulWidget {

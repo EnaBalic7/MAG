@@ -1,13 +1,12 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:mag_admin/screens/anime_screen.dart';
-import 'package:mag_admin/screens/help_screen.dart';
-import 'package:mag_admin/screens/profile_screen.dart';
-import 'package:mag_admin/screens/reports_screen.dart';
-import 'package:mag_admin/screens/testing_ground.dart';
-import 'package:mag_admin/screens/users_screen.dart';
 import 'package:provider/provider.dart';
-import '../main.dart';
+
+import '../screens/anime_screen.dart';
+import '../screens/help_screen.dart';
+import '../screens/profile_screen.dart';
+import '../screens/reports_screen.dart';
+import '../screens/users_screen.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
 import '../screens/clubs_screen.dart';
