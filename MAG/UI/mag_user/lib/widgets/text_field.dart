@@ -10,16 +10,18 @@ class MyTextField extends StatefulWidget {
   double? height;
   double? borderRadius;
   TextEditingController? controller;
-  MyTextField(
-      {Key? key,
-      this.hintText,
-      this.fillColor,
-      this.obscureText,
-      this.width,
-      this.height,
-      this.borderRadius,
-      this.controller})
-      : super(key: key);
+  TextInputType keyboardType;
+  MyTextField({
+    Key? key,
+    this.hintText,
+    this.fillColor,
+    this.obscureText,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.controller,
+    this.keyboardType = TextInputType.text,
+  }) : super(key: key);
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -35,11 +37,12 @@ class _MyTextFieldState extends State<MyTextField> {
         controller: widget.controller,
         style: const TextStyle(color: Palette.lightPurple),
         obscuringCharacter: '✮',
+        keyboardType: widget.keyboardType,
         obscureText: widget.obscureText ?? false,
         decoration: InputDecoration(
             hintText: widget.hintText ?? "",
             hintStyle: const TextStyle(
-                height: 1,
+                height: 2.8,
                 fontWeight: FontWeight.w400,
                 color: Palette.lightPurple),
             fillColor: widget.fillColor,

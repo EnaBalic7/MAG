@@ -83,6 +83,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Specify the URLs to listen on
+app.Urls.Add("http://0.0.0.0:5262");
+app.Urls.Add("https://0.0.0.0:7074");
+
 app.MapControllers();
 
 app.Run();

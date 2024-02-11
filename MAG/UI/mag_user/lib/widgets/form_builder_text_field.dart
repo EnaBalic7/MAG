@@ -98,7 +98,11 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
             focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),
-            errorStyle: const TextStyle(color: Palette.lightRed, height: 0.5),
+            errorStyle: const TextStyle(
+              color: Palette.lightRed,
+              height: 0.5,
+              textBaseline: TextBaseline.alphabetic,
+            ),
             errorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius: BorderRadius.circular(50)),
