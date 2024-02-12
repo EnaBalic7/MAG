@@ -11,6 +11,6 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
   @override
   Widget build(BuildContext context) {
-    return MasterScreenWidget(child: const Text("Test"));
+    return MasterScreenWidget(showSearch: true, child: const Text("Test"));
   }
 }

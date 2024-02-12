@@ -32,15 +32,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late UserProvider _userProvider;
   File? _image;
   String? _base64Image;
+  late Size screenSize;
+  double? textFieldWidth;
+  double? imageWidth;
+  double? containerWidth;
+  double? containerHeight;
 
   Future getImage() async {
-    var result = await FilePicker.platform.pickFiles(type: FileType.image);
+    try {
+      var result = await FilePicker.platform.pickFiles(type: FileType.image);
 
-    if (result != null && result.files.single.path != null) {
-      _image = File(result.files.single.path!);
-      setState(() {
-        _base64Image = base64Encode(_image!.readAsBytesSync());
-      });
+      if (result != null && result.files.single.path != null) {
+        _image = File(result.files.single.path!);
+        setState(() {
+          _base64Image = base64Encode(_image!.readAsBytesSync());
+        });
+      }
+    } catch (e) {
+      // Do nothing
     }
   }
 
@@ -61,6 +70,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    screenSize = MediaQuery.of(context).size;
+    containerWidth = screenSize.width;
+    containerHeight = screenSize.height;
+    textFieldWidth = containerWidth! * 0.9;
+    imageWidth = containerWidth! * 0.9;
+
     return MasterScreenWidget(
       titleWidget: const Text("My profile"),
       showBackArrow: true,
@@ -68,7 +83,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Center(
         child: SingleChildScrollView(
           child: Container(
-              width: 500,
+              width: containerWidth,
+              height: containerHeight! - 80,
               decoration: BoxDecoration(
                 color: Palette.midnightPurple.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(15),
@@ -86,67 +102,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(15),
                                 child: Image.memory(
                                   imageFromBase64String(_base64Image!),
-                                  width: 400,
-                                  height: 250,
+                                  width: imageWidth,
+                                  height: 200,
                                   fit: BoxFit.cover,
                                 )),
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Tooltip(
-                                message: "Date joined",
-                                verticalOffset: 15,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    buildCalendarIcon(18),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                        DateFormat('MMM d, y')
-                                            .format(widget.user.dateJoined!),
-                                        style: const TextStyle(fontSize: 16)),
-                                  ],
+                          SizedBox(
+                            width: screenSize.width * 0.9,
+                            child: Wrap(
+                              alignment: screenSize.width >= 256
+                                  ? WrapAlignment.spaceBetween
+                                  : WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Tooltip(
+                                  message: "Date joined",
+                                  verticalOffset: 15,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      buildCalendarIcon(18),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                          DateFormat('MMM d, y')
+                                              .format(widget.user.dateJoined!),
+                                          style: const TextStyle(fontSize: 15)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 145),
-                              FormBuilderField(
-                                name: "profilePicture",
-                                builder: (field) {
-                                  return GradientButton(
-                                      onPressed: () {
-                                        getImage();
-                                      },
-                                      width: 135,
-                                      height: 30,
-                                      borderRadius: 50,
-                                      paddingTop: 10,
-                                      paddingBottom: 10,
-                                      gradient: Palette.buttonGradient2,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(Icons.photo,
-                                              color: Palette.lightPurple),
-                                          SizedBox(width: 5),
-                                          Text("Change photo",
-                                              style: TextStyle(
-                                                  color: Palette.lightPurple)),
-                                        ],
-                                      ));
-                                },
-                              )
-                            ],
+                                FormBuilderField(
+                                  name: "profilePicture",
+                                  builder: (field) {
+                                    return GradientButton(
+                                        onPressed: () {
+                                          getImage();
+                                        },
+                                        width: 135,
+                                        height: 30,
+                                        borderRadius: 50,
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
+                                        gradient: Palette.buttonGradient2,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(Icons.photo,
+                                                color: Palette.lightPurple),
+                                            SizedBox(width: 5),
+                                            Text("Change photo",
+                                                style: TextStyle(
+                                                    color:
+                                                        Palette.lightPurple)),
+                                          ],
+                                        ));
+                                  },
+                                )
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 30),
                           MyFormBuilderTextField(
                             name: "username",
                             labelText: "Username",
                             fillColor: Palette.darkPurple,
-                            width: 400,
-                            height: 50,
+                            width: textFieldWidth,
+                            height: 43,
                             readOnly: true,
                             paddingBottom: 25,
                             borderRadius: 50,
@@ -158,8 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             name: "firstName",
                             labelText: "First name",
                             fillColor: Palette.darkPurple,
-                            width: 400,
-                            height: 50,
+                            width: textFieldWidth,
+                            height: 43,
                             paddingBottom: 25,
                             borderRadius: 50,
                             validator: FormBuilderValidators.compose([
@@ -170,8 +192,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             name: "lastName",
                             labelText: "Last name",
                             fillColor: Palette.darkPurple,
-                            width: 400,
-                            height: 50,
+                            width: textFieldWidth,
+                            height: 43,
                             paddingBottom: 25,
                             borderRadius: 50,
                             validator: FormBuilderValidators.compose([
@@ -182,8 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             name: "email",
                             labelText: "E-mail",
                             fillColor: Palette.darkPurple,
-                            width: 400,
-                            height: 50,
+                            width: textFieldWidth,
+                            height: 43,
                             borderRadius: 50,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(context),
@@ -195,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onPressed: () {
                         _saveProfileData();
                       },
-                      width: 100,
+                      width: 90,
                       height: 30,
                       borderRadius: 50,
                       paddingTop: 30,

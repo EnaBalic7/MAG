@@ -43,6 +43,7 @@ class MyMaterialApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My Anime Galaxy',
+      themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         primarySwatch: generateMaterialColor(Palette.darkPurple),
         scaffoldBackgroundColor: Palette.midnightPurple,

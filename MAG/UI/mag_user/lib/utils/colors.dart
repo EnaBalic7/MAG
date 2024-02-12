@@ -20,10 +20,6 @@ class Palette {
   static const Color listTile = Color.fromRGBO(55, 53, 102, 1);
 
   //Gradients
-  static const LinearGradient menuGradient = LinearGradient(colors: [
-    Color.fromRGBO(72, 72, 156, 0.9),
-    Color.fromRGBO(169, 87, 198, 0.9)
-  ]);
   static const LinearGradient buttonGradient = LinearGradient(colors: [
     Color.fromRGBO(155, 108, 249, 0.8),
     Color.fromRGBO(0, 255, 255, 0.8)
@@ -32,81 +28,40 @@ class Palette {
     Color.fromRGBO(0, 255, 255, 1),
     Color.fromRGBO(155, 108, 249, 1)
   ]);
-  static const LinearGradient barChartGradient = LinearGradient(
+
+  static const LinearGradient navGradient1 = LinearGradient(colors: [
+    Color.fromRGBO(155, 108, 249, 0.7),
+    Color.fromRGBO(0, 255, 255, 0.7)
+  ]);
+
+  static const LinearGradient navGradient2 = LinearGradient(
     colors: [
-      Color.fromRGBO(0, 255, 255, 1),
-      Color.fromRGBO(155, 108, 249, 1),
+      Color.fromRGBO(72, 72, 156, 0.7),
+      Color.fromRGBO(243, 137, 235, 0.7),
+      Color.fromRGBO(251, 248, 166, 0.7),
     ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
-  );
-  static const LinearGradient barChartGradient2 = LinearGradient(
-    colors: [
-      Color.fromRGBO(72, 72, 156, 1),
-      Color.fromRGBO(243, 137, 235, 1),
-      Color.fromRGBO(251, 248, 166, 1),
-    ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
   );
 
-  static const LinearGradient barChartGradient3 = LinearGradient(
+  static const LinearGradient navGradient3 = LinearGradient(
     colors: [
-      Color.fromRGBO(132, 255, 134, 1),
-      Color.fromRGBO(28, 167, 236, 1),
-      Color.fromRGBO(120, 127, 246, 1),
+      Color.fromRGBO(132, 255, 134, 0.7),
+      Color.fromRGBO(28, 167, 236, 0.7),
+      Color.fromRGBO(120, 127, 246, 0.7),
     ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
   );
 
-  static const LinearGradient barChartGradient4 = LinearGradient(
+  static const LinearGradient navGradient4 = LinearGradient(colors: [
+    Color.fromRGBO(72, 72, 156, 0.9),
+    Color.fromRGBO(169, 87, 198, 0.9)
+  ]);
+
+  static const LinearGradient navGradient5 = LinearGradient(
     colors: [
-      // Color.fromRGBO(73, 38, 248, 1),
-      Color.fromRGBO(229, 255, 100, 1),
-      Color.fromRGBO(174, 98, 255, 1),
+      Color.fromRGBO(214, 26, 176, 0.7),
+      Color.fromRGBO(236, 87, 129, 0.7),
+      Color.fromRGBO(251, 248, 166, 0.7),
     ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
   );
-
-  static const LinearGradient barChartGradient5 = LinearGradient(
-    colors: [
-      Color.fromRGBO(214, 26, 176, 1),
-      Color.fromRGBO(236, 87, 129, 1),
-      Color.fromRGBO(251, 248, 166, 1),
-    ],
-    begin: Alignment.bottomCenter,
-    end: Alignment.topCenter,
-  );
-
-  static const LinearGradient barChartGradient6 = LinearGradient(colors: [
-    Color.fromRGBO(251, 248, 166, 1),
-    Color.fromRGBO(236, 87, 129, 1),
-    Color.fromRGBO(214, 26, 176, 1),
-  ], begin: Alignment.topCenter, end: Alignment.bottomCenter);
-
-  static const LinearGradient barChartGradient7 = LinearGradient(colors: [
-    Color.fromRGBO(251, 248, 166, 1),
-    Color.fromRGBO(243, 137, 235, 1),
-    Color.fromRGBO(72, 72, 156, 1),
-  ], begin: Alignment.topCenter, end: Alignment.bottomCenter);
-
-  static List<LinearGradient> gradientList = [
-    barChartGradient2,
-    barChartGradient3,
-    barChartGradient5,
-    barChartGradient,
-    barChartGradient4
-  ];
-
-  static List<LinearGradient> gradientList2 = [
-    barChartGradient7,
-    barChartGradient3,
-    barChartGradient6,
-    barChartGradient,
-    barChartGradient4
-  ];
 
   static const LinearGradient buttonGradient2 = LinearGradient(
       colors: [Color.fromRGBO(52, 48, 110, 1), Color.fromRGBO(52, 48, 110, 1)]);

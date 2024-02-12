@@ -123,6 +123,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               height: 40,
                               paddingBottom: 25,
                               keyboardType: TextInputType.emailAddress,
+                              textCapitalization: TextCapitalization.none,
                               borderRadius: 50,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {

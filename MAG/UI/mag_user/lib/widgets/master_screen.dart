@@ -1,10 +1,10 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
 import '../models/user.dart';
 import '../providers/user_provider.dart';
-import '../screens/login_screen.dart';
 import '../screens/profile_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -28,6 +28,7 @@ class MasterScreenWidget extends StatefulWidget {
   GradientButton? gradientButton;
   bool? showProfileIcon;
   String? floatingButtonTooltip;
+
   MasterScreenWidget({
     Key? key,
     required this.child,
@@ -55,6 +56,8 @@ class MasterScreenWidget extends StatefulWidget {
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool? removeAppBar;
   late UserProvider _userProvider;
+  int _selectedIndex = 0;
+
   Map<String, bool> hoverStates = {
     'Login': false,
     'Anime': false,
@@ -101,49 +104,76 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               iconTheme: const IconThemeData(color: Palette.lightPurple));
         },
       ),
-      drawer: Drawer(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, bottom: 30),
-                  child: Image.asset('assets/images/logo.png', width: 220),
-                ),
-                /* buildListTile(
-                    context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
-                buildListTile(
-                    context, 'Users', buildUsersIcon(24), const UsersScreen()),
-                buildListTile(
-                    context, 'Reports', buildReportsIcon(24), ReportsScreen()),
-                buildListTile(
-                    context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
-                buildListTile(
-                    context, 'Help', buildHelpIcon(24), const HelpScreen()),*/
-                /*buildListTile(
-                    context,
-                    'Testing',
-                    const Icon(Icons.star_rounded, color: Palette.lightPurple),
-                    const TestingGround()),*/
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: buildListTile(
-                  context,
-                  'Log out',
-                  const Icon(
-                    Icons.logout_rounded,
-                    color: Palette.lightPurple,
-                  ),
-                  LoginScreen()),
-            )
-          ])),
+      bottomNavigationBar: ResponsiveNavigationBar(
+        backgroundColor: Palette.darkPurple,
+        textStyle: const TextStyle(
+          color: Palette.white,
+          fontWeight: FontWeight.w500,
+        ),
+        outerPadding: const EdgeInsets.all(0),
+        borderRadius: 0,
+        borderRadiusItem: 50,
+        selectedIndex: _selectedIndex,
+        onTabChange: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        navigationBarButtons: const <NavigationBarButton>[
+          NavigationBarButton(
+            text: 'Home',
+            icon: Icons.people,
+            backgroundGradient: Palette.navGradient1,
+          ),
+          NavigationBarButton(
+            text: 'My Nebula',
+            icon: Icons.star,
+            backgroundGradient: Palette.navGradient2,
+          ),
+          NavigationBarButton(
+            text: 'Explore',
+            icon: Icons.settings,
+            backgroundGradient: Palette.navGradient3,
+          ),
+          NavigationBarButton(
+            text: 'Constellation',
+            icon: Icons.star,
+            backgroundGradient: Palette.navGradient4,
+          ),
+          NavigationBarButton(
+            text: 'Clubs',
+            icon: Icons.settings,
+            backgroundGradient: Palette.navGradient5,
+          ),
+        ],
+      )
+
+      /*BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          backgroundColor: Palette.darkPurple,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Palette.teal,
+          unselectedItemColor: Palette.lightPurple,
+          selectedIconTheme: const IconThemeData(color: Palette.teal),
+          unselectedIconTheme: const IconThemeData(color: Palette.lightPurple),
+          elevation: 15,
+          onTap: (int index) {
+            setState(() {
+              _selectedIndex =
+                  index; // Update the selected index when an item is tapped
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(
+                label: "Home", icon: Icon(Icons.headphones)),
+            BottomNavigationBarItem(
+                label: "Earth", icon: Icon(Icons.headphones))
+          ])*/
+      ,
       body: Stack(children: [
         Positioned.fill(
           child: Opacity(
-            opacity: 0.1,
+            opacity: 0.3,
             child: Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
           ),
         ),
@@ -168,7 +198,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           height: 90,
           borderRadius: 100,
           onPressed: widget.floatingButtonOnPressed,
-          gradient: Palette.menuGradient,
+          gradient: Palette.navGradient4,
           child: widget.floatingActionButtonIcon ??
               const Icon(Icons.add_rounded,
                   size: 48, color: Palette.lightPurple)),
@@ -223,50 +253,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             color: Palette.lightPurple,
           ));
     } else {
-      return Builder(
-          builder: (context) => IconButton(
-                icon: const Icon(Icons.menu_rounded),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ));
+      return Container();
     }
-  }
-
-  MouseRegion buildListTile(
-      BuildContext context, String title, Widget leading, Widget screen) {
-    return MouseRegion(
-      onEnter: (event) => setState(() {
-        hoverStates[title] = true;
-      }),
-      onExit: (event) => setState(() {
-        hoverStates[title] = false;
-      }),
-      child: Container(
-        decoration: BoxDecoration(
-            gradient:
-                (hoverStates[title] == true) ? Palette.menuGradient : null,
-            borderRadius: BorderRadius.circular(50)),
-        child: ListTile(
-          title: Text(title, style: const TextStyle(fontSize: 16)),
-          leading: leading,
-          onTap: () {
-            if (title == 'Log out') {
-              Authorization.username = "";
-              Authorization.password = "";
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => screen,
-                ),
-              );
-            } else {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => screen,
-                ),
-              );
-            }
-          },
-        ),
-      ),
-    );
   }
 }

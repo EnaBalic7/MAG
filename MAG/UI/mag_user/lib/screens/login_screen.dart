@@ -61,6 +61,7 @@ class LoginScreen extends StatelessWidget {
                         fillColor: Palette.textFieldPurple.withOpacity(0.5),
                         obscureText: false,
                         width: textFieldWidth,
+                        textCapitalization: TextCapitalization.sentences,
                         height: 38,
                         borderRadius: 50,
                         controller: _usernameController),
@@ -86,32 +87,10 @@ class LoginScreen extends StatelessWidget {
 
                           try {
                             await _animeProvider.get();
-                            var admin = await _userProvider.get(filter: {
-                              "RolesIncluded": "true",
-                              "Username": username
-                            });
-                            List<UserRole> userRoles =
-                                admin.result.first.userRoles!;
 
-                            if (userRoles
-                                .any((userRole) => userRole.roleId == 1)) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const TestScreen()));
-                            } else {
-                              showInfoDialog(
-                                  context,
-                                  const Icon(Icons.warning_rounded,
-                                      color: Palette.lightRed, size: 55),
-                                  const SizedBox(
-                                    width: 300,
-                                    child: Text(
-                                      "User is registered but does not have administrator privileges.",
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ));
-                            }
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const TestScreen()));
                           } on Exception catch (e) {
                             showInfoDialog(
                                 context,
