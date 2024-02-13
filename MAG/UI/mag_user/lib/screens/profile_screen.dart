@@ -80,11 +80,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       titleWidget: const Text("My profile"),
       showBackArrow: true,
       showProfileIcon: false,
+      showNavBar: false,
       child: Center(
         child: SingleChildScrollView(
           child: Container(
               width: containerWidth,
-              height: containerHeight! - 80,
+              height: containerHeight! - (containerHeight! * 0.112),
               decoration: BoxDecoration(
                 color: Palette.midnightPurple.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(15),

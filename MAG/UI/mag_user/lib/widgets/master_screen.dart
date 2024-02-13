@@ -1,5 +1,7 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:mag_user/screens/nebula_screen.dart';
+import 'package:mag_user/screens/test_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
@@ -28,6 +30,10 @@ class MasterScreenWidget extends StatefulWidget {
   GradientButton? gradientButton;
   bool? showProfileIcon;
   String? floatingButtonTooltip;
+  bool? showTabBar;
+  TabController? tabController;
+  List<Widget>? tabs;
+  bool? showNavBar;
 
   MasterScreenWidget({
     Key? key,
@@ -47,6 +53,10 @@ class MasterScreenWidget extends StatefulWidget {
     this.floatingButtonOnPressed,
     this.showProfileIcon = true,
     this.floatingButtonTooltip,
+    this.showTabBar = false,
+    this.tabController,
+    this.tabs,
+    this.showNavBar = true,
   }) : super(key: key);
 
   @override
@@ -58,15 +68,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   late UserProvider _userProvider;
   int _selectedIndex = 0;
 
-  Map<String, bool> hoverStates = {
-    'Login': false,
-    'Anime': false,
-    'Users': false,
-    'Analytics': false,
-    'Clubs': false,
-    'Help': false
-  };
-
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
@@ -75,9 +76,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    double appBarHeight = (widget.showTabBar == true)
+        ? screenSize.height * 0.12
+        : screenSize.height * 0.08;
+
     return Scaffold(
       floatingActionButton: _buildFloatingActionButton(),
       appBar: AppBarWithSearchSwitch(
+        toolbarHeight: appBarHeight,
         //closeOnSubmit: false,
         onSubmitted: widget.onSubmitted,
         onClosed: widget.onClosed,
@@ -98,78 +105,16 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         iconTheme: const IconThemeData(color: Palette.lightPurple),
         appBarBuilder: (context) {
           return AppBar(
-              leading: _buildLeading(context),
-              title: widget.titleWidget ?? Text(widget.title ?? ""),
-              actions: _buildActions,
-              iconTheme: const IconThemeData(color: Palette.lightPurple));
+            centerTitle: true,
+            leading: _buildLeading(context),
+            title: widget.titleWidget ?? Text(widget.title ?? ""),
+            actions: _buildActions,
+            iconTheme: const IconThemeData(color: Palette.lightPurple),
+            bottom: _buildTabBar(),
+          );
         },
       ),
-      bottomNavigationBar: ResponsiveNavigationBar(
-        backgroundColor: Palette.darkPurple,
-        textStyle: const TextStyle(
-          color: Palette.white,
-          fontWeight: FontWeight.w500,
-        ),
-        outerPadding: const EdgeInsets.all(0),
-        borderRadius: 0,
-        borderRadiusItem: 50,
-        selectedIndex: _selectedIndex,
-        onTabChange: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        navigationBarButtons: const <NavigationBarButton>[
-          NavigationBarButton(
-            text: 'Home',
-            icon: Icons.people,
-            backgroundGradient: Palette.navGradient1,
-          ),
-          NavigationBarButton(
-            text: 'My Nebula',
-            icon: Icons.star,
-            backgroundGradient: Palette.navGradient2,
-          ),
-          NavigationBarButton(
-            text: 'Explore',
-            icon: Icons.settings,
-            backgroundGradient: Palette.navGradient3,
-          ),
-          NavigationBarButton(
-            text: 'Constellation',
-            icon: Icons.star,
-            backgroundGradient: Palette.navGradient4,
-          ),
-          NavigationBarButton(
-            text: 'Clubs',
-            icon: Icons.settings,
-            backgroundGradient: Palette.navGradient5,
-          ),
-        ],
-      )
-
-      /*BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          backgroundColor: Palette.darkPurple,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Palette.teal,
-          unselectedItemColor: Palette.lightPurple,
-          selectedIconTheme: const IconThemeData(color: Palette.teal),
-          unselectedIconTheme: const IconThemeData(color: Palette.lightPurple),
-          elevation: 15,
-          onTap: (int index) {
-            setState(() {
-              _selectedIndex =
-                  index; // Update the selected index when an item is tapped
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(
-                label: "Home", icon: Icon(Icons.headphones)),
-            BottomNavigationBarItem(
-                label: "Earth", icon: Icon(Icons.headphones))
-          ])*/
-      ,
+      bottomNavigationBar: _buildNavigationBar(),
       body: Stack(children: [
         Positioned.fill(
           child: Opacity(
@@ -183,6 +128,95 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         )
       ]),
     );
+  }
+
+  ResponsiveNavigationBar? _buildNavigationBar() {
+    return (widget.showNavBar == true)
+        ? ResponsiveNavigationBar(
+            backgroundColor: Palette.darkPurple,
+            backgroundOpacity: 1,
+            activeIconColor: Palette.white,
+            inactiveIconColor: Palette.lightPurple,
+            fontSize: 25,
+            padding: const EdgeInsets.all(4),
+            showActiveButtonText: false,
+            textStyle: const TextStyle(
+              color: Palette.white,
+              fontWeight: FontWeight.w500,
+            ),
+            outerPadding: const EdgeInsets.all(0),
+            borderRadius: 0,
+            borderRadiusItem: 50,
+            selectedIndex: _selectedIndex,
+            onTabChange: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+
+              if (_selectedIndex == 0) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const TestScreen(),
+                  ),
+                );
+              } else if (_selectedIndex == 1) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const NebulaScreen(),
+                  ),
+                );
+              }
+            },
+            navigationBarButtons: <NavigationBarButton>[
+              NavigationBarButton(
+                text: 'Home',
+                icon: buildEarthIcon(returnIconData: true),
+                backgroundGradient: Palette.navGradient1,
+              ),
+              NavigationBarButton(
+                text: 'My Nebula',
+                icon: buildNebulaIcon(returnIconData: true),
+                backgroundGradient: Palette.navGradient2,
+              ),
+              NavigationBarButton(
+                text: 'Explore',
+                icon: buildExploreIcon(returnIconData: true),
+                backgroundGradient: Palette.navGradient3,
+                padding: const EdgeInsets.all(10),
+              ),
+              NavigationBarButton(
+                text: 'Constellation',
+                icon: buildConstellationIcon(returnIconData: true),
+                backgroundGradient: Palette.navGradient4,
+                padding: const EdgeInsets.only(
+                    right: 31, left: 10, top: 10, bottom: 10),
+              ),
+              NavigationBarButton(
+                text: 'Clubs',
+                icon: buildClubsIcon(returnIconData: true),
+                backgroundGradient: Palette.navGradient5,
+              ),
+            ],
+          )
+        : null;
+  }
+
+  TabBar? _buildTabBar() {
+    return (widget.showTabBar == true)
+        ? TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
+            controller: widget.tabController,
+            labelColor: Palette.white,
+            unselectedLabelColor: Palette.lightPurple,
+            labelPadding: EdgeInsets.all(5),
+            tabs: widget.tabs ?? [],
+            indicator: const BoxDecoration(
+                gradient: Palette.navGradient4,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50))),
+          )
+        : null;
   }
 
   Widget _buildFloatingActionButton() {

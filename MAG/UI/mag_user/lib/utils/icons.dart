@@ -83,7 +83,10 @@ Icon buildHelpIcon(double size) {
       color: Palette.lightPurple, size: size);
 }
 
-Icon buildClubsIcon(double size) {
+dynamic buildClubsIcon({double? size, bool? returnIconData}) {
+  if (returnIconData == true && size == null) {
+    return const IconData(0xe900, fontFamily: 'icomoon');
+  }
   return Icon(const IconData(0xe900, fontFamily: 'icomoon'),
       color: Palette.lightPurple, size: size);
 }
@@ -241,5 +244,76 @@ Icon buildCrownIcon(double size, {Color? color}) {
     const IconData(0xe932, fontFamily: 'icomoon'),
     color: color ?? Palette.starYellow,
     size: size,
+  );
+}
+
+buildLogoutIcon(double size) {
+  return Icon(
+    const IconData(0xe951, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.lightPurple,
+  );
+}
+
+buildNebulaIcon({double? size, bool? returnIconData}) {
+  if (returnIconData == true && size == null) {
+    return const IconData(0xe937, fontFamily: 'icomoon');
+  }
+  return Icon(
+    const IconData(0xe933, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.lightPurple,
+  );
+}
+
+buildEarthIcon({double? size, bool? returnIconData}) {
+  if (returnIconData == true && size == null) {
+    return const IconData(0xe934, fontFamily: 'icomoon');
+  }
+
+  return Icon(
+    const IconData(0xe934, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.lightPurple,
+  );
+}
+
+buildExploreIcon({double? size, bool? returnIconData}) {
+  if (returnIconData == true && size == null) {
+    return const IconData(0xe935, fontFamily: 'icomoon');
+  }
+
+  return Icon(
+    const IconData(0xe935, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.lightPurple,
+  );
+}
+
+buildSparklePlusIcon(double size) {
+  return Icon(
+    const IconData(0xe936, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.starYellow,
+  );
+}
+
+buildConstellationIcon({double? size, bool? returnIconData}) {
+  if (returnIconData == true && size == null) {
+    return const IconData(0xe953, fontFamily: 'icomoon');
+  }
+
+  return Icon(
+    const IconData(0xe937, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.lightPurple,
+  );
+}
+
+buildOutlinedStarIcon(double size) {
+  return Icon(
+    const IconData(0xe952, fontFamily: 'icomoon'),
+    size: size,
+    color: Palette.lightPurple,
   );
 }
