@@ -34,6 +34,7 @@ class MasterScreenWidget extends StatefulWidget {
   TabController? tabController;
   List<Widget>? tabs;
   bool? showNavBar;
+  int? selectedIndex;
 
   MasterScreenWidget({
     Key? key,
@@ -57,6 +58,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.tabController,
     this.tabs,
     this.showNavBar = true,
+    this.selectedIndex,
   }) : super(key: key);
 
   @override
@@ -147,24 +149,38 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             outerPadding: const EdgeInsets.all(0),
             borderRadius: 0,
             borderRadiusItem: 50,
-            selectedIndex: _selectedIndex,
+            selectedIndex: (widget.selectedIndex != null)
+                ? widget.selectedIndex!
+                : _selectedIndex,
             onTabChange: (index) {
               setState(() {
+                widget.selectedIndex = index;
                 _selectedIndex = index;
               });
 
-              if (_selectedIndex == 0) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const TestScreen(),
-                  ),
-                );
-              } else if (_selectedIndex == 1) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const NebulaScreen(),
-                  ),
-                );
+              switch (index) {
+                case 0:
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => TestScreen(selectedIndex: index)));
+                  break;
+                case 1:
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => NebulaScreen(selectedIndex: index)));
+                  break;
+                case 2:
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => TestScreen(selectedIndex: index)));
+                  break;
+                case 3:
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => NebulaScreen(
+                            selectedIndex: index,
+                          )));
+                  break;
+                case 4:
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (_) => TestScreen(selectedIndex: index)));
+                  break;
               }
             },
             navigationBarButtons: <NavigationBarButton>[

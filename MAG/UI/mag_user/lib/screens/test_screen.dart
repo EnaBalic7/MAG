@@ -4,7 +4,8 @@ import 'package:mag_user/widgets/master_screen.dart';
 import '../utils/colors.dart';
 
 class TestScreen extends StatefulWidget {
-  const TestScreen({Key? key}) : super(key: key);
+  final int selectedIndex;
+  TestScreen({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<TestScreen> createState() => _TestScreenState();
@@ -24,6 +25,7 @@ class _TestScreenState extends State<TestScreen>
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      selectedIndex: widget.selectedIndex,
       showTabBar: true,
       tabController: _tabController,
       title: "Home",
