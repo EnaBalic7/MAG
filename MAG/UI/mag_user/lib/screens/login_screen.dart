@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/test_screen.dart';
+import 'package:mag_user/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/registration_screen.dart';
@@ -91,7 +91,7 @@ class LoginScreen extends StatelessWidget {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        TestScreen(selectedIndex: 0)));
+                                        HomeScreen(selectedIndex: 0)));
                           } on Exception catch (e) {
                             showInfoDialog(
                                 context,

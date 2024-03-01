@@ -1,7 +1,10 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:mag_user/screens/clubs_screen.dart';
+import 'package:mag_user/screens/constellation_screen.dart';
+import 'package:mag_user/screens/explore_screen.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
-import 'package:mag_user/screens/test_screen.dart';
+import 'package:mag_user/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
@@ -161,7 +164,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               switch (index) {
                 case 0:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => TestScreen(selectedIndex: index)));
+                      builder: (_) => HomeScreen(selectedIndex: index)));
                   break;
                 case 1:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -169,17 +172,17 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   break;
                 case 2:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => TestScreen(selectedIndex: index)));
+                      builder: (_) => ExploreScreen(selectedIndex: index)));
                   break;
                 case 3:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => NebulaScreen(
+                      builder: (_) => ConstellationScreen(
                             selectedIndex: index,
                           )));
                   break;
                 case 4:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => TestScreen(selectedIndex: index)));
+                      builder: (_) => ClubsScreen(selectedIndex: index)));
                   break;
               }
             },

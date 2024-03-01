@@ -8,6 +8,7 @@ class MyPaginationButtons extends StatefulWidget {
   int totalItems;
   Future<void> Function(int) fetchPage;
   Widget? noResults;
+  bool? hasSearch;
   MyPaginationButtons({
     Key? key,
     required this.page,
@@ -15,6 +16,7 @@ class MyPaginationButtons extends StatefulWidget {
     required this.totalItems,
     required this.fetchPage,
     this.noResults,
+    required this.hasSearch,
   }) : super(key: key);
 
   @override
@@ -64,6 +66,9 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
   }
 
   Widget _buildNoResults() {
+    if (widget.hasSearch == false) {
+      return Container();
+    }
     if (widget.noResults != null) {
       return Visibility(
         visible: widget.totalItems <= 0,
