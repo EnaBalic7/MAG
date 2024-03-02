@@ -168,3 +168,13 @@ bool isValidEmail(String text) {
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   ).hasMatch(text);
 }
+
+String extractVideoId(String videoLink) {
+  if (videoLink.contains('youtu.be/')) {
+    List<String> parts = videoLink.split('youtu.be/');
+    if (parts.length >= 2) {
+      return parts[1];
+    }
+  }
+  return '';
+}
