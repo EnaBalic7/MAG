@@ -10,6 +10,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
+import 'anime_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final int selectedIndex;
@@ -141,44 +142,158 @@ class _HomeScreenState extends State<HomeScreen>
     return Container(
         width: cardWidth,
         height: cardHeight,
-        margin: const EdgeInsets.only(top: 20, left: 7, right: 7, bottom: 0),
+        margin: const EdgeInsets.only(top: 7, left: 7, right: 7, bottom: 7),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              child: Image.network(
-                anime.imageUrl!,
-                width: cardWidth,
-                height: cardHeight * 0.85,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
+            Stack(children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AnimeDetailScreen(
+                            anime: anime,
+                            selectedIndex: widget.selectedIndex,
+                          )));
+                },
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15)),
+                  child: Image.network(
+                    anime.imageUrl!,
+                    width: cardWidth,
+                    height: cardHeight * 0.85,
+                    fit: BoxFit.cover,
                     alignment: Alignment.center,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: cardHeight * 0.75,
+                child: SizedBox(
+                  width: cardWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          width: cardWidth * 0.28,
+                          height: cardHeight * 0.1,
+                          decoration: BoxDecoration(
+                            color: Palette.darkPurple.withOpacity(0.8),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4),
+                                topRight: Radius.circular(4)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 1.5, left: 1, right: 1),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                buildStarIcon(16),
+                                const Text("7.14",
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: Palette.starYellow))
+                              ],
+                            ),
+                          )),
+                      GestureDetector(
+                        onTap: () {
+                          showInfoDialog(context, Text("Star~"),
+                              Text("You clicked on Trailing star!"));
+                        },
+                        child: Container(
+                            width: cardWidth * 0.28,
+                            height: cardHeight * 0.1,
+                            decoration: BoxDecoration(
+                              color: Palette.darkPurple.withOpacity(0.8),
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 1.5, left: 1, right: 1),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  buildStarTrailIcon(22),
+                                ],
+                              ),
+                            )),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          showInfoDialog(context, Text("Nebula~"),
+                              Text("You clicked on Nebula!"));
+                        },
+                        child: Container(
+                            width: cardWidth * 0.28,
+                            height: cardHeight * 0.1,
+                            decoration: BoxDecoration(
+                              color: Palette.darkPurple.withOpacity(0.8),
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 1.5, left: 1, right: 1),
+                              child: Stack(
+                                alignment: AlignmentDirectional.center,
+                                children: [
+                                  Positioned(
+                                    left: 8,
+                                    child: buildNebulaIcon(
+                                        size: 20, returnIconData: false),
+                                  ),
+                                  Positioned(
+                                    left: 22,
+                                    child: buildSparklePlusIcon(12),
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AnimeDetailScreen(
+                          anime: anime,
+                          selectedIndex: widget.selectedIndex,
+                        )));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
                           bottom: 0, left: 8, right: 8, top: 10),
-                      child: Text(
-                        anime.titleEn!,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          anime.titleEn!,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ));

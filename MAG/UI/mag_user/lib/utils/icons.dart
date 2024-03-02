@@ -260,7 +260,7 @@ buildNebulaIcon({double? size, bool? returnIconData}) {
     return const IconData(0xe937, fontFamily: 'icomoon');
   }
   return Icon(
-    const IconData(0xe933, fontFamily: 'icomoon'),
+    const IconData(0xe937, fontFamily: 'icomoon'),
     size: size,
     color: Palette.lightPurple,
   );
