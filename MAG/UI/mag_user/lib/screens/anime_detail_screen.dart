@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/models/club.dart';
 import 'package:mag_user/providers/genre_provider.dart';
+import 'package:mag_user/screens/video_screen.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/master_screen.dart';
 import 'package:orientation/orientation.dart';
@@ -32,6 +35,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late GenreProvider _genreProvider;
   late Future<SearchResult<Genre>> _genreFuture;
   late YoutubePlayerController _youtubePlayerController;
+  late ValueNotifier<int> playbackPosition;
+  late ValueNotifier<bool> isPlaying;
+  late Timer _progressTimer;
 
   @override
   void initState() {
@@ -41,21 +47,26 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     String videoLink = "${widget.anime.trailerUrl}";
     String videoId = extractVideoId(videoLink);
 
+    playbackPosition = ValueNotifier<int>(0);
+    isPlaying = ValueNotifier<bool>(false);
+
     _youtubePlayerController = YoutubePlayerController(
       initialVideoId: videoId,
       flags: YoutubePlayerFlags(
-        autoPlay: false,
+        autoPlay: isPlaying.value,
       ),
     );
 
-    // Locks orientation to landscape when entering full-screen
-    _youtubePlayerController.addListener(() {
-      if (_youtubePlayerController.value.isFullScreen) {
-        OrientationPlugin.forceOrientation(DeviceOrientation.landscapeRight);
-      }
+    _progressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      updateVideoProgress();
     });
 
     super.initState();
+  }
+
+  void updateVideoProgress() {
+    playbackPosition.value = _youtubePlayerController.value.position.inSeconds;
+    isPlaying.value = _youtubePlayerController.value.isPlaying;
   }
 
   @override
@@ -118,14 +129,69 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             controller: _youtubePlayerController,
             showVideoProgressIndicator: true,
             progressIndicatorColor: Colors.red,
-            progressColors: ProgressBarColors(
+            progressColors: const ProgressBarColors(
               playedColor: Colors.red,
               handleColor: Colors.redAccent,
             ),
+            bottomActions: [
+              CurrentPosition(),
+              ProgressBar(
+                isExpanded: true,
+                colors: const ProgressBarColors(
+                  playedColor: Colors.red,
+                  handleColor: Colors.redAccent,
+                ),
+              ),
+              RemainingDuration(),
+              GestureDetector(
+                  onTap: () {
+                    _youtubePlayerController.pause();
+                    _enterFullScreen();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Icon(Icons.fullscreen_rounded,
+                        color: Palette.white, size: 30),
+                  ))
+            ],
           ),
         ),
       ),
     );
+  }
+
+  void _enterFullScreen() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+
+    String videoLink = "${widget.anime.trailerUrl}";
+    String videoId = extractVideoId(videoLink);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VideoScreen(
+                  videoId: videoId,
+                  playbackPosition: playbackPosition,
+                  isPlaying: isPlaying,
+                ))).then((value) {
+      setState(() {
+        playbackPosition.value = value[0];
+        isPlaying.value = value[1];
+      });
+      print(
+          "playbackPosition: ${playbackPosition.value}\n isPlaying: ${isPlaying.value}");
+    });
+  }
+
+  @override
+  void dispose() {
+    _youtubePlayerController.dispose();
+    playbackPosition.dispose();
+    _progressTimer.cancel();
+    super.dispose();
   }
 
   Widget _buildSynopsis() {
