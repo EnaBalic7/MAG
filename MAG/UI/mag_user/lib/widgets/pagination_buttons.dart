@@ -38,6 +38,12 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary:
+                          Color.fromRGBO(140, 131, 215, 1).withOpacity(0.7),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                    ),
                     onPressed: widget.page > 0
                         ? () => widget.fetchPage(widget.page - 1)
                         : null,
@@ -49,6 +55,10 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Palette.textFieldPurple.withOpacity(0.7),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50))),
                     onPressed: widget.page + 1 ==
                             (widget.totalItems / widget.pageSize).ceil()
                         ? null

@@ -10,12 +10,14 @@ class VideoScreen extends StatefulWidget {
   final String videoId;
   ValueNotifier<int> playbackPosition;
   late ValueNotifier<bool> isPlaying;
+  final Function(int position, bool isPlaying) updatePlaybackStatus;
 
   VideoScreen({
     Key? key,
     required this.videoId,
     required this.playbackPosition,
     required this.isPlaying,
+    required this.updatePlaybackStatus,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,6 @@ class VideoScreen extends StatefulWidget {
 
 class _VideoScreenState extends State<VideoScreen> {
   late YoutubePlayerController controller;
-  late Timer _progressTimer;
 
   @override
   void initState() {
@@ -36,11 +37,19 @@ class _VideoScreenState extends State<VideoScreen> {
       ),
     );
 
-    _progressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      updateVideoProgress();
-    });
+    controller.addListener(_updatePlaybackPosition);
 
     super.initState();
+  }
+
+  void _updatePlaybackPosition() {
+    widget.playbackPosition.value = controller.value.position.inSeconds;
+    widget.isPlaying.value = controller.value.isPlaying;
+
+    widget.updatePlaybackStatus(
+      widget.playbackPosition.value,
+      widget.isPlaying.value,
+    );
   }
 
   void updateVideoProgress() {
@@ -50,56 +59,67 @@ class _VideoScreenState extends State<VideoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: YoutubePlayer(
-          controller: controller,
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: Colors.red,
-          progressColors: const ProgressBarColors(
-            playedColor: Colors.red,
-            handleColor: Colors.redAccent,
-          ),
-          bottomActions: [
-            CurrentPosition(),
-            ProgressBar(
-              isExpanded: true,
-              colors: const ProgressBarColors(
-                playedColor: Colors.red,
-                handleColor: Colors.redAccent,
-              ),
+    return WillPopScope(
+      onWillPop: () async {
+        // If it returns false, user can't go back using device navigation
+        _leaveFullScreen();
+        return true;
+      },
+      child: Scaffold(
+        body: Center(
+          child: YoutubePlayer(
+            controller: controller,
+            showVideoProgressIndicator: true,
+            progressIndicatorColor: Colors.red,
+            progressColors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
             ),
-            RemainingDuration(),
-            GestureDetector(
-                onTap: () {
-                  _leaveFullScreen();
-                },
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 8, right: 8),
-                  child: Icon(Icons.fullscreen_exit_rounded,
-                      color: Palette.white, size: 36),
-                ))
-          ],
+            bottomActions: [
+              CurrentPosition(),
+              ProgressBar(
+                isExpanded: true,
+                colors: const ProgressBarColors(
+                  playedColor: Colors.red,
+                  handleColor: Colors.redAccent,
+                ),
+              ),
+              RemainingDuration(),
+              GestureDetector(
+                  onTap: () {
+                    _leaveFullScreen();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 8, right: 8),
+                    child: Icon(Icons.fullscreen_exit_rounded,
+                        color: Palette.white, size: 36),
+                  ))
+            ],
+          ),
         ),
       ),
     );
   }
 
   void _leaveFullScreen() {
-    controller.pause();
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
 
-    Navigator.of(context)
-        .pop([controller.value.position.inSeconds, controller.value.isPlaying]);
+    int position = controller.value.position.inSeconds;
+    bool isPlaying = controller.value.isPlaying;
+
+    Navigator.of(context).pop([
+      position,
+      isPlaying,
+    ]);
+
+    controller.pause();
   }
 
   @override
   void dispose() {
     controller.dispose();
-    _progressTimer.cancel();
     super.dispose();
   }
 }

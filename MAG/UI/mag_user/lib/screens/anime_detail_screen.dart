@@ -37,7 +37,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late YoutubePlayerController _youtubePlayerController;
   late ValueNotifier<int> playbackPosition;
   late ValueNotifier<bool> isPlaying;
-  late Timer _progressTimer;
 
   @override
   void initState() {
@@ -57,11 +56,17 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       ),
     );
 
-    _progressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      updateVideoProgress();
-    });
+    // When entering fullscreen playback continues from where it left off
+    _youtubePlayerController.addListener(updateVideoProgress);
 
     super.initState();
+  }
+
+  void _updatePlaybackStatus(int position, bool isPlaying) {
+    setState(() {
+      playbackPosition.value = position;
+      this.isPlaying.value = isPlaying;
+    });
   }
 
   void updateVideoProgress() {
@@ -77,6 +82,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     return MasterScreenWidget(
         selectedIndex: widget.selectedIndex,
         showNavBar: false,
+        showProfileIcon: false,
         showBackArrow: true,
         title: "Anime details",
         child: Center(
@@ -120,39 +126,63 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   }
 
   Widget _buildTrailer() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: YoutubePlayer(
-            controller: _youtubePlayerController,
-            showVideoProgressIndicator: true,
-            progressIndicatorColor: Colors.red,
-            progressColors: const ProgressBarColors(
-              playedColor: Colors.red,
-              handleColor: Colors.redAccent,
-            ),
-            bottomActions: [
-              CurrentPosition(),
-              ProgressBar(
-                isExpanded: true,
-                colors: const ProgressBarColors(
-                  playedColor: Colors.red,
-                  handleColor: Colors.redAccent,
+    final Size screenSize = MediaQuery.of(context).size;
+
+    return Visibility(
+      visible: widget.anime.trailerUrl != "",
+      child: Center(
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 10),
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Text("Trailer",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: ValueListenableBuilder<int>(
+                  valueListenable: playbackPosition,
+                  builder: (context, position, _) {
+                    //print("Playback position: $position");
+                    // Widget tree that depends on playbackPosition
+                    return YoutubePlayer(
+                      width: screenSize.width,
+                      controller: _youtubePlayerController,
+                      showVideoProgressIndicator: true,
+                      progressIndicatorColor: Colors.red,
+                      progressColors: const ProgressBarColors(
+                        playedColor: Colors.red,
+                        handleColor: Colors.redAccent,
+                      ),
+                      bottomActions: [
+                        CurrentPosition(),
+                        ProgressBar(
+                          isExpanded: true,
+                          colors: const ProgressBarColors(
+                            playedColor: Colors.red,
+                            handleColor: Colors.redAccent,
+                          ),
+                        ),
+                        RemainingDuration(),
+                        GestureDetector(
+                            onTap: () {
+                              _youtubePlayerController.pause();
+                              _enterFullScreen();
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Icon(Icons.fullscreen_rounded,
+                                  color: Palette.white, size: 30),
+                            ))
+                      ],
+                    );
+                  },
                 ),
               ),
-              RemainingDuration(),
-              GestureDetector(
-                  onTap: () {
-                    _youtubePlayerController.pause();
-                    _enterFullScreen();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Icon(Icons.fullscreen_rounded,
-                        color: Palette.white, size: 30),
-                  ))
             ],
           ),
         ),
@@ -176,13 +206,18 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   videoId: videoId,
                   playbackPosition: playbackPosition,
                   isPlaying: isPlaying,
+                  updatePlaybackStatus: _updatePlaybackStatus,
                 ))).then((value) {
-      setState(() {
-        playbackPosition.value = value[0];
-        isPlaying.value = value[1];
-      });
-      print(
-          "playbackPosition: ${playbackPosition.value}\n isPlaying: ${isPlaying.value}");
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+      _youtubePlayerController.seekTo(Duration(seconds: value[0]));
+
+      if (value[1] == true) {
+        _youtubePlayerController.play();
+      } else if (value[1] == false) {
+        _youtubePlayerController.pause();
+      }
     });
   }
 
@@ -190,7 +225,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   void dispose() {
     _youtubePlayerController.dispose();
     playbackPosition.dispose();
-    _progressTimer.cancel();
+
     super.dispose();
   }
 

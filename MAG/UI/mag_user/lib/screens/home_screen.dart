@@ -43,7 +43,18 @@ class _HomeScreenState extends State<HomeScreen>
       "PageSize": "$pageSize"
     });
 
+    setTotalItems();
+
     super.initState();
+  }
+
+  void setTotalItems() async {
+    var animeResult = await _animeFuture;
+    if (mounted) {
+      setState(() {
+        totalItems = animeResult.count;
+      });
+    }
   }
 
   @override
