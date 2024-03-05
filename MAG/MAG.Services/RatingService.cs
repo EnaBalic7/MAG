@@ -44,6 +44,11 @@ namespace MAG.Services
                 query = query.OrderByDescending(x => x.DateAdded);
             }
 
+            if (search?.TakeItems != null)
+            {
+                query = query.Take((int)search.TakeItems);
+            }
+
             return base.AddFilter(query, search);
         }
     }

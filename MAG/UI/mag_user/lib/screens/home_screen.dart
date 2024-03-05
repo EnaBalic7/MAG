@@ -150,163 +150,189 @@ class _HomeScreenState extends State<HomeScreen>
     final Size screenSize = MediaQuery.of(context).size;
     double? cardWidth = screenSize.width * 0.44;
     double? cardHeight = screenSize.height * 0.3;
+
+    double topPadding = cardHeight * 0.1 < 23.4 ? 10 : 0;
+
     return Container(
-        width: cardWidth,
-        height: cardHeight,
-        margin: const EdgeInsets.only(top: 7, left: 7, right: 7, bottom: 7),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
-        child: Column(
-          children: [
-            Stack(children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+      width: cardWidth,
+      height: cardHeight,
+      margin: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Palette.darkPurple,
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AnimeDetailScreen(
-                            anime: anime,
-                            selectedIndex: widget.selectedIndex,
-                          )));
-                },
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
+                        anime: anime,
+                        selectedIndex: widget.selectedIndex,
+                      ),
+                    ));
+                  },
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15)),
-                  child: Image.network(
-                    anime.imageUrl!,
-                    width: cardWidth,
-                    height: cardHeight * 0.85,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: cardHeight * 0.75,
-                child: SizedBox(
-                  width: cardWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width: cardWidth * 0.28,
-                          height: cardHeight * 0.1,
-                          decoration: BoxDecoration(
-                            color: Palette.darkPurple.withOpacity(0.8),
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4),
-                                topRight: Radius.circular(4)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 1.5, left: 1, right: 1),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                buildStarIcon(16),
-                                const Text("7.14",
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: Palette.starYellow))
-                              ],
-                            ),
-                          )),
-                      GestureDetector(
-                        onTap: () {
-                          showInfoDialog(context, Text("Star~"),
-                              Text("You clicked on Trailing star!"));
-                        },
-                        child: Container(
-                            width: cardWidth * 0.28,
-                            height: cardHeight * 0.1,
-                            decoration: BoxDecoration(
-                              color: Palette.darkPurple.withOpacity(0.8),
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  topRight: Radius.circular(4)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 1.5, left: 1, right: 1),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  buildStarTrailIcon(22),
-                                ],
-                              ),
-                            )),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showInfoDialog(context, Text("Nebula~"),
-                              Text("You clicked on Nebula!"));
-                        },
-                        child: Container(
-                            width: cardWidth * 0.28,
-                            height: cardHeight * 0.1,
-                            decoration: BoxDecoration(
-                              color: Palette.darkPurple.withOpacity(0.8),
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  topRight: Radius.circular(4)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 1.5, left: 1, right: 1),
-                              child: Stack(
-                                alignment: AlignmentDirectional.center,
-                                children: [
-                                  Positioned(
-                                    left: 8,
-                                    child: buildNebulaIcon(
-                                        size: 20, returnIconData: false),
-                                  ),
-                                  Positioned(
-                                    left: 22,
-                                    child: buildSparklePlusIcon(12),
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ]),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AnimeDetailScreen(
-                          anime: anime,
-                          selectedIndex: widget.selectedIndex,
-                        )));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 0, left: 8, right: 8, top: 10),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          anime.titleEn!,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      topRight: Radius.circular(15),
+                    ),
+                    child: Image.network(
+                      anime.imageUrl!,
+                      width: cardWidth,
+                      height: cardHeight * 0.85,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
                     ),
                   ),
-                ],
+                ),
+                Positioned(
+                  bottom: (cardHeight * 0.1 < 23.4)
+                      ? -(cardHeight * 0.025)
+                      : (cardHeight * 0.015),
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: cardHeight * 0.15,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        buildStarContainer(cardWidth, cardHeight, anime),
+                        buildTrailingStarContainer(cardWidth, cardHeight),
+                        buildNebulaContainer(cardWidth, cardHeight),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AnimeDetailScreen(
+                  anime: anime,
+                  selectedIndex: widget.selectedIndex,
+                ),
+              ));
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: 10, left: 8, right: 8, top: topPadding),
+              child: Text(
+                anime.titleEn!,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildStarContainer(double cardWidth, double cardHeight, Anime anime) {
+    return GestureDetector(
+      onTap: () {
+        showInfoDialog(context, Text("Star~"), Text("You clicked on Star!"));
+      },
+      child: Container(
+        width: cardWidth * 0.28,
+        height: cardHeight * 0.1,
+        decoration: BoxDecoration(
+          color: Palette.darkPurple.withOpacity(0.8),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              buildStarIcon(cardHeight * 0.1 < 23.4 ? 12 : 16),
+              Text("${anime.score}",
+                  style:
+                      const TextStyle(fontSize: 11, color: Palette.starYellow)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTrailingStarContainer(double cardWidth, double cardHeight) {
+    return GestureDetector(
+      onTap: () {
+        showInfoDialog(
+            context, Text("Star~"), Text("You clicked on Trailing star!"));
+      },
+      child: Container(
+        width: cardWidth * 0.28,
+        height: cardHeight * 0.1,
+        decoration: BoxDecoration(
+          color: Palette.darkPurple.withOpacity(0.8),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              buildStarTrailIcon(cardHeight * 0.1 < 23.4 ? 15 : 21),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildNebulaContainer(double cardWidth, double cardHeight) {
+    return GestureDetector(
+      onTap: () {
+        showInfoDialog(
+            context, Text("Nebula~"), Text("You clicked on Nebula!"));
+      },
+      child: Container(
+        width: cardWidth * 0.28,
+        height: cardHeight * 0.1,
+        decoration: BoxDecoration(
+          color: Palette.darkPurple.withOpacity(0.8),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(1),
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Positioned(
+                left: 8,
+                child: buildNebulaIcon(
+                    size: cardHeight * 0.1 < 23.4 ? 15 : 20,
+                    returnIconData: false),
+              ),
+              Positioned(
+                left: 22,
+                child: buildSparklePlusIcon(cardHeight * 0.1 < 23.4 ? 9 : 12),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

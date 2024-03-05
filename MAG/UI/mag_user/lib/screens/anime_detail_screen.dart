@@ -5,15 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/models/club.dart';
 import 'package:mag_user/providers/genre_provider.dart';
+import 'package:mag_user/providers/rating_provider.dart';
+import 'package:mag_user/screens/ratings_screen.dart';
 import 'package:mag_user/screens/video_screen.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/master_screen.dart';
+import 'package:mag_user/widgets/separator.dart';
 import 'package:orientation/orientation.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../models/anime.dart';
 import '../models/genre.dart';
+import '../models/rating.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
@@ -37,11 +41,20 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late YoutubePlayerController _youtubePlayerController;
   late ValueNotifier<int> playbackPosition;
   late ValueNotifier<bool> isPlaying;
+  late RatingProvider _ratingProvider;
+  late Future<SearchResult<Rating>> _ratingFuture;
 
   @override
   void initState() {
     _genreProvider = context.read<GenreProvider>();
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
+
+    _ratingProvider = context.read<RatingProvider>();
+    _ratingFuture = _ratingProvider.get(filter: {
+      "AnimeId": "${widget.anime.id}",
+      "NewestFirst": "true",
+      "TakeItems": 1
+    });
 
     String videoLink = "${widget.anime.trailerUrl}";
     String videoId = extractVideoId(videoLink);
@@ -119,10 +132,163 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                 _buildDetails(),
                 _buildSynopsis(),
                 _buildTrailer(),
+                MySeparator(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  paddingTop: 20,
+                  paddingBottom: 10,
+                  borderRadius: 50,
+                  opacity: 0.8,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: Text("Reviews",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+                ),
+                _buildRating(),
+                _buildSeeMoreRatings(),
               ],
             ),
           ),
         ));
+  }
+
+  Widget _buildSeeMoreRatings() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RatingsScreen(anime: widget.anime)));
+        },
+        child: const Text("See more",
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+      ),
+    );
+  }
+
+  Widget _buildRating() {
+    return FutureBuilder<SearchResult<Rating>>(
+        future: _ratingFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var rating = snapshot.data!.result.single;
+
+            return _buildReviewCard(rating);
+          }
+        });
+  }
+
+  Widget _buildReviewCard(Rating rating) {
+    final Size screenSize = MediaQuery.of(context).size;
+    double? ratingHeight = screenSize.width * 0.45;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          right: 15,
+          left: 15,
+          bottom: 10,
+        ),
+        child: Container(
+          constraints: const BoxConstraints(
+            minHeight: 100,
+            maxHeight: 200,
+            minWidth: 315,
+          ),
+          height: ratingHeight,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Palette.darkPurple.withOpacity(0.7)),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 1),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  buildStarIcon(15),
+                                  const SizedBox(width: 3),
+                                  Text("${rating.ratingValue.toString()}/10",
+                                      style: const TextStyle(
+                                          color: Palette.starYellow,
+                                          fontSize: 13)),
+                                  Text(" by"),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Nezuko Kamado",
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          DateFormat('MMM d, y').format(
+                            rating.dateAdded!,
+                          ),
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  constraints:
+                      const BoxConstraints(minHeight: 30, maxHeight: 100),
+                  //height: 100,
+                  child: SingleChildScrollView(
+                    controller: ScrollController(),
+                    child: Column(
+                      children: [
+                        Text(
+                          "${rating.reviewText}",
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildTrailer() {

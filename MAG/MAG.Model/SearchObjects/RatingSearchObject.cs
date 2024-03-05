@@ -17,5 +17,7 @@ namespace MAG.Model.SearchObjects
         public int? AnimeId { get; set; }
 
         public bool? NewestFirst { get; set; }
+
+        public int? TakeItems { get; set; }
     }
 }

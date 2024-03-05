@@ -87,7 +87,7 @@ Future<void> showInfoDialog(
                     padding: const EdgeInsets.only(bottom: 10, top: 5),
                     child: GradientButton(
                         onPressed: onPressed ?? () => Navigator.pop(context),
-                        width: 85,
+                        width: 65,
                         height: 28,
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
