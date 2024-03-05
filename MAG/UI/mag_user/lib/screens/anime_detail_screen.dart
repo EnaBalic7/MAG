@@ -19,6 +19,8 @@ import '../models/anime.dart';
 import '../models/genre.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
+import '../models/user.dart';
+import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
@@ -43,11 +45,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late ValueNotifier<bool> isPlaying;
   late RatingProvider _ratingProvider;
   late Future<SearchResult<Rating>> _ratingFuture;
+  late UserProvider _userProvider;
+  late Future<SearchResult<User>> _userFuture;
 
   @override
   void initState() {
     _genreProvider = context.read<GenreProvider>();
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
+
+    _userProvider = context.read<UserProvider>();
 
     _ratingProvider = context.read<RatingProvider>();
     _ratingFuture = _ratingProvider.get(filter: {
@@ -146,7 +152,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
                 ),
                 _buildRating(),
-                _buildSeeMoreRatings(),
               ],
             ),
           ),
@@ -179,116 +184,158 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
             // Data loaded successfully
-            var rating = snapshot.data!.result.single;
+
+            Rating? rating;
+            if (snapshot.data!.result.isNotEmpty) {
+              rating = snapshot.data!.result.single;
+            }
 
             return _buildReviewCard(rating);
           }
         });
   }
 
-  Widget _buildReviewCard(Rating rating) {
+  Widget _buildReviewCard(Rating? rating) {
     final Size screenSize = MediaQuery.of(context).size;
     double? ratingHeight = screenSize.width * 0.45;
-
+    if (rating == null) {
+      return Text("No reviews yet",
+          style: TextStyle(
+              fontSize: 20,
+              fontStyle: FontStyle.italic,
+              color: Palette.lightPurple.withOpacity(0.5)));
+    }
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          right: 15,
-          left: 15,
-          bottom: 10,
-        ),
-        child: Container(
-          constraints: const BoxConstraints(
-            minHeight: 100,
-            maxHeight: 200,
-            minWidth: 315,
-          ),
-          height: ratingHeight,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Palette.darkPurple.withOpacity(0.7)),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 1),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  buildStarIcon(15),
-                                  const SizedBox(width: 3),
-                                  Text("${rating.ratingValue.toString()}/10",
-                                      style: const TextStyle(
-                                          color: Palette.starYellow,
-                                          fontSize: 13)),
-                                  Text(" by"),
-                                ],
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 15,
+              left: 15,
+              bottom: 10,
+            ),
+            child: Container(
+              constraints: const BoxConstraints(
+                minHeight: 100,
+                maxHeight: 200,
+                minWidth: 315,
+              ),
+              height: ratingHeight,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Palette.darkPurple.withOpacity(0.7)),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 1),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      buildStarIcon(15),
+                                      const SizedBox(width: 3),
+                                      Text(
+                                          "${rating.ratingValue.toString()}/10",
+                                          style: const TextStyle(
+                                              color: Palette.starYellow,
+                                              fontSize: 13)),
+                                      Text(" by"),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Nezuko Kamado",
-                                style: const TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold)),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildUsername(rating),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4),
-                        child: Text(
-                          DateFormat('MMM d, y').format(
-                            rating.dateAdded!,
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              DateFormat('MMM d, y').format(
+                                rating.dateAdded!,
+                              ),
+                              style: const TextStyle(fontSize: 13),
+                            ),
                           ),
-                          style: const TextStyle(fontSize: 13),
-                        ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Container(
-                  alignment: Alignment.topLeft,
-                  constraints:
-                      const BoxConstraints(minHeight: 30, maxHeight: 100),
-                  //height: 100,
-                  child: SingleChildScrollView(
-                    controller: ScrollController(),
-                    child: Column(
-                      children: [
-                        Text(
-                          "${rating.reviewText}",
-                          style: const TextStyle(fontSize: 15),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      constraints:
+                          const BoxConstraints(minHeight: 30, maxHeight: 100),
+                      //height: 100,
+                      child: SingleChildScrollView(
+                        controller: ScrollController(),
+                        child: Column(
+                          children: [
+                            Text(
+                              "${rating.reviewText}",
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ]),
               ),
-            ]),
+            ),
           ),
-        ),
+          _buildSeeMoreRatings(),
+        ],
       ),
     );
+  }
+
+  Widget _buildUsername(Rating rating) {
+    return FutureBuilder<SearchResult<User>>(
+        future: _userProvider.get(filter: {"Id": "${rating.userId}"}),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(
+              height: 10,
+              width: 10,
+              strokeWidth: 2,
+            ); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            User? user;
+            if (snapshot.data!.result.isNotEmpty) {
+              user = snapshot.data!.result.single;
+            }
+
+            return (user != null)
+                ? Text("${user.username}",
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold))
+                : const Text("");
+          }
+        });
   }
 
   Widget _buildTrailer() {
