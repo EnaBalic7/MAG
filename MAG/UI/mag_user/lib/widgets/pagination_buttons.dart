@@ -39,8 +39,7 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
                   padding: const EdgeInsets.only(right: 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary:
-                          Color.fromRGBO(140, 131, 215, 1).withOpacity(0.7),
+                      primary: Palette.textFieldPurple.withOpacity(0.7),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),

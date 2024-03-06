@@ -144,18 +144,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         borderRadius: 50,
                                         paddingTop: 10,
                                         paddingBottom: 10,
-                                        gradient: Palette.buttonGradient2,
+                                        gradient: const LinearGradient(colors: [
+                                          Palette.buttonPurple,
+                                          Palette.buttonPurple,
+                                        ]),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: const [
                                             Icon(Icons.photo,
-                                                color: Palette.lightPurple),
+                                                color: Palette.white),
                                             SizedBox(width: 5),
                                             Text("Change photo",
                                                 style: TextStyle(
-                                                    color:
-                                                        Palette.lightPurple)),
+                                                    color: Palette.white)),
                                           ],
                                         ));
                                   },

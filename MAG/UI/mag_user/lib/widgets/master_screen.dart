@@ -5,6 +5,7 @@ import 'package:mag_user/screens/constellation_screen.dart';
 import 'package:mag_user/screens/explore_screen.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
 import 'package:mag_user/screens/home_screen.dart';
+import 'package:mag_user/widgets/user_profile_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
@@ -271,19 +272,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     if (widget.showProfileIcon == true) {
       actions.add(GestureDetector(
           onTap: () async {
-            var userTmp = await _userProvider.get(filter: {
-              "Username": "${Authorization.username}",
-              "ProfilePictureIncluded": "true"
-            });
-            if (userTmp.count == 1) {
-              User user = userTmp.result.first;
-
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(user: user),
-                ),
-              );
-            }
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return UserProfileDialog(
+                  loggedUser: LoggedUser.user!,
+                );
+              },
+            );
           },
           child: MouseRegion(
               cursor: SystemMouseCursors.click,

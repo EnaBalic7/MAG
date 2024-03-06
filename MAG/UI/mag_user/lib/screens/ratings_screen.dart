@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../models/anime.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
+import '../models/user.dart';
 import '../providers/rating_provider.dart';
+import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -24,6 +26,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
   late RatingProvider _ratingProvider;
   late Future<SearchResult<Rating>> _ratingFuture;
   final ScrollController _scrollController = ScrollController();
+  late UserProvider _userProvider;
 
   int page = 0;
   int pageSize = 2;
@@ -31,6 +34,8 @@ class _RatingsScreenState extends State<RatingsScreen> {
 
   @override
   void initState() {
+    _userProvider = context.read<UserProvider>();
+
     _ratingProvider = context.read<RatingProvider>();
     _ratingFuture = _ratingProvider.get(filter: {
       "AnimeId": "${widget.anime.id}",
@@ -157,9 +162,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Nezuko Kamado",
-                                style: const TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold)),
+                            _buildUsername(rating),
                           ],
                         ),
                       ],
@@ -205,6 +208,34 @@ class _RatingsScreenState extends State<RatingsScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildUsername(Rating rating) {
+    return FutureBuilder<SearchResult<User>>(
+        future: _userProvider.get(filter: {"Id": "${rating.userId}"}),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(
+              height: 10,
+              width: 10,
+              strokeWidth: 2,
+            ); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            User? user;
+            if (snapshot.data!.result.isNotEmpty) {
+              user = snapshot.data!.result.single;
+            }
+
+            return (user != null)
+                ? Text("${user.username}",
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold))
+                : const Text("");
+          }
+        });
   }
 
   Future<void> fetchPage(int requestedPage) async {

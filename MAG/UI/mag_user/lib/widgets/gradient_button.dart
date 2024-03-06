@@ -17,6 +17,7 @@ class GradientButton extends StatefulWidget {
   double? contentPaddingRight;
   double? contentPaddingTop;
   double? contentPaddingBottom;
+  bool? showBorder;
 
   GradientButton({
     Key? key,
@@ -34,6 +35,7 @@ class GradientButton extends StatefulWidget {
     this.contentPaddingRight,
     this.contentPaddingTop,
     this.contentPaddingBottom,
+    this.showBorder,
   }) : super(key: key);
 
   @override
@@ -74,7 +76,9 @@ class _GradientButtonState extends State<GradientButton> {
         ),
         child: Ink(
           decoration: BoxDecoration(
-            border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
+            border: (widget.showBorder == true)
+                ? Border.all(color: Palette.lightPurple.withOpacity(0.3))
+                : null,
             gradient: widget.gradient,
             borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
           ),
@@ -109,7 +113,9 @@ class _GradientButtonState extends State<GradientButton> {
         ),
         child: Ink(
           decoration: BoxDecoration(
-            border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
+            border: (widget.showBorder == true)
+                ? Border.all(color: Palette.lightPurple.withOpacity(0.3))
+                : null,
             gradient: widget.gradient,
             borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
           ),

@@ -87,6 +87,13 @@ class LoginScreen extends StatelessWidget {
 
                           try {
                             await _animeProvider.get();
+                            var userResult = await _userProvider.get(filter: {
+                              "Username": "${Authorization.username}",
+                              "ProfilePictureIncluded": "true",
+                            });
+                            if (userResult.count == 1) {
+                              LoggedUser.user = userResult.result.single;
+                            }
 
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

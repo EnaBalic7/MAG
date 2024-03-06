@@ -247,11 +247,11 @@ Icon buildCrownIcon(double size, {Color? color}) {
   );
 }
 
-buildLogoutIcon(double size) {
+buildLogoutIcon(double size, {Color? color}) {
   return Icon(
     const IconData(0xe951, fontFamily: 'icomoon'),
     size: size,
-    color: Palette.lightPurple,
+    color: color ?? Palette.lightPurple,
   );
 }
 

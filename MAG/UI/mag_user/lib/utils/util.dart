@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
+import '../models/user.dart';
 import '../widgets/gradient_button.dart';
 import 'colors.dart';
 
@@ -42,6 +43,10 @@ Color shadeColor(Color color, double factor) => Color.fromRGBO(
 class Authorization {
   static String? username;
   static String? password;
+}
+
+class LoggedUser {
+  static User? user;
 }
 
 Future<void> showErrorDialog(BuildContext context, Exception e) async {

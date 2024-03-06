@@ -46,7 +46,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late RatingProvider _ratingProvider;
   late Future<SearchResult<Rating>> _ratingFuture;
   late UserProvider _userProvider;
-  late Future<SearchResult<User>> _userFuture;
 
   @override
   void initState() {
