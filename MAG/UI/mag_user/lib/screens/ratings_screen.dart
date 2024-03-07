@@ -29,7 +29,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
   late UserProvider _userProvider;
 
   int page = 0;
-  int pageSize = 2;
+  int pageSize = 10;
   int totalItems = 0;
 
   @override
@@ -82,8 +82,11 @@ class _RatingsScreenState extends State<RatingsScreen> {
                   child: Center(
                     child: Column(
                       children: [
-                        Wrap(
-                          children: _buildRatingCards(ratingList),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Wrap(
+                            children: _buildRatingCards(ratingList),
+                          ),
                         ),
                         MyPaginationButtons(
                           page: page,
@@ -126,6 +129,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
           ),
           height: ratingHeight,
           decoration: BoxDecoration(
+              border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
               borderRadius: BorderRadius.circular(15),
               color: Palette.darkPurple.withOpacity(0.7)),
           child: Padding(

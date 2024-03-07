@@ -25,10 +25,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      title: "Home",
       selectedIndex: widget.selectedIndex,
       showTabBar: true,
       tabController: _tabController,
-      title: "Home",
       tabs: const [
         Text(
           "Top Anime",
@@ -37,6 +37,12 @@ class _HomeScreenState extends State<HomeScreen>
           "Recommended",
         )
       ],
+      labelPadding: const EdgeInsets.only(
+        left: 5,
+        right: 5,
+        top: 8,
+        bottom: 5,
+      ),
       child: TabBarView(controller: _tabController, children: [
         TopAnimeScreen(selectedIndex: widget.selectedIndex),
         RecommendedScreen(selectedIndex: widget.selectedIndex),

@@ -98,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        HomeScreen(selectedIndex: 0)));
+                                        const HomeScreen(selectedIndex: 0)));
                           } on Exception catch (e) {
                             showInfoDialog(
                                 context,

@@ -20,6 +20,11 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
   int page = 0;
   int pageSize = 8;
 
+  final Map<String, dynamic> _filter = {
+    "GenresIncluded": "true",
+    "NewestFirst": "true",
+  };
+
   @override
   void initState() {
     _animeProvider = context.read<AnimeProvider>();
@@ -34,17 +39,13 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
       pageSize: pageSize,
       fetchAnime: fetchAnime,
       fetchPage: fetchPage,
-      filter: const {
-        "GenresIncluded": "true",
-        "NewestFirst": "true",
-      },
+      filter: _filter,
     );
   }
 
   Future<SearchResult<Anime>> fetchAnime() {
     return _animeProvider.get(filter: {
-      "GenresIncluded": "true",
-      "NewestFirst": "true",
+      ..._filter,
       "Page": "$page",
       "PageSize": "$pageSize",
     });

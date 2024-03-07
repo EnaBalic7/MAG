@@ -47,6 +47,11 @@ namespace MAG.Services
                 query = query.Where(x => x.Id == search.Id);
             }
 
+            if (search?.TopFirst == true)
+            {
+                query = query.OrderByDescending(anime => anime.Ratings.Count).ThenByDescending(anime => anime.Score);
+            }
+
             return base.AddFilter(query, search);
         }
 

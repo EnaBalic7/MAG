@@ -21,16 +21,29 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? child;
   String? title;
   Widget? titleWidget;
+
+  /// Controller for search
   TextEditingController? controller;
+
+  /// onSubmitted event for search
   void Function(String)? onSubmitted;
+
+  /// onClosed event for search
   void Function()? onClosed;
+
+  /// onChanged event for search
   void Function(String)? onChanged;
+
+  /// onCleared event for search
   void Function()? onCleared;
+
   void Function()? floatingButtonOnPressed;
   bool? showBackArrow;
   bool? showSearch;
   bool? showFloatingActionButton;
   Widget? floatingActionButtonIcon;
+
+  /// This widget will be used for floatingActionButton
   GradientButton? gradientButton;
   bool? showProfileIcon;
   String? floatingButtonTooltip;
@@ -39,6 +52,15 @@ class MasterScreenWidget extends StatefulWidget {
   List<Widget>? tabs;
   bool? showNavBar;
   int? selectedIndex;
+
+  /// If set to true, it makes tabs scrollable horizontally
+  bool? isScrollable;
+
+  /// Border radius for TabBar tabs
+  BorderRadius? borderRadius;
+
+  /// Padding around tabs' labels
+  EdgeInsets? labelPadding;
 
   MasterScreenWidget({
     Key? key,
@@ -63,6 +85,9 @@ class MasterScreenWidget extends StatefulWidget {
     this.tabs,
     this.showNavBar = true,
     this.selectedIndex,
+    this.isScrollable,
+    this.borderRadius,
+    this.labelPadding,
   }) : super(key: key);
 
   @override
@@ -224,17 +249,19 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   TabBar? _buildTabBar() {
     return (widget.showTabBar == true)
         ? TabBar(
+            isScrollable: widget.isScrollable ?? false,
             indicatorSize: TabBarIndicatorSize.tab,
             controller: widget.tabController,
             labelColor: Palette.white,
             unselectedLabelColor: Palette.lightPurple,
-            labelPadding: EdgeInsets.all(5),
+            labelPadding: widget.labelPadding ?? const EdgeInsets.all(5),
             tabs: widget.tabs ?? [],
-            indicator: const BoxDecoration(
+            indicator: BoxDecoration(
                 gradient: Palette.navGradient4,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50))),
+                borderRadius: widget.borderRadius ??
+                    const BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50))),
           )
         : null;
   }

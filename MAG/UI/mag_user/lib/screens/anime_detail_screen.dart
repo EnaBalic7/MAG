@@ -221,6 +221,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               ),
               height: ratingHeight,
               decoration: BoxDecoration(
+                  border:
+                      Border.all(color: Palette.lightPurple.withOpacity(0.3)),
                   borderRadius: BorderRadius.circular(15),
                   color: Palette.darkPurple.withOpacity(0.7)),
               child: Padding(

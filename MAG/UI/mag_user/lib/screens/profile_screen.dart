@@ -144,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         borderRadius: 50,
                                         paddingTop: 10,
                                         paddingBottom: 10,
+                                        hideBorder: true,
                                         gradient: const LinearGradient(colors: [
                                           Palette.buttonPurple,
                                           Palette.buttonPurple,

@@ -18,7 +18,12 @@ class TopAnimeScreen extends StatefulWidget {
 class _TopAnimeScreenState extends State<TopAnimeScreen> {
   late AnimeProvider _animeProvider;
   int page = 0;
-  int pageSize = 8;
+  int pageSize = 20;
+
+  final Map<String, dynamic> _filter = {
+    "GenresIncluded": "true",
+    "TopFirst": "true",
+  };
 
   @override
   void initState() {
@@ -34,17 +39,13 @@ class _TopAnimeScreenState extends State<TopAnimeScreen> {
       pageSize: pageSize,
       fetchAnime: fetchAnime,
       fetchPage: fetchPage,
-      filter: const {
-        "GenresIncluded": "true",
-        "NewestFirst": "false",
-      },
+      filter: _filter,
     );
   }
 
   Future<SearchResult<Anime>> fetchAnime() {
     return _animeProvider.get(filter: {
-      "GenresIncluded": "true",
-      "NewestFirst": "false",
+      ..._filter,
       "Page": "$page",
       "PageSize": "$pageSize",
     });

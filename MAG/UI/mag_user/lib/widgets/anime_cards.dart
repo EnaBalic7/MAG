@@ -135,6 +135,7 @@ class _AnimeCardsState extends State<AnimeCards>
       margin: const EdgeInsets.all(7),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
         color: Palette.darkPurple,
       ),
       child: Column(
@@ -172,7 +173,7 @@ class _AnimeCardsState extends State<AnimeCards>
                   left: 0,
                   right: 0,
                   child: SizedBox(
-                    height: cardHeight * 0.15,
+                    height: cardHeight * 0.135,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

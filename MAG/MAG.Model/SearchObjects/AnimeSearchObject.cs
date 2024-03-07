@@ -17,5 +17,7 @@ namespace MAG.Model.SearchObjects
         public bool? GenresIncluded { get; set; }
 
         public bool? NewestFirst { get; set; }
+
+        public bool? TopFirst { get; set; }
     }
 }
