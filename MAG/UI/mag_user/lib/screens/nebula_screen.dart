@@ -3,6 +3,7 @@ import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/master_screen.dart';
 
 import '../utils/colors.dart';
+import '../widgets/nebula_form.dart';
 
 class NebulaScreen extends StatefulWidget {
   final int selectedIndex;
@@ -132,7 +133,16 @@ class _NebulaScreenState extends State<NebulaScreen>
                               style: TextStyle(fontSize: 12)),
                         ],
                       ),
-                      buildEditIcon(30),
+                      GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const NebulaForm();
+                              },
+                            );
+                          },
+                          child: buildEditIcon(30)),
                     ],
                   ),
                   Row(

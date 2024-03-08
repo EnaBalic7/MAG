@@ -91,6 +91,10 @@ namespace MAG.Services
             CreateMap<Database.ClubCover, Model.ClubCover>();
             CreateMap<ClubCoverInsertRequest, Database.ClubCover>();
             CreateMap<ClubCoverUpdateRequest, Database.ClubCover>();
+
+            CreateMap<Database.AnimeWatchlist, Model.AnimeWatchlist>();
+            CreateMap<AnimeWatchlistInsertRequest, Database.AnimeWatchlist>();
+            CreateMap<AnimeWatchlistUpdateRequest, Database.AnimeWatchlist>();
         }
     }
 }

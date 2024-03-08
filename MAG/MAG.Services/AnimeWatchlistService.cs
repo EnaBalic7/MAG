@@ -14,6 +14,22 @@ namespace MAG.Services
     {
         public AnimeWatchlistService(MagContext context, IMapper mapper) : base(context, mapper)
         {
+
+        }
+
+        public override IQueryable<AnimeWatchlist> AddFilter(IQueryable<AnimeWatchlist> query, AnimeWatchlistSearchObject? search = null)
+        {
+            if(search?.WatchlistId != null)
+            {
+                query = query.Where(animeWatchlist => animeWatchlist.WatchlistId == search.WatchlistId);
+            }
+
+            if (search?.WatchStatus != null)
+            {
+                query = query.Where(animeWatchlist => animeWatchlist.WatchStatus == search.WatchStatus);
+            }
+
+            return base.AddFilter(query, search);
         }
     }
 }
