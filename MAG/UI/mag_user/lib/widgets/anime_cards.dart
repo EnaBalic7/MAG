@@ -96,13 +96,6 @@ class _AnimeCardsState extends State<AnimeCards>
         });
   }
 
-  List<Widget> _buildAnimeCards(List<Anime> animeList) {
-    return List.generate(
-      animeList.length,
-      (index) => _buildAnimeCard(animeList[index]),
-    );
-  }
-
   Future<void> fetchPage(int requestedPage) async {
     try {
       var result = await widget.fetchPage({
@@ -120,6 +113,13 @@ class _AnimeCardsState extends State<AnimeCards>
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }
+  }
+
+  List<Widget> _buildAnimeCards(List<Anime> animeList) {
+    return List.generate(
+      animeList.length,
+      (index) => _buildAnimeCard(animeList[index]),
+    );
   }
 
   Widget _buildAnimeCard(Anime anime) {

@@ -2,6 +2,7 @@
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,15 @@ namespace MAG.Services
             }
 
             return base.AddFilter(query, search);
+        }
+
+        public override IQueryable<AnimeWatchlist> AddInclude(IQueryable<AnimeWatchlist> query, AnimeWatchlistSearchObject? search = null)
+        {
+            if(search?.AnimeIncluded == true)
+            {
+                query = query.Include(animeWatchlist => animeWatchlist.Anime);
+            }
+            return base.AddInclude(query, search);
         }
     }
 }

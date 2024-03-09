@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MAG.Services
 {
-    public interface IWatchlistService : ICRUDService<Model.Watchlist, BaseSearchObject, WatchlistInsertRequest, WatchlistUpdateRequest>
+    public interface IWatchlistService : ICRUDService<Model.Watchlist, WatchlistSearchObject, WatchlistInsertRequest, WatchlistUpdateRequest>
     {
     }
 }

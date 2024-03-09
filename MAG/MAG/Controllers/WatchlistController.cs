@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MAG.Controllers
 {
     [ApiController]
-    public class WatchlistController : BaseCRUDController<Model.Watchlist, BaseSearchObject, WatchlistInsertRequest, WatchlistUpdateRequest>
+    public class WatchlistController : BaseCRUDController<Model.Watchlist, WatchlistSearchObject, WatchlistInsertRequest, WatchlistUpdateRequest>
     {
         public WatchlistController(IWatchlistService service) : base(service)
         {
