@@ -195,8 +195,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   }
 
   Widget _buildReviewCard(Rating? rating) {
-    final Size screenSize = MediaQuery.of(context).size;
-    double? ratingHeight = screenSize.width * 0.45;
     if (rating == null) {
       return Text("No reviews yet",
           style: TextStyle(
@@ -204,36 +202,37 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               fontStyle: FontStyle.italic,
               color: Palette.lightPurple.withOpacity(0.5)));
     }
+
+    final Size screenSize = MediaQuery.of(context).size;
+    double? ratingHeight =
+        rating.reviewText != "" ? screenSize.width * 0.45 : 42;
+
     return Center(
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              right: 15,
-              left: 15,
-              bottom: 10,
-            ),
+            padding: const EdgeInsets.only(right: 15, left: 15, bottom: 10),
             child: Container(
               constraints: const BoxConstraints(
-                minHeight: 100,
+                // minHeight: 100,
                 maxHeight: 200,
                 minWidth: 315,
               ),
               height: ratingHeight,
               decoration: BoxDecoration(
-                  border:
-                      Border.all(color: Palette.lightPurple.withOpacity(0.3)),
-                  borderRadius: BorderRadius.circular(15),
-                  color: Palette.darkPurple.withOpacity(0.7)),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Row(
+                border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(15),
+                color: Palette.darkPurple.withOpacity(0.7),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(right: 5),
@@ -247,11 +246,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                       buildStarIcon(15),
                                       const SizedBox(width: 3),
                                       Text(
-                                          "${rating.ratingValue.toString()}/10",
-                                          style: const TextStyle(
-                                              color: Palette.starYellow,
-                                              fontSize: 13)),
-                                      Text(" by"),
+                                        "${rating.ratingValue.toString()}/10",
+                                        style: const TextStyle(
+                                          color: Palette.starYellow,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      const Text(" by"),
                                     ],
                                   ),
                                 ),
@@ -265,43 +266,37 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                             ),
                           ],
                         ),
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              DateFormat('MMM d, y').format(
-                                rating.dateAdded!,
-                              ),
-                              style: const TextStyle(fontSize: 13),
-                            ),
+                        Text(
+                          DateFormat('MMM d, y').format(
+                            rating.dateAdded!,
                           ),
-                        ],
-                      ),
-                    ],
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ],
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      constraints:
-                          const BoxConstraints(minHeight: 30, maxHeight: 100),
-                      //height: 100,
-                      child: SingleChildScrollView(
-                        controller: ScrollController(),
-                        child: Column(
-                          children: [
-                            Text(
+                  Visibility(
+                    visible: rating.reviewText != "",
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            right: 10, left: 10, bottom: 10),
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxHeight: 200,
+                            ),
+                            child: Text(
                               "${rating.reviewText}",
                               style: const TextStyle(fontSize: 15),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ]),
+                ],
               ),
             ),
           ),

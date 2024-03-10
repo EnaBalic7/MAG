@@ -25,6 +25,7 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
     double imageHeight = imageWidth;
 
     return Dialog(
+      insetPadding: const EdgeInsets.only(right: 10, left: 10, top: 20),
       alignment: Alignment.topCenter,
       elevation: 0,
       backgroundColor: Colors.transparent,

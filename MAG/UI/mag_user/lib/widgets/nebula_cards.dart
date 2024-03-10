@@ -193,7 +193,8 @@ class _NebulaCardsState extends State<NebulaCards>
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return const NebulaForm();
+                                  return NebulaForm(
+                                      anime: animeWatchlist.anime!);
                                 },
                               );
                             },

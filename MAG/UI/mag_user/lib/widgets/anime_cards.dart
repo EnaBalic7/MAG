@@ -8,6 +8,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
+import 'nebula_form.dart';
 
 typedef FetchPage = Future<SearchResult<Anime>> Function(
     Map<String, dynamic> filter);
@@ -179,7 +180,7 @@ class _AnimeCardsState extends State<AnimeCards>
                       children: [
                         buildStarContainer(cardWidth, cardHeight, anime),
                         buildTrailingStarContainer(cardWidth, cardHeight),
-                        buildNebulaContainer(cardWidth, cardHeight),
+                        buildNebulaContainer(cardWidth, cardHeight, anime),
                       ],
                     ),
                   ),
@@ -276,11 +277,16 @@ class _AnimeCardsState extends State<AnimeCards>
     );
   }
 
-  Widget buildNebulaContainer(double cardWidth, double cardHeight) {
+  Widget buildNebulaContainer(
+      double cardWidth, double cardHeight, Anime anime) {
     return GestureDetector(
       onTap: () {
-        showInfoDialog(context, const Text("Nebula~"),
-            const Text("You clicked on Nebula!"));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return NebulaForm(anime: anime);
+          },
+        );
       },
       child: Container(
         width: cardWidth * 0.28,

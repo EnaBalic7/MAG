@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -74,6 +76,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderTextField(
+          selectionHeightStyle: BoxHeightStyle.includeLineSpacingBottom,
           textAlignVertical: widget.textAlignVertical,
           textCapitalization: widget.textCapitalization,
           focusNode: FocusNode(),
