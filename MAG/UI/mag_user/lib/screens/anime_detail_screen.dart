@@ -406,7 +406,12 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     ]);
 
     String videoLink = "${widget.anime.trailerUrl}";
+
+    // Using custom method
     String videoId = extractVideoId(videoLink);
+
+    // Using method from package:
+    // String videoId = YoutubePlayer.convertUrlToId(videoLink) ?? "";
 
     Navigator.push(
         context,

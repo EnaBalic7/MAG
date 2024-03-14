@@ -6,13 +6,13 @@ class NumericStepButton extends StatefulWidget {
   final int minValue;
   final int maxValue;
 
-  final ValueChanged<int>? onChanged;
+  final ValueChanged<int> onChanged;
 
   const NumericStepButton({
     Key? key,
     this.minValue = 0,
     this.maxValue = 10,
-    this.onChanged,
+    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _NumericStepButtonState extends State<NumericStepButton> {
                 if (counter > widget.minValue) {
                   counter--;
                 }
-                // widget.onChanged(counter);
+                widget.onChanged(counter);
               });
             },
           ),
@@ -77,7 +77,7 @@ class _NumericStepButtonState extends State<NumericStepButton> {
                 if (counter < widget.maxValue) {
                   counter++;
                 }
-                //widget.onChanged(counter);
+                widget.onChanged(counter);
               });
             },
           ),

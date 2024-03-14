@@ -8,7 +8,7 @@ class MyFormBuilderChoiceChip extends StatefulWidget {
   List<FormBuilderFieldOption<dynamic>>? options;
   String? labelText;
   final List<dynamic>? initialValue;
-  void Function(List<dynamic>?)? onChanged;
+  void Function(dynamic)? onChanged;
   String? Function(dynamic)? validator;
   Color? selectedColor;
 
@@ -33,7 +33,6 @@ class _MyFormBuilderChoiceChipState extends State<MyFormBuilderChoiceChip> {
   Widget build(BuildContext context) {
     return FormBuilderChoiceChip(
       name: widget.name!,
-
       initialValue: widget.initialValue ?? [],
       options: widget.options!,
       selectedColor: widget.selectedColor ?? Palette.teal.withOpacity(0.8),
@@ -50,8 +49,13 @@ class _MyFormBuilderChoiceChipState extends State<MyFormBuilderChoiceChip> {
           height: 0.2,
         ),
         border: InputBorder.none,
+        errorStyle: const TextStyle(
+          color: Palette.lightRed,
+          height: 0.05,
+          textBaseline: TextBaseline.alphabetic,
+        ),
       ),
-      //onChanged: widget.onChanged,
+      onChanged: widget.onChanged,
       spacing: 5,
       runSpacing: 0,
       validator: widget.validator,

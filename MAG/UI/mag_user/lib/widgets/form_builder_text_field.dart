@@ -30,34 +30,36 @@ class MyFormBuilderTextField extends StatefulWidget {
   void Function(String?)? onSaved;
   TextAlignVertical textAlignVertical;
   TextCapitalization textCapitalization;
+  double? errorBorderRadius;
 
-  MyFormBuilderTextField(
-      {Key? key,
-      required this.name,
-      this.labelText,
-      this.fillColor,
-      this.obscureText,
-      this.width,
-      this.height,
-      this.borderRadius,
-      this.readOnly,
-      this.keyboardType,
-      this.initialValue,
-      this.maxLines = 1,
-      this.minLines = 1,
-      this.paddingLeft = 0,
-      this.paddingRight = 0,
-      this.paddingTop = 0,
-      this.paddingBottom = 0,
-      this.onChanged,
-      this.validator,
-      this.borderWidth = 0,
-      this.borderColor = Colors.transparent,
-      this.onSubmitted,
-      this.onSaved,
-      this.textAlignVertical = TextAlignVertical.center,
-      this.textCapitalization = TextCapitalization.sentences})
-      : super(key: key);
+  MyFormBuilderTextField({
+    Key? key,
+    required this.name,
+    this.labelText,
+    this.fillColor,
+    this.obscureText,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.readOnly,
+    this.keyboardType,
+    this.initialValue,
+    this.maxLines = 1,
+    this.minLines = 1,
+    this.paddingLeft = 0,
+    this.paddingRight = 0,
+    this.paddingTop = 0,
+    this.paddingBottom = 0,
+    this.onChanged,
+    this.validator,
+    this.borderWidth = 0,
+    this.borderColor = Colors.transparent,
+    this.onSubmitted,
+    this.onSaved,
+    this.textAlignVertical = TextAlignVertical.center,
+    this.textCapitalization = TextCapitalization.sentences,
+    this.errorBorderRadius,
+  }) : super(key: key);
 
   @override
   State<MyFormBuilderTextField> createState() => _MyFormBuilderTextFieldState();
@@ -108,7 +110,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
             ),
             focusedErrorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Palette.lightRed),
-                borderRadius: BorderRadius.circular(50)),
+                borderRadius:
+                    BorderRadius.circular(widget.errorBorderRadius ?? 50)),
             errorStyle: const TextStyle(
               color: Palette.lightRed,
               height: 0.3,
@@ -116,7 +119,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
             ),
             errorBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Palette.lightRed),
-                borderRadius: BorderRadius.circular(50)),
+                borderRadius:
+                    BorderRadius.circular(widget.errorBorderRadius ?? 50)),
             labelText: widget.labelText ?? "",
             floatingLabelBehavior: FloatingLabelBehavior.always,
             labelStyle: const TextStyle(

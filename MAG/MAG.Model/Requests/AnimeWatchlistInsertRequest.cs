@@ -15,5 +15,9 @@ namespace MAG.Model.Requests
         public string WatchStatus { get; set; } = null!;
 
         public int Progress { get; set; }
+
+        public DateTime? DateStarted { get; set; }
+
+        public DateTime? DateFinished { get; set; }
     }
 }

@@ -51,6 +51,7 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDateTimePicker(
+          style: const TextStyle(fontSize: 14, height: 1),
           validator: widget.validator,
           valueTransformer: (selectedDate) {
             return selectedDate?.toIso8601String();

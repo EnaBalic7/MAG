@@ -187,3 +187,7 @@ String extractVideoId(String videoLink) {
   }
   return '';
 }
+
+bool isValidReviewText(String text) {
+  return RegExp(r"^[a-zA-Z0-9\s.,!?;:'()]*$").hasMatch(text);
+}

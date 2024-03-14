@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_user/providers/anime_watchlist_provider.dart';
+import 'package:mag_user/providers/rating_provider.dart';
+import 'package:mag_user/utils/util.dart';
 import 'package:mag_user/widgets/form_builder_datetime_picker.dart';
 import 'package:mag_user/widgets/form_builder_text_field.dart';
 import 'package:mag_user/widgets/numeric_step_button.dart';
+import 'package:mag_user/widgets/separator.dart';
+import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
 import '../utils/colors.dart';
@@ -11,7 +16,12 @@ import 'gradient_button.dart';
 
 class NebulaForm extends StatefulWidget {
   final Anime anime;
-  const NebulaForm({Key? key, required this.anime}) : super(key: key);
+
+  /// If watchlistId isn't provided, it means editing is in question, not adding
+  final int? watchlistId;
+
+  const NebulaForm({Key? key, required this.anime, this.watchlistId})
+      : super(key: key);
 
   @override
   State<NebulaForm> createState() => _NebulaFormState();
@@ -19,6 +29,18 @@ class NebulaForm extends StatefulWidget {
 
 class _NebulaFormState extends State<NebulaForm> {
   final _nebulaFormKey = GlobalKey<FormBuilderState>();
+  late final AnimeWatchlistProvider _animeWatchlistProvider;
+  late final RatingProvider _ratingProvider;
+
+  int progress = 0;
+
+  @override
+  void initState() {
+    _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
+    _ratingProvider = context.read<RatingProvider>();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,20 +65,50 @@ class _NebulaFormState extends State<NebulaForm> {
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "${widget.anime.titleEn}",
-                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    Expanded(
+                      child: Text(
+                        "${widget.anime.titleEn}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Palette.teal.withOpacity(0.85)),
+                      ),
                     ),
                   ],
                 ),
-                MyFormBuilderChoiceChip(name: "progress", options: const [
-                  FormBuilderFieldOption(value: "Watching"),
-                  FormBuilderFieldOption(value: "Completed"),
-                  FormBuilderFieldOption(value: "On Hold"),
-                  FormBuilderFieldOption(value: "Dropped"),
-                  FormBuilderFieldOption(value: "Plan to Watch"),
-                ]),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      "Watch status",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                MyFormBuilderChoiceChip(
+                  name: "watchStatus",
+                  options: const [
+                    FormBuilderFieldOption(value: "Watching"),
+                    FormBuilderFieldOption(value: "Completed"),
+                    FormBuilderFieldOption(value: "On Hold"),
+                    FormBuilderFieldOption(value: "Dropped"),
+                    FormBuilderFieldOption(value: "Plan to Watch"),
+                  ],
+                  onChanged: (val) {
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return "You must choose watch status.";
+                    }
+                    return null;
+                  },
+                ),
                 Row(
                   children: const [
                     Text(
@@ -65,20 +117,30 @@ class _NebulaFormState extends State<NebulaForm> {
                     ),
                   ],
                 ),
-                const NumericStepButton(
+                NumericStepButton(
                   minValue: 0,
-                  maxValue: 1000,
+                  maxValue: widget.anime.episodesNumber!,
+                  onChanged: (val) {
+                    progress = val;
+                  },
+                ),
+                MySeparator(
+                  width: double.infinity,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  borderRadius: 50,
+                  opacity: 0.5,
                 ),
                 Row(
                   children: const [
                     Text(
-                      "Score",
+                      "Score & review (optional)",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
                 MyFormBuilderChoiceChip(
-                    name: "score",
+                    name: "ratingValue",
                     selectedColor: Palette.starYellow,
                     options: const [
                       FormBuilderFieldOption(value: "10"),
@@ -96,20 +158,52 @@ class _NebulaFormState extends State<NebulaForm> {
                   height: 10,
                 ),
                 MyFormBuilderTextField(
-                  name: "review",
+                  name: "reviewText",
                   labelText: "Review",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                  height: 54,
+                  //height: 54,
                   maxLines: null,
                   textAlignVertical: TextAlignVertical.center,
                   paddingBottom: 10,
                   keyboardType: TextInputType.multiline,
                   borderRadius: 20,
+                  errorBorderRadius: 20,
+                  validator: (val) {
+                    if (val != null &&
+                        val.isNotEmpty &&
+                        !isValidReviewText(val)) {
+                      return "Some special characters are not allowed.";
+                    } else if (val != null &&
+                        val.isNotEmpty &&
+                        _nebulaFormKey
+                                .currentState?.fields["ratingValue"]?.value !=
+                            null &&
+                        _nebulaFormKey.currentState?.fields["ratingValue"]
+                            ?.value.isEmpty) {
+                      return "Score must be selected to leave a review.";
+                    } else if (val != null &&
+                        val.isNotEmpty &&
+                        (_nebulaFormKey.currentState?.fields["ratingValue"]
+                                    ?.value ==
+                                null ||
+                            _nebulaFormKey.currentState?.fields["ratingValue"]
+                                ?.value.isEmpty)) {
+                      return "Score must be selected to leave a review.";
+                    }
+                    return null;
+                  },
+                ),
+                MySeparator(
+                  width: double.infinity,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  borderRadius: 50,
+                  opacity: 0.5,
                 ),
                 Row(
                   children: const [
                     Text(
-                      "Date",
+                      "Date (optional)",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -118,26 +212,75 @@ class _NebulaFormState extends State<NebulaForm> {
                   height: 30,
                 ),
                 MyDateTimePicker(
-                  name: "start",
+                  name: "dateStarted",
                   labelText: "Began watching",
                   fillColor: Palette.ratingPurple,
                   width: double.infinity,
-                  height: 35,
+                  height: 40,
                   borderRadius: 50,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 MyDateTimePicker(
-                  name: "end",
+                  name: "dateFinished",
                   labelText: "Finished watching",
                   fillColor: Palette.ratingPurple,
                   width: double.infinity,
-                  height: 35,
+                  height: 40,
                   borderRadius: 50,
                 ),
                 GradientButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                    var request = Map.from(_nebulaFormKey.currentState!.value);
+
+                    if (_nebulaFormKey.currentState?.saveAndValidate() ==
+                        true) {
+                      try {
+                        Map<String, dynamic> animeWatchlist = {
+                          "animeId": "${widget.anime.id}",
+                          "watchlistId": "${widget.watchlistId}",
+                          "watchStatus":
+                              "${_nebulaFormKey.currentState!.fields["watchStatus"]?.value}",
+                          "progress": "$progress",
+                          "dateStarted":
+                              "${_nebulaFormKey.currentState!.fields["dateStarted"]?.value}",
+                          "dateFinished":
+                              "${_nebulaFormKey.currentState!.fields["dateFinished"]?.value}",
+                        };
+
+                        print("AnimeWatchlist object: $animeWatchlist");
+                        var ratingValue = (_nebulaFormKey.currentState!
+                                .fields["ratingValue"]?.value.isEmpty)
+                            ? 0
+                            : _nebulaFormKey
+                                .currentState!.fields["ratingValue"]?.value;
+
+                        Map<String, dynamic> rating = {
+                          "userId": LoggedUser.user!.id,
+                          "animeId": widget.anime.id,
+                          "ratingValue": ratingValue,
+                          "reviewText":
+                              "${_nebulaFormKey.currentState!.fields["reviewText"]?.value ?? ""}",
+                          "dateAdded": DateTime.now().toIso8601String(),
+                        };
+
+                        print("Rating object: $rating");
+
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.task_alt,
+                                color: Palette.lightPurple, size: 50),
+                            const Text(
+                              "Added successfully!",
+                              textAlign: TextAlign.center,
+                            ));
+                      } on Exception catch (e) {
+                        showErrorDialog(context, e);
+                      }
+                    }
+                  },
                   borderRadius: 50,
                   height: 30,
                   width: 120,

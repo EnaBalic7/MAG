@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
 import '../models/search_result.dart';
+import '../models/watchlist.dart';
+import '../providers/watchlist_provider.dart';
 import '../screens/anime_detail_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -39,6 +42,10 @@ class _AnimeCardsState extends State<AnimeCards>
     with AutomaticKeepAliveClientMixin<AnimeCards> {
   late Future<SearchResult<Anime>> _animeFuture;
   final ScrollController _scrollController = ScrollController();
+  late WatchlistProvider _watchlistProvider;
+  late SearchResult<Watchlist> _watchlist;
+  late int watchlistId;
+
   int totalItems = 0;
 
   @override
@@ -47,10 +54,20 @@ class _AnimeCardsState extends State<AnimeCards>
   @override
   void initState() {
     _animeFuture = widget.fetchAnime();
+    _watchlistProvider = context.read<WatchlistProvider>();
+
+    getWatchlistId();
 
     setTotalItems();
 
     super.initState();
+  }
+
+  void getWatchlistId() async {
+    _watchlist = await _watchlistProvider
+        .get(filter: {"userId": "${LoggedUser.user!.id}"});
+
+    watchlistId = (_watchlist.count == 1) ? _watchlist.result.first.id! : 0;
   }
 
   void setTotalItems() async {
@@ -284,7 +301,10 @@ class _AnimeCardsState extends State<AnimeCards>
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return NebulaForm(anime: anime);
+            return NebulaForm(
+              anime: anime,
+              watchlistId: watchlistId,
+            );
           },
         );
       },
