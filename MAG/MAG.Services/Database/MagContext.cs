@@ -314,7 +314,7 @@ public partial class MagContext : DbContext
 
         modelBuilder.Entity<Rating>(entity =>
         {
-            entity.ToTable("Rating");
+            entity.ToTable("Rating", tb => tb.HasTrigger("UpdateAnimeScore"));
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnimeId).HasColumnName("AnimeID");

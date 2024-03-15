@@ -233,7 +233,6 @@ class _NebulaFormState extends State<NebulaForm> {
                 GradientButton(
                   onPressed: () async {
                     _nebulaFormKey.currentState?.saveAndValidate();
-                    var request = Map.from(_nebulaFormKey.currentState!.value);
 
                     if (_nebulaFormKey.currentState?.saveAndValidate() ==
                         true) {
@@ -244,18 +243,38 @@ class _NebulaFormState extends State<NebulaForm> {
                           "watchStatus":
                               "${_nebulaFormKey.currentState!.fields["watchStatus"]?.value}",
                           "progress": "$progress",
-                          "dateStarted":
-                              "${_nebulaFormKey.currentState!.fields["dateStarted"]?.value}",
-                          "dateFinished":
-                              "${_nebulaFormKey.currentState!.fields["dateFinished"]?.value}",
+                          "dateStarted": (_nebulaFormKey.currentState!
+                                      .fields["dateStarted"]?.value !=
+                                  null)
+                              ? (_nebulaFormKey.currentState!
+                                      .fields["dateStarted"]?.value as DateTime)
+                                  .toIso8601String()
+                              : null,
+                          "dateFinished": (_nebulaFormKey.currentState!
+                                      .fields["dateFinished"]?.value !=
+                                  null)
+                              ? (_nebulaFormKey
+                                      .currentState!
+                                      .fields["dateFinished"]
+                                      ?.value as DateTime)
+                                  .toIso8601String()
+                              : null,
                         };
 
                         print("AnimeWatchlist object: $animeWatchlist");
-                        var ratingValue = (_nebulaFormKey.currentState!
-                                .fields["ratingValue"]?.value.isEmpty)
-                            ? 0
-                            : _nebulaFormKey
-                                .currentState!.fields["ratingValue"]?.value;
+                        var ratingValue;
+
+                        if (_nebulaFormKey
+                                .currentState!.fields["ratingValue"]?.value ==
+                            null) {
+                          ratingValue = 0;
+                        } else if (_nebulaFormKey.currentState!
+                            .fields["ratingValue"]?.value.isEmpty) {
+                          ratingValue = 0;
+                        } else {
+                          ratingValue = _nebulaFormKey
+                              .currentState!.fields["ratingValue"]?.value;
+                        }
 
                         Map<String, dynamic> rating = {
                           "userId": LoggedUser.user!.id,
@@ -267,6 +286,16 @@ class _NebulaFormState extends State<NebulaForm> {
                         };
 
                         print("Rating object: $rating");
+
+                        await _animeWatchlistProvider.insert(animeWatchlist);
+
+                        if (_nebulaFormKey.currentState!.fields["ratingValue"]
+                                    ?.value !=
+                                null &&
+                            _nebulaFormKey.currentState!.fields["ratingValue"]
+                                ?.value.isNotEmpty) {
+                          await _ratingProvider.insert(rating);
+                        }
 
                         showInfoDialog(
                             context,
