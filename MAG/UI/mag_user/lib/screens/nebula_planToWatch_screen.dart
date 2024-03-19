@@ -47,6 +47,7 @@ class _NebulaPlanToWatchScreenState extends State<NebulaPlanToWatchScreen> {
       "WatchlistId": "${_watchlist.result[0].id}",
       "AnimeIncluded": "true",
       "WatchStatus": "Plan to Watch",
+      "NewestFirst": "true",
     };
 
     return _filter;

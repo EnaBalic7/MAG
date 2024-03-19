@@ -325,7 +325,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             Navigator.pop(context);
           },
           child: const Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_rounded,
             color: Palette.lightPurple,
           ));
     } else {

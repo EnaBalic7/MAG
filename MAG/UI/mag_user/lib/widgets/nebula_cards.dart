@@ -194,7 +194,9 @@ class _NebulaCardsState extends State<NebulaCards>
                                 context: context,
                                 builder: (BuildContext context) {
                                   return NebulaForm(
-                                      anime: animeWatchlist.anime!);
+                                    anime: animeWatchlist.anime!,
+                                    animeWatchlist: animeWatchlist,
+                                  );
                                 },
                               );
                             },
@@ -247,8 +249,10 @@ class _NebulaCardsState extends State<NebulaCards>
               rating = snapshot.data!.result.single;
             }
 
-            return Text("${rating?.ratingValue}",
-                style: const TextStyle(color: Palette.starYellow));
+            return (rating?.ratingValue != null)
+                ? Text("${rating?.ratingValue}",
+                    style: const TextStyle(color: Palette.starYellow))
+                : const Text("-", style: TextStyle(color: Palette.starYellow));
           }
         });
   }

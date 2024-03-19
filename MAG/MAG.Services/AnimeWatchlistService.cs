@@ -20,7 +20,12 @@ namespace MAG.Services
 
         public override IQueryable<AnimeWatchlist> AddFilter(IQueryable<AnimeWatchlist> query, AnimeWatchlistSearchObject? search = null)
         {
-            if(search?.WatchlistId != null)
+            if (search?.AnimeId != null)
+            {
+                query = query.Where(animeWatchlist => animeWatchlist.AnimeId == search.AnimeId);
+            }
+
+            if (search?.WatchlistId != null)
             {
                 query = query.Where(animeWatchlist => animeWatchlist.WatchlistId == search.WatchlistId);
             }
@@ -28,6 +33,11 @@ namespace MAG.Services
             if (search?.WatchStatus != null)
             {
                 query = query.Where(animeWatchlist => animeWatchlist.WatchStatus == search.WatchStatus);
+            }
+
+            if (search?.NewestFirst != null)
+            {
+                query = query.OrderByDescending(animeWatchlist => animeWatchlist.Id);
             }
 
             return base.AddFilter(query, search);

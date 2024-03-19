@@ -10,8 +10,12 @@ namespace MAG.Model.SearchObjects
     {
         public string? WatchStatus { get; set; }
 
+        public int? AnimeId { get; set; }
+
         public int? WatchlistId { get; set; }
 
         public bool? AnimeIncluded { get; set; }
+
+        public bool? NewestFirst { get; set; }
     }
 }

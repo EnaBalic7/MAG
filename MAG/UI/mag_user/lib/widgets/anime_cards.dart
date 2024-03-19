@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/models/anime_watchlist.dart';
+import 'package:mag_user/providers/anime_watchlist_provider.dart';
+import 'package:mag_user/screens/nebula_screen.dart';
+import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
@@ -45,6 +49,7 @@ class _AnimeCardsState extends State<AnimeCards>
   late WatchlistProvider _watchlistProvider;
   late SearchResult<Watchlist> _watchlist;
   late int watchlistId;
+  late AnimeWatchlistProvider _animeWatchlistProvider;
 
   int totalItems = 0;
 
@@ -55,6 +60,7 @@ class _AnimeCardsState extends State<AnimeCards>
   void initState() {
     _animeFuture = widget.fetchAnime();
     _watchlistProvider = context.read<WatchlistProvider>();
+    _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
 
     getWatchlistId();
 
@@ -297,16 +303,66 @@ class _AnimeCardsState extends State<AnimeCards>
   Widget buildNebulaContainer(
       double cardWidth, double cardHeight, Anime anime) {
     return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return NebulaForm(
-              anime: anime,
-              watchlistId: watchlistId,
-            );
-          },
-        );
+      onTap: () async {
+        var animeWatchlist = await _animeWatchlistProvider
+            .get(filter: {"WatchlistId": watchlistId, "AnimeId": anime.id});
+        if (animeWatchlist.result.isNotEmpty) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                insetPadding: const EdgeInsets.all(17),
+                alignment: Alignment.center,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Palette.darkPurple,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Palette.lightPurple.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                          "You already added this anime to your Nebula."),
+                      GradientButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => NebulaScreen(
+                                        selectedIndex: 1,
+                                      )));
+                        },
+                        borderRadius: 50,
+                        width: 130,
+                        paddingTop: 10,
+                        height: 30,
+                        gradient: Palette.buttonGradient,
+                        child: const Text("Go to Nebula",
+                            style: TextStyle(fontWeight: FontWeight.w500)),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return NebulaForm(
+                anime: anime,
+                watchlistId: watchlistId,
+              );
+            },
+          );
+        }
       },
       child: Container(
         width: cardWidth * 0.28,

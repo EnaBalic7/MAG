@@ -46,6 +46,7 @@ class _NebulaOnHoldScreenState extends State<NebulaOnHoldScreen> {
       "WatchlistId": "${_watchlist.result[0].id}",
       "AnimeIncluded": "true",
       "WatchStatus": "On Hold",
+      "NewestFirst": "true",
     };
 
     return _filter;

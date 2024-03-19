@@ -5,6 +5,7 @@ import '../utils/colors.dart';
 class NumericStepButton extends StatefulWidget {
   final int minValue;
   final int maxValue;
+  final int? initialValue;
 
   final ValueChanged<int> onChanged;
 
@@ -12,6 +13,7 @@ class NumericStepButton extends StatefulWidget {
     Key? key,
     this.minValue = 0,
     this.maxValue = 10,
+    this.initialValue,
     required this.onChanged,
   }) : super(key: key);
 
@@ -23,6 +25,16 @@ class NumericStepButton extends StatefulWidget {
 
 class _NumericStepButtonState extends State<NumericStepButton> {
   int counter = 0;
+
+  @override
+  void initState() {
+    if (widget.initialValue != null) {
+      counter = widget.initialValue!;
+      widget.onChanged(widget.initialValue!);
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

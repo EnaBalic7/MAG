@@ -46,6 +46,7 @@ class _NebulaCompletedScreenState extends State<NebulaCompletedScreen> {
       "WatchlistId": "${_watchlist.result[0].id}",
       "AnimeIncluded": "true",
       "WatchStatus": "Completed",
+      "NewestFirst": "true",
     };
 
     return _filter;
