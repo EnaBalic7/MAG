@@ -212,19 +212,12 @@ class _NebulaFormState extends State<NebulaForm> {
                       return "Some special characters are not allowed.";
                     } else if (val != null &&
                         val.isNotEmpty &&
-                        _nebulaFormKey
-                                .currentState?.fields["ratingValue"]?.value !=
-                            null &&
-                        _nebulaFormKey.currentState?.fields["ratingValue"]
-                            ?.value.isEmpty) {
-                      return "Score must be selected to leave a review.";
-                    } else if (val != null &&
-                        val.isNotEmpty &&
                         (_nebulaFormKey.currentState?.fields["ratingValue"]
                                     ?.value ==
                                 null ||
                             _nebulaFormKey.currentState?.fields["ratingValue"]
-                                ?.value.isEmpty)) {
+                                    ?.value ==
+                                "")) {
                       return "Score must be selected to leave a review.";
                     }
                     return null;
@@ -327,7 +320,8 @@ class _NebulaFormState extends State<NebulaForm> {
                                     ?.value !=
                                 null &&
                             _nebulaFormKey.currentState!.fields["ratingValue"]
-                                ?.value.isNotEmpty) {
+                                    ?.value !=
+                                "") {
                           await _ratingProvider.insert(rating);
                         }
 
@@ -558,109 +552,161 @@ class _NebulaFormState extends State<NebulaForm> {
                           height: 40,
                           borderRadius: 50,
                         ),
-                        GradientButton(
-                          onPressed: () async {
-                            _nebulaFormKey.currentState?.saveAndValidate();
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GradientButton(
+                              onPressed: () async {
+                                try {
+                                  var animeWatchlist =
+                                      await _animeWatchlistProvider
+                                          .get(filter: {
+                                    "AnimeId": "${widget.anime.id}",
+                                    "WatchlistId":
+                                        "${widget.animeWatchlist!.watchlistId}"
+                                  });
 
-                            if (_nebulaFormKey.currentState
-                                    ?.saveAndValidate() ==
-                                true) {
-                              try {
-                                var animeWatchlist =
-                                    await _animeWatchlistProvider.get(filter: {
-                                  "AnimeId": "${widget.anime.id}",
-                                  "WatchlistId":
-                                      "${widget.animeWatchlist!.watchlistId}"
-                                });
+                                  var rating = await _ratingProvider.get(
+                                      filter: {
+                                        "UserId": "${LoggedUser.user!.id}",
+                                        "AnimeId": "${widget.anime.id}"
+                                      });
 
-                                if (animeWatchlist.count == 1) {
-                                  animeWatchlist.result[0].watchStatus =
-                                      _nebulaFormKey.currentState!
-                                          .fields["watchStatus"]?.value;
-                                  animeWatchlist.result[0].progress = progress;
-                                  animeWatchlist.result[0].dateStarted =
-                                      (_nebulaFormKey
+                                  if (animeWatchlist.count == 1) {
+                                    await _animeWatchlistProvider
+                                        .delete(animeWatchlist.result[0].id!);
+
+                                    await _ratingProvider
+                                        .delete(rating.result[0].id!);
+
+                                    showInfoDialog(
+                                        context,
+                                        const Icon(Icons.task_alt,
+                                            color: Palette.lightPurple,
+                                            size: 50),
+                                        const Text(
+                                          "Removed successfully!",
+                                          textAlign: TextAlign.center,
+                                        ));
+                                  }
+                                } on Exception catch (e) {
+                                  showErrorDialog(context, e);
+                                }
+                              },
+                              borderRadius: 50,
+                              height: 30,
+                              width: 80,
+                              paddingTop: 20,
+                              gradient: Palette.redGradient,
+                              child: const Text(
+                                "Remove",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            GradientButton(
+                              onPressed: () async {
+                                _nebulaFormKey.currentState?.saveAndValidate();
+
+                                if (_nebulaFormKey.currentState
+                                        ?.saveAndValidate() ==
+                                    true) {
+                                  try {
+                                    var animeWatchlist =
+                                        await _animeWatchlistProvider
+                                            .get(filter: {
+                                      "AnimeId": "${widget.anime.id}",
+                                      "WatchlistId":
+                                          "${widget.animeWatchlist!.watchlistId}"
+                                    });
+
+                                    if (animeWatchlist.count == 1) {
+                                      animeWatchlist.result[0].watchStatus =
+                                          _nebulaFormKey.currentState!
+                                              .fields["watchStatus"]?.value;
+                                      animeWatchlist.result[0].progress =
+                                          progress;
+                                      animeWatchlist.result[0].dateStarted =
+                                          (_nebulaFormKey
+                                                      .currentState!
+                                                      .fields["dateStarted"]
+                                                      ?.value !=
+                                                  null)
+                                              ? (_nebulaFormKey
                                                   .currentState!
                                                   .fields["dateStarted"]
-                                                  ?.value !=
-                                              null)
-                                          ? (_nebulaFormKey
-                                              .currentState!
-                                              .fields["dateStarted"]
-                                              ?.value as DateTime)
-                                          : null;
-                                  animeWatchlist.result[0].dateFinished =
-                                      (_nebulaFormKey
+                                                  ?.value as DateTime)
+                                              : null;
+                                      animeWatchlist.result[0].dateFinished =
+                                          (_nebulaFormKey
+                                                      .currentState!
+                                                      .fields["dateFinished"]
+                                                      ?.value !=
+                                                  null)
+                                              ? (_nebulaFormKey
                                                   .currentState!
                                                   .fields["dateFinished"]
-                                                  ?.value !=
-                                              null)
-                                          ? (_nebulaFormKey
-                                              .currentState!
-                                              .fields["dateFinished"]
-                                              ?.value as DateTime)
-                                          : null;
-                                }
+                                                  ?.value as DateTime)
+                                              : null;
+                                    }
 
-                                /* _animeWatchlistProvider.update(
-                                    animeWatchlist.result[0].id!,
-                                    request: animeWatchlist);*/
+                                    /* _animeWatchlistProvider.update(
+                                        animeWatchlist.result[0].id!,
+                                        request: animeWatchlist);*/
 
-                                print(
-                                    "AnimeWatchlist update obj: Id: ${animeWatchlist.result[0].id} AnimeId: ${animeWatchlist.result[0].animeId} Progress: ${animeWatchlist.result[0].progress} WatchStatus: ${animeWatchlist.result[0].watchStatus} DateStarted: ${animeWatchlist.result[0].dateStarted} DateFinished: ${animeWatchlist.result[0].dateFinished}");
+                                    print(
+                                        "AnimeWatchlist update obj: Id: ${animeWatchlist.result[0].id} AnimeId: ${animeWatchlist.result[0].animeId} Progress: ${animeWatchlist.result[0].progress} WatchStatus: ${animeWatchlist.result[0].watchStatus} DateStarted: ${animeWatchlist.result[0].dateStarted} DateFinished: ${animeWatchlist.result[0].dateFinished}");
 
-                                var rating = await _ratingProvider.get(filter: {
-                                  "UserId": "${LoggedUser.user!.id}",
-                                  "AnimeId": "${widget.anime.id}"
-                                });
+                                    var rating = await _ratingProvider.get(
+                                        filter: {
+                                          "UserId": "${LoggedUser.user!.id}",
+                                          "AnimeId": "${widget.anime.id}"
+                                        });
 
-                                if (rating.count == 1) {
-                                  var ratingValue;
+                                    if (rating.count == 1) {
+                                      var ratingValue;
 
-                                  if (_nebulaFormKey.currentState!
-                                          .fields["ratingValue"]?.value ==
-                                      null) {
-                                    ratingValue = 0;
-                                  } else {
-                                    ratingValue = _nebulaFormKey.currentState!
-                                        .fields["ratingValue"]?.value;
+                                      if (_nebulaFormKey.currentState!
+                                              .fields["ratingValue"]?.value ==
+                                          null) {
+                                        ratingValue = 0;
+                                      } else {
+                                        ratingValue = _nebulaFormKey
+                                            .currentState!
+                                            .fields["ratingValue"]
+                                            ?.value;
+                                      }
+                                      rating.result[0].ratingValue =
+                                          ratingValue;
+                                      rating.result[0].reviewText =
+                                          _nebulaFormKey
+                                                  .currentState!
+                                                  .fields["reviewText"]
+                                                  ?.value ??
+                                              "";
+
+                                      /* _ratingProvider.update(rating.result[0].id!,
+                                          request: rating);*/
+                                    }
+
+                                    print(
+                                        "Rating update obj: Id: ${rating.result[0].id} AnimeId: ${rating.result[0].animeId} UserId: ${rating.result[0].userId} RatingValue: ${rating.result[0].ratingValue} ReviewText: ${rating.result[0].reviewText}");
+                                  } on Exception catch (e) {
+                                    showErrorDialog(context, e);
                                   }
-                                  rating.result[0].ratingValue = ratingValue;
-                                  rating.result[0].reviewText = _nebulaFormKey
-                                          .currentState!
-                                          .fields["reviewText"]
-                                          ?.value ??
-                                      "";
-
-                                  /* _ratingProvider.update(rating.result[0].id!,
-                                      request: rating);*/
                                 }
-
-                                print(
-                                    "Rating update obj: Id: ${rating.result[0].id} AnimeId: ${rating.result[0].animeId} UserId: ${rating.result[0].userId} RatingValue: ${rating.result[0].ratingValue} ReviewText: ${rating.result[0].reviewText}");
-
-                                showInfoDialog(
-                                    context,
-                                    const Icon(Icons.task_alt,
-                                        color: Palette.lightPurple, size: 50),
-                                    const Text(
-                                      "Updated successfully!",
-                                      textAlign: TextAlign.center,
-                                    ));
-                              } on Exception catch (e) {
-                                showErrorDialog(context, e);
-                              }
-                            }
-                          },
-                          borderRadius: 50,
-                          height: 30,
-                          width: 80,
-                          paddingTop: 20,
-                          gradient: Palette.buttonGradient,
-                          child: const Text(
-                            "Save",
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
+                              },
+                              borderRadius: 50,
+                              height: 30,
+                              width: 80,
+                              paddingTop: 20,
+                              gradient: Palette.buttonGradient,
+                              child: const Text(
+                                "Save",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

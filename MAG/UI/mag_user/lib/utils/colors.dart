@@ -70,6 +70,14 @@ class Palette {
 
   static const LinearGradient buttonGradient2 = LinearGradient(
       colors: [Color.fromRGBO(52, 48, 110, 1), Color.fromRGBO(52, 48, 110, 1)]);
+
+  static const LinearGradient redGradient = LinearGradient(
+    colors: [
+      Color.fromRGBO(144, 36, 88, 0.698),
+      Color.fromRGBO(236, 87, 129, 0.7),
+    ],
+  );
+
   //Detailed icon colors
   static const Color animeIco_e902 = Color.fromRGBO(101, 91, 192, 1);
   static const Color animeIco_e903 = Color.fromRGBO(140, 131, 215, 1);

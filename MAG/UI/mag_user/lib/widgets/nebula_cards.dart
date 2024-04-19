@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../models/anime_watchlist.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
+import '../providers/anime_watchlist_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -41,6 +42,7 @@ class NebulaCards extends StatefulWidget {
 class _NebulaCardsState extends State<NebulaCards>
     with AutomaticKeepAliveClientMixin<NebulaCards> {
   late Future<SearchResult<AnimeWatchlist>> _animeWatchlistFuture;
+  late AnimeWatchlistProvider _animeWatchlistProvider;
   final ScrollController _scrollController = ScrollController();
   late RatingProvider _ratingProvider;
   int totalItems = 0;
@@ -51,11 +53,28 @@ class _NebulaCardsState extends State<NebulaCards>
   @override
   void initState() {
     _animeWatchlistFuture = widget.fetch();
+    _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _ratingProvider = context.read<RatingProvider>();
+
+    _animeWatchlistProvider.addListener(() {
+      _reloadData();
+    });
 
     setTotalItems();
 
     super.initState();
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _animeWatchlistFuture = _animeWatchlistProvider.get(filter: {
+          ...widget.filter,
+          "Page": "${widget.page}",
+          "PageSize": "${widget.pageSize}"
+        });
+      });
+    }
   }
 
   void setTotalItems() async {
