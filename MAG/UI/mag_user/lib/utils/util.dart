@@ -210,7 +210,7 @@ Center buildEmptyNebula(BuildContext context) {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const HomeScreen(selectedIndex: 0)));
               },
-              width: 110,
+              width: 120,
               height: 30,
               borderRadius: 50,
               gradient: Palette.navGradient4,

@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_user/models/anime_watchlist.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
 import 'package:mag_user/providers/rating_provider.dart';
+import 'package:mag_user/providers/watchlist_provider.dart';
 import 'package:mag_user/utils/util.dart';
 import 'package:mag_user/widgets/form_builder_datetime_picker.dart';
 import 'package:mag_user/widgets/form_builder_text_field.dart';
@@ -11,7 +12,9 @@ import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
+import '../models/rating.dart';
 import '../models/search_result.dart';
+import '../models/watchlist.dart';
 import '../utils/colors.dart';
 import 'circular_progress_indicator.dart';
 import 'form_builder_choice_chip.dart';
@@ -20,13 +23,15 @@ import 'gradient_button.dart';
 class NebulaForm extends StatefulWidget {
   final Anime anime;
 
-  /// If watchlistId isn't provided, it means editing is in question, not adding
-  final int? watchlistId;
+  /// If provided -> adding, if not provided -> editing
+  ///
+  /// If zero, it means user has no watchlist and it must be created before inserting Anime into it
+  int? watchlistId;
 
   /// When accessing NebulaForm from NebulaScreen, this object must be passed for editing
   final AnimeWatchlist? animeWatchlist;
 
-  const NebulaForm({
+  NebulaForm({
     Key? key,
     required this.anime,
     this.watchlistId,
@@ -41,6 +46,7 @@ class _NebulaFormState extends State<NebulaForm> {
   final _nebulaFormKey = GlobalKey<FormBuilderState>();
   late final AnimeWatchlistProvider _animeWatchlistProvider;
   late final RatingProvider _ratingProvider;
+  late final WatchlistProvider _watchlistProvider;
   late Future<Map<String, dynamic>> _initialValueFuture;
 
   int progress = 0;
@@ -49,8 +55,11 @@ class _NebulaFormState extends State<NebulaForm> {
   void initState() {
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _ratingProvider = context.read<RatingProvider>();
+    _watchlistProvider = context.read<WatchlistProvider>();
 
     _initialValueFuture = setInitialValue();
+
+    print("Watchlist Id is: ${widget.watchlistId}");
 
     super.initState();
   }
@@ -74,10 +83,21 @@ class _NebulaFormState extends State<NebulaForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.watchlistId != null) {
+    if (widget.watchlistId != null && widget.watchlistId != 0) {
+      return _buildAddForm(context);
+    } else if (widget.watchlistId == 0) {
+      _addFirstWatchlist();
       return _buildAddForm(context);
     }
     return _buildEditForm(context);
+  }
+
+  void _addFirstWatchlist() async {
+    Watchlist watchlist = Watchlist(null, LoggedUser.user!.id, DateTime.now());
+    var usersWatchlist = await _watchlistProvider.insert(watchlist);
+    setState(() {
+      widget.watchlistId = usersWatchlist.id;
+    });
   }
 
   Dialog _buildAddForm(BuildContext context) {
@@ -654,9 +674,9 @@ class _NebulaFormState extends State<NebulaForm> {
                                               : null;
                                     }
 
-                                    /* _animeWatchlistProvider.update(
+                                    _animeWatchlistProvider.update(
                                         animeWatchlist.result[0].id!,
-                                        request: animeWatchlist);*/
+                                        request: animeWatchlist.result[0]);
 
                                     print(
                                         "AnimeWatchlist update obj: Id: ${animeWatchlist.result[0].id} AnimeId: ${animeWatchlist.result[0].animeId} Progress: ${animeWatchlist.result[0].progress} WatchStatus: ${animeWatchlist.result[0].watchStatus} DateStarted: ${animeWatchlist.result[0].dateStarted} DateFinished: ${animeWatchlist.result[0].dateFinished}");
@@ -666,8 +686,10 @@ class _NebulaFormState extends State<NebulaForm> {
                                           "UserId": "${LoggedUser.user!.id}",
                                           "AnimeId": "${widget.anime.id}"
                                         });
-
-                                    if (rating.count == 1) {
+                                    if (rating.count == 0) {
+                                      // Rating rating = Rating(null, LoggedUser.user!.id, widget.anime.id, );
+                                      // _ratingProvider.insert();
+                                    } else if (rating.count == 1) {
                                       var ratingValue;
 
                                       if (_nebulaFormKey.currentState!
@@ -691,10 +713,22 @@ class _NebulaFormState extends State<NebulaForm> {
 
                                       /* _ratingProvider.update(rating.result[0].id!,
                                           request: rating);*/
+
+                                      print(
+                                          "Rating update obj: Id: ${rating.result[0].id} AnimeId: ${rating.result[0].animeId} UserId: ${rating.result[0].userId} RatingValue: ${rating.result[0].ratingValue} ReviewText: ${rating.result[0].reviewText}");
                                     }
 
-                                    print(
-                                        "Rating update obj: Id: ${rating.result[0].id} AnimeId: ${rating.result[0].animeId} UserId: ${rating.result[0].userId} RatingValue: ${rating.result[0].ratingValue} ReviewText: ${rating.result[0].reviewText}");
+                                    Navigator.of(context).pop();
+
+                                    showInfoDialog(
+                                        context,
+                                        const Icon(Icons.task_alt,
+                                            color: Palette.lightPurple,
+                                            size: 50),
+                                        const Text(
+                                          "Updated successfully!",
+                                          textAlign: TextAlign.center,
+                                        ));
                                   } on Exception catch (e) {
                                     showErrorDialog(context, e);
                                   }

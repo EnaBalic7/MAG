@@ -73,6 +73,7 @@ class _AnimeCardsState extends State<AnimeCards>
     _watchlist = await _watchlistProvider
         .get(filter: {"userId": "${LoggedUser.user!.id}"});
 
+    /// If zero, it means user has no watchlist yet
     watchlistId = (_watchlist.count == 1) ? _watchlist.result.first.id! : 0;
   }
 
