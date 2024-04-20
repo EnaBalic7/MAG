@@ -325,6 +325,8 @@ class _NebulaFormState extends State<NebulaForm> {
                           await _ratingProvider.insert(rating);
                         }
 
+                        Navigator.of(context).pop();
+
                         showInfoDialog(
                             context,
                             const Icon(Icons.task_alt,
@@ -579,6 +581,8 @@ class _NebulaFormState extends State<NebulaForm> {
 
                                     await _ratingProvider
                                         .delete(rating.result[0].id!);
+
+                                    Navigator.of(context).pop();
 
                                     showInfoDialog(
                                         context,

@@ -98,6 +98,7 @@ class _NebulaCardsState extends State<NebulaCards>
           } else {
             // Data loaded successfully
             var animeWatchlists = snapshot.data!.result;
+
             return SingleChildScrollView(
               controller: _scrollController,
               child: Center(

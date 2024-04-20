@@ -317,3 +317,11 @@ buildOutlinedStarIcon(double size) {
     color: Palette.lightPurple,
   );
 }
+
+buildBlackHoleIcon(double size, {Color? color}) {
+  return Icon(
+    const IconData(0xe954, fontFamily: 'icomoon'),
+    size: size,
+    color: color ?? Palette.lightPurple,
+  );
+}

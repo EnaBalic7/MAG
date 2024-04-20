@@ -8,6 +8,10 @@ import '../models/anime_watchlist.dart';
 import '../models/search_result.dart';
 import '../models/watchlist.dart';
 import '../providers/anime_watchlist_provider.dart';
+import '../utils/colors.dart';
+import '../utils/icons.dart';
+import '../widgets/gradient_button.dart';
+import 'home_screen.dart';
 
 class NebulaAllScreen extends StatefulWidget {
   final int selectedIndex;
@@ -42,13 +46,15 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
     _watchlist = await _watchlistProvider
         .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
-    _filter = {
-      "WatchlistId": "${_watchlist.result[0].id}",
-      "AnimeIncluded": "true",
-      "NewestFirst": "true",
-    };
-
-    return _filter;
+    if (_watchlist.result.isNotEmpty) {
+      _filter = {
+        "WatchlistId": "${_watchlist.result[0].id}",
+        "AnimeIncluded": "true",
+        "NewestFirst": "true",
+      };
+      return _filter;
+    }
+    return {};
   }
 
   @override
@@ -62,14 +68,18 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
           return Text('Error: ${snapshot.error}');
         } else {
           final filter = snapshot.data!;
-          return NebulaCards(
-            selectedIndex: widget.selectedIndex,
-            page: page,
-            pageSize: pageSize,
-            fetch: fetchAnime,
-            fetchPage: fetchPage,
-            filter: filter,
-          );
+
+          if (filter.isNotEmpty) {
+            return NebulaCards(
+              selectedIndex: widget.selectedIndex,
+              page: page,
+              pageSize: pageSize,
+              fetch: fetchAnime,
+              fetchPage: fetchPage,
+              filter: filter,
+            );
+          }
+          return buildEmptyNebula(context);
         }
       },
     );

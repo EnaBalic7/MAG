@@ -43,14 +43,16 @@ class _NebulaPlanToWatchScreenState extends State<NebulaPlanToWatchScreen> {
     _watchlist = await _watchlistProvider
         .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
-    _filter = {
-      "WatchlistId": "${_watchlist.result[0].id}",
-      "AnimeIncluded": "true",
-      "WatchStatus": "Plan to Watch",
-      "NewestFirst": "true",
-    };
-
-    return _filter;
+    if (_watchlist.result.isNotEmpty) {
+      _filter = {
+        "WatchlistId": "${_watchlist.result[0].id}",
+        "AnimeIncluded": "true",
+        "WatchStatus": "Plan to Watch",
+        "NewestFirst": "true",
+      };
+      return _filter;
+    }
+    return {};
   }
 
   @override
@@ -64,14 +66,18 @@ class _NebulaPlanToWatchScreenState extends State<NebulaPlanToWatchScreen> {
           return Text('Error: ${snapshot.error}');
         } else {
           final filter = snapshot.data!;
-          return NebulaCards(
-            selectedIndex: widget.selectedIndex,
-            page: page,
-            pageSize: pageSize,
-            fetch: fetchAnime,
-            fetchPage: fetchPage,
-            filter: filter,
-          );
+
+          if (filter.isNotEmpty) {
+            return NebulaCards(
+              selectedIndex: widget.selectedIndex,
+              page: page,
+              pageSize: pageSize,
+              fetch: fetchAnime,
+              fetchPage: fetchPage,
+              filter: filter,
+            );
+          }
+          return buildEmptyNebula(context);
         }
       },
     );
