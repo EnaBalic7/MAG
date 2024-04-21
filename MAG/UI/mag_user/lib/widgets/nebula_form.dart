@@ -197,20 +197,31 @@ class _NebulaFormState extends State<NebulaForm> {
                   ],
                 ),
                 MyFormBuilderChoiceChip(
-                    name: "ratingValue",
-                    selectedColor: Palette.lightYellow,
-                    options: const [
-                      FormBuilderFieldOption(value: 10),
-                      FormBuilderFieldOption(value: 9),
-                      FormBuilderFieldOption(value: 8),
-                      FormBuilderFieldOption(value: 7),
-                      FormBuilderFieldOption(value: 6),
-                      FormBuilderFieldOption(value: 5),
-                      FormBuilderFieldOption(value: 4),
-                      FormBuilderFieldOption(value: 3),
-                      FormBuilderFieldOption(value: 2),
-                      FormBuilderFieldOption(value: 1),
-                    ]),
+                  name: "ratingValue",
+                  selectedColor: Palette.lightYellow,
+                  options: const [
+                    FormBuilderFieldOption(value: 10),
+                    FormBuilderFieldOption(value: 9),
+                    FormBuilderFieldOption(value: 8),
+                    FormBuilderFieldOption(value: 7),
+                    FormBuilderFieldOption(value: 6),
+                    FormBuilderFieldOption(value: 5),
+                    FormBuilderFieldOption(value: 4),
+                    FormBuilderFieldOption(value: 3),
+                    FormBuilderFieldOption(value: 2),
+                    FormBuilderFieldOption(value: 1),
+                  ],
+                  validator: (val) {
+                    /* final watchStatus = _nebulaFormKey
+                        .currentState!.fields['watchStatus']?.value;*/
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                    if (val is int) {
+                      return 'No can do, buckaroo.';
+                    }
+
+                    return null;
+                  },
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -230,6 +241,11 @@ class _NebulaFormState extends State<NebulaForm> {
                         val.isNotEmpty &&
                         !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
+                    } else if (val != "" &&
+                        _nebulaFormKey
+                                .currentState?.fields["watchStatus"]?.value ==
+                            "Plan to Watch") {
+                      return "Plan to Watch selected.";
                     } else if (val != null &&
                         val.isNotEmpty &&
                         (_nebulaFormKey.currentState?.fields["ratingValue"]
@@ -490,21 +506,30 @@ class _NebulaFormState extends State<NebulaForm> {
                           ],
                         ),
                         MyFormBuilderChoiceChip(
-                            name: "ratingValue",
-                            initialValue: initialValue?["ratingValue"],
-                            selectedColor: Palette.lightYellow,
-                            options: const [
-                              FormBuilderFieldOption(value: 10),
-                              FormBuilderFieldOption(value: 9),
-                              FormBuilderFieldOption(value: 8),
-                              FormBuilderFieldOption(value: 7),
-                              FormBuilderFieldOption(value: 6),
-                              FormBuilderFieldOption(value: 5),
-                              FormBuilderFieldOption(value: 4),
-                              FormBuilderFieldOption(value: 3),
-                              FormBuilderFieldOption(value: 2),
-                              FormBuilderFieldOption(value: 1),
-                            ]),
+                          name: "ratingValue",
+                          initialValue: initialValue?["ratingValue"],
+                          selectedColor: Palette.lightYellow,
+                          options: const [
+                            FormBuilderFieldOption(value: 10),
+                            FormBuilderFieldOption(value: 9),
+                            FormBuilderFieldOption(value: 8),
+                            FormBuilderFieldOption(value: 7),
+                            FormBuilderFieldOption(value: 6),
+                            FormBuilderFieldOption(value: 5),
+                            FormBuilderFieldOption(value: 4),
+                            FormBuilderFieldOption(value: 3),
+                            FormBuilderFieldOption(value: 2),
+                            FormBuilderFieldOption(value: 1),
+                          ],
+                          validator: (val) {
+                            if (val != null &&
+                                _nebulaFormKey.currentState
+                                        ?.fields["watchStatus"]?.value ==
+                                    "Plan to Watch") {
+                              return "No can do, buckaroo.";
+                            }
+                          },
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
@@ -686,34 +711,57 @@ class _NebulaFormState extends State<NebulaForm> {
                                           "UserId": "${LoggedUser.user!.id}",
                                           "AnimeId": "${widget.anime.id}"
                                         });
-                                    if (rating.count == 0) {
-                                      // Rating rating = Rating(null, LoggedUser.user!.id, widget.anime.id, );
-                                      // _ratingProvider.insert();
-                                    } else if (rating.count == 1) {
-                                      var ratingValue;
 
+                                    var ratingValue;
+
+                                    if (_nebulaFormKey.currentState!
+                                            .fields["ratingValue"]?.value ==
+                                        null) {
+                                      ratingValue = 0;
+                                    } else {
+                                      ratingValue = _nebulaFormKey.currentState!
+                                          .fields["ratingValue"]?.value;
+                                    }
+
+                                    if (rating.count == 0 &&
+                                        _nebulaFormKey.currentState!
+                                                .fields["ratingValue"]?.value !=
+                                            null) {
+                                      String? reviewText = _nebulaFormKey
+                                              .currentState!
+                                              .fields["reviewText"]
+                                              ?.value ??
+                                          "";
+
+                                      Rating rating = Rating(
+                                          null,
+                                          LoggedUser.user!.id,
+                                          widget.anime.id,
+                                          ratingValue,
+                                          reviewText,
+                                          DateTime.now());
+
+                                      _ratingProvider.insert(rating);
+                                    } else if (rating.count == 1) {
                                       if (_nebulaFormKey.currentState!
                                               .fields["ratingValue"]?.value ==
                                           null) {
-                                        ratingValue = 0;
+                                        _ratingProvider
+                                            .delete(rating.result[0].id!);
                                       } else {
-                                        ratingValue = _nebulaFormKey
-                                            .currentState!
-                                            .fields["ratingValue"]
-                                            ?.value;
+                                        rating.result[0].ratingValue =
+                                            ratingValue;
+                                        rating.result[0].reviewText =
+                                            _nebulaFormKey
+                                                    .currentState!
+                                                    .fields["reviewText"]
+                                                    ?.value ??
+                                                "";
+
+                                        _ratingProvider.update(
+                                            rating.result[0].id!,
+                                            request: rating.result[0]);
                                       }
-                                      rating.result[0].ratingValue =
-                                          ratingValue;
-                                      rating.result[0].reviewText =
-                                          _nebulaFormKey
-                                                  .currentState!
-                                                  .fields["reviewText"]
-                                                  ?.value ??
-                                              "";
-
-                                      /* _ratingProvider.update(rating.result[0].id!,
-                                          request: rating);*/
-
                                       print(
                                           "Rating update obj: Id: ${rating.result[0].id} AnimeId: ${rating.result[0].animeId} UserId: ${rating.result[0].userId} RatingValue: ${rating.result[0].ratingValue} ReviewText: ${rating.result[0].reviewText}");
                                     }
