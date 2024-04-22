@@ -191,7 +191,7 @@ String extractVideoId(String videoLink) {
 }
 
 bool isValidReviewText(String text) {
-  return RegExp(r"^[a-zA-Z0-9\s.,!?;:'()]*$").hasMatch(text);
+  return RegExp(r"^[a-zA-Z0-9\s.,!?;:'()-]*$").hasMatch(text);
 }
 
 Center buildEmptyNebula(BuildContext context) {

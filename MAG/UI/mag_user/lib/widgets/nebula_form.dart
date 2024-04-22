@@ -59,7 +59,7 @@ class _NebulaFormState extends State<NebulaForm> {
 
     _initialValueFuture = setInitialValue();
 
-    print("Watchlist Id is: ${widget.watchlistId}");
+    // print("Watchlist Id is: ${widget.watchlistId}");
 
     super.initState();
   }
@@ -174,11 +174,40 @@ class _NebulaFormState extends State<NebulaForm> {
                     ),
                   ],
                 ),
-                NumericStepButton(
-                  minValue: 0,
-                  maxValue: widget.anime.episodesNumber!,
+                FormBuilderField(
+                  name: "",
+                  builder: (FormFieldState<dynamic> field) {
+                    return InputDecorator(
+                      decoration: InputDecoration(
+                          errorStyle: TextStyle(color: Palette.lightRed),
+                          errorText: field.errorText,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(0)),
+                      child: NumericStepButton(
+                        minValue: 0,
+                        maxValue: widget.anime.episodesNumber!,
+                        onChanged: (val) {
+                          progress = val;
+                          field.didChange(val);
+                        },
+                      ),
+                    );
+                  },
                   onChanged: (val) {
-                    progress = val;
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    final watchStatus = _nebulaFormKey
+                        .currentState!.fields['watchStatus']?.value;
+
+                    if (watchStatus == "Plan to Watch" &&
+                        val != null &&
+                        val != "" &&
+                        val is int &&
+                        val > 0) {
+                      return "Cannot choose progress with selected watch status.";
+                    }
+                    return null;
                   },
                 ),
                 MySeparator(
@@ -211,12 +240,19 @@ class _NebulaFormState extends State<NebulaForm> {
                     FormBuilderFieldOption(value: 2),
                     FormBuilderFieldOption(value: 1),
                   ],
-                  validator: (val) {
-                    /* final watchStatus = _nebulaFormKey
-                        .currentState!.fields['watchStatus']?.value;*/
+                  onChanged: (val) {
                     _nebulaFormKey.currentState?.saveAndValidate();
-                    if (val is int) {
-                      return 'No can do, buckaroo.';
+                  },
+                  validator: (val) {
+                    final watchStatus = _nebulaFormKey
+                        .currentState!.fields['watchStatus']?.value;
+
+                    if (watchStatus == "Plan to Watch" &&
+                        val != null &&
+                        val != "" &&
+                        val is int &&
+                        val > 0) {
+                      return "Cannot leave score with selected watch status.";
                     }
 
                     return null;
@@ -241,11 +277,12 @@ class _NebulaFormState extends State<NebulaForm> {
                         val.isNotEmpty &&
                         !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
-                    } else if (val != "" &&
+                    } else if (val != null &&
+                        val != "" &&
                         _nebulaFormKey
                                 .currentState?.fields["watchStatus"]?.value ==
                             "Plan to Watch") {
-                      return "Plan to Watch selected.";
+                      return "Cannot leave review with selected watch status.";
                     } else if (val != null &&
                         val.isNotEmpty &&
                         (_nebulaFormKey.currentState?.fields["ratingValue"]
@@ -624,8 +661,10 @@ class _NebulaFormState extends State<NebulaForm> {
                                     await _animeWatchlistProvider
                                         .delete(animeWatchlist.result[0].id!);
 
-                                    await _ratingProvider
-                                        .delete(rating.result[0].id!);
+                                    if (rating.count == 1) {
+                                      await _ratingProvider
+                                          .delete(rating.result[0].id!);
+                                    }
 
                                     Navigator.of(context).pop();
 
