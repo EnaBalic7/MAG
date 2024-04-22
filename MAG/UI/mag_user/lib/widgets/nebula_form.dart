@@ -179,7 +179,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   builder: (FormFieldState<dynamic> field) {
                     return InputDecorator(
                       decoration: InputDecoration(
-                          errorStyle: TextStyle(color: Palette.lightRed),
+                          errorStyle: const TextStyle(color: Palette.lightRed),
                           errorText: field.errorText,
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.all(0)),
@@ -316,22 +316,48 @@ class _NebulaFormState extends State<NebulaForm> {
                 ),
                 MyDateTimePicker(
                   name: "dateStarted",
+                  formKey: _nebulaFormKey,
                   labelText: "Began watching",
                   fillColor: Palette.ratingPurple,
                   width: double.infinity,
                   height: 40,
                   borderRadius: 50,
+                  onChanged: (val) {
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    final watchStatus = _nebulaFormKey
+                        .currentState!.fields['watchStatus']?.value;
+
+                    if (watchStatus == "Plan to Watch" && val != null) {
+                      return "Cannot choose date with selected watch status.";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 MyDateTimePicker(
                   name: "dateFinished",
+                  formKey: _nebulaFormKey,
                   labelText: "Finished watching",
                   fillColor: Palette.ratingPurple,
                   width: double.infinity,
                   height: 40,
                   borderRadius: 50,
+                  onChanged: (val) {
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    final watchStatus = _nebulaFormKey
+                        .currentState!.fields['watchStatus']?.value;
+
+                    if (watchStatus == "Plan to Watch" && val != null) {
+                      return "Cannot choose date with selected watch status.";
+                    }
+                    return null;
+                  },
                 ),
                 GradientButton(
                   onPressed: () async {
@@ -507,6 +533,8 @@ class _NebulaFormState extends State<NebulaForm> {
                           validator: (val) {
                             if (val == null || val.isEmpty) {
                               return "You must choose watch status.";
+                            } else if (val == "Plan to Watch") {
+                              return "Cannot change to selected watch status.";
                             }
                             return null;
                           },
@@ -519,13 +547,29 @@ class _NebulaFormState extends State<NebulaForm> {
                             ),
                           ],
                         ),
-                        NumericStepButton(
-                          minValue: 0,
-                          maxValue: widget.anime.episodesNumber!,
-                          onChanged: (val) {
-                            progress = val;
+                        FormBuilderField(
+                          name: "",
+                          builder: (FormFieldState<dynamic> field) {
+                            return InputDecorator(
+                              decoration: InputDecoration(
+                                  errorStyle:
+                                      const TextStyle(color: Palette.lightRed),
+                                  errorText: field.errorText,
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.all(0)),
+                              child: NumericStepButton(
+                                minValue: 0,
+                                maxValue: widget.anime.episodesNumber!,
+                                onChanged: (val) {
+                                  progress = val;
+                                },
+                                initialValue: widget.animeWatchlist!.progress,
+                              ),
+                            );
                           },
-                          initialValue: widget.animeWatchlist!.progress,
+                          onChanged: (val) {
+                            _nebulaFormKey.currentState?.saveAndValidate();
+                          },
                         ),
                         MySeparator(
                           width: double.infinity,
@@ -558,13 +602,8 @@ class _NebulaFormState extends State<NebulaForm> {
                             FormBuilderFieldOption(value: 2),
                             FormBuilderFieldOption(value: 1),
                           ],
-                          validator: (val) {
-                            if (val != null &&
-                                _nebulaFormKey.currentState
-                                        ?.fields["watchStatus"]?.value ==
-                                    "Plan to Watch") {
-                              return "No can do, buckaroo.";
-                            }
+                          onChanged: (val) {
+                            _nebulaFormKey.currentState?.saveAndValidate();
                           },
                         ),
                         const SizedBox(
@@ -619,22 +658,30 @@ class _NebulaFormState extends State<NebulaForm> {
                         ),
                         MyDateTimePicker(
                           name: "dateStarted",
+                          formKey: _nebulaFormKey,
                           labelText: "Began watching",
                           fillColor: Palette.ratingPurple,
                           width: double.infinity,
                           height: 40,
                           borderRadius: 50,
+                          onChanged: (val) {
+                            _nebulaFormKey.currentState?.saveAndValidate();
+                          },
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         MyDateTimePicker(
                           name: "dateFinished",
+                          formKey: _nebulaFormKey,
                           labelText: "Finished watching",
                           fillColor: Palette.ratingPurple,
                           width: double.infinity,
                           height: 40,
                           borderRadius: 50,
+                          onChanged: (val) {
+                            _nebulaFormKey.currentState?.saveAndValidate();
+                          },
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -765,7 +812,10 @@ class _NebulaFormState extends State<NebulaForm> {
                                     if (rating.count == 0 &&
                                         _nebulaFormKey.currentState!
                                                 .fields["ratingValue"]?.value !=
-                                            null) {
+                                            null &&
+                                        _nebulaFormKey.currentState!
+                                                .fields["ratingValue"]?.value !=
+                                            "") {
                                       String? reviewText = _nebulaFormKey
                                               .currentState!
                                               .fields["reviewText"]

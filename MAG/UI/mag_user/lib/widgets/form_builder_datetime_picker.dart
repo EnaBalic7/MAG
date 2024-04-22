@@ -18,6 +18,8 @@ class MyDateTimePicker extends StatefulWidget {
   double? paddingTop;
   double? paddingBottom;
   String? Function(DateTime?)? validator;
+  void Function(DateTime?)? onChanged;
+  GlobalKey<FormBuilderState>? formKey;
   MyDateTimePicker({
     Key? key,
     required this.name,
@@ -32,6 +34,8 @@ class MyDateTimePicker extends StatefulWidget {
     this.initialValue,
     this.fillColor,
     this.validator,
+    this.onChanged,
+    this.formKey,
   }) : super(key: key);
 
   @override
@@ -57,10 +61,31 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
             return selectedDate?.toIso8601String();
           },
           name: widget.name!,
+          onChanged: widget.onChanged,
           decoration: InputDecoration(
-            suffixIcon: Padding(
+            suffixIcon: GestureDetector(
+              onTap: () {
+                if (widget.formKey != null) {
+                  widget.formKey!.currentState?.fields["${widget.name}"]
+                      ?.didChange(null);
+                }
+              },
+              child: Icon(Icons.clear_rounded,
+                  color: Palette.lightPurple.withOpacity(0.5)),
+            ),
+            prefixIcon: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: buildCalendarIcon(24),
+            ),
+            errorStyle: const TextStyle(
+              fontSize: 11,
+              color: Palette.lightRed,
+              height: 0.3,
+              textBaseline: TextBaseline.alphabetic,
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Palette.lightRed),
+              borderRadius: BorderRadius.circular(50),
             ),
             fillColor: widget.fillColor,
             labelText: widget.labelText,
