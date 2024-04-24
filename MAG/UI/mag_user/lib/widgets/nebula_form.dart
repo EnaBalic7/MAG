@@ -175,7 +175,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   ],
                 ),
                 FormBuilderField(
-                  name: "",
+                  name: "progress",
                   builder: (FormFieldState<dynamic> field) {
                     return InputDecorator(
                       decoration: InputDecoration(
@@ -206,6 +206,9 @@ class _NebulaFormState extends State<NebulaForm> {
                         val is int &&
                         val > 0) {
                       return "Cannot choose progress with selected watch status.";
+                    } else if (watchStatus == "Completed" &&
+                        progress < widget.anime.episodesNumber!) {
+                      return "Must select max. number of episodes.";
                     }
                     return null;
                   },
@@ -548,7 +551,7 @@ class _NebulaFormState extends State<NebulaForm> {
                           ],
                         ),
                         FormBuilderField(
-                          name: "",
+                          name: "progress",
                           builder: (FormFieldState<dynamic> field) {
                             return InputDecorator(
                               decoration: InputDecoration(
@@ -562,6 +565,10 @@ class _NebulaFormState extends State<NebulaForm> {
                                 maxValue: widget.anime.episodesNumber!,
                                 onChanged: (val) {
                                   progress = val;
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    field.didChange(val);
+                                  });
                                 },
                                 initialValue: widget.animeWatchlist!.progress,
                               ),
@@ -569,6 +576,16 @@ class _NebulaFormState extends State<NebulaForm> {
                           },
                           onChanged: (val) {
                             _nebulaFormKey.currentState?.saveAndValidate();
+                          },
+                          validator: (val) {
+                            final watchStatus = _nebulaFormKey
+                                .currentState!.fields['watchStatus']?.value;
+
+                            if (watchStatus == "Completed" &&
+                                progress < widget.anime.episodesNumber!) {
+                              return "Must select max. number of episodes.";
+                            }
+                            return null;
                           },
                         ),
                         MySeparator(

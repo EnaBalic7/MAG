@@ -49,6 +49,10 @@ namespace MAG.Services
             {
                 query = query.Include(animeWatchlist => animeWatchlist.Anime);
             }
+            if (search?.GenresIncluded == true)
+            {
+                query = query.Include(animeWatchlist => animeWatchlist.Anime.GenreAnimes);
+            }
             return base.AddInclude(query, search);
         }
     }

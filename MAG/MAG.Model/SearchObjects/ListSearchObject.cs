@@ -9,5 +9,7 @@ namespace MAG.Model.SearchObjects
     public class ListSearchObject : BaseSearchObject
     {
         public string? Name { get; set; }
+
+        public bool? NewestFirst { get; set; }
     }
 }

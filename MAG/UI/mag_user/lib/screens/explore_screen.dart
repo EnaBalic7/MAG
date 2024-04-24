@@ -17,6 +17,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     return MasterScreenWidget(
         selectedIndex: widget.selectedIndex,
         showNavBar: true,
+        showSearch: true,
         title: "Explore",
         child: const Text("Explore"));
   }

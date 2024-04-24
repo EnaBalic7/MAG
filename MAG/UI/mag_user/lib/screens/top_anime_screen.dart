@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/utils/util.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
 import '../models/search_result.dart';
-import '../models/watchlist.dart';
 import '../providers/anime_provider.dart';
-import '../providers/watchlist_provider.dart';
 import '../widgets/anime_cards.dart';
 
 class TopAnimeScreen extends StatefulWidget {

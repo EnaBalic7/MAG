@@ -275,14 +275,13 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       message: widget.floatingButtonTooltip ?? "",
       verticalOffset: 50,
       child: GradientButton(
-          width: 90,
-          height: 90,
+          width: 70,
+          height: 70,
           borderRadius: 100,
           onPressed: widget.floatingButtonOnPressed,
-          gradient: Palette.navGradient4,
+          gradient: Palette.navGradient2,
           child: widget.floatingActionButtonIcon ??
-              const Icon(Icons.add_rounded,
-                  size: 48, color: Palette.lightPurple)),
+              const Icon(Icons.add_rounded, size: 40, color: Palette.white)),
     );
   }
 

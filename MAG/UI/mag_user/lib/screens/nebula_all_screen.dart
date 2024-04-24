@@ -49,7 +49,7 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
     if (_watchlist.result.isNotEmpty) {
       _filter = {
         "WatchlistId": "${_watchlist.result[0].id}",
-        "AnimeIncluded": "true",
+        "GenresIncluded": "true",
         "NewestFirst": "true",
       };
       return _filter;

@@ -586,9 +586,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const MyProgressIndicator(
-              height: 10,
-              width: 10,
-              strokeWidth: 2,
+              height: 48,
+              width: 48,
+              strokeWidth: 4,
             ); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state

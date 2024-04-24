@@ -16,5 +16,19 @@ namespace MAG.Services
         {
 
         }
+
+        public override IQueryable<List> AddFilter(IQueryable<List> query, ListSearchObject? search = null)
+        {
+            if(search?.Name != null)
+            {
+                query = query.Where(list => list.Name.Contains(search.Name));
+            }
+            if (search?.NewestFirst != null)
+            {
+                query = query.OrderByDescending(list => list.Id);
+            }
+
+            return base.AddFilter(query, search);
+        }
     }
 }

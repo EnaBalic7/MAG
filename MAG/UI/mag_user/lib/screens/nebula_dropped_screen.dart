@@ -45,7 +45,7 @@ class _NebulaDroppedScreenState extends State<NebulaDroppedScreen> {
     if (_watchlist.result.isNotEmpty) {
       _filter = {
         "WatchlistId": "${_watchlist.result[0].id}",
-        "AnimeIncluded": "true",
+        "GenresIncluded": "true",
         "WatchStatus": "Dropped",
         "NewestFirst": "true",
       };
