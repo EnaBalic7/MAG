@@ -37,6 +37,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
     _listProvider = context.read<ListtProvider>();
     _listFuture = _listProvider.get(
       filter: {
+        "UserId": "${LoggedUser.user!.id}",
         "NewestFirst": "true",
         "Page": "$page",
         "PageSize": "$pageSize",
@@ -58,6 +59,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
     if (mounted) {
       setState(() {
         _listFuture = _listProvider.get(filter: {
+          "UserId": "${LoggedUser.user!.id}",
           "NewestFirst": "true",
           "Page": "$page",
           "PageSize": "$pageSize",
@@ -114,6 +116,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
     try {
       var result = await _listProvider.get(
         filter: {
+          "UserId": "${LoggedUser.user!.id}",
           "NewestFirst": "true",
           "Page": "$requestedPage",
           "PageSize": "$pageSize",

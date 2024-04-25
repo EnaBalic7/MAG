@@ -32,6 +32,8 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
       options: widget.options!,
       decoration: InputDecoration(
         labelText: widget.labelText ?? "",
+        contentPadding: EdgeInsets.zero,
+        floatingLabelAlignment: FloatingLabelAlignment.center,
         fillColor: Colors.transparent,
         labelStyle: const TextStyle(
           fontSize: 20,
@@ -42,8 +44,9 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
         border: InputBorder.none,
       ),
       onChanged: widget.onChanged,
+      alignment: WrapAlignment.center,
       spacing: 8,
-      runSpacing: 12,
+      runSpacing: 0,
     );
   }
 }

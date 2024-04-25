@@ -61,10 +61,16 @@ class MyMaterialApp extends StatelessWidget {
               decorationColor: Palette.lightPurple,
             ),
         chipTheme: const ChipThemeData(
-          padding: EdgeInsets.all(10),
-          selectedColor: Palette.teal,
+          padding: EdgeInsets.all(8),
+          selectedColor: Palette.rose,
           checkmarkColor: Palette.midnightPurple,
           backgroundColor: Palette.textFieldPurple,
+          labelPadding: EdgeInsets.only(
+            left: 5,
+            right: 5,
+            top: 0,
+            bottom: 0,
+          ),
         ),
         textSelectionTheme: const TextSelectionThemeData(
             cursorColor: Palette.lightPurple,

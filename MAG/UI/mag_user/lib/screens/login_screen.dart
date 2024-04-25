@@ -11,9 +11,14 @@ import '../utils/util.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/text_field.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late AnimeProvider _animeProvider;
@@ -94,11 +99,12 @@ class LoginScreen extends StatelessWidget {
                             if (userResult.count == 1) {
                               LoggedUser.user = userResult.result.single;
                             }
-
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const HomeScreen(selectedIndex: 0)));
+                            if (mounted) {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomeScreen(selectedIndex: 0)));
+                            }
                           } on Exception catch (e) {
                             showInfoDialog(
                                 context,

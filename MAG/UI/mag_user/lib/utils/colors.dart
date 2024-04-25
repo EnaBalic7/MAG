@@ -23,7 +23,11 @@ class Palette {
   static const Color buttonPurple2 = Color.fromRGBO(51, 48, 107, 1);
   static const Color stardust = Color.fromRGBO(216, 218, 254, 1);
   static const Color lightYellow = Color.fromRGBO(255, 255, 200, 1);
-
+  static const Color turquoise = Color.fromRGBO(7, 167, 164, 1);
+  static const Color turquoiseLight = Color.fromRGBO(124, 204, 213, 1);
+  static const Color techPurple = Color.fromRGBO(190, 162, 203, 1);
+  static const Color rose = Color.fromRGBO(245, 149, 183, 1);
+  static const Color lime = Color.fromRGBO(205, 223, 102, 1);
   //Gradients
   static const LinearGradient buttonGradient = LinearGradient(colors: [
     Color.fromRGBO(155, 108, 249, 0.8),
