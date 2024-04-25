@@ -27,6 +27,10 @@ namespace MAG.Services
             {
                 query = query.OrderByDescending(list => list.Id);
             }
+            if (search?.UserId != null)
+            {
+                query = query.Where(list => list.UserId == search.UserId);
+            }
 
             return base.AddFilter(query, search);
         }

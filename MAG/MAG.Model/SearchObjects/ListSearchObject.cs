@@ -8,6 +8,8 @@ namespace MAG.Model.SearchObjects
 {
     public class ListSearchObject : BaseSearchObject
     {
+        public int? UserId { get; set; }
+
         public string? Name { get; set; }
 
         public bool? NewestFirst { get; set; }

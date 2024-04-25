@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/models/anime_watchlist.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
+import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
 import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
+import 'constellation_form.dart';
 import 'nebula_form.dart';
 
 typedef FetchPage = Future<SearchResult<Anime>> Function(
@@ -50,6 +52,7 @@ class _AnimeCardsState extends State<AnimeCards>
   late SearchResult<Watchlist> _watchlist;
   late int watchlistId;
   late AnimeWatchlistProvider _animeWatchlistProvider;
+  late final ListtProvider _listtProvider;
 
   int totalItems = 0;
 
@@ -61,6 +64,7 @@ class _AnimeCardsState extends State<AnimeCards>
     _animeFuture = widget.fetchAnime();
     _watchlistProvider = context.read<WatchlistProvider>();
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
+    _listtProvider = context.read<ListtProvider>();
 
     getWatchlistId();
 
@@ -203,7 +207,8 @@ class _AnimeCardsState extends State<AnimeCards>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         buildStarContainer(cardWidth, cardHeight, anime),
-                        buildTrailingStarContainer(cardWidth, cardHeight),
+                        buildTrailingStarContainer(
+                            cardWidth, cardHeight, anime),
                         buildNebulaContainer(cardWidth, cardHeight, anime),
                       ],
                     ),
@@ -241,42 +246,51 @@ class _AnimeCardsState extends State<AnimeCards>
   }
 
   Widget buildStarContainer(double cardWidth, double cardHeight, Anime anime) {
-    return GestureDetector(
-      onTap: () {
-        showInfoDialog(
-            context, const Text("Star~"), const Text("You clicked on Star!"));
-      },
-      child: Container(
-        width: cardWidth * 0.28,
-        height: cardHeight * 0.1,
-        decoration: BoxDecoration(
-          color: Palette.darkPurple.withOpacity(0.8),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(4),
-            topRight: Radius.circular(4),
-          ),
+    return Container(
+      width: cardWidth * 0.28,
+      height: cardHeight * 0.1,
+      decoration: BoxDecoration(
+        color: Palette.darkPurple.withOpacity(0.8),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(4),
+          topRight: Radius.circular(4),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(1),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              buildStarIcon(cardHeight * 0.1 < 23.4 ? 12 : 16),
-              Text("${anime.score}",
-                  style:
-                      const TextStyle(fontSize: 11, color: Palette.starYellow)),
-            ],
-          ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            buildStarIcon(cardHeight * 0.1 < 23.4 ? 12 : 16),
+            Text("${anime.score}",
+                style:
+                    const TextStyle(fontSize: 11, color: Palette.starYellow)),
+          ],
         ),
       ),
     );
   }
 
-  Widget buildTrailingStarContainer(double cardWidth, double cardHeight) {
+  Widget buildTrailingStarContainer(
+      double cardWidth, double cardHeight, Anime anime) {
     return GestureDetector(
-      onTap: () {
-        showInfoDialog(context, const Text("Star~"),
-            const Text("You clicked on Trailing star!"));
+      onTap: () async {
+        var constellations = await _listtProvider
+            .get(filter: {"UserId": "${LoggedUser.user!.id}"});
+
+        if (constellations.count == 0) {
+          showInfoDialog(
+              context,
+              const Text("Star~"),
+              const Text(
+                  "You clicked on Trailing star! Also your constellation is empty :3"));
+        } else if (constellations.count > 0) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ConstellationForm(anime: anime);
+              });
+        }
       },
       child: Container(
         width: cardWidth * 0.28,

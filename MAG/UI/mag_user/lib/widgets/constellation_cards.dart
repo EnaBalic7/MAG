@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/models/anime.dart';
+import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/star_form.dart';
 import 'package:provider/provider.dart';
 
+import '../models/anime_list.dart';
 import '../models/listt.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
@@ -20,11 +23,13 @@ class ConstellationCards extends StatefulWidget {
 
 class _ConstellationCardsState extends State<ConstellationCards> {
   late Future<SearchResult<Listt>> _listFuture;
-  late ListtProvider _listProvider;
+  late final ListtProvider _listProvider;
+  late Future<SearchResult<AnimeList>> _animeListFuture;
+  late final AnimeListProvider _animeListProvider;
   final ScrollController _scrollController = ScrollController();
 
   int page = 0;
-  int pageSize = 10;
+  int pageSize = 6;
   int totalItems = 0;
 
   @override
@@ -37,6 +42,8 @@ class _ConstellationCardsState extends State<ConstellationCards> {
         "PageSize": "$pageSize",
       },
     );
+
+    _animeListProvider = context.read<AnimeListProvider>();
 
     _listProvider.addListener(() {
       _reloadData();
@@ -136,44 +143,74 @@ class _ConstellationCardsState extends State<ConstellationCards> {
     double? cardWidth = screenSize.width * 0.45;
     double? cardHeight = screenSize.height * 0.2;
 
-    return Container(
-      height: cardHeight,
-      width: cardWidth,
-      margin: const EdgeInsets.all(7),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Opacity(
-              opacity: 0.7,
-              child: Image.network(
-                "https://i.pinimg.com/originals/6a/40/44/6a4044edc5ba4a2216a39e1cf111c507.png",
-                width: cardWidth,
-                height: cardHeight,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
+    return FutureBuilder<SearchResult<AnimeList>>(
+        future: _animeListProvider.get(
+          filter: {
+            "ListId": "${list.id}",
+            "IncludeAnime": "true",
+            "GetRandom": "true",
+          },
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var animeListObject = snapshot.data!.result;
+
+            return Container(
+              height: cardHeight,
+              width: cardWidth,
+              margin: const EdgeInsets.all(7),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Opacity(
+                      opacity: 0.7,
+                      child: _buildCoverPhoto(
+                          cardWidth, cardHeight, animeListObject),
+                    ),
+                  ),
+                  Center(
+                      child: Container(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      top: 5,
+                      bottom: 5,
+                    ),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Palette.darkPurple.withOpacity(0.8)),
+                    child: Text("${list.name}",
+                        style: const TextStyle(
+                          fontSize: 17,
+                        )),
+                  )),
+                  Positioned(right: 0, child: _buildPopupMenu(list)),
+                ],
               ),
-            ),
-          ),
-          Center(
-              child: Container(
-            padding: const EdgeInsets.only(
-              left: 8,
-              right: 8,
-              top: 5,
-              bottom: 5,
-            ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Palette.darkPurple.withOpacity(0.8)),
-            child: Text("${list.name}",
-                style: const TextStyle(
-                  fontSize: 17,
-                )),
-          )),
-          Positioned(right: 0, child: _buildPopupMenu(list)),
-        ],
-      ),
+            );
+          }
+        });
+  }
+
+  Widget _buildCoverPhoto(
+      double cardWidth, double cardHeight, List<AnimeList> animeListObject) {
+    if (animeListObject.isEmpty) {
+      return Container(
+        decoration: BoxDecoration(color: Palette.lightPurple.withOpacity(0.3)),
+      );
+    }
+    return Image.network(
+      animeListObject.single.anime!.imageUrl!,
+      width: cardWidth,
+      height: cardHeight,
+      fit: BoxFit.cover,
+      alignment: Alignment.center,
     );
   }
 

@@ -8,5 +8,10 @@ namespace MAG.Model.SearchObjects
 {
     public class AnimeListSearchObject : BaseSearchObject
     {
+        public int? ListId { get; set; }
+
+        public bool? IncludeAnime { get; set; }
+
+        public bool? GetRandom { get; set; }
     }
 }
