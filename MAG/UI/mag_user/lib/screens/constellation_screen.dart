@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:mag_user/utils/icons.dart';
+import '../widgets/constellation_cards.dart';
 
-import '../models/anime.dart';
-import '../models/search_result.dart';
 import '../widgets/master_screen.dart';
-import '../providers/list_provider.dart';
+import '../widgets/star_form.dart';
 
 class ConstellationScreen extends StatefulWidget {
   final int selectedIndex;
@@ -16,19 +15,8 @@ class ConstellationScreen extends StatefulWidget {
 }
 
 class _ConstellationScreenState extends State<ConstellationScreen> {
-  late ListProvider _listProvider;
-
-  int page = 0;
-  int pageSize = 20;
-
-  final Map<String, dynamic> _filter = {
-    "NewestFirst": "true",
-  };
-
   @override
   void initState() {
-    _listProvider = context.read<ListProvider>();
-
     super.initState();
   }
 
@@ -37,16 +25,38 @@ class _ConstellationScreenState extends State<ConstellationScreen> {
     return MasterScreenWidget(
         selectedIndex: widget.selectedIndex,
         showNavBar: true,
+        showSearch: true,
         title: "Constellation",
         showFloatingActionButton: true,
-        child: const Text("Constellation"));
+        floatingButtonOnPressed: () {
+          _showStarForm();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const Text("Group Anime in individual Stars",
+                        style: TextStyle(fontSize: 16)),
+                    const SizedBox(width: 5),
+                    buildStarTrailIcon(24),
+                  ],
+                ),
+              ),
+              ConstellationCards(),
+            ],
+          ),
+        ));
   }
 
-  /* Future<SearchResult<List>> fetchConstellations() {
-    return _listProvider.get(filter: {
-      ..._filter,
-      "Page": "$page",
-      "PageSize": "$pageSize",
-    });
-  }*/
+  _showStarForm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StarForm();
+      },
+    );
+  }
 }

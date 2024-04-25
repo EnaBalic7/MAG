@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
-import 'package:mag_user/providers/list_provider.dart';
+import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/providers/watchlist_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +39,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => UserRoleProvider()),
     ChangeNotifierProvider(create: (_) => AnimeWatchlistProvider()),
     ChangeNotifierProvider(create: (_) => WatchlistProvider()),
-    ChangeNotifierProvider(create: (_) => ListProvider()),
+    ChangeNotifierProvider(create: (_) => ListtProvider()),
     ChangeNotifierProvider(create: (_) => AnimeListProvider()),
   ], child: const MyMaterialApp()));
 }

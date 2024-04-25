@@ -121,7 +121,7 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
         content: content,
         actions: <Widget>[
           Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(left: 16, bottom: 5, top: 5),
               child: GradientButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -132,7 +132,7 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   gradient: Palette.buttonGradient2,
                   child: const Text("No"))),
           Padding(
-              padding: const EdgeInsets.only(right: 16, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(right: 16, bottom: 5, top: 5),
               child: GradientButton(
                   onPressed: () {
                     onPressedYes();
