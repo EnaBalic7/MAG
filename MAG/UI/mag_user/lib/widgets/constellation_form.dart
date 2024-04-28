@@ -4,6 +4,7 @@ import 'package:mag_user/models/search_result.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/utils/util.dart';
+import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
@@ -25,7 +26,8 @@ class _ConstellationFormState extends State<ConstellationForm> {
   late final ListtProvider _listtProvider;
   late Future<SearchResult<Listt>> _listtFuture;
   late final AnimeListProvider _animeListProvider;
-  SearchResult<AnimeList> animeList = SearchResult<AnimeList>();
+  late Future<SearchResult<AnimeList>> _animeListFuture;
+  final _constellationFormKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
@@ -35,14 +37,10 @@ class _ConstellationFormState extends State<ConstellationForm> {
 
     _animeListProvider = context.read<AnimeListProvider>();
 
-    getAnimeListData();
+    _animeListFuture =
+        _animeListProvider.get(filter: {"AnimeId": "${widget.anime.id}"});
 
     super.initState();
-  }
-
-  void getAnimeListData() async {
-    animeList =
-        await _animeListProvider.get(filter: {"AnimeId": "${widget.anime.id}"});
   }
 
   @override
@@ -94,27 +92,94 @@ class _ConstellationFormState extends State<ConstellationForm> {
                       } else {
                         // Data loaded successfully
                         var stars = snapshot.data!.result;
-                        return MyFormBuilderFilterChip(
-                          labelText: "Your Stars",
-                          name: '',
-                          options: [
-                            ...stars
-                                .map(
-                                  (star) => FormBuilderFieldOption(
-                                    value: star.id.toString(),
-                                    child: Text(star.name!,
-                                        style: const TextStyle(
-                                            color: Palette.midnightPurple)),
-                                  ),
-                                )
-                                .toList(),
-                          ],
-                          initialValue: animeList.result
-                              .map((animeList) => animeList.listId.toString())
-                              .toList(),
+                        return FormBuilder(
+                          key: _constellationFormKey,
+                          child: FutureBuilder<SearchResult<AnimeList>>(
+                              future: _animeListFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const MyProgressIndicator(); // Loading state
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                      'Error: ${snapshot.error}'); // Error state
+                                } else {
+                                  // Data loaded successfully
+                                  var selectedStars = snapshot.data!.result;
+
+                                  return MyFormBuilderFilterChip(
+                                    labelText: "Your Stars",
+                                    name: 'stars',
+                                    options: [
+                                      ...stars
+                                          .map(
+                                            (star) => FormBuilderFieldOption(
+                                              value: star.id.toString(),
+                                              child: Text(star.name!,
+                                                  style: const TextStyle(
+                                                      color: Palette
+                                                          .midnightPurple)),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ],
+                                    initialValue: selectedStars
+                                        .map((animeList) =>
+                                            animeList.listId.toString())
+                                        .toList(),
+                                  );
+                                }
+                              }),
                         );
                       }
                     }),
+                const SizedBox(height: 30),
+                GradientButton(
+                    onPressed: () async {
+                      try {
+                        _constellationFormKey.currentState?.saveAndValidate();
+
+                        var selectedStars = (_constellationFormKey
+                                    .currentState?.value['stars'] as List?)
+                                ?.whereType<String>()
+                                .toList() ??
+                            [];
+
+                        List<AnimeList> animeListInsert = [];
+
+                        if (selectedStars.isNotEmpty) {
+                          for (var listId in selectedStars) {
+                            animeListInsert.add(AnimeList(null,
+                                int.parse(listId), widget.anime.id, null));
+                          }
+
+                          if (animeListInsert.isNotEmpty) {
+                            print(
+                                "AnimeList: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
+                          }
+                        }
+
+                        await _animeListProvider.updateListsForAnime(
+                            widget.anime.id!, animeListInsert);
+
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.task_alt,
+                                color: Palette.lightPurple, size: 50),
+                            const Text(
+                              "Saved successfully!",
+                              textAlign: TextAlign.center,
+                            ));
+                      } on Exception catch (e) {
+                        showErrorDialog(context, e);
+                      }
+                    },
+                    width: 60,
+                    height: 30,
+                    borderRadius: 50,
+                    gradient: Palette.buttonGradient,
+                    child: const Text("Save",
+                        style: TextStyle(fontWeight: FontWeight.w500)))
               ],
             ),
           ),

@@ -13,14 +13,20 @@ namespace MAG.Services
 {
     public class AnimeListService : BaseCRUDService<Model.AnimeList, Database.AnimeList, AnimeListSearchObject, AnimeListInsertRequest, AnimeListUpdateRequest>, IAnimeListService
     {
+        protected MagContext _context;
         public AnimeListService(MagContext context, IMapper mapper) : base(context, mapper)
         {
-
+            _context = context;
         }
 
         public override IQueryable<AnimeList> AddFilter(IQueryable<AnimeList> query, AnimeListSearchObject? search = null)
         {
-            if(search?.ListId != null)
+            if (search?.AnimeId != null)
+            {
+                query = query.Where(animeList => animeList.AnimeId == search.AnimeId);
+            }
+
+            if (search?.ListId != null)
             {
                 query = query.Where(animeList => animeList.ListId ==  search.ListId);
             }
@@ -44,6 +50,35 @@ namespace MAG.Services
             return base.AddInclude(query, search);
         }
 
+        public async Task<bool> UpdateListsForAnime(int animeId, List<AnimeListInsertRequest> newLists)
+        {
+            await DeleteByAnimeId(animeId);
 
+            var entities = newLists.Select(insert => _mapper.Map<Database.AnimeList>(insert));
+
+            _context.AnimeLists.AddRange(entities);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteByAnimeId(int animeId)
+        {
+            var set = _context.Set<Database.AnimeList>();
+
+            var entityList = await set.Where(animeList => animeList.AnimeId == animeId).ToListAsync();
+
+            if (entityList.Count() != 0)
+            {
+                set.RemoveRange(entityList);
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
