@@ -11,6 +11,7 @@ import '../providers/anime_watchlist_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../widgets/gradient_button.dart';
+import '../widgets/nebula_indicator.dart';
 import 'home_screen.dart';
 
 class NebulaAllScreen extends StatefulWidget {
@@ -63,7 +64,20 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
       future: _filterFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MyProgressIndicator();
+          return SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Center(
+              child: Wrap(
+                children: const [
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                ],
+              ),
+            ),
+          );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {

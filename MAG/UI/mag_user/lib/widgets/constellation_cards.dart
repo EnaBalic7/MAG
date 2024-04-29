@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:mag_user/models/anime.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
@@ -48,6 +49,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
 
     _listProvider.addListener(() {
       _reloadData();
+      setTotalItems();
     });
 
     setTotalItems();
@@ -156,7 +158,8 @@ class _ConstellationCardsState extends State<ConstellationCards> {
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyProgressIndicator(); // Loading state
+            return _constellationIndicator(
+                cardHeight, cardWidth, list); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -178,27 +181,79 @@ class _ConstellationCardsState extends State<ConstellationCards> {
                     ),
                   ),
                   Center(
-                      child: Container(
-                    padding: const EdgeInsets.only(
-                      left: 8,
-                      right: 8,
-                      top: 5,
-                      bottom: 5,
-                    ),
-                    decoration: BoxDecoration(
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                        right: 8,
+                        top: 5,
+                        bottom: 5,
+                      ),
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Palette.darkPurple.withOpacity(0.8)),
-                    child: Text("${list.name}",
-                        style: const TextStyle(
-                          fontSize: 17,
-                        )),
-                  )),
+                        color: Palette.darkPurple.withOpacity(0.5),
+                      ),
+                      child: Text("${list.name}",
+                          style: const TextStyle(
+                            fontSize: 17,
+                          )),
+                    ).asGlass(
+                      blurX: 4,
+                      blurY: 4,
+                      clipBorderRadius: BorderRadius.circular(20),
+                      tintColor: Palette.darkPurple,
+                    ),
+                  ),
                   Positioned(right: 0, child: _buildPopupMenu(list)),
                 ],
               ),
             );
           }
         });
+  }
+
+  Container _constellationIndicator(
+      double cardHeight, double cardWidth, Listt list) {
+    return Container(
+      height: cardHeight,
+      width: cardWidth,
+      margin: const EdgeInsets.all(7),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Palette.lightPurple.withOpacity(0.2)),
+            ),
+          ).asGlass(
+              tintColor: Palette.lightPurple,
+              clipBorderRadius: BorderRadius.circular(15),
+              blurX: 3,
+              blurY: 3),
+          Center(
+            child: Container(
+              padding: const EdgeInsets.only(
+                left: 8,
+                right: 8,
+                top: 5,
+                bottom: 5,
+              ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Palette.darkPurple.withOpacity(0.5)),
+              child: Text("${list.name}",
+                  style: const TextStyle(
+                    fontSize: 17,
+                  )),
+            ).asGlass(
+              blurX: 4,
+              blurY: 4,
+              clipBorderRadius: BorderRadius.circular(20),
+              tintColor: Palette.darkPurple,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCoverPhoto(
@@ -222,8 +277,9 @@ class _ConstellationCardsState extends State<ConstellationCards> {
       width: 25,
       height: 25,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Palette.darkPurple.withOpacity(0.8)),
+        borderRadius: BorderRadius.circular(15),
+        color: Palette.darkPurple.withOpacity(0.8),
+      ),
       child: PopupMenuButton<String>(
         tooltip: "Actions",
         shape: RoundedRectangleBorder(
@@ -283,6 +339,11 @@ class _ConstellationCardsState extends State<ConstellationCards> {
           ),
         ],
       ),
+    ).asGlass(
+      blurX: 1,
+      blurY: 1,
+      clipBorderRadius: BorderRadius.circular(20),
+      tintColor: Palette.darkPurple,
     );
   }
 }

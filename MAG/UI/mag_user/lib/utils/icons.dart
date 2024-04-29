@@ -26,14 +26,14 @@ Stack buildAnimeIcon(double size) {
   ]);
 }
 
-Stack buildStarIcon(double size) {
+Stack buildStarIcon(double size, {double? opacity}) {
   return Stack(children: [
     Icon(const IconData(0xe918, fontFamily: 'icomoon'),
-        color: Palette.starIco_e918, size: size),
+        color: Palette.starIco_e918.withOpacity(opacity ?? 1), size: size),
     Icon(const IconData(0xe919, fontFamily: 'icomoon'),
-        color: Palette.starIco_e919, size: size),
+        color: Palette.starIco_e919.withOpacity(opacity ?? 1), size: size),
     Icon(const IconData(0xe91a, fontFamily: 'icomoon'),
-        color: Palette.starIco_e91a, size: size)
+        color: Palette.starIco_e91a.withOpacity(opacity ?? 1), size: size)
   ]);
 }
 
@@ -55,10 +55,10 @@ Stack buildPdfIcon(double size) {
 Icon buildAstronautIcon() =>
     const Icon(IconData(0xe90b, fontFamily: 'icomoon'));
 
-Icon buildEditIcon(double size) {
+Icon buildEditIcon(double size, {double? opacity}) {
   return Icon(
     const IconData(0xe90e, fontFamily: 'icomoon'),
-    color: Palette.lightPurple,
+    color: Palette.lightPurple.withOpacity(opacity ?? 1),
     size: size,
   );
 }

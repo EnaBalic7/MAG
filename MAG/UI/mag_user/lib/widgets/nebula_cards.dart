@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:mag_user/models/anime.dart';
 import 'package:mag_user/providers/rating_provider.dart';
 import 'package:mag_user/screens/anime_detail_screen.dart';
+import 'package:mag_user/widgets/nebula_indicator.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/anime_watchlist.dart';
 import '../models/rating.dart';
@@ -58,6 +61,7 @@ class _NebulaCardsState extends State<NebulaCards>
 
     _animeWatchlistProvider.addListener(() {
       _reloadData();
+      setTotalItems();
     });
 
     setTotalItems();
@@ -86,13 +90,34 @@ class _NebulaCardsState extends State<NebulaCards>
     }
   }
 
+  Future<SearchResult<AnimeWatchlist>> _loadDataForever() {
+    return Future.delayed(Duration(milliseconds: 500), () {})
+        .then((_) => _loadDataForever());
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SearchResult<AnimeWatchlist>>(
         future: _animeWatchlistFuture,
+        // future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyProgressIndicator(); // Loading state
+            return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Center(
+                child: Wrap(
+                  children: const [
+                    NebulaIndicator(),
+                    NebulaIndicator(),
+                    NebulaIndicator(),
+                    NebulaIndicator(),
+                    NebulaIndicator(),
+                  ],
+                ),
+              ),
+            );
+
+            // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -170,7 +195,7 @@ class _NebulaCardsState extends State<NebulaCards>
           width: containerWidth,
           height: containerHeight,
           decoration:
-              BoxDecoration(color: Palette.buttonPurple.withOpacity(0.4)),
+              BoxDecoration(color: Palette.buttonPurple.withOpacity(0.1)),
           child: Row(children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -242,6 +267,10 @@ class _NebulaCardsState extends State<NebulaCards>
               ),
             ),
           ]),
+        ).asGlass(
+          blurX: 2,
+          blurY: 2,
+          tintColor: Palette.lightPurple,
         ),
       ),
     );

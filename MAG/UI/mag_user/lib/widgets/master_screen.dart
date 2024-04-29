@@ -62,6 +62,9 @@ class MasterScreenWidget extends StatefulWidget {
   /// Padding around tabs' labels
   EdgeInsets? labelPadding;
 
+  /// Floating action button location
+  FloatingActionButtonLocation? floatingActionButtonLocation;
+
   MasterScreenWidget({
     Key? key,
     required this.child,
@@ -88,6 +91,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.isScrollable,
     this.borderRadius,
     this.labelPadding,
+    this.floatingActionButtonLocation,
   }) : super(key: key);
 
   @override
@@ -114,6 +118,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
     return Scaffold(
       floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButtonLocation: widget.floatingActionButtonLocation ??
+          FloatingActionButtonLocation.endFloat,
       appBar: AppBarWithSearchSwitch(
         toolbarHeight: appBarHeight,
         //closeOnSubmit: false,
@@ -275,8 +281,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       message: widget.floatingButtonTooltip ?? "",
       verticalOffset: 50,
       child: GradientButton(
-          width: 70,
-          height: 70,
+          width: 60,
+          height: 60,
           borderRadius: 100,
           onPressed: widget.floatingButtonOnPressed,
           gradient: Palette.navGradient2,

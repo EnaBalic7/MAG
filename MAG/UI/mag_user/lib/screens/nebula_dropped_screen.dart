@@ -8,6 +8,7 @@ import '../models/anime_watchlist.dart';
 import '../models/search_result.dart';
 import '../models/watchlist.dart';
 import '../providers/anime_watchlist_provider.dart';
+import '../widgets/nebula_indicator.dart';
 
 class NebulaDroppedScreen extends StatefulWidget {
   final int selectedIndex;
@@ -60,7 +61,20 @@ class _NebulaDroppedScreenState extends State<NebulaDroppedScreen> {
       future: _filterFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MyProgressIndicator();
+          return SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: Center(
+              child: Wrap(
+                children: const [
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                  NebulaIndicator(),
+                ],
+              ),
+            ),
+          );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
