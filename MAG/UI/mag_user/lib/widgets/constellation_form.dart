@@ -124,6 +124,10 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                           .toList(),
                                     ],
                                     initialValue: selectedStars
+                                        .where((animeList) => stars.any(
+                                            (listItem) =>
+                                                listItem.id ==
+                                                animeList.listId))
                                         .map((animeList) =>
                                             animeList.listId.toString())
                                         .toList(),
@@ -153,9 +157,16 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                 int.parse(listId), widget.anime.id, null));
                           }
 
-                          if (animeListInsert.isNotEmpty) {
+                          if (animeListInsert.isNotEmpty &&
+                              animeListInsert.length == 1) {
                             print(
-                                "AnimeList: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
+                                "AnimeList with only ONE: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
+                          } else if (animeListInsert.isNotEmpty &&
+                              animeListInsert.length == 2) {
+                            print(
+                                "AnimeList with TWO: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
+                            print(
+                                "AnimeList with TWO: ${animeListInsert[1].id}, ${animeListInsert[1].listId}, ${animeListInsert[1].animeId}, ${animeListInsert[1].anime}");
                           }
                         }
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
@@ -19,7 +20,7 @@ namespace MAG.Services
             _context = context;
         }
 
-        public override IQueryable<AnimeList> AddFilter(IQueryable<AnimeList> query, AnimeListSearchObject? search = null)
+        public override IQueryable<Database.AnimeList> AddFilter(IQueryable<Database.AnimeList> query, AnimeListSearchObject? search = null)
         {
             if (search?.AnimeId != null)
             {
@@ -40,7 +41,7 @@ namespace MAG.Services
             return base.AddFilter(query, search);
         }
 
-        public override IQueryable<AnimeList> AddInclude(IQueryable<AnimeList> query, AnimeListSearchObject? search = null)
+        public override IQueryable<Database.AnimeList> AddInclude(IQueryable<Database.AnimeList> query, AnimeListSearchObject? search = null)
         {
             if(search?.IncludeAnime == true)
             {
@@ -68,6 +69,24 @@ namespace MAG.Services
             var set = _context.Set<Database.AnimeList>();
 
             var entityList = await set.Where(animeList => animeList.AnimeId == animeId).ToListAsync();
+
+            if (entityList.Count() != 0)
+            {
+                set.RemoveRange(entityList);
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteByListId(int listId)
+        {
+            var set = _context.Set<Database.AnimeList>();
+
+            var entityList = await set.Where(animeList => animeList.ListId == listId).ToListAsync();
 
             if (entityList.Count() != 0)
             {

@@ -6,6 +6,7 @@ import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/star_form.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/anime_list.dart';
 import '../models/listt.dart';
@@ -83,9 +84,24 @@ class _ConstellationCardsState extends State<ConstellationCards> {
   Widget build(BuildContext context) {
     return FutureBuilder<SearchResult<Listt>>(
         future: _listFuture,
+        // future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyProgressIndicator(); // Loading state
+            return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: Center(
+                child: Wrap(
+                  children: [
+                    _constellationIndicator(),
+                    _constellationIndicator(),
+                    _constellationIndicator(),
+                    _constellationIndicator(),
+                    _constellationIndicator(),
+                    _constellationIndicator(),
+                  ],
+                ),
+              ),
+            ); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -143,6 +159,11 @@ class _ConstellationCardsState extends State<ConstellationCards> {
     );
   }
 
+  Future<SearchResult<Listt>> _loadDataForever() {
+    return Future.delayed(Duration(milliseconds: 500), () {})
+        .then((_) => _loadDataForever());
+  }
+
   Widget _buildListCard(Listt list) {
     final Size screenSize = MediaQuery.of(context).size;
     double? cardWidth = screenSize.width * 0.45;
@@ -156,10 +177,10 @@ class _ConstellationCardsState extends State<ConstellationCards> {
             "GetRandom": "true",
           },
         ),
+        //  future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return _constellationIndicator(
-                cardHeight, cardWidth, list); // Loading state
+            return _constellationIndicator(); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -211,8 +232,11 @@ class _ConstellationCardsState extends State<ConstellationCards> {
         });
   }
 
-  Container _constellationIndicator(
-      double cardHeight, double cardWidth, Listt list) {
+  Container _constellationIndicator() {
+    final Size screenSize = MediaQuery.of(context).size;
+    double? cardWidth = screenSize.width * 0.45;
+    double? cardHeight = screenSize.height * 0.2;
+
     return Container(
       height: cardHeight,
       width: cardWidth,
@@ -230,25 +254,27 @@ class _ConstellationCardsState extends State<ConstellationCards> {
               blurX: 3,
               blurY: 3),
           Center(
-            child: Container(
-              padding: const EdgeInsets.only(
-                left: 8,
-                right: 8,
-                top: 5,
-                bottom: 5,
+            child: Shimmer.fromColors(
+              baseColor: Palette.lightPurple,
+              highlightColor: Palette.white,
+              child: Container(
+                width: 70,
+                height: 30,
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  top: 5,
+                  bottom: 5,
+                ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Palette.lightPurple.withOpacity(0.2)),
+              ).asGlass(
+                blurX: 1,
+                blurY: 1,
+                clipBorderRadius: BorderRadius.circular(20),
+                tintColor: Palette.lightPurple,
               ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Palette.darkPurple.withOpacity(0.5)),
-              child: Text("${list.name}",
-                  style: const TextStyle(
-                    fontSize: 17,
-                  )),
-            ).asGlass(
-              blurX: 4,
-              blurY: 4,
-              clipBorderRadius: BorderRadius.circular(20),
-              tintColor: Palette.darkPurple,
             ),
           ),
         ],
@@ -332,7 +358,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
                       "Are you sure you want to delete this Star?",
                       textAlign: TextAlign.center,
                     ), () async {
-                  _listProvider.delete(list.id!);
+                  await _listProvider.delete(list.id!);
                 });
               },
             ),
