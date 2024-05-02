@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/anime.dart';
@@ -128,7 +129,7 @@ class _RatingsScreenState extends State<RatingsScreen> {
           decoration: BoxDecoration(
             border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
             borderRadius: BorderRadius.circular(15),
-            color: Palette.darkPurple.withOpacity(0.7),
+            color: Palette.darkPurple.withOpacity(0.4),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -204,7 +205,11 @@ class _RatingsScreenState extends State<RatingsScreen> {
               ),
             ],
           ),
-        ),
+        ).asGlass(
+            blurX: 5,
+            blurY: 5,
+            tintColor: Palette.darkPurple,
+            clipBorderRadius: BorderRadius.circular(15)),
       ),
     );
   }

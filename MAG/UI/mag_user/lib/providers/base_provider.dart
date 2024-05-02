@@ -173,6 +173,12 @@ abstract class BaseProvider<T> with ChangeNotifier {
         query += '$prefix$key=$encoded';
       } else if (value is DateTime) {
         query += '$prefix$key=${(value as DateTime).toIso8601String()}';
+      } else if (value is List<int>) {
+        // Handle list of integers (anime IDs)
+        for (int id in value) {
+          query += '$prefix$key=$id';
+          query += '&'; // Add '&' to separate multiple IDs
+        }
       } else if (value is List || value is Map) {
         if (value is List) value = value.asMap();
         value.forEach((k, v) {

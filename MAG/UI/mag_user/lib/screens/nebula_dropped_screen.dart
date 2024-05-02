@@ -8,7 +8,9 @@ import '../models/anime_watchlist.dart';
 import '../models/search_result.dart';
 import '../models/watchlist.dart';
 import '../providers/anime_watchlist_provider.dart';
+import '../widgets/empty.dart';
 import '../widgets/nebula_indicator.dart';
+import 'home_screen.dart';
 
 class NebulaDroppedScreen extends StatefulWidget {
   final int selectedIndex;
@@ -90,7 +92,10 @@ class _NebulaDroppedScreenState extends State<NebulaDroppedScreen> {
               filter: filter,
             );
           }
-          return buildEmptyNebula(context);
+          return const Empty(
+              text: Text("Your Nebula is empty."),
+              screen: HomeScreen(selectedIndex: 0),
+              child: Text("Explore Anime"));
         }
       },
     );

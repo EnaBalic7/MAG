@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:mag_user/models/anime_watchlist.dart';
+import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
+import 'package:mag_user/screens/constellation_screen.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
 import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:mag_user/widgets/separator.dart';
@@ -20,6 +22,7 @@ import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
 import 'constellation_form.dart';
+import 'empty.dart';
 import 'nebula_form.dart';
 
 typedef FetchPage = Future<SearchResult<Anime>> Function(
@@ -56,6 +59,7 @@ class _AnimeCardsState extends State<AnimeCards>
   late int watchlistId;
   late AnimeWatchlistProvider _animeWatchlistProvider;
   late final ListtProvider _listtProvider;
+  late final AnimeListProvider _animeListProvider;
 
   int totalItems = 0;
 
@@ -68,10 +72,15 @@ class _AnimeCardsState extends State<AnimeCards>
     _watchlistProvider = context.read<WatchlistProvider>();
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _listtProvider = context.read<ListtProvider>();
+    _animeListProvider = context.read<AnimeListProvider>();
 
     getWatchlistId();
 
     setTotalItems();
+
+    _animeListProvider.addListener(() {
+      setTotalItems();
+    });
 
     super.initState();
   }
@@ -376,11 +385,34 @@ class _AnimeCardsState extends State<AnimeCards>
             .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
         if (constellations.count == 0) {
-          showInfoDialog(
-              context,
-              const Text("Star~"),
-              const Text(
-                  "You clicked on Trailing star! Also your constellation is empty :3"));
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                    insetPadding: const EdgeInsets.all(17),
+                    alignment: Alignment.center,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Palette.darkPurple,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Palette.lightPurple.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Empty(
+                                text: Text("Your Constellation is empty."),
+                                screen: ConstellationScreen(selectedIndex: 3),
+                                child: Text("Make Stars")),
+                          ],
+                        )));
+              });
         } else if (constellations.count > 0) {
           showDialog(
               context: context,

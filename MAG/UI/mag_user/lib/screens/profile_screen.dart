@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -84,155 +85,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Center(
         child: SingleChildScrollView(
           child: Container(
-              width: containerWidth,
-              height: containerHeight! - (containerHeight! * 0.112),
-              decoration: BoxDecoration(
-                color: Palette.midnightPurple.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  FormBuilder(
-                      key: _formKey,
-                      initialValue: _initialValue,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: Image.memory(
-                                  imageFromBase64String(_base64Image!),
-                                  width: imageWidth,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
-                          SizedBox(
-                            width: screenSize.width * 0.9,
-                            child: Wrap(
-                              alignment: screenSize.width >= 256
-                                  ? WrapAlignment.spaceBetween
-                                  : WrapAlignment.center,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Tooltip(
-                                  message: "Date joined",
-                                  verticalOffset: 15,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      buildCalendarIcon(18),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                          DateFormat('MMM d, y')
-                                              .format(widget.user.dateJoined!),
-                                          style: const TextStyle(fontSize: 15)),
-                                    ],
-                                  ),
+            width: containerWidth,
+            height: containerHeight! - (containerHeight! * 0.112),
+            decoration: BoxDecoration(
+              color: Palette.midnightPurple.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                FormBuilder(
+                    key: _formKey,
+                    initialValue: _initialValue,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.memory(
+                                imageFromBase64String(_base64Image!),
+                                width: imageWidth,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        SizedBox(
+                          width: screenSize.width * 0.9,
+                          child: Wrap(
+                            alignment: screenSize.width >= 256
+                                ? WrapAlignment.spaceBetween
+                                : WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Tooltip(
+                                message: "Date joined",
+                                verticalOffset: 15,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    buildCalendarIcon(18),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                        DateFormat('MMM d, y')
+                                            .format(widget.user.dateJoined!),
+                                        style: const TextStyle(fontSize: 15)),
+                                  ],
                                 ),
-                                FormBuilderField(
-                                  name: "profilePicture",
-                                  builder: (field) {
-                                    return GradientButton(
-                                        onPressed: () {
-                                          getImage();
-                                        },
-                                        width: 135,
-                                        height: 30,
-                                        borderRadius: 50,
-                                        paddingTop: 10,
-                                        paddingBottom: 10,
-                                        hideBorder: true,
-                                        gradient: const LinearGradient(colors: [
-                                          Palette.buttonPurple,
-                                          Palette.buttonPurple,
-                                        ]),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: const [
-                                            Icon(Icons.photo,
-                                                color: Palette.white),
-                                            SizedBox(width: 5),
-                                            Text("Change photo",
-                                                style: TextStyle(
-                                                    color: Palette.white)),
-                                          ],
-                                        ));
-                                  },
-                                )
-                              ],
-                            ),
+                              ),
+                              FormBuilderField(
+                                name: "profilePicture",
+                                builder: (field) {
+                                  return GradientButton(
+                                      onPressed: () {
+                                        getImage();
+                                      },
+                                      width: 135,
+                                      height: 30,
+                                      borderRadius: 50,
+                                      paddingTop: 10,
+                                      paddingBottom: 10,
+                                      hideBorder: true,
+                                      gradient: const LinearGradient(colors: [
+                                        Palette.buttonPurple,
+                                        Palette.buttonPurple,
+                                      ]),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(Icons.photo,
+                                              color: Palette.white),
+                                          SizedBox(width: 5),
+                                          Text("Change photo",
+                                              style: TextStyle(
+                                                  color: Palette.white)),
+                                        ],
+                                      ));
+                                },
+                              )
+                            ],
                           ),
-                          const SizedBox(height: 30),
-                          MyFormBuilderTextField(
-                            name: "username",
-                            labelText: "Username",
-                            fillColor: Palette.darkPurple,
-                            width: textFieldWidth,
-                            height: 43,
-                            readOnly: true,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
-                          ),
-                          MyFormBuilderTextField(
-                            name: "firstName",
-                            labelText: "First name",
-                            fillColor: Palette.darkPurple,
-                            width: textFieldWidth,
-                            height: 43,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
-                          ),
-                          MyFormBuilderTextField(
-                            name: "lastName",
-                            labelText: "Last name",
-                            fillColor: Palette.darkPurple,
-                            width: textFieldWidth,
-                            height: 43,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
-                          ),
-                          MyFormBuilderTextField(
-                            name: "email",
-                            labelText: "E-mail",
-                            fillColor: Palette.darkPurple,
-                            width: textFieldWidth,
-                            height: 43,
-                            borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
-                          ),
-                        ],
-                      )),
-                  GradientButton(
-                      onPressed: () {
-                        _saveProfileData();
-                      },
-                      width: 90,
-                      height: 30,
-                      borderRadius: 50,
-                      paddingTop: 30,
-                      paddingBottom: 30,
-                      gradient: Palette.buttonGradient,
-                      child: const Text("Save",
-                          style: TextStyle(
-                              color: Palette.white,
-                              fontWeight: FontWeight.w500))),
-                ],
-              )),
+                        ),
+                        const SizedBox(height: 30),
+                        MyFormBuilderTextField(
+                          name: "username",
+                          labelText: "Username",
+                          fillColor: Palette.darkPurple,
+                          width: textFieldWidth,
+                          height: 43,
+                          readOnly: true,
+                          paddingBottom: 25,
+                          borderRadius: 50,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                        ),
+                        MyFormBuilderTextField(
+                          name: "firstName",
+                          labelText: "First name",
+                          fillColor: Palette.darkPurple,
+                          width: textFieldWidth,
+                          height: 43,
+                          paddingBottom: 25,
+                          borderRadius: 50,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                        ),
+                        MyFormBuilderTextField(
+                          name: "lastName",
+                          labelText: "Last name",
+                          fillColor: Palette.darkPurple,
+                          width: textFieldWidth,
+                          height: 43,
+                          paddingBottom: 25,
+                          borderRadius: 50,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                        ),
+                        MyFormBuilderTextField(
+                          name: "email",
+                          labelText: "E-mail",
+                          fillColor: Palette.darkPurple,
+                          width: textFieldWidth,
+                          height: 43,
+                          borderRadius: 50,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context),
+                          ]),
+                        ),
+                      ],
+                    )),
+                GradientButton(
+                    onPressed: () {
+                      _saveProfileData();
+                    },
+                    width: 90,
+                    height: 30,
+                    borderRadius: 50,
+                    paddingTop: 30,
+                    paddingBottom: 30,
+                    gradient: Palette.buttonGradient,
+                    child: const Text("Save",
+                        style: TextStyle(
+                            color: Palette.white,
+                            fontWeight: FontWeight.w500))),
+              ],
+            ),
+          ).asGlass(
+            tintColor: Palette.darkPurple,
+            frosted: false,
+          ),
         ),
       ),
     );

@@ -8,6 +8,8 @@ namespace MAG.Model.SearchObjects
 {
     public class AnimeListSearchObject : BaseSearchObject
     {
+        public int? Id { get; set; }
+
         public int? AnimeId { get; set; }
 
         public int? ListId { get; set; }

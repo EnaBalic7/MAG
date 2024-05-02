@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/models/club.dart';
 import 'package:mag_user/providers/genre_provider.dart';
@@ -222,7 +223,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               decoration: BoxDecoration(
                 border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
                 borderRadius: BorderRadius.circular(15),
-                color: Palette.darkPurple.withOpacity(0.7),
+                color: Palette.darkPurple.withOpacity(0.4),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -298,7 +299,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   ),
                 ],
               ),
-            ),
+            ).asGlass(
+                blurX: 5,
+                blurY: 5,
+                tintColor: Palette.darkPurple,
+                clipBorderRadius: BorderRadius.circular(15)),
           ),
           _buildSeeMoreRatings(),
         ],

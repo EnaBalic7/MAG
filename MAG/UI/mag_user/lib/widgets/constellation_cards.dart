@@ -16,6 +16,7 @@ import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/pagination_buttons.dart';
 import 'circular_progress_indicator.dart';
+import 'empty.dart';
 
 class ConstellationCards extends StatefulWidget {
   final int selectedIndex;
@@ -109,6 +110,15 @@ class _ConstellationCardsState extends State<ConstellationCards> {
           } else {
             // Data loaded successfully
             var lists = snapshot.data!.result;
+            if (lists.isEmpty) {
+              return const Empty(
+                text: Text(
+                  "Your Constellation is empty.\nTry adding some Stars!",
+                  textAlign: TextAlign.center,
+                ),
+                showGradientButton: false,
+              );
+            }
             return SingleChildScrollView(
               controller: _scrollController,
               child: Center(
@@ -195,7 +205,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
                     builder: (context) => ConstellationDetailScreen(
                           selectedIndex: widget.selectedIndex,
                           star: list,
-                          animeListData: animeListObject,
+                          animeListRandomObj: animeListObject,
                         )));
               },
               child: Container(

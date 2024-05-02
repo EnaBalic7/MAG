@@ -10,6 +10,7 @@ import '../models/watchlist.dart';
 import '../providers/anime_watchlist_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../widgets/empty.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/nebula_indicator.dart';
 import 'home_screen.dart';
@@ -94,7 +95,10 @@ class _NebulaWatchingScreenState extends State<NebulaWatchingScreen> {
               filter: filter,
             );
           }
-          return buildEmptyNebula(context);
+          return const Empty(
+              text: Text("Your Nebula is empty."),
+              screen: HomeScreen(selectedIndex: 0),
+              child: Text("Explore Anime"));
         }
       },
     );

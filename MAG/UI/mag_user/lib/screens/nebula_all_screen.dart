@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mag_user/providers/watchlist_provider.dart';
 import 'package:mag_user/utils/util.dart';
 import 'package:mag_user/widgets/circular_progress_indicator.dart';
+import 'package:mag_user/widgets/empty.dart';
 import 'package:mag_user/widgets/nebula_cards.dart';
 import 'package:provider/provider.dart';
 import '../models/anime_watchlist.dart';
@@ -93,7 +94,10 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
               filter: filter,
             );
           }
-          return buildEmptyNebula(context);
+          return const Empty(
+              text: Text("Your Nebula is empty."),
+              screen: HomeScreen(selectedIndex: 0),
+              child: Text("Explore Anime"));
         }
       },
     );

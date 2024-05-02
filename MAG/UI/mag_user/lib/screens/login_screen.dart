@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:mag_user/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -53,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
               width: containerWidth,
               height: containerHeight,
               decoration: BoxDecoration(
-                  color: Palette.darkPurple.withOpacity(0.9),
+                  color: Palette.darkPurple.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(15)),
               child: SingleChildScrollView(
                 child: Column(
@@ -149,6 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
+            ).asGlass(
+              clipBorderRadius: BorderRadius.circular(15),
+              tintColor: Palette.darkPurple,
             ),
           ),
         ],

@@ -56,7 +56,7 @@ class _ConstellationScreenState extends State<ConstellationScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return StarForm();
+        return const StarForm();
       },
     );
   }

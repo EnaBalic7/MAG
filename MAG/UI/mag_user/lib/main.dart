@@ -60,6 +60,12 @@ class MyMaterialApp extends StatelessWidget {
               displayColor: const Color.fromARGB(255, 90, 83, 155),
               decorationColor: Palette.lightPurple,
             ),
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: MyCustomPageTransitionBuilder(),
+            TargetPlatform.iOS: MyCustomPageTransitionBuilder(),
+          },
+        ),
         chipTheme: const ChipThemeData(
           padding: EdgeInsets.all(8),
           selectedColor: Palette.rose,
@@ -102,7 +108,23 @@ class MyMaterialApp extends StatelessWidget {
             labelStyle: TextStyle(color: Palette.lightPurple),
             helperStyle: TextStyle(color: Palette.lightPurple)),
       ),
-      home: LoginScreen(),
+      home: const LoginScreen(),
+    );
+  }
+}
+
+class MyCustomPageTransitionBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
     );
   }
 }

@@ -12,10 +12,12 @@ import '../models/anime_watchlist.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
 import '../providers/anime_watchlist_provider.dart';
+import '../screens/home_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'circular_progress_indicator.dart';
+import 'empty.dart';
 import 'nebula_form.dart';
 
 typedef FetchPage = Future<SearchResult<AnimeWatchlist>> Function(
@@ -123,7 +125,12 @@ class _NebulaCardsState extends State<NebulaCards>
           } else {
             // Data loaded successfully
             var animeWatchlists = snapshot.data!.result;
-
+            if (animeWatchlists.isEmpty) {
+              return const Empty(
+                  text: Text("Your Nebula is empty."),
+                  screen: HomeScreen(selectedIndex: 0),
+                  child: Text("Explore Anime"));
+            }
             return SingleChildScrollView(
               controller: _scrollController,
               child: Center(

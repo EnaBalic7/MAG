@@ -193,31 +193,3 @@ String extractVideoId(String videoLink) {
 bool isValidReviewText(String text) {
   return RegExp(r"^[a-zA-Z0-9\s.,!?;:'()-]*$").hasMatch(text);
 }
-
-Center buildEmptyNebula(BuildContext context) {
-  return Center(
-    child: SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          buildBlackHoleIcon(200, color: Palette.lightPurple.withOpacity(0.8)),
-          const Text("Your Nebula is empty"),
-          const SizedBox(
-            height: 30,
-          ),
-          GradientButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const HomeScreen(selectedIndex: 0)));
-              },
-              width: 120,
-              height: 30,
-              borderRadius: 50,
-              gradient: Palette.navGradient4,
-              child: const Text("Explore Anime",
-                  style: TextStyle(fontWeight: FontWeight.w500))),
-        ],
-      ),
-    ),
-  );
-}

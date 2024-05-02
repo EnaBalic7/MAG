@@ -22,6 +22,11 @@ namespace MAG.Services
 
         public override IQueryable<Database.AnimeList> AddFilter(IQueryable<Database.AnimeList> query, AnimeListSearchObject? search = null)
         {
+            if (search?.Id != null)
+            {
+                query = query.Where(animeList => animeList.Id == search.Id);
+            }
+
             if (search?.AnimeId != null)
             {
                 query = query.Where(animeList => animeList.AnimeId == search.AnimeId);

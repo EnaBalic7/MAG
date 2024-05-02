@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:glass/glass.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
@@ -71,7 +72,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               width: containerWidth,
               height: containerHeight,
               decoration: BoxDecoration(
-                  color: Palette.darkPurple.withOpacity(0.9),
+                  color: Palette.darkPurple.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(15)),
               child: SingleChildScrollView(
                 child: Column(
@@ -313,6 +314,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ],
                 ),
               ),
+            ).asGlass(
+              clipBorderRadius: BorderRadius.circular(15),
+              tintColor: Palette.darkPurple,
             ),
           ),
         ],
