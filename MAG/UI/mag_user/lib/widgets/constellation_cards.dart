@@ -3,6 +3,7 @@ import 'package:glass/glass.dart';
 import 'package:mag_user/models/anime.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
+import 'package:mag_user/screens/constellation_detail_screen.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/star_form.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,8 @@ import '../widgets/pagination_buttons.dart';
 import 'circular_progress_indicator.dart';
 
 class ConstellationCards extends StatefulWidget {
-  ConstellationCards({Key? key}) : super(key: key);
+  final int selectedIndex;
+  ConstellationCards({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<ConstellationCards> createState() => _ConstellationCardsState();
@@ -187,45 +189,55 @@ class _ConstellationCardsState extends State<ConstellationCards> {
             // Data loaded successfully
             var animeListObject = snapshot.data!.result;
 
-            return Container(
-              height: cardHeight,
-              width: cardWidth,
-              margin: const EdgeInsets.all(7),
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Opacity(
-                      opacity: 0.7,
-                      child: _buildCoverPhoto(
-                          cardWidth, cardHeight, animeListObject),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        top: 5,
-                        bottom: 5,
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ConstellationDetailScreen(
+                          selectedIndex: widget.selectedIndex,
+                          star: list,
+                          animeListData: animeListObject,
+                        )));
+              },
+              child: Container(
+                height: cardHeight,
+                width: cardWidth,
+                margin: const EdgeInsets.all(7),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Opacity(
+                        opacity: 0.7,
+                        child: _buildCoverPhoto(
+                            cardWidth, cardHeight, animeListObject),
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Palette.darkPurple.withOpacity(0.5),
-                      ),
-                      child: Text("${list.name}",
-                          style: const TextStyle(
-                            fontSize: 17,
-                          )),
-                    ).asGlass(
-                      blurX: 4,
-                      blurY: 4,
-                      clipBorderRadius: BorderRadius.circular(20),
-                      tintColor: Palette.darkPurple,
                     ),
-                  ),
-                  Positioned(right: 0, child: _buildPopupMenu(list)),
-                ],
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          left: 8,
+                          right: 8,
+                          top: 5,
+                          bottom: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Palette.darkPurple.withOpacity(0.5),
+                        ),
+                        child: Text("${list.name}",
+                            style: const TextStyle(
+                              fontSize: 17,
+                            )),
+                      ).asGlass(
+                        blurX: 4,
+                        blurY: 4,
+                        clipBorderRadius: BorderRadius.circular(20),
+                        tintColor: Palette.darkPurple,
+                      ),
+                    ),
+                    Positioned(right: 0, child: _buildPopupMenu(list)),
+                  ],
+                ),
               ),
             );
           }

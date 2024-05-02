@@ -19,5 +19,7 @@ namespace MAG.Model.SearchObjects
         public bool? NewestFirst { get; set; }
 
         public bool? TopFirst { get; set; }
+
+        public List<int>? Ids { get; set; }
     }
 }

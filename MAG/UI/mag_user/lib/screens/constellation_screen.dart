@@ -44,7 +44,9 @@ class _ConstellationScreenState extends State<ConstellationScreen> {
                   ],
                 ),
               ),
-              ConstellationCards(),
+              ConstellationCards(
+                selectedIndex: widget.selectedIndex,
+              ),
             ],
           ),
         ));
