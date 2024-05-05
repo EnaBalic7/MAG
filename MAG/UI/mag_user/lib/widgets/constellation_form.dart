@@ -110,6 +110,7 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                   return MyFormBuilderFilterChip(
                                     labelText: "Your Stars",
                                     name: 'stars',
+                                    fontSize: 20,
                                     options: [
                                       ...stars
                                           .map(

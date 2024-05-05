@@ -9,6 +9,22 @@ class MyFormBuilderFilterChip extends StatefulWidget {
   String? labelText;
   final List<dynamic>? initialValue;
   void Function(List<dynamic>?)? onChanged;
+
+  /// Width of FormBuilderFilterChip
+  double? width;
+
+  /// Height of FormBuilderFilterChip
+  double? height;
+
+  /// Label font size
+  double? fontSize;
+
+  /// Shows checkmark when selected, true by default
+  bool? showCheckmark;
+
+  /// Refers to padding of each individual chip
+  EdgeInsets? padding;
+
   MyFormBuilderFilterChip({
     Key? key,
     required this.name,
@@ -16,6 +32,11 @@ class MyFormBuilderFilterChip extends StatefulWidget {
     this.labelText,
     this.initialValue,
     this.onChanged,
+    this.width,
+    this.height,
+    this.fontSize,
+    this.showCheckmark = true,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -26,27 +47,33 @@ class MyFormBuilderFilterChip extends StatefulWidget {
 class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
   @override
   Widget build(BuildContext context) {
-    return FormBuilderFilterChip(
-      name: widget.name!,
-      initialValue: widget.initialValue ?? [],
-      options: widget.options!,
-      decoration: InputDecoration(
-        labelText: widget.labelText ?? "",
-        contentPadding: EdgeInsets.zero,
-        floatingLabelAlignment: FloatingLabelAlignment.center,
-        fillColor: Colors.transparent,
-        labelStyle: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: Palette.lightPurple,
-          height: 0.2,
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: FormBuilderFilterChip(
+        padding: widget.padding,
+        name: widget.name!,
+        initialValue: widget.initialValue ?? [],
+        showCheckmark: widget.showCheckmark ?? true,
+        options: widget.options!,
+        decoration: InputDecoration(
+          labelText: widget.labelText ?? "",
+          contentPadding: EdgeInsets.zero,
+          floatingLabelAlignment: FloatingLabelAlignment.center,
+          fillColor: Colors.transparent,
+          labelStyle: TextStyle(
+            fontSize: widget.fontSize ?? 0,
+            fontWeight: FontWeight.w500,
+            color: Palette.lightPurple,
+            height: 0.2,
+          ),
+          border: InputBorder.none,
         ),
-        border: InputBorder.none,
+        onChanged: widget.onChanged,
+        alignment: WrapAlignment.center,
+        spacing: 8,
+        runSpacing: 0,
       ),
-      onChanged: widget.onChanged,
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 0,
     );
   }
 }
