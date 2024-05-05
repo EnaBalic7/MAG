@@ -7,6 +7,7 @@ import 'package:mag_user/screens/constellation_screen.dart';
 import 'package:mag_user/screens/explore_screen.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
 import 'package:mag_user/screens/home_screen.dart';
+import 'package:mag_user/screens/testing.dart';
 import 'package:mag_user/widgets/user_profile_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
@@ -217,7 +218,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   break;
                 case 4:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => ClubsScreen(selectedIndex: index)));
+                      builder: (_) => TestingScreen(selectedIndex: index)));
                   break;
               }
             },

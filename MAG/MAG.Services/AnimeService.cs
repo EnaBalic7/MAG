@@ -57,6 +57,16 @@ namespace MAG.Services
                 query = query.Where(anime => search.Ids.Contains(anime.Id));
             }
 
+            if (search?.GenreIds != null)
+            {
+                foreach (var genreId in search.GenreIds)
+                {
+                    query = query.Where(anime => anime.GenreAnimes.Any(genreAnime => genreAnime.GenreId == genreId));
+                }
+            }
+
+
+
             return base.AddFilter(query, search);
         }
 

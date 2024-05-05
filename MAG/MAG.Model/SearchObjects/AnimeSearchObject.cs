@@ -21,5 +21,7 @@ namespace MAG.Model.SearchObjects
         public bool? TopFirst { get; set; }
 
         public List<int>? Ids { get; set; }
+
+        public List<int>? GenreIds { get; set; }
     }
 }
