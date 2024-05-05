@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/utils/icons.dart';
+import 'package:provider/provider.dart';
+import '../providers/anime_list_provider.dart';
 import '../widgets/constellation_cards.dart';
 
 import '../widgets/master_screen.dart';
@@ -15,8 +17,12 @@ class ConstellationScreen extends StatefulWidget {
 }
 
 class _ConstellationScreenState extends State<ConstellationScreen> {
+  late final AnimeListProvider _animeListProvider;
+
   @override
   void initState() {
+    _animeListProvider = context.read<AnimeListProvider>();
+
     super.initState();
   }
 

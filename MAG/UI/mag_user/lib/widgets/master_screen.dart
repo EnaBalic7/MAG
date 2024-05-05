@@ -1,5 +1,7 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:glass/glass.dart';
 import 'package:mag_user/screens/clubs_screen.dart';
 import 'package:mag_user/screens/constellation_screen.dart';
 import 'package:mag_user/screens/explore_screen.dart';
@@ -106,6 +108,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
+
     super.initState();
   }
 
@@ -122,7 +125,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           FloatingActionButtonLocation.endFloat,
       appBar: AppBarWithSearchSwitch(
         toolbarHeight: appBarHeight,
-        //closeOnSubmit: false,
+        closeOnSubmit: false,
         onSubmitted: widget.onSubmitted,
         onClosed: widget.onClosed,
         onChanged: widget.onChanged,

@@ -56,6 +56,13 @@ class _ConstellationCardsState extends State<ConstellationCards> {
       setTotalItems();
     });
 
+    _animeListProvider.addListener(
+      () {
+        _reloadData();
+        setTotalItems();
+      },
+    );
+
     setTotalItems();
 
     super.initState();

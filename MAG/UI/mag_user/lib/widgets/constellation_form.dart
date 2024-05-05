@@ -157,7 +157,7 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                 int.parse(listId), widget.anime.id, null));
                           }
 
-                          if (animeListInsert.isNotEmpty &&
+                          /*if (animeListInsert.isNotEmpty &&
                               animeListInsert.length == 1) {
                             print(
                                 "AnimeList with only ONE: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
@@ -167,7 +167,7 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                 "AnimeList with TWO: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
                             print(
                                 "AnimeList with TWO: ${animeListInsert[1].id}, ${animeListInsert[1].listId}, ${animeListInsert[1].animeId}, ${animeListInsert[1].anime}");
-                          }
+                          }*/
                         }
 
                         await _animeListProvider.updateListsForAnime(

@@ -50,6 +50,14 @@ class _MyTextFieldState extends State<MyTextField> {
                 fontWeight: FontWeight.w400,
                 color: Palette.lightPurple),
             fillColor: widget.fillColor,
+            enabledBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color: Palette.lightPurple.withOpacity(0.0)),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 0)),
+            focusedBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color: Palette.lightPurple.withOpacity(0.8)),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 0)),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius ?? 0))),
       ),

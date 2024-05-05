@@ -46,18 +46,30 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
   void initState() {
     _animeProvider = context.read<AnimeProvider>();
     _animeListProvider = context.read<AnimeListProvider>();
+    _animeListProvider.addListener(_animeListListener);
 
     _filterFuture = getFilter();
-
-    _animeListProvider.addListener(() {
-      //_reloadData();
-    });
 
     super.initState();
   }
 
+  void _animeListListener() {
+    if (mounted) {
+      setState(() {
+        _filterFuture = getFilter();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _animeListProvider.removeListener(_animeListListener);
+    super.dispose();
+  }
+
   Future<Map<String, dynamic>> getFilter() async {
     if (widget.animeListRandomObj.isEmpty) {
+      _filter = {};
       return {};
     }
     _animeList = await _animeListProvider
@@ -74,6 +86,7 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
       };
       return _filter;
     }
+    _filter = {};
     return {};
   }
 
@@ -108,7 +121,8 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
-            if (widget.animeListRandomObj.isEmpty) {
+            Map<String, dynamic> filter = snapshot.data!;
+            if (widget.animeListRandomObj.isEmpty || filter.isEmpty) {
               return const Empty(
                   text: Text("This Star is empty."),
                   screen: HomeScreen(selectedIndex: 0),
@@ -120,7 +134,7 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
               pageSize: pageSize,
               fetchAnime: fetchAnime,
               fetchPage: fetchPage,
-              filter: _filter,
+              filter: filter,
             );
           }
         },

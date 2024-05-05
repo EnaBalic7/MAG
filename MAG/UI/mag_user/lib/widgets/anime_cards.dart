@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:mag_user/models/anime_watchlist.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
+import 'package:mag_user/providers/anime_provider.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/screens/constellation_screen.dart';
@@ -31,8 +32,9 @@ typedef FetchPage = Future<SearchResult<Anime>> Function(
 class AnimeCards extends StatefulWidget {
   final int selectedIndex;
   final Future<SearchResult<Anime>> Function() fetchAnime;
+  final Future<Map<String, dynamic>> Function()? getFilter;
   final FetchPage fetchPage;
-  final Map<String, dynamic> filter;
+  Map<String, dynamic> filter;
   int page;
   int pageSize;
 
@@ -44,6 +46,7 @@ class AnimeCards extends StatefulWidget {
     required this.filter,
     required this.page,
     required this.pageSize,
+    this.getFilter,
   }) : super(key: key);
 
   @override
@@ -60,6 +63,7 @@ class _AnimeCardsState extends State<AnimeCards>
   late AnimeWatchlistProvider _animeWatchlistProvider;
   late final ListtProvider _listtProvider;
   late final AnimeListProvider _animeListProvider;
+  // late final AnimeProvider _animeProvider;
 
   int totalItems = 0;
 
@@ -73,16 +77,29 @@ class _AnimeCardsState extends State<AnimeCards>
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _listtProvider = context.read<ListtProvider>();
     _animeListProvider = context.read<AnimeListProvider>();
+    // _animeProvider = context.read<AnimeProvider>();
 
     getWatchlistId();
 
     setTotalItems();
 
     _animeListProvider.addListener(() {
+      //_reloadData();
       setTotalItems();
     });
 
     super.initState();
+  }
+
+  void _reloadData() async {
+    if (mounted) {
+      if (widget.getFilter != null) {
+        widget.filter = await widget.getFilter!();
+      }
+      setState(() {
+        _animeFuture = widget.fetchAnime();
+      });
+    }
   }
 
   void getWatchlistId() async {
