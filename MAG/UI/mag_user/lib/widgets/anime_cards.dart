@@ -68,6 +68,16 @@ class _AnimeCardsState extends State<AnimeCards>
   int totalItems = 0;
 
   @override
+  void didUpdateWidget(AnimeCards oldWidget) {
+    // Check if filter has changed
+    if (widget.filter != oldWidget.filter) {
+      _animeFuture = widget.fetchAnime();
+      setTotalItems();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
   @override
@@ -77,14 +87,13 @@ class _AnimeCardsState extends State<AnimeCards>
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _listtProvider = context.read<ListtProvider>();
     _animeListProvider = context.read<AnimeListProvider>();
-    // _animeProvider = context.read<AnimeProvider>();
+    //_animeProvider = context.read<AnimeProvider>();
 
     getWatchlistId();
 
     setTotalItems();
 
     _animeListProvider.addListener(() {
-      //_reloadData();
       setTotalItems();
     });
 
@@ -135,14 +144,8 @@ class _AnimeCardsState extends State<AnimeCards>
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  children: [
-                    _animeCardIndicator(context),
-                    _animeCardIndicator(context),
-                    _animeCardIndicator(context),
-                    _animeCardIndicator(context),
-                    _animeCardIndicator(context),
-                    _animeCardIndicator(context),
-                  ],
+                  children:
+                      List.generate(6, (_) => _animeCardIndicator(context)),
                 ),
               ),
             );

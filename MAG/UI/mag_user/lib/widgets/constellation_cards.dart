@@ -101,15 +101,8 @@ class _ConstellationCardsState extends State<ConstellationCards> {
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  children: [
-                    _constellationIndicator(),
-                    _constellationIndicator(),
-                    _constellationIndicator(),
-                    _constellationIndicator(),
-                    _constellationIndicator(),
-                    _constellationIndicator(),
-                  ],
-                ),
+                    children:
+                        List.generate(6, (index) => _constellationIndicator())),
               ),
             ); // Loading state
           } else if (snapshot.hasError) {

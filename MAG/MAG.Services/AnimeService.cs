@@ -65,6 +65,12 @@ namespace MAG.Services
                 }
             }
 
+            if (search?.GetEmptyList == true)
+            {
+                query = query.Where(anime => false);
+            }
+
+
 
 
             return base.AddFilter(query, search);

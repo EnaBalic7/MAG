@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_user/providers/genre_provider.dart';
+import 'package:mag_user/widgets/chip_indicator.dart';
 import 'package:mag_user/widgets/form_builder_filter_chip.dart';
 import 'package:provider/provider.dart';
 
@@ -27,14 +28,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
   late final GenreProvider _genreProvider;
   final _exploreFormKey = GlobalKey<FormBuilderState>();
   late AnimeProvider _animeProvider;
+  final TextEditingController _searchController = TextEditingController();
 
   int page = 0;
   int pageSize = 10;
 
-  // Must get filter from search field and selected genres
-  final Map<String, dynamic> _filter = {
-    "GenresIncluded": "true",
-    "TopFirst": "true",
+  Map<String, dynamic> _filter = {
+    "GetEmptyList": "true",
   };
 
   @override
@@ -52,7 +52,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
       selectedIndex: widget.selectedIndex,
       showNavBar: true,
       showProfileIcon: false,
+      controller: _searchController,
       showSearch: true,
+      onSubmitted: _search,
+      onCleared: _updateFilter,
       title: "Explore",
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -73,6 +76,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
+  void _search(String text) {
+    _updateFilter();
+  }
+
   Future<SearchResult<Anime>> fetchAnime() {
     return _animeProvider.get(filter: {
       ..._filter,
@@ -85,12 +92,22 @@ class _ExploreScreenState extends State<ExploreScreen> {
     return _animeProvider.get(filter: filter);
   }
 
+  Future<SearchResult<Genre>> _loadDataForever() {
+    return Future.delayed(Duration(milliseconds: 500), () {})
+        .then((_) => _loadDataForever());
+  }
+
   Widget _buildGenres() {
     return FutureBuilder<SearchResult<Genre>>(
         future: _genreFuture,
+        //future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyProgressIndicator(); // Loading state
+            return Center(
+              child: Wrap(
+                children: List.generate(12, (_) => const ChipIndicator()),
+              ),
+            ); // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
           } else {
@@ -99,6 +116,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
             return FormBuilder(
               key: _exploreFormKey,
               child: MyFormBuilderFilterChip(
+                onChanged: ((p0) {
+                  _updateFilter();
+                }),
                 width: 500,
                 showCheckmark: false,
                 padding:
@@ -120,5 +140,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
             );
           }
         });
+  }
+
+  void _updateFilter() {
+    _exploreFormKey.currentState?.saveAndValidate();
+    var genreIds = _exploreFormKey.currentState?.fields["genres"]?.value;
+
+    if (genreIds.isEmpty && _searchController.text.isEmpty) {
+      setState(() {
+        _filter = {"GetEmptyList": "true"};
+      });
+    } else {
+      setState(() {
+        _filter = {
+          "FTS": _searchController.text,
+          "GenresIncluded": "true",
+          "TopFirst": "true",
+          "GenreIds": genreIds,
+        };
+      });
+    }
   }
 }

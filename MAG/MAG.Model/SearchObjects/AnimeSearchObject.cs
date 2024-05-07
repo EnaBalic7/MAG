@@ -23,5 +23,7 @@ namespace MAG.Model.SearchObjects
         public List<int>? Ids { get; set; }
 
         public List<int>? GenreIds { get; set; }
+
+        public bool? GetEmptyList { get; set; }
     }
 }

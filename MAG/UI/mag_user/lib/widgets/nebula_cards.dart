@@ -108,14 +108,7 @@ class _NebulaCardsState extends State<NebulaCards>
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  children: const [
-                    NebulaIndicator(),
-                    NebulaIndicator(),
-                    NebulaIndicator(),
-                    NebulaIndicator(),
-                    NebulaIndicator(),
-                  ],
-                ),
+                    children: List.generate(5, (_) => const NebulaIndicator())),
               ),
             );
 

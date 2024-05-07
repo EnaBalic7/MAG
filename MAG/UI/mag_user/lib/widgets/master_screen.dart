@@ -126,7 +126,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           FloatingActionButtonLocation.endFloat,
       appBar: AppBarWithSearchSwitch(
         toolbarHeight: appBarHeight,
-        closeOnSubmit: false,
+        closeOnSubmit: true,
         onSubmitted: widget.onSubmitted,
         onClosed: widget.onClosed,
         onChanged: widget.onChanged,
