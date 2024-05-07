@@ -68,6 +68,8 @@ class MasterScreenWidget extends StatefulWidget {
   /// Floating action button location
   FloatingActionButtonLocation? floatingActionButtonLocation;
 
+  bool? showHelpIcon;
+
   MasterScreenWidget({
     Key? key,
     required this.child,
@@ -95,6 +97,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.borderRadius,
     this.labelPadding,
     this.floatingActionButtonLocation,
+    this.showHelpIcon,
   }) : super(key: key);
 
   @override
@@ -306,8 +309,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     }
     actions.add(const SizedBox(width: 10));
     if (widget.showProfileIcon == true) {
-      actions.add(GestureDetector(
-          onTap: () async {
+      actions.add(IconButton(
+          splashRadius: 24,
+          onPressed: () {
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -317,26 +321,32 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               },
             );
           },
-          child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: Tooltip(
-                  message: "View profile", child: buildAstronautIcon()))));
+          icon: buildAstronautIcon()));
     }
 
-    actions.add(const SizedBox(width: 40));
     return actions;
   }
 
   Widget _buildLeading(BuildContext context) {
     if (widget.showBackArrow == true) {
-      return InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.arrow_back_rounded,
-            color: Palette.lightPurple,
-          ));
+      return IconButton(
+        splashRadius: 24,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(
+          Icons.arrow_back_rounded,
+          color: Palette.lightPurple,
+        ),
+      );
+    } else if (widget.showHelpIcon == true) {
+      return IconButton(
+        splashRadius: 24,
+        onPressed: () {
+          // Implement navigation to HelpScreen
+        },
+        icon: buildHelpIcon(24),
+      );
     } else {
       return Container();
     }

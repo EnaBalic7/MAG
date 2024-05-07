@@ -95,6 +95,7 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
     return MasterScreenWidget(
       selectedIndex: widget.selectedIndex,
       showNavBar: true,
+      showProfileIcon: false,
       showBackArrow: true,
       titleWidget: Row(
         mainAxisSize: MainAxisSize.min,

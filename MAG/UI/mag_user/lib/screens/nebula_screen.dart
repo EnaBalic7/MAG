@@ -37,6 +37,7 @@ class _NebulaScreenState extends State<NebulaScreen>
       selectedIndex: widget.selectedIndex,
       showNavBar: true,
       showTabBar: true,
+      showHelpIcon: true,
       tabController: _tabController,
       isScrollable: true,
       tabs: const [

@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen>
       title: "Home",
       selectedIndex: widget.selectedIndex,
       showTabBar: true,
+      showHelpIcon: true,
       tabController: _tabController,
       tabs: const [
         Text(

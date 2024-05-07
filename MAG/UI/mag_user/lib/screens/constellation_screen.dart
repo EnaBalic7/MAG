@@ -31,6 +31,7 @@ class _ConstellationScreenState extends State<ConstellationScreen> {
     return MasterScreenWidget(
         selectedIndex: widget.selectedIndex,
         showNavBar: true,
+        showHelpIcon: true,
         title: "Constellation",
         showFloatingActionButton: true,
         floatingButtonOnPressed: () {
