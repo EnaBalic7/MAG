@@ -56,6 +56,7 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDropdown(
+          initialValue: widget.initialValue,
           icon: widget.icon,
           dropdownColor: widget.dropdownColor ?? Palette.darkPurple,
           items: widget.items,
@@ -64,6 +65,7 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
           name: widget.name,
           style: const TextStyle(color: Palette.lightPurple),
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.only(left: 20),
             labelText: widget.labelText ?? "",
             floatingLabelBehavior: FloatingLabelBehavior.always,
             labelStyle: const TextStyle(

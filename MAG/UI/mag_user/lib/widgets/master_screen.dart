@@ -14,6 +14,7 @@ import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
 import '../models/user.dart';
 import '../providers/user_provider.dart';
+import '../screens/help_screen.dart';
 import '../screens/profile_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -343,7 +344,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       return IconButton(
         splashRadius: 24,
         onPressed: () {
-          // Implement navigation to HelpScreen
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HelpScreen()));
         },
         icon: buildHelpIcon(24),
       );
