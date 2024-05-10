@@ -19,6 +19,12 @@ namespace MAG.Services
 
         public override IQueryable<QA> AddFilter(IQueryable<QA> query, QASearchObject? search = null)
         {
+
+            if (search?.UserId != null)
+            {
+                query = query.Where(qa => qa.UserId == search.UserId);
+            }
+
             if (!string.IsNullOrWhiteSpace(search?.FTS))
             {
                 query = query.Where(x => x.Question.Contains(search.FTS) || x.Answer.Contains(search.FTS));
@@ -47,6 +53,11 @@ namespace MAG.Services
             if (search?.UnansweredFirst == true)
             {
                 query = query.OrderByDescending(x => string.IsNullOrEmpty(x.Answer)).ThenByDescending(y => y.Id);
+            }
+
+            if (search?.UserId != null && search?.AskedByOthers == true)
+            {
+                query = query.Where(qa => qa.UserId != search.UserId);
             }
 
             return base.AddFilter(query, search);

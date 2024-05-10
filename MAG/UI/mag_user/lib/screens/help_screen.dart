@@ -27,6 +27,7 @@ class _HelpScreenState extends State<HelpScreen>
       title: "Help",
       showBackArrow: true,
       showNavBar: false,
+      showSearch: false,
       tabs: const [
         Text(
           "My Questions",

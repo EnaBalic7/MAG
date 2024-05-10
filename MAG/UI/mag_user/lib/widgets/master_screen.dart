@@ -301,6 +301,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
   List<Widget> get _buildActions {
     List<Widget> actions = [];
+
     if (widget.showSearch == true) {
       actions.add(AppBarSearchButton(
         searchIcon: buildSearchIcon(true),

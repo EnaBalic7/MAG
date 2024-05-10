@@ -8,6 +8,8 @@ namespace MAG.Model.SearchObjects
 {
     public class QASearchObject : BaseSearchObject
     {
+        public int? UserId { get; set; }
+
         public string? FTS { get; set; }
 
         public bool? UserIncluded { get; set; }
@@ -23,6 +25,8 @@ namespace MAG.Model.SearchObjects
         public bool? DisplayedOnly { get; set; }
 
         public bool? UnansweredFirst { get; set; }
+
+        public bool? AskedByOthers { get; set; }
 
     }
 }
