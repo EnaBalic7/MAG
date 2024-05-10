@@ -20,7 +20,7 @@ namespace MAG.Services
         public override IQueryable<QA> AddFilter(IQueryable<QA> query, QASearchObject? search = null)
         {
 
-            if (search?.UserId != null)
+            if (search?.UserId != null && (search?.AskedByOthers == false || search?.AskedByOthers == null))
             {
                 query = query.Where(qa => qa.UserId == search.UserId);
             }

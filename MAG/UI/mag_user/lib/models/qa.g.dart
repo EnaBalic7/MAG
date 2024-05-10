@@ -7,16 +7,16 @@ part of 'qa.dart';
 // **************************************************************************
 
 QA _$QAFromJson(Map<String, dynamic> json) => QA(
-      json['id'] as int?,
-      json['userId'] as int?,
-      json['categoryId'] as int?,
-      json['question'] as String?,
-      json['answer'] as String?,
-      json['displayed'] as bool?,
-      json['category'] == null
+      id: json['id'] as int?,
+      userId: json['userId'] as int?,
+      categoryId: json['categoryId'] as int?,
+      question: json['question'] as String?,
+      answer: json['answer'] as String?,
+      displayed: json['displayed'] as bool?,
+      category: json['category'] == null
           ? null
           : QAcategory.fromJson(json['category'] as Map<String, dynamic>),
-      json['user'] == null
+      user: json['user'] == null
           ? null
           : User.fromJson(json['user'] as Map<String, dynamic>),
     );

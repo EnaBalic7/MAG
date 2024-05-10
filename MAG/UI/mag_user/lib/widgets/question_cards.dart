@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
+import 'package:mag_user/widgets/qa_details.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../models/qa.dart';
 import '../models/search_result.dart';
+import '../providers/qa_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -20,6 +23,7 @@ class QuestionCards extends StatefulWidget {
   Map<String, dynamic> filter;
   int page;
   int pageSize;
+  bool showPopupIcon;
 
   QuestionCards({
     Key? key,
@@ -29,25 +33,45 @@ class QuestionCards extends StatefulWidget {
     required this.filter,
     required this.page,
     required this.pageSize,
+    this.showPopupIcon = true,
   }) : super(key: key);
 
   @override
   State<QuestionCards> createState() => _QuestionCardsState();
 }
 
-class _QuestionCardsState extends State<QuestionCards> {
+class _QuestionCardsState extends State<QuestionCards>
+    with AutomaticKeepAliveClientMixin<QuestionCards> {
   late Future<SearchResult<QA>> _qAFuture;
   final ScrollController _scrollController = ScrollController();
+  late final QAProvider _qAProvider;
 
   int totalItems = 0;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     _qAFuture = widget.fetchQA();
+    _qAProvider = context.read<QAProvider>();
 
     setTotalItems();
 
+    _qAProvider.addListener(() {
+      setTotalItems();
+      _reloadData();
+    });
+
     super.initState();
+  }
+
+  void _reloadData() async {
+    if (mounted) {
+      setState(() {
+        _qAFuture = widget.fetchQA();
+      });
+    }
   }
 
   void setTotalItems() async {
@@ -135,78 +159,90 @@ class _QuestionCardsState extends State<QuestionCards> {
   }
 
   Widget _buildQACard(QA qa) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-        bottom: 5,
-      ),
-      child: Container(
-        constraints: const BoxConstraints(maxHeight: 100),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Palette.textFieldPurple.withOpacity(0.2),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return QADetails(qa: qa);
+            });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: 5,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(qa.question.toString(),
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold)),
-                ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 23),
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    child: _buildPopupMenu(qa),
-                  ),
-                )
-              ],
-            ),
-            Flexible(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 100),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Palette.textFieldPurple.withOpacity(0.2),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GradientButton(
-                      contentPaddingLeft: 5,
-                      contentPaddingRight: 5,
-                      contentPaddingBottom: 1,
-                      contentPaddingTop: 0,
-                      borderRadius: 50,
-                      gradient: Palette.navGradient4,
-                      child: Text(
-                        qa.category!.name.toString(),
+                  Expanded(
+                    child: Text(qa.question.toString(),
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 13,
-                            color: Palette.lightPurple,
-                            fontWeight: FontWeight.w500),
-                      )),
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                  ),
+                  Visibility(
+                    visible: widget.showPopupIcon,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 23),
+                      child: Container(
+                        padding: EdgeInsets.zero,
+                        child: _buildPopupMenu(qa),
+                      ),
+                    ),
+                  )
                 ],
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Text(
-                qa.answer.toString(),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 15),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    GradientButton(
+                        contentPaddingLeft: 5,
+                        contentPaddingRight: 5,
+                        contentPaddingBottom: 1,
+                        contentPaddingTop: 0,
+                        borderRadius: 50,
+                        gradient: Palette.navGradient4,
+                        child: Text(
+                          qa.category!.name.toString(),
+                          style: const TextStyle(
+                              fontSize: 10,
+                              color: Palette.lightPurple,
+                              fontWeight: FontWeight.w500),
+                        )),
+                  ],
+                ),
               ),
-            ),
-          ]),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  qa.answer.toString(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 15),
+                ),
+              ),
+            ]),
+          ),
+        ).asGlass(
+          blurX: 5,
+          blurY: 5,
+          tintColor: Palette.buttonPurple,
+          clipBorderRadius: BorderRadius.circular(15),
         ),
-      ).asGlass(
-        blurX: 5,
-        blurY: 5,
-        tintColor: Palette.buttonPurple,
-        clipBorderRadius: BorderRadius.circular(15),
       ),
     );
   }
@@ -321,7 +357,7 @@ class _QuestionCardsState extends State<QuestionCards> {
                       "Are you sure you want to delete this question?",
                       textAlign: TextAlign.center,
                     ), () async {
-                  //  await _qAProvider.delete(qa.id!);
+                  await _qAProvider.delete(qa.id!);
                 });
               },
             ),

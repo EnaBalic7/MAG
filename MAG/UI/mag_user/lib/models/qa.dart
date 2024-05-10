@@ -16,7 +16,7 @@ class QA {
   QAcategory? category;
   User? user;
 
-  QA(
+  QA({
     this.id,
     this.userId,
     this.categoryId,
@@ -25,7 +25,7 @@ class QA {
     this.displayed,
     this.category,
     this.user,
-  );
+  });
 
   factory QA.fromJson(Map<String, dynamic> json) => _$QAFromJson(json);
 

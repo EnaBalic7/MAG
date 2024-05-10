@@ -89,6 +89,7 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
           ),
         ),
         FormBuilder(
+          key: _questionFormKey,
           child: Column(
             children: [
               Container(
@@ -211,7 +212,27 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
         const SizedBox(height: 10),
         GradientButton(
           onPressed: () {
-            // Implement adding a question
+            if (_questionFormKey.currentState?.saveAndValidate() == true) {
+              String? question =
+                  _questionFormKey.currentState?.fields["question"]?.value;
+
+              QA qa = QA(
+                  userId: LoggedUser.user!.id,
+                  categoryId: int.parse(category!),
+                  question: question,
+                  answer: "",
+                  displayed: true);
+
+              _qAProvider.insert(qa);
+              showInfoDialog(
+                  context,
+                  const Icon(Icons.task_alt,
+                      color: Palette.lightPurple, size: 50),
+                  const Text(
+                    "Added successfully!",
+                    textAlign: TextAlign.center,
+                  ));
+            }
           },
           width: 90,
           height: 30,
