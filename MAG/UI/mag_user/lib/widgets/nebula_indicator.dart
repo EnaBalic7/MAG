@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:glass/glass.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -33,7 +31,7 @@ class _NebulaIndicatorState extends State<NebulaIndicator> {
             baseColor: Palette.lightPurple,
             highlightColor: Palette.white,
             enabled: false,
-            child: Container(
+            child: SizedBox(
               width: containerWidth * 0.25,
               height: containerHeight,
             ).asGlass(
@@ -60,7 +58,7 @@ class _NebulaIndicatorState extends State<NebulaIndicator> {
                             child: Container(
                               constraints: BoxConstraints(
                                   maxWidth: containerWidth * 0.6),
-                              child: Container(
+                              child: const SizedBox(
                                 width: 150,
                                 height: 12,
                               ).asGlass(),
@@ -72,7 +70,7 @@ class _NebulaIndicatorState extends State<NebulaIndicator> {
                           Shimmer.fromColors(
                             baseColor: Palette.lightPurple,
                             highlightColor: Palette.white,
-                            child: Container(
+                            child: const SizedBox(
                               width: 75,
                               height: 8,
                             ).asGlass(
@@ -102,7 +100,7 @@ class _NebulaIndicatorState extends State<NebulaIndicator> {
                       Shimmer.fromColors(
                         baseColor: Palette.lightPurple,
                         highlightColor: Palette.white,
-                        child: Container(
+                        child: const SizedBox(
                           width: 95,
                           height: 9,
                         ).asGlass(

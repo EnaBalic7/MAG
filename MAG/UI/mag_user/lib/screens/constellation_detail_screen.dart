@@ -1,13 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:mag_user/models/search_result.dart';
-import 'package:mag_user/providers/anime_list_provider.dart';
-import 'package:mag_user/screens/home_screen.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../models/search_result.dart';
+import '../providers/anime_list_provider.dart';
+import '../screens/home_screen.dart';
+import '../utils/icons.dart';
+import '../widgets/master_screen.dart';
 import '../models/anime.dart';
 import '../models/anime_list.dart';
 import '../models/listt.dart';
@@ -113,7 +111,7 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  children: [
+                  children: const [
                     Text("Loading"),
                   ],
                 ),

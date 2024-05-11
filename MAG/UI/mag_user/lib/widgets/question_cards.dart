@@ -83,13 +83,10 @@ class _QuestionCardsState extends State<QuestionCards>
     }
   }
 
-  Future<SearchResult<QA>> _loadDataForever() {
-    return Future.delayed(Duration(milliseconds: 500), () {})
-        .then((_) => _loadDataForever());
-  }
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return FutureBuilder<SearchResult<QA>>(
         future: _qAFuture,
         // future: _loadDataForever(),
@@ -277,7 +274,7 @@ class _QuestionCardsState extends State<QuestionCards>
                   highlightColor: Palette.white,
                   child: Container(
                     constraints: BoxConstraints(maxWidth: containerWidth * 0.6),
-                    child: Container(
+                    child: const SizedBox(
                       width: 200,
                       height: 12,
                     ).asGlass(),

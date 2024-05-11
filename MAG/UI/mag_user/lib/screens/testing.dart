@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/widgets/master_screen.dart';
-import 'package:mag_user/widgets/numeric_step_button.dart';
 
 import '../utils/colors.dart';
 
@@ -23,7 +22,7 @@ class _TestingScreenState extends State<TestingScreen> {
       child: SingleChildScrollView(
         child: Center(
           child: Column(
-            children: [
+            children: const [
               CardWidget(),
               CardWidget(),
               CardWidget(),
@@ -43,15 +42,17 @@ class _TestingScreenState extends State<TestingScreen> {
 }
 
 class CardWidget extends StatelessWidget {
+  const CardWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Palette.darkPurple,
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          children: const [
             Text('Stateless Card Widget'),
             SizedBox(height: 20),
             CounterWidget(),
@@ -63,7 +64,10 @@ class CardWidget extends StatelessWidget {
 }
 
 class CounterWidget extends StatefulWidget {
+  const CounterWidget({Key? key}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _CounterWidgetState createState() => _CounterWidgetState();
 }
 
@@ -84,7 +88,7 @@ class _CounterWidgetState extends State<CounterWidget> {
         Text('Counter: $_counter'),
         ElevatedButton(
           onPressed: _incrementCounter,
-          child: Text('Increment'),
+          child: const Text('Increment'),
         ),
       ],
     );

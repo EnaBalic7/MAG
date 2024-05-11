@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glass/glass.dart';
 import 'package:mag_user/screens/login_screen.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/separator.dart';
@@ -124,7 +123,7 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                     LoggedUser.user = null;
 
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
+                      builder: (context) => const LoginScreen(),
                     ));
                   },
                   style: ElevatedButton.styleFrom(

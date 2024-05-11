@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/nebula_all_screen.dart';
-import 'package:mag_user/screens/nebula_completed_screen.dart';
-import 'package:mag_user/screens/nebula_dropped_screen.dart';
-import 'package:mag_user/screens/nebula_onHold_screen.dart';
-import 'package:mag_user/screens/nebula_planToWatch_screen.dart';
-import 'package:mag_user/screens/nebula_watching_screen.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/master_screen.dart';
 
-import '../utils/colors.dart';
-import '../widgets/nebula_form.dart';
+import '../screens/nebula_all_screen.dart';
+import '../screens/nebula_completed_screen.dart';
+import '../screens/nebula_dropped_screen.dart';
+import '../screens/nebula_onHold_screen.dart';
+import '../screens/nebula_planToWatch_screen.dart';
+import '../screens/nebula_watching_screen.dart';
+import '../widgets/master_screen.dart';
 
 class NebulaScreen extends StatefulWidget {
   final int selectedIndex;
-  NebulaScreen({Key? key, required this.selectedIndex}) : super(key: key);
+  const NebulaScreen({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<NebulaScreen> createState() => _NebulaScreenState();

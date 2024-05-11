@@ -19,8 +19,8 @@ import '../utils/util.dart';
 import '../widgets/form_builder_text_field.dart';
 
 class ProfileScreen extends StatefulWidget {
-  User user;
-  ProfileScreen({Key? key, required this.user}) : super(key: key);
+  final User user;
+  const ProfileScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();

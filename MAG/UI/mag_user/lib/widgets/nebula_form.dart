@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
 import '../models/rating.dart';
-import '../models/search_result.dart';
 import '../models/watchlist.dart';
 import '../utils/colors.dart';
 import 'circular_progress_indicator.dart';
@@ -393,7 +392,6 @@ class _NebulaFormState extends State<NebulaForm> {
                               : null,
                         };
 
-                        print("AnimeWatchlist object: $animeWatchlist");
                         var ratingValue;
 
                         if (_nebulaFormKey
@@ -413,8 +411,6 @@ class _NebulaFormState extends State<NebulaForm> {
                               "${_nebulaFormKey.currentState!.fields["reviewText"]?.value ?? ""}",
                           "dateAdded": DateTime.now().toIso8601String(),
                         };
-
-                        print("Rating object: $rating");
 
                         await _animeWatchlistProvider.insert(animeWatchlist);
 
@@ -806,9 +802,6 @@ class _NebulaFormState extends State<NebulaForm> {
                                         animeWatchlist.result[0].id!,
                                         request: animeWatchlist.result[0]);
 
-                                    print(
-                                        "AnimeWatchlist update obj: Id: ${animeWatchlist.result[0].id} AnimeId: ${animeWatchlist.result[0].animeId} Progress: ${animeWatchlist.result[0].progress} WatchStatus: ${animeWatchlist.result[0].watchStatus} DateStarted: ${animeWatchlist.result[0].dateStarted} DateFinished: ${animeWatchlist.result[0].dateFinished}");
-
                                     var rating = await _ratingProvider.get(
                                         filter: {
                                           "UserId": "${LoggedUser.user!.id}",
@@ -868,8 +861,6 @@ class _NebulaFormState extends State<NebulaForm> {
                                             rating.result[0].id!,
                                             request: rating.result[0]);
                                       }
-                                      print(
-                                          "Rating update obj: Id: ${rating.result[0].id} AnimeId: ${rating.result[0].animeId} UserId: ${rating.result[0].userId} RatingValue: ${rating.result[0].ratingValue} ReviewText: ${rating.result[0].reviewText}");
                                     }
 
                                     Navigator.of(context).pop();

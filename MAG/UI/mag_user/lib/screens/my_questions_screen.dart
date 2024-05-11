@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/models/qa_category.dart';
-import 'package:mag_user/providers/qa_category_provider.dart';
-import 'package:mag_user/providers/qa_provider.dart';
-import 'package:mag_user/widgets/form_builder_dropdown.dart';
-import 'package:mag_user/widgets/form_builder_text_field.dart';
-import 'package:mag_user/widgets/question_cards.dart';
 import 'package:provider/provider.dart';
 
+import '../models/qa_category.dart';
+import '../providers/qa_category_provider.dart';
+import '../providers/qa_provider.dart';
+import '../widgets/form_builder_text_field.dart';
+import '../widgets/question_cards.dart';
 import '../models/qa.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
@@ -33,7 +32,7 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
   int page = 0;
   int pageSize = 10;
 
-  Map<String, dynamic> _filter = {
+  final Map<String, dynamic> _filter = {
     "UserId": "${LoggedUser.user!.id}",
     "NewestFirst": "true",
     "CategoryIncluded": "true",

@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/watchlist_provider.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/circular_progress_indicator.dart';
-import 'package:mag_user/widgets/nebula_cards.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/watchlist_provider.dart';
+import '../utils/util.dart';
+import '../widgets/nebula_cards.dart';
 import '../models/anime_watchlist.dart';
 import '../models/search_result.dart';
 import '../models/watchlist.dart';
 import '../providers/anime_watchlist_provider.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
 import '../widgets/empty.dart';
-import '../widgets/gradient_button.dart';
 import '../widgets/nebula_indicator.dart';
 import 'home_screen.dart';
 

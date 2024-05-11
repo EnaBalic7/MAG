@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/models/anime_watchlist.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
-import 'package:mag_user/providers/anime_provider.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/screens/constellation_screen.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
 import 'package:mag_user/widgets/gradient_button.dart';
-import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -20,7 +17,6 @@ import '../screens/anime_detail_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
-import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
 import 'constellation_form.dart';
 import 'empty.dart';
@@ -63,9 +59,11 @@ class _AnimeCardsState extends State<AnimeCards>
   late AnimeWatchlistProvider _animeWatchlistProvider;
   late final ListtProvider _listtProvider;
   late final AnimeListProvider _animeListProvider;
-  // late final AnimeProvider _animeProvider;
 
   int totalItems = 0;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void didUpdateWidget(AnimeCards oldWidget) {
@@ -78,16 +76,12 @@ class _AnimeCardsState extends State<AnimeCards>
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void initState() {
     _animeFuture = widget.fetchAnime();
     _watchlistProvider = context.read<WatchlistProvider>();
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _listtProvider = context.read<ListtProvider>();
     _animeListProvider = context.read<AnimeListProvider>();
-    //_animeProvider = context.read<AnimeProvider>();
 
     getWatchlistId();
 
@@ -98,17 +92,6 @@ class _AnimeCardsState extends State<AnimeCards>
     });
 
     super.initState();
-  }
-
-  void _reloadData() async {
-    if (mounted) {
-      if (widget.getFilter != null) {
-        widget.filter = await widget.getFilter!();
-      }
-      setState(() {
-        _animeFuture = widget.fetchAnime();
-      });
-    }
   }
 
   void getWatchlistId() async {
@@ -128,16 +111,12 @@ class _AnimeCardsState extends State<AnimeCards>
     }
   }
 
-  Future<SearchResult<Anime>> _loadDataForever() {
-    return Future.delayed(Duration(milliseconds: 500), () {})
-        .then((_) => _loadDataForever());
-  }
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return FutureBuilder<SearchResult<Anime>>(
         future: _animeFuture,
-        // future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SingleChildScrollView(
@@ -224,7 +203,7 @@ class _AnimeCardsState extends State<AnimeCards>
                     height: cardHeight * 0.135,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [],
+                      children: const [],
                     ),
                   ),
                 ),
@@ -498,7 +477,7 @@ class _AnimeCardsState extends State<AnimeCards>
                         onPressed: () {
                           Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => NebulaScreen(
+                                  builder: (context) => const NebulaScreen(
                                         selectedIndex: 1,
                                       )));
                         },

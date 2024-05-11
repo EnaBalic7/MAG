@@ -38,63 +38,61 @@ class _NumericStepButtonState extends State<NumericStepButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            icon: const Icon(
-              Icons.remove_rounded,
-              color: Palette.lightPurple,
-            ),
-            iconSize: 32.0,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.remove_rounded,
             color: Palette.lightPurple,
-            onPressed: () {
-              setState(() {
-                if (counter > widget.minValue) {
-                  counter--;
-                }
-                widget.onChanged(counter);
-              });
-            },
           ),
-          Container(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 5,
-              bottom: 5,
-            ),
-            decoration: BoxDecoration(
-                color: Palette.buttonPurple2,
-                borderRadius: BorderRadius.circular(4)),
-            child: Text(
-              '$counter',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Palette.lightPurple,
-                fontSize: 18.0,
-              ),
-            ),
+          iconSize: 32.0,
+          color: Palette.lightPurple,
+          onPressed: () {
+            setState(() {
+              if (counter > widget.minValue) {
+                counter--;
+              }
+              widget.onChanged(counter);
+            });
+          },
+        ),
+        Container(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 5,
+            bottom: 5,
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.add_rounded,
+          decoration: BoxDecoration(
+              color: Palette.buttonPurple2,
+              borderRadius: BorderRadius.circular(4)),
+          child: Text(
+            '$counter',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
               color: Palette.lightPurple,
+              fontSize: 18.0,
             ),
-            iconSize: 32.0,
-            color: Palette.lightPurple,
-            onPressed: () {
-              setState(() {
-                if (counter < widget.maxValue) {
-                  counter++;
-                }
-                widget.onChanged(counter);
-              });
-            },
           ),
-        ],
-      ),
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.add_rounded,
+            color: Palette.lightPurple,
+          ),
+          iconSize: 32.0,
+          color: Palette.lightPurple,
+          onPressed: () {
+            setState(() {
+              if (counter < widget.maxValue) {
+                counter++;
+              }
+              widget.onChanged(counter);
+            });
+          },
+        ),
+      ],
     );
   }
 }

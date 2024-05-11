@@ -1,21 +1,14 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:glass/glass.dart';
-import 'package:mag_user/screens/clubs_screen.dart';
 import 'package:mag_user/screens/constellation_screen.dart';
 import 'package:mag_user/screens/explore_screen.dart';
 import 'package:mag_user/screens/nebula_screen.dart';
 import 'package:mag_user/screens/home_screen.dart';
 import 'package:mag_user/screens/testing.dart';
 import 'package:mag_user/widgets/user_profile_dialog.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
-import '../models/user.dart';
-import '../providers/user_provider.dart';
 import '../screens/help_screen.dart';
-import '../screens/profile_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
@@ -107,13 +100,10 @@ class MasterScreenWidget extends StatefulWidget {
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool? removeAppBar;
-  late UserProvider _userProvider;
   int _selectedIndex = 0;
 
   @override
   void initState() {
-    _userProvider = context.read<UserProvider>();
-
     super.initState();
   }
 

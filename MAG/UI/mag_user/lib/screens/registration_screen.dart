@@ -257,7 +257,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) => LoginScreen()));
+                                        builder: (context) =>
+                                            const LoginScreen()));
                               }, barrierDismissible: false);
                             }).catchError((error) {
                               showInfoDialog(

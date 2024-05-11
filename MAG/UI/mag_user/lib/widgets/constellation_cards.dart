@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/models/anime.dart';
 import 'package:mag_user/providers/anime_list_provider.dart';
 import 'package:mag_user/providers/listt_provider.dart';
 import 'package:mag_user/screens/constellation_detail_screen.dart';
@@ -15,12 +14,12 @@ import '../models/search_result.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/pagination_buttons.dart';
-import 'circular_progress_indicator.dart';
 import 'empty.dart';
 
 class ConstellationCards extends StatefulWidget {
   final int selectedIndex;
-  ConstellationCards({Key? key, required this.selectedIndex}) : super(key: key);
+  const ConstellationCards({Key? key, required this.selectedIndex})
+      : super(key: key);
 
   @override
   State<ConstellationCards> createState() => _ConstellationCardsState();
@@ -29,7 +28,6 @@ class ConstellationCards extends StatefulWidget {
 class _ConstellationCardsState extends State<ConstellationCards> {
   late Future<SearchResult<Listt>> _listFuture;
   late final ListtProvider _listProvider;
-  late Future<SearchResult<AnimeList>> _animeListFuture;
   late final AnimeListProvider _animeListProvider;
   final ScrollController _scrollController = ScrollController();
 
@@ -169,11 +167,6 @@ class _ConstellationCardsState extends State<ConstellationCards> {
       lists.length,
       (index) => _buildListCard(lists[index]),
     );
-  }
-
-  Future<SearchResult<Listt>> _loadDataForever() {
-    return Future.delayed(Duration(milliseconds: 500), () {})
-        .then((_) => _loadDataForever());
   }
 
   Widget _buildListCard(Listt list) {

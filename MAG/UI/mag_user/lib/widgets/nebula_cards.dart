@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/models/anime.dart';
 import 'package:mag_user/providers/rating_provider.dart';
 import 'package:mag_user/screens/anime_detail_screen.dart';
 import 'package:mag_user/widgets/nebula_indicator.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../models/anime_watchlist.dart';
 import '../models/rating.dart';
@@ -92,13 +90,10 @@ class _NebulaCardsState extends State<NebulaCards>
     }
   }
 
-  Future<SearchResult<AnimeWatchlist>> _loadDataForever() {
-    return Future.delayed(Duration(milliseconds: 500), () {})
-        .then((_) => _loadDataForever());
-  }
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return FutureBuilder<SearchResult<AnimeWatchlist>>(
         future: _animeWatchlistFuture,
         // future: _loadDataForever(),

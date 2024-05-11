@@ -20,7 +20,7 @@ class _AskedByOthersScreenState extends State<AskedByOthersScreen> {
   int page = 0;
   int pageSize = 10;
 
-  Map<String, dynamic> _filter = {
+  final Map<String, dynamic> _filter = {
     "UserId": "${LoggedUser.user!.id}",
     "NewestFirst": "true",
     "CategoryIncluded": "true",

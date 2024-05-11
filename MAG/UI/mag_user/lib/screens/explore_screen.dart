@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/providers/genre_provider.dart';
-import 'package:mag_user/widgets/chip_indicator.dart';
-import 'package:mag_user/widgets/form_builder_filter_chip.dart';
 import 'package:provider/provider.dart';
 
 import '../models/anime.dart';
@@ -11,8 +8,10 @@ import '../models/search_result.dart';
 import '../providers/anime_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/anime_cards.dart';
-import '../widgets/circular_progress_indicator.dart';
 import '../widgets/master_screen.dart';
+import '../providers/genre_provider.dart';
+import '../widgets/chip_indicator.dart';
+import '../widgets/form_builder_filter_chip.dart';
 
 class ExploreScreen extends StatefulWidget {
   final int selectedIndex;
@@ -92,15 +91,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
     return _animeProvider.get(filter: filter);
   }
 
-  Future<SearchResult<Genre>> _loadDataForever() {
-    return Future.delayed(Duration(milliseconds: 500), () {})
-        .then((_) => _loadDataForever());
-  }
-
   Widget _buildGenres() {
     return FutureBuilder<SearchResult<Genre>>(
         future: _genreFuture,
-        //future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

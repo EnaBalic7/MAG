@@ -4,18 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_user/models/club.dart';
-import 'package:mag_user/providers/genre_provider.dart';
-import 'package:mag_user/providers/rating_provider.dart';
-import 'package:mag_user/screens/ratings_screen.dart';
-import 'package:mag_user/screens/video_screen.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/master_screen.dart';
-import 'package:mag_user/widgets/separator.dart';
-import 'package:orientation/orientation.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../providers/genre_provider.dart';
+import '../providers/rating_provider.dart';
+import '../screens/ratings_screen.dart';
+import '../screens/video_screen.dart';
+import '../utils/icons.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/separator.dart';
 import '../models/anime.dart';
 import '../models/genre.dart';
 import '../models/rating.dart';
@@ -28,9 +26,9 @@ import '../widgets/circular_progress_indicator.dart';
 import '../widgets/gradient_button.dart';
 
 class AnimeDetailScreen extends StatefulWidget {
-  Anime anime;
+  final Anime anime;
   final int selectedIndex;
-  AnimeDetailScreen(
+  const AnimeDetailScreen(
       {Key? key, required this.selectedIndex, required this.anime})
       : super(key: key);
 

@@ -4,10 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../models/user.dart';
-import '../screens/home_screen.dart';
 import '../widgets/gradient_button.dart';
 import 'colors.dart';
-import 'icons.dart';
 
 MaterialColor generateMaterialColor(Color color) {
   return MaterialColor(color.value, {

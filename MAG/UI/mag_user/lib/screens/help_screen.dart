@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/asked_by_others_screen.dart';
-import 'package:mag_user/screens/my_questions_screen.dart';
 
+import '../screens/asked_by_others_screen.dart';
+import '../screens/my_questions_screen.dart';
 import '../widgets/master_screen.dart';
 
 class HelpScreen extends StatefulWidget {
@@ -44,7 +44,7 @@ class _HelpScreenState extends State<HelpScreen>
         bottom: 5,
       ),
       showTabBar: true,
-      child: TabBarView(controller: _tabController, children: [
+      child: TabBarView(controller: _tabController, children: const [
         MyQuestionsScreen(),
         AskedByOthersScreen(),
       ]),
