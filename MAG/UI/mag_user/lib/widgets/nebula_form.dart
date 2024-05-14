@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/models/anime_watchlist.dart';
-import 'package:mag_user/providers/anime_watchlist_provider.dart';
-import 'package:mag_user/providers/rating_provider.dart';
-import 'package:mag_user/providers/watchlist_provider.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/form_builder_datetime_picker.dart';
-import 'package:mag_user/widgets/form_builder_text_field.dart';
-import 'package:mag_user/widgets/numeric_step_button.dart';
-import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/anime_watchlist.dart';
+import '../providers/anime_watchlist_provider.dart';
+import '../providers/rating_provider.dart';
+import '../providers/watchlist_provider.dart';
+import '../utils/util.dart';
+import '../widgets/form_builder_datetime_picker.dart';
+import '../widgets/form_builder_text_field.dart';
+import '../widgets/numeric_step_button.dart';
+import '../widgets/separator.dart';
 import '../models/anime.dart';
 import '../models/rating.dart';
 import '../models/watchlist.dart';

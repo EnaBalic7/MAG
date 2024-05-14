@@ -1,13 +1,13 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/constellation_screen.dart';
-import 'package:mag_user/screens/explore_screen.dart';
-import 'package:mag_user/screens/nebula_screen.dart';
-import 'package:mag_user/screens/home_screen.dart';
-import 'package:mag_user/screens/testing.dart';
-import 'package:mag_user/widgets/user_profile_dialog.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
+import '../screens/constellation_screen.dart';
+import '../screens/explore_screen.dart';
+import '../screens/nebula_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/testing.dart';
+import '../widgets/user_profile_dialog.dart';
 import '../screens/help_screen.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';

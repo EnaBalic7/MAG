@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/providers/listt_provider.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/form_builder_text_field.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/listt_provider.dart';
+import '../utils/util.dart';
+import '../widgets/form_builder_text_field.dart';
+import '../widgets/gradient_button.dart';
 import '../models/listt.dart';
 import '../utils/colors.dart';
 
@@ -80,22 +80,28 @@ class _StarFormState extends State<StarForm> {
               const SizedBox(height: 15),
               GradientButton(
                   onPressed: () async {
-                    if (_starFormKey.currentState?.saveAndValidate() == true &&
-                        widget.initialValue == null) {
-                      await _listtProvider.insert(Listt(
-                          null,
-                          LoggedUser.user!.id,
-                          _starFormKey.currentState?.fields["name"]?.value,
-                          DateTime.now()));
-                    } else if (_starFormKey.currentState?.saveAndValidate() ==
-                            true &&
-                        widget.initialValue != null &&
-                        widget.listId != null) {
-                      Map<String, dynamic> list = {
-                        "name": _starFormKey.currentState?.fields["name"]?.value
-                      };
-                      await _listtProvider.update(widget.listId!,
-                          request: list);
+                    try {
+                      if (_starFormKey.currentState?.saveAndValidate() ==
+                              true &&
+                          widget.initialValue == null) {
+                        await _listtProvider.insert(Listt(
+                            null,
+                            LoggedUser.user!.id,
+                            _starFormKey.currentState?.fields["name"]?.value,
+                            DateTime.now()));
+                      } else if (_starFormKey.currentState?.saveAndValidate() ==
+                              true &&
+                          widget.initialValue != null &&
+                          widget.listId != null) {
+                        Map<String, dynamic> list = {
+                          "name":
+                              _starFormKey.currentState?.fields["name"]?.value
+                        };
+                        await _listtProvider.update(widget.listId!,
+                            request: list);
+                      }
+                    } on Exception catch (e) {
+                      showErrorDialog(context, e);
                     }
 
                     Navigator.of(context).pop();

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/recommended_screen.dart';
-import 'package:mag_user/screens/top_anime_screen.dart';
-import 'package:mag_user/widgets/master_screen.dart';
+
+import '../screens/recommended_screen.dart';
+import '../screens/top_anime_screen.dart';
+import '../widgets/master_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final int selectedIndex;

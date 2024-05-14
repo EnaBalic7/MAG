@@ -28,5 +28,7 @@ namespace MAG.Model.SearchObjects
 
         public bool? AskedByOthers { get; set; }
 
+        public bool? AnsweredOnly { get; set; }
+
     }
 }

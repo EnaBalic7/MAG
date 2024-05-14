@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/models/search_result.dart';
-import 'package:mag_user/providers/anime_list_provider.dart';
-import 'package:mag_user/providers/listt_provider.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
+import '../models/search_result.dart';
+import '../providers/anime_list_provider.dart';
+import '../providers/listt_provider.dart';
+import '../utils/util.dart';
+import '../widgets/gradient_button.dart';
 import '../models/anime.dart';
 import '../models/anime_list.dart';
 import '../models/listt.dart';

@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'dart:convert';
-import '../models/search_result.dart';
-import '../utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
+
+import '../models/search_result.dart';
+import '../utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;

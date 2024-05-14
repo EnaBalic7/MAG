@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/widgets/pagination_buttons.dart';
-import 'package:mag_user/widgets/qa_details.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../widgets/pagination_buttons.dart';
+import '../widgets/qa_details.dart';
 import '../models/qa.dart';
 import '../models/search_result.dart';
 import '../providers/qa_provider.dart';
@@ -354,7 +354,11 @@ class _QuestionCardsState extends State<QuestionCards>
                       "Are you sure you want to delete this question?",
                       textAlign: TextAlign.center,
                     ), () async {
-                  await _qAProvider.delete(qa.id!);
+                  try {
+                    await _qAProvider.delete(qa.id!);
+                  } on Exception catch (e) {
+                    showErrorDialog(context, e);
+                  }
                 });
               },
             ),

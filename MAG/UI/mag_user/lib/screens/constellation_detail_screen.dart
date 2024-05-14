@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/widgets/anime_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/search_result.dart';
@@ -111,9 +112,7 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  children: const [
-                    Text("Loading"),
-                  ],
+                  children: List.generate(6, (index) => const AnimeIndicator()),
                 ),
               ),
             ); // Loading state

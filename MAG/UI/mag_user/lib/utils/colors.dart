@@ -99,4 +99,19 @@ class Palette {
 
   static const Color snowflakeIco1 = Color.fromRGBO(135, 206, 217, 1);
   static const Color snowflakeIco2 = Color.fromRGBO(167, 225, 235, 1);
+
+  static const Color rocketIco_e938_e93b_e94b = Color.fromRGBO(249, 94, 233, 1);
+  static const Color rocketIco_e939_e93a_e944 = Color.fromRGBO(160, 34, 155, 1);
+  static const Color rocketIco_e93c = Color.fromRGBO(247, 215, 77, 1);
+  static const Color rocketIco_e93d = Color.fromRGBO(251, 240, 180, 1);
+  static const Color rocketIco_e93e = Color.fromRGBO(133, 133, 133, 1);
+  static const Color rocketIco_e93f = Color.fromRGBO(67, 118, 135, 1);
+  static const Color rocketIco_e940_e949 = Color.fromRGBO(63, 84, 95, 1);
+  static const Color rocketIco_e941 = Color.fromRGBO(141, 175, 191, 1);
+  static const Color rocketIco_e942 = Color.fromRGBO(158, 34, 216, 1);
+  static const Color rocketIco_e943 = Color.fromRGBO(104, 150, 165, 1);
+  static const Color rocketIco_e945_e946 = Color.fromRGBO(179, 225, 238, 1);
+  static const Color rocketIco_e947 = Color.fromRGBO(226, 101, 237, 1);
+  static const Color rocketIco_e948 = Color.fromRGBO(225, 225, 225, 1);
+  static const Color rocketIco_e94a = Color.fromRGBO(105, 36, 160, 1);
 }

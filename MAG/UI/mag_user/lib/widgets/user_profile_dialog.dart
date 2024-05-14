@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/login_screen.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/separator.dart';
 
+import '../screens/login_screen.dart';
+import '../utils/icons.dart';
+import '../widgets/separator.dart';
 import '../models/user.dart';
 import '../screens/profile_screen.dart';
 import '../utils/colors.dart';

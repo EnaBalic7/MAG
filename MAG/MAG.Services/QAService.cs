@@ -27,37 +27,42 @@ namespace MAG.Services
 
             if (!string.IsNullOrWhiteSpace(search?.FTS))
             {
-                query = query.Where(x => x.Question.Contains(search.FTS) || x.Answer.Contains(search.FTS));
+                query = query.Where(qa => qa.Question.Contains(search.FTS) || qa.Answer.Contains(search.FTS));
             }
 
             if (search?.NewestFirst == true)
             {
-                query = query.OrderByDescending(x => x.Id);
+                query = query.OrderByDescending(qa => qa.Id);
             }
 
             if (search?.UnansweredOnly == true)
             {
-                query = query.Where(x => string.IsNullOrWhiteSpace(x.Answer));
+                query = query.Where(qa => string.IsNullOrWhiteSpace(qa.Answer));
             }
 
             if (search?.HiddenOnly == true)
             {
-                query = query.Where(x => x.Displayed == false);
+                query = query.Where(qa => qa.Displayed == false);
             }
 
             if (search?.DisplayedOnly == true)
             {
-                query = query.Where(x => x.Displayed == true);
+                query = query.Where(qa => qa.Displayed == true);
             }
 
             if (search?.UnansweredFirst == true)
             {
-                query = query.OrderByDescending(x => string.IsNullOrEmpty(x.Answer)).ThenByDescending(y => y.Id);
+                query = query.OrderByDescending(qa => string.IsNullOrEmpty(qa.Answer)).ThenByDescending(y => y.Id);
             }
 
             if (search?.UserId != null && search?.AskedByOthers == true)
             {
                 query = query.Where(qa => qa.UserId != search.UserId);
+            }
+
+            if (search?.AnsweredOnly == true)
+            {
+                query = query.Where(qa => qa.Answer != "");
             }
 
             return base.AddFilter(query, search);

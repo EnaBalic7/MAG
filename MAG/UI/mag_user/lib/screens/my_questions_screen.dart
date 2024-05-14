@@ -210,7 +210,7 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
         ),
         const SizedBox(height: 10),
         GradientButton(
-          onPressed: () {
+          onPressed: () async {
             if (_questionFormKey.currentState?.saveAndValidate() == true) {
               String? question =
                   _questionFormKey.currentState?.fields["question"]?.value;
@@ -222,15 +222,20 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                   answer: "",
                   displayed: true);
 
-              _qAProvider.insert(qa);
-              showInfoDialog(
-                  context,
-                  const Icon(Icons.task_alt,
-                      color: Palette.lightPurple, size: 50),
-                  const Text(
-                    "Added successfully!",
-                    textAlign: TextAlign.center,
-                  ));
+              try {
+                await _qAProvider.insert(qa);
+
+                showInfoDialog(
+                    context,
+                    const Icon(Icons.task_alt,
+                        color: Palette.lightPurple, size: 50),
+                    const Text(
+                      "Added successfully!",
+                      textAlign: TextAlign.center,
+                    ));
+              } on Exception catch (e) {
+                showErrorDialog(context, e);
+              }
             }
           },
           width: 90,

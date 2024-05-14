@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/providers/anime_list_provider.dart';
-import 'package:mag_user/providers/listt_provider.dart';
-import 'package:mag_user/screens/constellation_detail_screen.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/star_form.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../providers/anime_list_provider.dart';
+import '../providers/listt_provider.dart';
+import '../screens/constellation_detail_screen.dart';
+import '../utils/icons.dart';
+import '../widgets/star_form.dart';
 import '../models/anime_list.dart';
 import '../models/listt.dart';
 import '../models/search_result.dart';
@@ -373,7 +373,11 @@ class _ConstellationCardsState extends State<ConstellationCards> {
                       "Are you sure you want to delete this Star?",
                       textAlign: TextAlign.center,
                     ), () async {
-                  await _listProvider.delete(list.id!);
+                  try {
+                    await _listProvider.delete(list.id!);
+                  } on Exception catch (e) {
+                    showErrorDialog(context, e);
+                  }
                 });
               },
             ),

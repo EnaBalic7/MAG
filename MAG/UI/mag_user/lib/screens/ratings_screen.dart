@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../models/anime.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';

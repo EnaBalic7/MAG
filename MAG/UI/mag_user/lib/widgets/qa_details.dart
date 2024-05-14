@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
 
+import '../widgets/gradient_button.dart';
 import '../models/qa.dart';
 import '../utils/colors.dart';
 

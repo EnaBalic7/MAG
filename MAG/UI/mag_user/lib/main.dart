@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/anime_list_provider.dart';
-import 'package:mag_user/providers/anime_watchlist_provider.dart';
-import 'package:mag_user/providers/listt_provider.dart';
-import 'package:mag_user/providers/watchlist_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/anime_list_provider.dart';
+import '../providers/anime_watchlist_provider.dart';
+import '../providers/listt_provider.dart';
+import '../providers/watchlist_provider.dart';
 import '../providers/anime_provider.dart';
 import '../providers/club_provider.dart';
 import '../providers/comment_provider.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/providers/rating_provider.dart';
-import 'package:mag_user/screens/anime_detail_screen.dart';
-import 'package:mag_user/widgets/nebula_indicator.dart';
-import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/rating_provider.dart';
+import '../screens/anime_detail_screen.dart';
+import '../widgets/nebula_indicator.dart';
+import '../widgets/pagination_buttons.dart';
 import '../models/anime_watchlist.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
