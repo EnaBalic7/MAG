@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:glass/glass.dart';
+import 'package:mag_user/utils/icons.dart';
 import 'package:provider/provider.dart';
 
 import '../models/qa_category.dart';
@@ -80,11 +81,17 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
   Column _buildTop() {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 10),
-          child: Text(
-            "Have a question? Ask away ~",
-            style: TextStyle(fontSize: 17),
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Have a question? Ask away ",
+                style: TextStyle(fontSize: 17),
+              ),
+              buildRocketIcon(24),
+            ],
           ),
         ),
         FormBuilder(
@@ -173,36 +180,6 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                           blurY: 5,
                           tintColor: Palette.buttonPurple,
                           clipBorderRadius: BorderRadius.circular(50));
-
-                      /* return Container(
-                          child: MyFormBuilderDropdown(
-                            name: "category",
-                            labelText: "Category",
-                            initialValue: "1",
-                            width: 300,
-                            borderRadius: 50,
-                            height: 50,
-                            icon: const Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Icon(
-                                Icons.arrow_drop_down_rounded,
-                                color: Palette.lightPurple,
-                                size: 28,
-                              ),
-                            ),
-                            fillColor:
-                                Palette.textFieldPurple.withOpacity(0.5),
-                            dropdownColor: Palette.buttonPurple,
-                            items: qaCategoryList
-                                .map(
-                                  (qaCategory) => DropdownMenuItem(
-                                    value: "${qaCategory.id}",
-                                    child: Text("${qaCategory.name}"),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        );*/
                     }
                   }),
             ],

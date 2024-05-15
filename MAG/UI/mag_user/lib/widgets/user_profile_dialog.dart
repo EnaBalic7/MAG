@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/screens/settings_screen.dart';
 
 import '../screens/login_screen.dart';
 import '../utils/icons.dart';
@@ -97,8 +98,7 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProfileScreen(user: widget.loggedUser),
+                        builder: (context) => const SettingsScreen(),
                       ),
                     );
                   },

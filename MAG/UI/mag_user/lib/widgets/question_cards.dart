@@ -11,6 +11,7 @@ import '../providers/qa_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
+import 'empty.dart';
 import 'gradient_button.dart';
 
 typedef FetchPage = Future<SearchResult<QA>> Function(
@@ -89,7 +90,6 @@ class _QuestionCardsState extends State<QuestionCards>
 
     return FutureBuilder<SearchResult<QA>>(
         future: _qAFuture,
-        // future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SingleChildScrollView(
@@ -106,6 +106,14 @@ class _QuestionCardsState extends State<QuestionCards>
           } else {
             // Data loaded successfully
             var qAList = snapshot.data!.result;
+
+            if (qAList.isEmpty) {
+              return const Empty(
+                showGradientButton: false,
+                text: Text("Empty"),
+              );
+            }
+
             return SingleChildScrollView(
               controller: _scrollController,
               child: Center(
@@ -166,8 +174,8 @@ class _QuestionCardsState extends State<QuestionCards>
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
+          left: 15,
+          right: 15,
           bottom: 5,
         ),
         child: Container(

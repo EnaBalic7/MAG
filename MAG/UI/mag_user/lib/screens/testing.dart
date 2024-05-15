@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_user/widgets/master_screen.dart';
 
 import '../utils/colors.dart';
@@ -22,17 +25,31 @@ class _TestingScreenState extends State<TestingScreen> {
       child: SingleChildScrollView(
         child: Center(
           child: Column(
-            children: const [
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
-              CardWidget(),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                    width: 200,
+                    height: 43,
+                    child: FormBuilderTextField(
+                      name: "name",
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                      ),
+                    )),
+              ),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
+              const CardWidget(),
             ],
           ),
         ),
