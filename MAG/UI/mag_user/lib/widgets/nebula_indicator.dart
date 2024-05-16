@@ -35,10 +35,11 @@ class _NebulaIndicatorState extends State<NebulaIndicator> {
               width: containerWidth * 0.25,
               height: containerHeight,
             ).asGlass(
-                tintColor: Palette.lightPurple,
-                clipBorderRadius: BorderRadius.circular(4),
-                blurX: 3,
-                blurY: 3),
+              tintColor: Palette.lightPurple,
+              clipBorderRadius: BorderRadius.circular(4),
+              blurX: 3,
+              blurY: 3,
+            ),
           ),
           Expanded(
             child: Padding(

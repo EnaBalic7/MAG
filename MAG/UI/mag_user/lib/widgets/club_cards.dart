@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:mag_user/utils/icons.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/club.dart';
 import '../models/search_result.dart';
@@ -166,14 +168,14 @@ class _ClubCardsState extends State<ClubCards> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: cardWidth - 140,
+                  width: cardWidth * 0.62,
                   child: Text("${club.name}",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w500)),
                 ),
                 SizedBox(
-                  width: cardWidth - 140,
+                  width: cardWidth * 0.62,
                   child: Text("${club.description}",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
@@ -200,65 +202,91 @@ class _ClubCardsState extends State<ClubCards> {
     double? cardWidth = screenSize.width;
     double? cardHeight = 130;
 
-    return Container(
-      width: cardWidth,
-      height: cardHeight,
-      margin: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
-        color: Palette.darkPurple,
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.all(7),
+      child: Container(
+        width: cardWidth,
+        height: cardHeight,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
+          color: Palette.buttonPurple.withOpacity(0.1),
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                  ).asGlass(
+                    tintColor: Palette.lightPurple,
+                    clipBorderRadius: BorderRadius.circular(100),
+                    blurX: 3,
+                    blurY: 3,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: cardWidth - 150,
-                  child: Text("",
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
-                ),
-                SizedBox(
-                  width: cardWidth - 150,
-                  child: Text("",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 4,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500)),
-                ),
-                Row(
-                  children: [
-                    buildUsersIcon(18),
-                    const SizedBox(width: 5),
-                    Text("")
-                  ],
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 10, top: 10, right: 10, bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Palette.lightPurple,
+                    highlightColor: Palette.white,
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: cardWidth * 0.6),
+                      child: const SizedBox(
+                        width: 150,
+                        height: 13,
+                      ).asGlass(),
+                    ).asGlass(
+                        clipBorderRadius: BorderRadius.circular(4),
+                        tintColor: Palette.lightPurple),
+                  ),
+                  ...List.generate(
+                    4,
+                    (index) => Shimmer.fromColors(
+                      baseColor: Palette.lightPurple,
+                      highlightColor: Palette.white,
+                      child: SizedBox(
+                        width: cardWidth * 0.6,
+                        height: 9,
+                      ).asGlass(
+                        clipBorderRadius: BorderRadius.circular(3),
+                        tintColor: Palette.lightPurple,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: Palette.lightPurple.withOpacity(0.5),
+                        highlightColor: Palette.white.withOpacity(0.5),
+                        child: buildUsersIcon(18),
+                      ),
+                      const SizedBox(width: 5),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ).asGlass(
+          blurX: 0,
+          blurY: 0,
+          tintColor: Palette.lightPurple,
+          clipBorderRadius: BorderRadius.circular(15)),
     );
   }
 }
