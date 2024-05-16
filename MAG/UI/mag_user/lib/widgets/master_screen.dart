@@ -1,5 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:mag_user/screens/clubs_screen.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
 import '../screens/constellation_screen.dart';
@@ -212,7 +213,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   break;
                 case 4:
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (_) => TestingScreen(selectedIndex: index)));
+                      builder: (_) => ClubsScreen(selectedIndex: index)));
                   break;
               }
             },
