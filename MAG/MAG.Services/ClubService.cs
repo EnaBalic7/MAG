@@ -40,6 +40,16 @@ namespace MAG.Services
                 query = query.Where(club => club.Id == search.ClubId);
             }
 
+            if (search?.OwnerId != null)
+            {
+                query = query.Where(club => club.OwnerId == search.OwnerId);
+            }
+
+            if (search?.OrderByMemberCount == true)
+            {
+                query = query.OrderByDescending(club => club.MemberCount);
+            }
+
             return base.AddFilter(query, search);
         }
 

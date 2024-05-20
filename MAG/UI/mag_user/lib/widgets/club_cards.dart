@@ -20,6 +20,7 @@ class ClubCards extends StatefulWidget {
   Map<String, dynamic> filter;
   int page;
   int pageSize;
+  bool? showPagination;
 
   ClubCards({
     Key? key,
@@ -30,6 +31,7 @@ class ClubCards extends StatefulWidget {
     required this.filter,
     required this.page,
     required this.pageSize,
+    this.showPagination = true,
   }) : super(key: key);
 
   @override
@@ -64,6 +66,9 @@ class _ClubCardsState extends State<ClubCards> {
         future: _clubFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            if (widget.showPagination == false) {
+              return Center(child: _buildClubCardIndicator());
+            }
             return SingleChildScrollView(
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
@@ -78,6 +83,7 @@ class _ClubCardsState extends State<ClubCards> {
           } else {
             // Data loaded successfully
             var clubList = snapshot.data!.result;
+
             return SingleChildScrollView(
               controller: _scrollController,
               child: Center(
@@ -86,12 +92,15 @@ class _ClubCardsState extends State<ClubCards> {
                     Wrap(
                       children: _buildClubCards(clubList),
                     ),
-                    MyPaginationButtons(
-                      page: widget.page,
-                      pageSize: widget.pageSize,
-                      totalItems: totalItems,
-                      fetchPage: fetchPage,
-                      hasSearch: false,
+                    Visibility(
+                      visible: widget.showPagination!,
+                      child: MyPaginationButtons(
+                        page: widget.page,
+                        pageSize: widget.pageSize,
+                        totalItems: totalItems,
+                        fetchPage: fetchPage,
+                        hasSearch: false,
+                      ),
                     ),
                   ],
                 ),
@@ -135,7 +144,12 @@ class _ClubCardsState extends State<ClubCards> {
     return Container(
       width: cardWidth,
       height: cardHeight,
-      margin: const EdgeInsets.all(7),
+      margin: const EdgeInsets.only(
+        left: 7,
+        right: 7,
+        top: 5,
+        bottom: 5,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
@@ -148,15 +162,29 @@ class _ClubCardsState extends State<ClubCards> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.memory(
-                    imageFromBase64String(club.cover!.cover!),
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                (club.cover != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.memory(
+                          imageFromBase64String(club.cover!.cover!),
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Palette.lightPurple.withOpacity(0.2),
+                        ),
+                        child: Icon(
+                          Icons.image,
+                          color: Palette.lightPurple.withOpacity(0.4),
+                          size: 36,
+                        ),
+                      ),
               ],
             ),
           ),
@@ -283,10 +311,11 @@ class _ClubCardsState extends State<ClubCards> {
           ],
         ),
       ).asGlass(
-          blurX: 0,
-          blurY: 0,
-          tintColor: Palette.lightPurple,
-          clipBorderRadius: BorderRadius.circular(15)),
+        blurX: 0,
+        blurY: 0,
+        tintColor: Palette.lightPurple,
+        clipBorderRadius: BorderRadius.circular(15),
+      ),
     );
   }
 }

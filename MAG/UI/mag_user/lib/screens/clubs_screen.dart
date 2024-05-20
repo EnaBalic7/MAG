@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/providers/club_provider.dart';
+import 'package:mag_user/utils/colors.dart';
+import 'package:mag_user/utils/util.dart';
 import 'package:mag_user/widgets/club_cards.dart';
+import 'package:mag_user/widgets/gradient_button.dart';
+import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/club.dart';
@@ -23,6 +27,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
 
   final Map<String, dynamic> _filter = {
     "CoverIncluded": "true",
+    "OrderByMemberCount": "true",
   };
 
   @override
@@ -34,11 +39,81 @@ class _ClubsScreenState extends State<ClubsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    double separatorWidth = screenSize.width * 0.9;
+
     return MasterScreenWidget(
       selectedIndex: widget.selectedIndex,
       showNavBar: true,
+      showSearch: true,
       showHelpIcon: true,
       title: "Clubs",
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildTop(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MySeparator(
+                width: separatorWidth,
+                borderRadius: 50,
+                opacity: 0.5,
+                paddingTop: 5,
+                paddingBottom: 5,
+              ),
+            ],
+          ),
+          _buildBottom(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTop() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 7),
+              child: Text("My Clubs"),
+            ),
+            Row(
+              children: [
+                const Text("Create a club"),
+                GradientButton(
+                  onPressed: () {
+                    // Add club
+                  },
+                  width: 30,
+                  height: 30,
+                  gradient: Palette.buttonGradient2,
+                  borderRadius: 50,
+                  child:
+                      const Icon(Icons.add_rounded, color: Palette.lightPurple),
+                ),
+              ],
+            )
+          ],
+        ),
+        ClubCards(
+          selectedIndex: widget.selectedIndex,
+          page: page,
+          pageSize: pageSize,
+          fetchClubs: fetchOneClub,
+          fetchPage: fetchPage,
+          filter: _filter,
+          showPagination: false,
+          //top: _buildTopWidget(),
+        ),
+      ],
+    );
+  }
+
+  Expanded _buildBottom() {
+    return Expanded(
       child: ClubCards(
         selectedIndex: widget.selectedIndex,
         page: page,
@@ -48,6 +123,15 @@ class _ClubsScreenState extends State<ClubsScreen> {
         filter: _filter,
       ),
     );
+  }
+
+  Future<SearchResult<Club>> fetchOneClub() {
+    return _clubProvider.get(filter: {
+      "OwnerId": "${LoggedUser.user!.id}",
+      "CoverIncluded": "true",
+      "Page": "0",
+      "PageSize": "1",
+    });
   }
 
   Future<SearchResult<Club>> fetchClubs() {
