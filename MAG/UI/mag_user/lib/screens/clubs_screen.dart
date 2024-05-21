@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/club_provider.dart';
-import 'package:mag_user/utils/colors.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/club_cards.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
-import 'package:mag_user/widgets/separator.dart';
+import 'package:mag_user/screens/my_clubs_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/club_provider.dart';
+import '../utils/colors.dart';
+import '../utils/util.dart';
+import '../widgets/club_cards.dart';
+import '../widgets/club_form.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/separator.dart';
 import '../models/club.dart';
 import '../models/search_result.dart';
 import '../widgets/master_screen.dart';
@@ -21,11 +23,12 @@ class ClubsScreen extends StatefulWidget {
 
 class _ClubsScreenState extends State<ClubsScreen> {
   late ClubProvider _clubProvider;
+  final TextEditingController _searchController = TextEditingController();
 
   int page = 0;
   int pageSize = 10;
 
-  final Map<String, dynamic> _filter = {
+  Map<String, dynamic> _filter = {
     "CoverIncluded": "true",
     "OrderByMemberCount": "true",
   };
@@ -47,6 +50,8 @@ class _ClubsScreenState extends State<ClubsScreen> {
       showNavBar: true,
       showSearch: true,
       showHelpIcon: true,
+      controller: _searchController,
+      onSubmitted: _search,
       title: "Clubs",
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,16 +81,46 @@ class _ClubsScreenState extends State<ClubsScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 7),
-              child: Text("My Clubs"),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 7),
+                  child: Text("My Clubs"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 7),
+                  child: GradientButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => MyClubsScreen(
+                            selectedIndex: widget.selectedIndex,
+                          ),
+                        ),
+                      );
+                    },
+                    width: 60,
+                    height: 20,
+                    gradient: Palette.buttonGradient2,
+                    borderRadius: 50,
+                    child: const Text(
+                      "See all",
+                      style: TextStyle(color: Palette.lightPurple),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Row(
               children: [
                 const Text("Create a club"),
                 GradientButton(
                   onPressed: () {
-                    // Add club
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return const ClubForm();
+                        });
                   },
                   width: 30,
                   height: 30,
@@ -106,7 +141,6 @@ class _ClubsScreenState extends State<ClubsScreen> {
           fetchPage: fetchPage,
           filter: _filter,
           showPagination: false,
-          //top: _buildTopWidget(),
         ),
       ],
     );
@@ -123,6 +157,16 @@ class _ClubsScreenState extends State<ClubsScreen> {
         filter: _filter,
       ),
     );
+  }
+
+  void _search(String text) {
+    setState(() {
+      _filter = {
+        "Name": _searchController.text,
+        "CoverIncluded": "true",
+        "OrderByMemberCount": "true",
+      };
+    });
   }
 
   Future<SearchResult<Club>> fetchOneClub() {

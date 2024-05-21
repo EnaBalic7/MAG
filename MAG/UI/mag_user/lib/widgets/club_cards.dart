@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../utils/icons.dart';
+import '../widgets/pagination_buttons.dart';
 import '../models/club.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
@@ -42,6 +42,19 @@ class _ClubCardsState extends State<ClubCards> {
   late Future<SearchResult<Club>> _clubFuture;
   final ScrollController _scrollController = ScrollController();
   int totalItems = 0;
+
+  @override
+  void didUpdateWidget(ClubCards oldWidget) {
+    // Results will show only in the second instance of ClubCards in ClubsScreen
+    if (widget.showPagination == true) {
+      // Check if filter has changed
+      if (widget.filter != oldWidget.filter) {
+        _clubFuture = widget.fetchClubs();
+        setTotalItems();
+      }
+      super.didUpdateWidget(oldWidget);
+    }
+  }
 
   @override
   void initState() {
