@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_user/providers/club_provider.dart';
+import 'package:provider/provider.dart';
 
+import '../models/club_cover.dart';
+import '../providers/club_cover_provider.dart';
 import '../widgets/gradient_button.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
@@ -19,6 +24,17 @@ class ClubForm extends StatefulWidget {
 class _ClubFormState extends State<ClubForm> {
   File? _image;
   String? _base64Image;
+  final _clubFormKey = GlobalKey<FormBuilderState>();
+  late final ClubCoverProvider _clubCoverProvider;
+  late final ClubProvider _clubProvider;
+
+  @override
+  void initState() {
+    _clubCoverProvider = context.read<ClubCoverProvider>();
+    _clubProvider = context.read<ClubProvider>();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +54,7 @@ class _ClubFormState extends State<ClubForm> {
           ),
         ),
         child: FormBuilder(
+          key: _clubFormKey,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -54,9 +71,11 @@ class _ClubFormState extends State<ClubForm> {
                   height: 43,
                   borderRadius: 50,
                   validator: (val) {
-                    if (val != null && val != "" && !isValidReviewText(val)) {
+                    if (val == null || val.isEmpty) {
+                      return "This field cannot be empty.";
+                    } else if (val != "" && !isValidReviewText(val)) {
                       return "Illegal characters.";
-                    } else if (val != null && val != "" && val.length > 50) {
+                    } else if (val != "" && val.length > 20) {
                       return "Name is too long.";
                     }
                     return null;
@@ -74,38 +93,60 @@ class _ClubFormState extends State<ClubForm> {
                   borderRadius: 20,
                   errorBorderRadius: 20,
                   validator: (val) {
-                    if (val != null &&
-                        val.isNotEmpty &&
-                        !isValidReviewText(val)) {
+                    if (val == null || val.isEmpty) {
+                      return "This field cannot be empty.";
+                    } else if (val.isNotEmpty && !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
-                    } else if (val != null &&
-                        val.isNotEmpty &&
-                        val.length > 300) {
+                    } else if (val.isNotEmpty && val.length > 300) {
                       return "Exceeded character limit: ${val.length}/300";
                     }
                     return null;
                   },
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Palette.ratingPurple,
-                      borderRadius: BorderRadius.circular(50)),
-                  child: ListTile(
-                    dense: true,
-                    visualDensity: VisualDensity.compact,
-                    leading: const Icon(Icons.image_rounded,
-                        color: Palette.lightPurple),
-                    trailing: GestureDetector(
-                      onTap: () {
-                        getImage();
-                      },
-                      child: const Icon(
-                        Icons.upload_rounded,
-                        color: Palette.lightPurple,
+                FormBuilderField(
+                  name: "cover",
+                  builder: (FormFieldState<dynamic> field) {
+                    return InputDecorator(
+                      decoration: InputDecoration(
+                          errorStyle: const TextStyle(color: Palette.lightRed),
+                          errorText: field.errorText,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(0)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Palette.ratingPurple,
+                            borderRadius: BorderRadius.circular(50)),
+                        child: ListTile(
+                          dense: true,
+                          visualDensity: VisualDensity.compact,
+                          leading: const Icon(Icons.image_rounded,
+                              color: Palette.lightPurple),
+                          trailing: GestureDetector(
+                            onTap: () {
+                              getImage();
+                            },
+                            child: const Icon(
+                              Icons.upload_rounded,
+                              color: Palette.lightPurple,
+                            ),
+                          ),
+                          title: const Text("Upload cover photo"),
+                        ),
                       ),
-                    ),
-                    title: const Text("Upload cover photo"),
-                  ),
+                    );
+                  },
+                  onChanged: (val) {
+                    _clubFormKey.currentState?.saveAndValidate();
+                  },
+                  validator: (val) {
+                    int maxSizeInBytes = 1 * 1024 * 1024;
+                    if (isImageSizeValid(_base64Image, maxSizeInBytes) ==
+                        false) {
+                      print("Image too large");
+                      return "Image file is too large.";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 _base64Image != null
@@ -120,7 +161,50 @@ class _ClubFormState extends State<ClubForm> {
                     : Container(),
                 const SizedBox(height: 20),
                 GradientButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    try {
+                      if (_clubFormKey.currentState?.saveAndValidate() ==
+                          true) {
+// Add cover first
+
+                        ClubCover? cc;
+                        if (_base64Image != null) {
+                          var cover = {"cover": _base64Image};
+                          cc = await _clubCoverProvider.insert(cover);
+                        }
+
+// Then add club with added cover
+                        String? name =
+                            _clubFormKey.currentState?.fields["name"]?.value;
+                        String? description = _clubFormKey
+                            .currentState?.fields["description"]?.value;
+
+                        var clubObj = {
+                          "ownerId": LoggedUser.user!.id,
+                          "name": name,
+                          "description": description,
+                          "memberCount": 0,
+                          "dateCreated": DateTime.now().toIso8601String(),
+                          "coverId": (cc != null) ? cc.id : null,
+                        };
+
+                        await _clubProvider.insert(clubObj);
+
+                        Navigator.of(context).pop();
+
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.task_alt,
+                                color: Palette.lightPurple, size: 50),
+                            const Text(
+                              "Club created!",
+                              textAlign: TextAlign.center,
+                            ));
+                      }
+                    } on Exception catch (e) {
+                      showErrorDialog(context, e);
+                    }
+                  },
                   width: 80,
                   height: 30,
                   borderRadius: 50,
@@ -136,18 +220,30 @@ class _ClubFormState extends State<ClubForm> {
     );
   }
 
-  Future getImage() async {
+  Future<void> getImage() async {
     try {
       var result = await FilePicker.platform.pickFiles(type: FileType.image);
 
       if (result != null && result.files.single.path != null) {
-        _image = File(result.files.single.path!);
+        File originalImage = File(result.files.single.path!);
+
+        print("Original Image Path: ${originalImage.path}");
+        print("Original Image Size: ${originalImage.lengthSync()} bytes");
+
+        Uint8List compressedImage = await compressImage(originalImage);
+
+        print("Compressed Image Size: ${compressedImage.length} bytes");
+
         setState(() {
-          _base64Image = base64Encode(_image!.readAsBytesSync());
+          _base64Image = base64Encode(compressedImage);
         });
+
+        _clubFormKey.currentState?.fields['cover']?.didChange(_base64Image);
+      } else {
+        print("No image selected.");
       }
     } catch (e) {
-      // Do nothing
+      print("Error picking or compressing image: $e");
     }
   }
 }

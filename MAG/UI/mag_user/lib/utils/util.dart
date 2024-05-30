@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 
 import '../models/user.dart';
 import '../widgets/gradient_button.dart';
@@ -190,4 +192,26 @@ String extractVideoId(String videoLink) {
 
 bool isValidReviewText(String text) {
   return RegExp(r"^[a-zA-Z0-9\s.,!?;:'()-]*$").hasMatch(text);
+}
+
+bool isImageSizeValid(String? base64String, int maxSizeInBytes) {
+  if (base64String == null) {
+    return true;
+  }
+  final decodedBytes = base64Decode(base64String);
+
+  final imageSizeInBytes = decodedBytes.length;
+
+  return imageSizeInBytes <= maxSizeInBytes;
+}
+
+Future<Uint8List> compressImage(File imageFile) async {
+  img.Image? image = img.decodeImage(imageFile.readAsBytesSync());
+
+  // Resize the image to a maximum width of 800, maintaining the aspect ratio
+  img.Image resizedImage = img.copyResize(image!, width: 800);
+
+  List<int> jpeg = img.encodeJpg(resizedImage, quality: 85);
+
+  return Uint8List.fromList(jpeg);
 }
