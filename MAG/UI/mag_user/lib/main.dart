@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/providers/club_cover_provider.dart';
+import 'package:mag_user/providers/club_user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/anime_list_provider.dart';
@@ -43,6 +44,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => ListtProvider()),
     ChangeNotifierProvider(create: (_) => AnimeListProvider()),
     ChangeNotifierProvider(create: (_) => ClubCoverProvider()),
+    ChangeNotifierProvider(create: (_) => ClubUserProvider()),
   ], child: const MyMaterialApp()));
 }
 

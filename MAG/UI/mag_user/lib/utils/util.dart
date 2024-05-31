@@ -208,10 +208,23 @@ bool isImageSizeValid(String? base64String, int maxSizeInBytes) {
 Future<Uint8List> compressImage(File imageFile) async {
   img.Image? image = img.decodeImage(imageFile.readAsBytesSync());
 
-  // Resize the image to a maximum width of 800, maintaining the aspect ratio
-  img.Image resizedImage = img.copyResize(image!, width: 800);
+  if (image == null) {
+    throw Exception('Unable to decode image');
+  }
 
-  List<int> jpeg = img.encodeJpg(resizedImage, quality: 85);
+  // Resize the image only if its width is greater than 800 pixels
+  if (image.width > 800) {
+    image = img.copyResize(image, width: 800, maintainAspect: true);
+  }
+
+  // Encode the image as JPEG with quality 85
+  List<int> jpeg = img.encodeJpg(image, quality: 85);
+
+  // Check if the compressed image is larger than the original
+  if (jpeg.length > imageFile.lengthSync()) {
+    // If it is, reduce the quality to make it smaller
+    jpeg = img.encodeJpg(image, quality: 50);
+  }
 
   return Uint8List.fromList(jpeg);
 }

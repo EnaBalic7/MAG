@@ -5,8 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:mag_user/providers/club_provider.dart';
+import 'package:mag_user/providers/club_user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/club.dart';
 import '../models/club_cover.dart';
 import '../providers/club_cover_provider.dart';
 import '../widgets/gradient_button.dart';
@@ -27,11 +29,13 @@ class _ClubFormState extends State<ClubForm> {
   final _clubFormKey = GlobalKey<FormBuilderState>();
   late final ClubCoverProvider _clubCoverProvider;
   late final ClubProvider _clubProvider;
+  late final ClubUserProvider _clubUserProvider;
 
   @override
   void initState() {
     _clubCoverProvider = context.read<ClubCoverProvider>();
     _clubProvider = context.read<ClubProvider>();
+    _clubUserProvider = context.read<ClubUserProvider>();
 
     super.initState();
   }
@@ -139,10 +143,9 @@ class _ClubFormState extends State<ClubForm> {
                     _clubFormKey.currentState?.saveAndValidate();
                   },
                   validator: (val) {
-                    int maxSizeInBytes = 1 * 1024 * 1024;
+                    int maxSizeInBytes = 300000; // 300 KB
                     if (isImageSizeValid(_base64Image, maxSizeInBytes) ==
                         false) {
-                      print("Image too large");
                       return "Image file is too large.";
                     }
                     return null;
@@ -188,7 +191,15 @@ class _ClubFormState extends State<ClubForm> {
                           "coverId": (cc != null) ? cc.id : null,
                         };
 
-                        await _clubProvider.insert(clubObj);
+                        Club addedClub = await _clubProvider.insert(clubObj);
+
+// Add club owner to his club
+                        var clubUserObj = {
+                          "clubId": addedClub.id,
+                          "userId": LoggedUser.user!.id,
+                        };
+
+                        await _clubUserProvider.insert(clubUserObj);
 
                         Navigator.of(context).pop();
 
