@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
+import 'package:mag_user/providers/club_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../utils/icons.dart';
@@ -8,6 +10,7 @@ import '../models/club.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
+import 'club_form.dart';
 
 typedef FetchPage = Future<SearchResult<Club>> Function(
     Map<String, dynamic> filter);
@@ -21,6 +24,7 @@ class ClubCards extends StatefulWidget {
   int page;
   int pageSize;
   bool? showPagination;
+  bool? showPopupMenuButton;
 
   ClubCards({
     Key? key,
@@ -32,6 +36,7 @@ class ClubCards extends StatefulWidget {
     required this.page,
     required this.pageSize,
     this.showPagination = true,
+    this.showPopupMenuButton = false,
   }) : super(key: key);
 
   @override
@@ -41,6 +46,7 @@ class ClubCards extends StatefulWidget {
 class _ClubCardsState extends State<ClubCards> {
   late Future<SearchResult<Club>> _clubFuture;
   final ScrollController _scrollController = ScrollController();
+  late final ClubProvider _clubProvider;
   int totalItems = 0;
 
   @override
@@ -60,6 +66,7 @@ class _ClubCardsState extends State<ClubCards> {
   void initState() {
     _clubFuture = widget.fetchClubs();
     setTotalItems();
+    _clubProvider = context.read<ClubProvider>();
 
     super.initState();
   }
@@ -171,7 +178,7 @@ class _ClubCardsState extends State<ClubCards> {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
+            padding: const EdgeInsets.only(left: 5),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -201,36 +208,49 @@ class _ClubCardsState extends State<ClubCards> {
               ],
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: cardWidth * 0.62,
-                  child: Text("${club.name}",
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
-                ),
-                SizedBox(
-                  width: cardWidth * 0.62,
-                  child: Text("${club.description}",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 4,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500)),
-                ),
-                Row(
-                  children: [
-                    buildUsersIcon(18),
-                    const SizedBox(width: 5),
-                    Text("${club.memberCount}")
-                  ],
-                ),
-              ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 10, top: 10, right: 10, bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  (widget.showPopupMenuButton == true)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${club.name}",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500)),
+                            _buildPopupMenu(club),
+                          ],
+                        )
+                      : SizedBox(
+                          width: cardWidth * 0.62,
+                          child: Text("${club.name}",
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500)),
+                        ),
+                  SizedBox(
+                    width: cardWidth * 0.62,
+                    child: Text("${club.description}",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500)),
+                  ),
+                  Row(
+                    children: [
+                      buildUsersIcon(18),
+                      const SizedBox(width: 5),
+                      Text("${club.memberCount}")
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -329,6 +349,82 @@ class _ClubCardsState extends State<ClubCards> {
         tintColor: Palette.lightPurple,
         clipBorderRadius: BorderRadius.circular(15),
       ),
+    );
+  }
+
+  Widget _buildPopupMenu(Club club) {
+    return Container(
+      width: 25,
+      height: 25,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Palette.darkPurple.withOpacity(0.8),
+      ),
+      child: PopupMenuButton<String>(
+        tooltip: "Actions",
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+        ),
+        icon: const Icon(Icons.more_horiz_rounded),
+        splashRadius: 1,
+        padding: EdgeInsets.zero,
+        color: const Color.fromRGBO(50, 48, 90, 1),
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          PopupMenuItem<String>(
+            padding: EdgeInsets.zero,
+            child: ListTile(
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+              hoverColor: Palette.lightPurple.withOpacity(0.1),
+              leading:
+                  const Icon(Icons.edit_rounded, color: Palette.lightPurple),
+              title: const Text('Edit',
+                  style: TextStyle(color: Palette.lightPurple)),
+              onTap: () {
+                Navigator.of(context).pop();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ClubForm(club: club);
+                  },
+                );
+              },
+            ),
+          ),
+          PopupMenuItem<String>(
+            padding: EdgeInsets.zero,
+            child: ListTile(
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+              hoverColor: Palette.lightRed.withOpacity(0.1),
+              leading: buildTrashIcon(24),
+              title: const Text('Delete',
+                  style: TextStyle(color: Palette.lightRed)),
+              onTap: () {
+                Navigator.pop(context);
+                showConfirmationDialog(
+                    context,
+                    const Icon(Icons.warning_rounded,
+                        color: Palette.lightRed, size: 55),
+                    const Text(
+                      "Are you sure you want to delete this Star?",
+                      textAlign: TextAlign.center,
+                    ), () async {
+                  try {
+                    await _clubProvider.delete(club.id!);
+                  } on Exception catch (e) {
+                    showErrorDialog(context, e);
+                  }
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    ).asGlass(
+      blurX: 1,
+      blurY: 1,
+      clipBorderRadius: BorderRadius.circular(20),
+      tintColor: Palette.darkPurple,
     );
   }
 }

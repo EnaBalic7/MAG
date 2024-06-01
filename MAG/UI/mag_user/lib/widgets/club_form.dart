@@ -17,7 +17,12 @@ import '../utils/util.dart';
 import 'form_builder_text_field.dart';
 
 class ClubForm extends StatefulWidget {
-  const ClubForm({Key? key}) : super(key: key);
+  /// If not null, it means editing is in question
+  Club? club;
+  ClubForm({
+    Key? key,
+    this.club,
+  }) : super(key: key);
 
   @override
   State<ClubForm> createState() => _ClubFormState();
@@ -30,12 +35,22 @@ class _ClubFormState extends State<ClubForm> {
   late final ClubCoverProvider _clubCoverProvider;
   late final ClubProvider _clubProvider;
   late final ClubUserProvider _clubUserProvider;
+  Map<String, dynamic> _initialValue = {};
 
   @override
   void initState() {
     _clubCoverProvider = context.read<ClubCoverProvider>();
     _clubProvider = context.read<ClubProvider>();
     _clubUserProvider = context.read<ClubUserProvider>();
+
+    _initialValue = {
+      "name": widget.club?.name ?? "",
+      "description": widget.club?.description ?? "",
+    };
+
+    if (widget.club != null) {
+      _base64Image = widget.club?.cover?.cover;
+    }
 
     super.initState();
   }
@@ -59,18 +74,23 @@ class _ClubFormState extends State<ClubForm> {
         ),
         child: FormBuilder(
           key: _clubFormKey,
+          initialValue: _initialValue,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 20),
-                  child: Text("Create your own club",
-                      style: TextStyle(fontSize: 17)),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: (widget.club == null)
+                      ? const Text("Create your own club",
+                          style: TextStyle(fontSize: 17))
+                      : const Text("Edit your club",
+                          style: TextStyle(fontSize: 17)),
                 ),
                 MyFormBuilderTextField(
                   labelText: "Name",
                   name: "name",
+                  //  initialValue: widget.club?.name ?? "",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
                   height: 43,
                   borderRadius: 50,
@@ -89,6 +109,7 @@ class _ClubFormState extends State<ClubForm> {
                 MyFormBuilderTextField(
                   name: "description",
                   labelText: "Description",
+                  //initialValue: widget.club?.description ?? "",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
                   maxLines: null,
                   textAlignVertical: TextAlignVertical.center,
@@ -144,7 +165,9 @@ class _ClubFormState extends State<ClubForm> {
                   },
                   validator: (val) {
                     int maxSizeInBytes = 300000; // 300 KB
-                    if (isImageSizeValid(_base64Image, maxSizeInBytes) ==
+                    if (_base64Image == "") {
+                      return "Must select cover photo";
+                    } else if (isImageSizeValid(_base64Image, maxSizeInBytes) ==
                         false) {
                       return "Image file is too large.";
                     }
@@ -168,49 +191,78 @@ class _ClubFormState extends State<ClubForm> {
                     try {
                       if (_clubFormKey.currentState?.saveAndValidate() ==
                           true) {
-// Add cover first
-
-                        ClubCover? cc;
-                        if (_base64Image != null) {
-                          var cover = {"cover": _base64Image};
-                          cc = await _clubCoverProvider.insert(cover);
-                        }
-
-// Then add club with added cover
                         String? name =
                             _clubFormKey.currentState?.fields["name"]?.value;
                         String? description = _clubFormKey
                             .currentState?.fields["description"]?.value;
 
-                        var clubObj = {
-                          "ownerId": LoggedUser.user!.id,
-                          "name": name,
-                          "description": description,
-                          "memberCount": 0,
-                          "dateCreated": DateTime.now().toIso8601String(),
-                          "coverId": (cc != null) ? cc.id : null,
-                        };
+                        if (widget.club == null) {
+                          // Add cover first
+                          ClubCover? cc;
+                          if (_base64Image != null) {
+                            var cover = {"cover": _base64Image};
+                            cc = await _clubCoverProvider.insert(cover);
+                          }
 
-                        Club addedClub = await _clubProvider.insert(clubObj);
+                          // Then add club with added cover
+                          var clubObj = {
+                            "ownerId": LoggedUser.user!.id,
+                            "name": name,
+                            "description": description,
+                            "memberCount": 0,
+                            "dateCreated": DateTime.now().toIso8601String(),
+                            "coverId": (cc != null) ? cc.id : null,
+                          };
 
-// Add club owner to his club
-                        var clubUserObj = {
-                          "clubId": addedClub.id,
-                          "userId": LoggedUser.user!.id,
-                        };
+                          Club addedClub = await _clubProvider.insert(clubObj);
 
-                        await _clubUserProvider.insert(clubUserObj);
+                          // Add club owner to his club
+                          var clubUserObj = {
+                            "clubId": addedClub.id,
+                            "userId": LoggedUser.user!.id,
+                          };
 
-                        Navigator.of(context).pop();
+                          await _clubUserProvider.insert(clubUserObj);
 
-                        showInfoDialog(
-                            context,
-                            const Icon(Icons.task_alt,
-                                color: Palette.lightPurple, size: 50),
-                            const Text(
-                              "Club created!",
-                              textAlign: TextAlign.center,
-                            ));
+                          Navigator.of(context).pop();
+
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Club created!",
+                                textAlign: TextAlign.center,
+                              ));
+                        } else if (widget.club != null) {
+                          // Update club name and description
+                          var clubUpdateObj = {
+                            "name": name,
+                            "description": description,
+                          };
+
+                          await _clubProvider.update(widget.club!.id!,
+                              request: clubUpdateObj);
+
+                          // Update club cover photo
+                          Map<String, dynamic>? cover;
+                          if (_base64Image != null) {
+                            cover = {"cover": _base64Image};
+                          }
+
+                          await _clubCoverProvider.update(widget.club!.coverId!,
+                              request: cover);
+
+                          Navigator.of(context).pop();
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Club info updated!",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
                       }
                     } on Exception catch (e) {
                       showErrorDialog(context, e);

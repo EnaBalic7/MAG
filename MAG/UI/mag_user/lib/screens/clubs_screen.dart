@@ -119,7 +119,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                     showDialog(
                         context: context,
                         builder: (_) {
-                          return const ClubForm();
+                          return ClubForm();
                         });
                   },
                   width: 30,

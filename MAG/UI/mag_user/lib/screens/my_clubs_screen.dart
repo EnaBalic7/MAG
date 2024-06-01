@@ -49,6 +49,7 @@ class _MyClubsScreenState extends State<MyClubsScreen> {
         fetchClubs: fetchClubs,
         fetchPage: fetchPage,
         filter: _filter,
+        showPopupMenuButton: true,
       ),
     );
   }

@@ -15,6 +15,7 @@ Club _$ClubFromJson(Map<String, dynamic> json) => Club(
       json['dateCreated'] == null
           ? null
           : DateTime.parse(json['dateCreated'] as String),
+      json['coverId'] as int?,
       json['cover'] == null
           ? null
           : ClubCover.fromJson(json['cover'] as Map<String, dynamic>),
@@ -27,5 +28,6 @@ Map<String, dynamic> _$ClubToJson(Club instance) => <String, dynamic>{
       'description': instance.description,
       'memberCount': instance.memberCount,
       'dateCreated': instance.dateCreated?.toIso8601String(),
+      'coverId': instance.coverId,
       'cover': instance.cover,
     };

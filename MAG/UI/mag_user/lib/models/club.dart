@@ -11,6 +11,7 @@ class Club {
   String? description;
   int? memberCount;
   DateTime? dateCreated;
+  int? coverId;
   ClubCover? cover;
 
   Club(
@@ -20,6 +21,7 @@ class Club {
     this.description,
     this.memberCount,
     this.dateCreated,
+    this.coverId,
     this.cover,
   );
 

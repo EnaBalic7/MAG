@@ -12,7 +12,5 @@ namespace MAG.Model.Requests
 
         public string Description { get; set; } = null!;
 
-        public int CoverId { get; set; }
-
     }
 }
