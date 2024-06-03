@@ -27,5 +27,16 @@ namespace MAG.Services
 
             return base.AddInclude(query, search);
         }
+
+        public async Task<bool> DeleteByClubId(int clubId)
+        {
+            var clubUserList = _context.ClubUsers.Where(clubUser => clubUser.ClubId == clubId).ToList();
+
+            _context.RemoveRange(clubUserList);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

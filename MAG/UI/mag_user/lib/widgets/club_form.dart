@@ -52,6 +52,10 @@ class _ClubFormState extends State<ClubForm> {
       _base64Image = widget.club?.cover?.cover;
     }
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _clubFormKey.currentState?.validate();
+    });
+
     super.initState();
   }
 
@@ -90,10 +94,12 @@ class _ClubFormState extends State<ClubForm> {
                 MyFormBuilderTextField(
                   labelText: "Name",
                   name: "name",
-                  //  initialValue: widget.club?.name ?? "",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
                   height: 43,
                   borderRadius: 50,
+                  onChanged: (val) {
+                    _clubFormKey.currentState?.saveAndValidate();
+                  },
                   validator: (val) {
                     if (val == null || val.isEmpty) {
                       return "This field cannot be empty.";
@@ -109,7 +115,6 @@ class _ClubFormState extends State<ClubForm> {
                 MyFormBuilderTextField(
                   name: "description",
                   labelText: "Description",
-                  //initialValue: widget.club?.description ?? "",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
                   maxLines: null,
                   textAlignVertical: TextAlignVertical.center,
@@ -117,6 +122,9 @@ class _ClubFormState extends State<ClubForm> {
                   keyboardType: TextInputType.multiline,
                   borderRadius: 20,
                   errorBorderRadius: 20,
+                  onChanged: (val) {
+                    _clubFormKey.currentState?.saveAndValidate();
+                  },
                   validator: (val) {
                     if (val == null || val.isEmpty) {
                       return "This field cannot be empty.";
@@ -149,6 +157,8 @@ class _ClubFormState extends State<ClubForm> {
                           trailing: GestureDetector(
                             onTap: () {
                               getImage();
+                              field.didChange(_base64Image);
+                              _clubFormKey.currentState?.saveAndValidate();
                             },
                             child: const Icon(
                               Icons.upload_rounded,
@@ -165,7 +175,7 @@ class _ClubFormState extends State<ClubForm> {
                   },
                   validator: (val) {
                     int maxSizeInBytes = 300000; // 300 KB
-                    if (_base64Image == "") {
+                    if (_base64Image == null) {
                       return "Must select cover photo";
                     } else if (isImageSizeValid(_base64Image, maxSizeInBytes) ==
                         false) {
@@ -246,12 +256,12 @@ class _ClubFormState extends State<ClubForm> {
 
                           // Update club cover photo
                           Map<String, dynamic>? cover;
-                          if (_base64Image != null) {
+                          if (_base64Image != null &&
+                              _base64Image != widget.club!.cover!.cover) {
                             cover = {"cover": _base64Image};
+                            await _clubCoverProvider
+                                .update(widget.club!.coverId!, request: cover);
                           }
-
-                          await _clubCoverProvider.update(widget.club!.coverId!,
-                              request: cover);
 
                           Navigator.of(context).pop();
                           showInfoDialog(
@@ -272,8 +282,11 @@ class _ClubFormState extends State<ClubForm> {
                   height: 30,
                   borderRadius: 50,
                   gradient: Palette.buttonGradient,
-                  child: const Text("Create",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  child: (widget.club == null)
+                      ? const Text("Create",
+                          style: TextStyle(fontWeight: FontWeight.w500))
+                      : const Text("Save",
+                          style: TextStyle(fontWeight: FontWeight.w500)),
                 ),
               ],
             ),
@@ -302,6 +315,8 @@ class _ClubFormState extends State<ClubForm> {
         });
 
         _clubFormKey.currentState?.fields['cover']?.didChange(_base64Image);
+
+        _clubFormKey.currentState?.saveAndValidate();
       } else {
         print("No image selected.");
       }

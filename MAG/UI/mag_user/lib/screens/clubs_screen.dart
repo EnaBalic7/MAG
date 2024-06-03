@@ -33,6 +33,13 @@ class _ClubsScreenState extends State<ClubsScreen> {
     "OrderByMemberCount": "true",
   };
 
+  Map<String, dynamic> _filterOneClub = {
+    "OwnerId": "${LoggedUser.user!.id}",
+    "CoverIncluded": "true",
+    "Page": "0",
+    "PageSize": "1",
+  };
+
   @override
   void initState() {
     _clubProvider = context.read<ClubProvider>();
@@ -139,7 +146,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
           pageSize: pageSize,
           fetchClubs: fetchOneClub,
           fetchPage: fetchPage,
-          filter: _filter,
+          filter: _filterOneClub,
           showPagination: false,
         ),
       ],

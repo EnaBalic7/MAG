@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
@@ -13,7 +14,11 @@ namespace MAG.Services
 {
     public class ClubService : BaseCRUDService<Model.Club, Database.Club, ClubSearchObject, ClubInsertRequest, ClubUpdateRequest>, IClubService
     {
-        public ClubService(MagContext context, IMapper mapper) : base(context, mapper)
+
+        protected IPostService _postService;
+        protected ICommentService _commentService;
+        protected IClubUserService _clubUserService;
+        public ClubService(MagContext context, IMapper mapper, IPostService postService, ICommentService commentService, IClubUserService clubUserService) : base(context, mapper)
         {
             var clubs = context.Clubs.ToList();
 
@@ -25,10 +30,12 @@ namespace MAG.Services
             }
 
             context.SaveChanges();
-
+            _postService = postService;
+            _commentService = commentService;
+            _clubUserService = clubUserService;
         }
 
-        public override IQueryable<Club> AddFilter(IQueryable<Club> query, ClubSearchObject? search = null)
+        public override IQueryable<Database.Club> AddFilter(IQueryable<Database.Club> query, ClubSearchObject? search = null)
         {
             if(search?.Name != null)
             {
@@ -40,9 +47,9 @@ namespace MAG.Services
                 query = query.Where(club => club.Id == search.ClubId);
             }
 
-            if (search?.OwnerId != null)
+            if (search?.UserId != null && search?.GetJoinedClubs != true)
             {
-                query = query.Where(club => club.OwnerId == search.OwnerId);
+                query = query.Where(club => club.OwnerId == search.UserId);
             }
 
             if (search?.OrderByMemberCount == true)
@@ -50,10 +57,17 @@ namespace MAG.Services
                 query = query.OrderByDescending(club => club.MemberCount);
             }
 
+            if (search?.GetJoinedClubs == true && search?.UserId != null)
+            {
+                query = query.Where(club => club.OwnerId != search.UserId);
+
+                query = query.Where(club => club.ClubUsers.Any(clubUser => clubUser.UserId == search.UserId));
+            }
+
             return base.AddFilter(query, search);
         }
 
-        public override IQueryable<Club> AddInclude(IQueryable<Club> query, ClubSearchObject? search = null)
+        public override IQueryable<Database.Club> AddInclude(IQueryable<Database.Club> query, ClubSearchObject? search = null)
         {
             if(search?.CoverIncluded == true)
             {
@@ -61,6 +75,23 @@ namespace MAG.Services
             }
             
             return base.AddInclude(query, search);
+        }
+
+        public override async Task BeforeDelete(Database.Club entity)
+        {
+            var posts = _context.Posts.Where(post => post.ClubId == entity.Id).ToList();
+
+            foreach (var post in posts)
+            {
+                await _commentService.DeleteAllCommentsByPostId(post.Id);
+            }
+
+            await _postService.DeleteByClubId(entity.Id);
+
+            await _clubUserService.DeleteByClubId(entity.Id);
+
+            // Implement cover deletion as well
+          
         }
     }
 }

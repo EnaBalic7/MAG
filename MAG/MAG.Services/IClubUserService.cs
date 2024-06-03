@@ -10,5 +10,6 @@ namespace MAG.Services
 {
     public interface IClubUserService : ICRUDService<Model.ClubUser, ClubUserSearchObject, ClubUserInsertRequest, ClubUserUpdateRequest>
     {
+        Task<bool> DeleteByClubId(int clubId);
     }
 }

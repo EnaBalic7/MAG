@@ -24,7 +24,7 @@ namespace MAG.Model
 
         public virtual ClubCover? Cover { get; set; }
 
-        //public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
+        public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
 
         public virtual User Owner { get; set; } = null!;
 

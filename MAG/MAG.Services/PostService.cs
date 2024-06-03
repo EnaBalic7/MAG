@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
@@ -21,7 +22,7 @@ namespace MAG.Services
             _commentService = commentService;
         }
 
-        public override IQueryable<Post> AddInclude(IQueryable<Post> query, PostSearchObject? search = null)
+        public override IQueryable<Database.Post> AddInclude(IQueryable<Database.Post> query, PostSearchObject? search = null)
         {
             if(search?.CommentsIncluded == true)
             {
@@ -31,7 +32,7 @@ namespace MAG.Services
             return base.AddInclude(query, search);
         }
 
-        public override IQueryable<Post> AddFilter(IQueryable<Post> query, PostSearchObject? search = null)
+        public override IQueryable<Database.Post> AddFilter(IQueryable<Database.Post> query, PostSearchObject? search = null)
         {
 
             if (search?.ClubId != null)
@@ -57,10 +58,20 @@ namespace MAG.Services
             return base.AddFilter(query, search);
         }
 
-        public override async Task BeforeDelete(Post entity)
+        public override async Task BeforeDelete(Database.Post entity)
         {
            await _commentService.DeleteAllCommentsByPostId(entity.Id);
         }
 
+        public async Task<bool> DeleteByClubId(int clubId)
+        {
+            var posts = _context.Posts.Where(x => x.ClubId == clubId).ToList();
+
+            _context.RemoveRange(posts);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

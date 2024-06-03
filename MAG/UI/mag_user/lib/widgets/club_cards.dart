@@ -68,7 +68,31 @@ class _ClubCardsState extends State<ClubCards> {
     setTotalItems();
     _clubProvider = context.read<ClubProvider>();
 
+    _clubProvider.addListener(() {
+      _reloadData();
+    });
+
     super.initState();
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      if (widget.showPagination == true) {
+        setState(() {
+          _clubFuture = _clubProvider.get(filter: {
+            ...widget.filter,
+            "Page": "${widget.page}",
+            "PageSize": "${widget.pageSize}"
+          });
+        });
+      } else if (widget.showPagination == false) {
+        setState(() {
+          _clubFuture = _clubProvider.get(filter: {
+            ...widget.filter,
+          });
+        });
+      }
+    }
   }
 
   void setTotalItems() async {
@@ -406,7 +430,7 @@ class _ClubCardsState extends State<ClubCards> {
                     const Icon(Icons.warning_rounded,
                         color: Palette.lightRed, size: 55),
                     const Text(
-                      "Are you sure you want to delete this Star?",
+                      "Are you sure you want to delete this club?",
                       textAlign: TextAlign.center,
                     ), () async {
                   try {

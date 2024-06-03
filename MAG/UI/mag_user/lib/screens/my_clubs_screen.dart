@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/screens/joined_clubs_screen.dart';
+import 'package:mag_user/screens/owned_clubs_screen.dart';
 import 'package:mag_user/widgets/master_screen.dart';
-import 'package:provider/provider.dart';
-
-import '../models/club.dart';
-import '../models/search_result.dart';
-import '../providers/club_provider.dart';
-import '../utils/util.dart';
-import '../widgets/club_cards.dart';
 
 class MyClubsScreen extends StatefulWidget {
   final int selectedIndex;
@@ -17,21 +12,13 @@ class MyClubsScreen extends StatefulWidget {
   State<MyClubsScreen> createState() => _MyClubsScreenState();
 }
 
-class _MyClubsScreenState extends State<MyClubsScreen> {
-  late ClubProvider _clubProvider;
-
-  int page = 0;
-  int pageSize = 10;
-
-  final Map<String, dynamic> _filter = {
-    "CoverIncluded": "true",
-    "OrderByMemberCount": "true",
-    "OwnerId": "${LoggedUser.user!.id}",
-  };
+class _MyClubsScreenState extends State<MyClubsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
 
   @override
   void initState() {
-    _clubProvider = context.read<ClubProvider>();
+    _tabController = TabController(length: 2, vsync: this);
 
     super.initState();
   }
@@ -42,27 +29,26 @@ class _MyClubsScreenState extends State<MyClubsScreen> {
       selectedIndex: widget.selectedIndex,
       title: "My Clubs",
       showBackArrow: true,
-      child: ClubCards(
-        selectedIndex: widget.selectedIndex,
-        page: page,
-        pageSize: pageSize,
-        fetchClubs: fetchClubs,
-        fetchPage: fetchPage,
-        filter: _filter,
-        showPopupMenuButton: true,
+      showTabBar: true,
+      tabController: _tabController,
+      tabs: const [
+        Text(
+          "Owned",
+        ),
+        Text(
+          "Joined",
+        ),
+      ],
+      labelPadding: const EdgeInsets.only(
+        left: 15,
+        right: 15,
+        top: 8,
+        bottom: 5,
       ),
+      child: TabBarView(controller: _tabController, children: [
+        OwnedClubsScreen(selectedIndex: widget.selectedIndex),
+        JoinedClubsScreen(selectedIndex: widget.selectedIndex),
+      ]),
     );
-  }
-
-  Future<SearchResult<Club>> fetchClubs() {
-    return _clubProvider.get(filter: {
-      ..._filter,
-      "Page": "$page",
-      "PageSize": "$pageSize",
-    });
-  }
-
-  Future<SearchResult<Club>> fetchPage(Map<String, dynamic> filter) {
-    return _clubProvider.get(filter: filter);
   }
 }
