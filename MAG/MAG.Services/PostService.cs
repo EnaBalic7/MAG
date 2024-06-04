@@ -63,15 +63,5 @@ namespace MAG.Services
            await _commentService.DeleteAllCommentsByPostId(entity.Id);
         }
 
-        public async Task<bool> DeleteByClubId(int clubId)
-        {
-            var posts = _context.Posts.Where(x => x.ClubId == clubId).ToList();
-
-            _context.RemoveRange(posts);
-
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
     }
 }

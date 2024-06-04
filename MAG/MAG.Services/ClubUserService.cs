@@ -20,7 +20,7 @@ namespace MAG.Services
 
         public override IQueryable<ClubUser> AddInclude(IQueryable<ClubUser> query, ClubUserSearchObject? search = null)
         {
-            if(search.ClubIncluded == true)
+            if(search?.ClubIncluded == true)
             {
                 query = query.Include(club => club.Club);
             }
@@ -28,15 +28,5 @@ namespace MAG.Services
             return base.AddInclude(query, search);
         }
 
-        public async Task<bool> DeleteByClubId(int clubId)
-        {
-            var clubUserList = _context.ClubUsers.Where(clubUser => clubUser.ClubId == clubId).ToList();
-
-            _context.RemoveRange(clubUserList);
-
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
     }
 }

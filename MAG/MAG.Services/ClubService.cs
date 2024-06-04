@@ -14,11 +14,8 @@ namespace MAG.Services
 {
     public class ClubService : BaseCRUDService<Model.Club, Database.Club, ClubSearchObject, ClubInsertRequest, ClubUpdateRequest>, IClubService
     {
-
-        protected IPostService _postService;
-        protected ICommentService _commentService;
-        protected IClubUserService _clubUserService;
-        public ClubService(MagContext context, IMapper mapper, IPostService postService, ICommentService commentService, IClubUserService clubUserService) : base(context, mapper)
+        protected IClubCoverService _clubCoverService;
+        public ClubService(MagContext context, IMapper mapper, IClubCoverService clubCoverService) : base(context, mapper)
         {
             var clubs = context.Clubs.ToList();
 
@@ -30,9 +27,7 @@ namespace MAG.Services
             }
 
             context.SaveChanges();
-            _postService = postService;
-            _commentService = commentService;
-            _clubUserService = clubUserService;
+            _clubCoverService = clubCoverService;
         }
 
         public override IQueryable<Database.Club> AddFilter(IQueryable<Database.Club> query, ClubSearchObject? search = null)
@@ -79,19 +74,10 @@ namespace MAG.Services
 
         public override async Task BeforeDelete(Database.Club entity)
         {
-            var posts = _context.Posts.Where(post => post.ClubId == entity.Id).ToList();
-
-            foreach (var post in posts)
+            if(entity.CoverId != null)
             {
-                await _commentService.DeleteAllCommentsByPostId(post.Id);
+                await _clubCoverService.Delete((int)entity.CoverId);
             }
-
-            await _postService.DeleteByClubId(entity.Id);
-
-            await _clubUserService.DeleteByClubId(entity.Id);
-
-            // Implement cover deletion as well
-          
         }
     }
 }
