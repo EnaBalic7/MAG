@@ -4,6 +4,7 @@ import 'package:mag_user/providers/club_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../screens/club_detail_screen.dart';
 import '../utils/icons.dart';
 import '../widgets/pagination_buttons.dart';
 import '../models/club.dart';
@@ -185,99 +186,110 @@ class _ClubCardsState extends State<ClubCards> {
     double? cardWidth = screenSize.width;
     double? cardHeight = 130;
 
-    return Container(
-      width: cardWidth,
-      height: cardHeight,
-      margin: const EdgeInsets.only(
-        left: 7,
-        right: 7,
-        top: 5,
-        bottom: 5,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
-        color: Palette.darkPurple,
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 5),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                (club.cover != null)
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.memory(
-                          imageFromBase64String(club.cover!.cover!),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ClubDetailScreen(
+            club: club,
+            selectedIndex: widget.selectedIndex,
+          ),
+        ));
+      },
+      child: Container(
+        width: cardWidth,
+        height: cardHeight,
+        margin: const EdgeInsets.only(
+          left: 7,
+          right: 7,
+          top: 5,
+          bottom: 5,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
+          color: Palette.darkPurple,
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  (club.cover != null)
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.memory(
+                            imageFromBase64String(club.cover!.cover!),
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Container(
                           width: 80,
                           height: 80,
-                          fit: BoxFit.cover,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Palette.lightPurple.withOpacity(0.2),
+                          ),
+                          child: Icon(
+                            Icons.image,
+                            color: Palette.lightPurple.withOpacity(0.4),
+                            size: 36,
+                          ),
                         ),
-                      )
-                    : Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Palette.lightPurple.withOpacity(0.2),
-                        ),
-                        child: Icon(
-                          Icons.image,
-                          color: Palette.lightPurple.withOpacity(0.4),
-                          size: 36,
-                        ),
-                      ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 10, top: 10, right: 10, bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  (widget.showPopupMenuButton == true)
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("${club.name}",
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500)),
-                            _buildPopupMenu(club),
-                          ],
-                        )
-                      : SizedBox(
-                          width: cardWidth * 0.62,
-                          child: Text("${club.name}",
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500)),
-                        ),
-                  SizedBox(
-                    width: cardWidth * 0.62,
-                    child: Text("${club.description}",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 4,
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500)),
-                  ),
-                  Row(
-                    children: [
-                      buildUsersIcon(18),
-                      const SizedBox(width: 5),
-                      Text("${club.memberCount}")
-                    ],
-                  ),
                 ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, top: 10, right: 10, bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    (widget.showPopupMenuButton == true)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("${club.name}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500)),
+                              _buildPopupMenu(club),
+                            ],
+                          )
+                        : SizedBox(
+                            width: cardWidth * 0.62,
+                            child: Text("${club.name}",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500)),
+                          ),
+                    SizedBox(
+                      width: cardWidth * 0.62,
+                      child: Text("${club.description}",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 4,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500)),
+                    ),
+                    Row(
+                      children: [
+                        buildUsersIcon(18),
+                        const SizedBox(width: 5),
+                        Text("${club.memberCount}")
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
