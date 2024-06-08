@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mag_user/providers/club_user_provider.dart';
+import 'package:mag_user/widgets/join_club_button.dart';
 import 'package:mag_user/widgets/master_screen.dart';
 import 'package:mag_user/widgets/separator.dart';
+import 'package:provider/provider.dart';
 
 import '../models/club.dart';
+import '../providers/club_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
-import '../widgets/gradient_button.dart';
 import '../widgets/post_card.dart';
 
 class ClubDetailScreen extends StatefulWidget {
@@ -24,6 +27,29 @@ class ClubDetailScreen extends StatefulWidget {
 }
 
 class _ClubDetailScreenState extends State<ClubDetailScreen> {
+  late final ClubUserProvider _clubUserProvider;
+  late final ClubProvider _clubProvider;
+
+  @override
+  void initState() {
+    _clubUserProvider = context.read<ClubUserProvider>();
+    _clubProvider = context.read<ClubProvider>();
+
+    _clubUserProvider.addListener(() {
+      _updateMemberCount();
+    });
+    super.initState();
+  }
+
+  void _updateMemberCount() async {
+    var club = await _clubProvider.get(filter: {"ClubId": "${widget.club.id}"});
+    if (mounted) {
+      setState(() {
+        widget.club.memberCount = club.result.single.memberCount;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -73,14 +99,16 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                     ],
                   ),
                 ),
-                GradientButton(
-                  onPressed: () {
-                    // Implement joining club
-                  },
+                JoinClubButton(
+                  clubId: widget.club.id!,
+                  userId: LoggedUser.user!.id!,
                   width: 70,
                   height: 23,
                   gradient: Palette.buttonGradient,
+                  updateGradient: Palette.navGradient2,
                   borderRadius: 50,
+                  updateChild: const Text("Joined",
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                   child: const Text("Join",
                       style: TextStyle(fontWeight: FontWeight.w500)),
                 ),
@@ -89,7 +117,11 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-            child: Text("${widget.club.description}"),
+            child: Row(
+              children: [
+                Expanded(child: Text("${widget.club.description}")),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, top: 10),

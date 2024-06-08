@@ -4,6 +4,7 @@ import 'package:mag_user/providers/club_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../providers/club_user_provider.dart';
 import '../screens/club_detail_screen.dart';
 import '../utils/icons.dart';
 import '../widgets/pagination_buttons.dart';
@@ -49,6 +50,7 @@ class _ClubCardsState extends State<ClubCards> {
   final ScrollController _scrollController = ScrollController();
   late final ClubProvider _clubProvider;
   int totalItems = 0;
+  late final ClubUserProvider _clubUserProvider;
 
   @override
   void didUpdateWidget(ClubCards oldWidget) {
@@ -68,8 +70,13 @@ class _ClubCardsState extends State<ClubCards> {
     _clubFuture = widget.fetchClubs();
     setTotalItems();
     _clubProvider = context.read<ClubProvider>();
+    _clubUserProvider = context.read<ClubUserProvider>();
 
     _clubProvider.addListener(() {
+      _reloadData();
+    });
+
+    _clubUserProvider.addListener(() {
       _reloadData();
     });
 

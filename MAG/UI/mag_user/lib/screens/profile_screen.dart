@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -19,8 +20,8 @@ import '../utils/util.dart';
 import '../widgets/form_builder_text_field.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final User user;
-  const ProfileScreen({Key? key, required this.user}) : super(key: key);
+  User user;
+  ProfileScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -44,13 +45,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
       var result = await FilePicker.platform.pickFiles(type: FileType.image);
 
       if (result != null && result.files.single.path != null) {
-        _image = File(result.files.single.path!);
+        File originalImage = File(result.files.single.path!);
+
+        print("Original Image Size: ${originalImage.lengthSync()} bytes");
+
+        Uint8List compressedImage = await compressImage(originalImage);
+
+        print("Compressed Image Size: ${compressedImage.length} bytes");
+
         setState(() {
-          _base64Image = base64Encode(_image!.readAsBytesSync());
+          _base64Image = base64Encode(compressedImage);
         });
+      } else {
+        print("No image selected.");
       }
     } catch (e) {
-      // Do nothing
+      print("Error picking or compressing image: $e");
     }
   }
 
@@ -66,7 +76,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
     _userProvider = context.read<UserProvider>();
 
+    _userProvider.addListener(() {
+      _reloadUserData();
+    });
+
     super.initState();
+  }
+
+  void _reloadUserData() async {
+    var userResult = await _userProvider.get(filter: {
+      "Username": "${Authorization.username}",
+      "ProfilePictureIncluded": "true",
+    });
+
+    if (mounted) {
+      setState(() {
+        if (userResult.count == 1) {
+          LoggedUser.user = userResult.result.single;
+          widget.user = userResult.result.single;
+        }
+      });
+    }
   }
 
   @override
@@ -107,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderRadius: BorderRadius.circular(15),
                               child: Image.memory(
                                 imageFromBase64String(_base64Image!),
-                                width: imageWidth,
+                                //width: imageWidth,
                                 height: 200,
                                 fit: BoxFit.cover,
                               )),

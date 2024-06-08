@@ -96,6 +96,7 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const SettingsScreen(),

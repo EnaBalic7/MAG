@@ -6,12 +6,14 @@ class MyProgressIndicator extends StatefulWidget {
   final double? width;
   final double? height;
   final double? strokeWidth;
+  final Color? color;
 
   const MyProgressIndicator({
     Key? key,
     this.height,
     this.width,
     this.strokeWidth,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class _MyProgressIndicatorState extends State<MyProgressIndicator> {
         height: widget.height,
         child: CircularProgressIndicator(
           strokeWidth: widget.strokeWidth ?? 4,
-          color: Palette.lightPurple.withOpacity(0.7),
+          color: widget.color ?? Palette.lightPurple.withOpacity(0.7),
         ),
       ),
     );

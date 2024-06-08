@@ -18,6 +18,22 @@ namespace MAG.Services
 
         }
 
+        public override IQueryable<ClubUser> AddFilter(IQueryable<ClubUser> query, ClubUserSearchObject? search = null)
+        {
+            
+            if(search?.ClubId != null)
+            {
+                query = query.Where(clubUser => clubUser.ClubId == search.ClubId);
+            }
+
+            if (search?.UserId != null)
+            {
+                query = query.Where(clubUser => clubUser.UserId == search.UserId);
+            }
+
+            return base.AddFilter(query, search);
+        }
+
         public override IQueryable<ClubUser> AddInclude(IQueryable<ClubUser> query, ClubUserSearchObject? search = null)
         {
             if(search?.ClubIncluded == true)

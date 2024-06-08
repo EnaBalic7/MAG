@@ -9,5 +9,9 @@ namespace MAG.Model.SearchObjects
     public class ClubUserSearchObject : BaseSearchObject
     {
         public bool? ClubIncluded { get; set; }
+
+        public int? ClubId { get; set; }
+
+        public int? UserId { get; set; }
     }
 }
