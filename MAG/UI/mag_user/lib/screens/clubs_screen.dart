@@ -34,7 +34,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
   };
 
   Map<String, dynamic> _filterOneClub = {
-    "OwnerId": "${LoggedUser.user!.id}",
+    "UserId": "${LoggedUser.user!.id}",
     "CoverIncluded": "true",
     "Page": "0",
     "PageSize": "1",
@@ -178,7 +178,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
 
   Future<SearchResult<Club>> fetchOneClub() {
     return _clubProvider.get(filter: {
-      "OwnerId": "${LoggedUser.user!.id}",
+      "UserId": "${LoggedUser.user!.id}",
       "CoverIncluded": "true",
       "Page": "0",
       "PageSize": "1",

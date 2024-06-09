@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/providers/club_provider.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
 import 'package:mag_user/widgets/circular_progress_indicator.dart';
 import 'package:provider/provider.dart';
 import '../utils/colors.dart';
+import '../utils/util.dart';
 
 class JoinClubButton extends StatefulWidget {
   final double? width;
@@ -19,8 +21,6 @@ class JoinClubButton extends StatefulWidget {
   final double? contentPaddingTop;
   final double? contentPaddingBottom;
   final bool? hideBorder;
-  final Widget? updateChild;
-  final LinearGradient? updateGradient;
   final int userId;
   final int clubId;
 
@@ -40,8 +40,6 @@ class JoinClubButton extends StatefulWidget {
     this.contentPaddingTop,
     this.contentPaddingBottom,
     this.hideBorder = false,
-    this.updateChild,
-    this.updateGradient,
     required this.clubId,
     required this.userId,
   }) : super(key: key);
@@ -53,21 +51,42 @@ class JoinClubButton extends StatefulWidget {
 class _JoinClubButtonState extends State<JoinClubButton> {
   bool _isJoined = false;
   bool _isLoading = true;
+  bool _isOwner = false;
   late final ClubUserProvider _clubUserProvider;
+  late final ClubProvider _clubProvider;
 
   @override
   void initState() {
     super.initState();
     _clubUserProvider = context.read<ClubUserProvider>();
+    _clubProvider = context.read<ClubProvider>();
 
     _checkMembershipStatus();
+    _checkOwnershipStatus();
+  }
+
+  void _checkOwnershipStatus() async {
+    bool isOwner = await checkUserOwnership(widget.userId, widget.clubId);
+    setState(() {
+      _isOwner = isOwner;
+      _isLoading = false;
+    });
+  }
+
+  Future<bool> checkUserOwnership(int userId, int clubId) async {
+    var club = await _clubProvider.get(filter: {"ClubId": "$clubId"});
+
+    if (club.count == 1 && club.result.single.ownerId == userId) {
+      return true;
+    }
+
+    return false;
   }
 
   void _checkMembershipStatus() async {
     bool isJoined = await checkUserMembership(widget.userId, widget.clubId);
     setState(() {
       _isJoined = isJoined;
-      _isLoading = false;
     });
   }
 
@@ -87,10 +106,24 @@ class _JoinClubButtonState extends State<JoinClubButton> {
       _isLoading = true;
     });
 
-    if (_isJoined) {
+    if (_isJoined == true && _isOwner == false) {
       await leaveClub(widget.userId, widget.clubId);
-    } else {
+    } else if (_isJoined == false) {
       await joinClub(widget.userId, widget.clubId);
+    } else if (_isJoined == true && _isOwner == true) {
+      showConfirmationDialog(
+          context,
+          const Icon(Icons.warning_rounded, color: Palette.lightRed, size: 55),
+          const Text(
+            "Are you sure you want to delete your club, all its posts and comments?",
+            textAlign: TextAlign.center,
+          ), () async {
+        try {
+          await _clubProvider.delete(widget.clubId);
+        } on Exception catch (e) {
+          showErrorDialog(context, e);
+        }
+      });
     }
 
     setState(() {
@@ -166,21 +199,39 @@ class _JoinClubButtonState extends State<JoinClubButton> {
             border: (widget.hideBorder == false)
                 ? Border.all(color: Palette.lightPurple.withOpacity(0.3))
                 : null,
-            gradient: _isJoined && widget.updateGradient != null
-                ? widget.updateGradient
-                : widget.gradient,
+            gradient: _buildGradient(),
             borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
           ),
           child: Container(
             width: widget.width,
             height: widget.height,
             alignment: Alignment.center,
-            child: _isJoined && widget.updateChild != null
-                ? widget.updateChild
-                : widget.child,
+            child: _buildChild(),
           ),
         ),
       ),
     );
+  }
+
+  Widget? _buildChild() {
+    if (_isJoined == true && _isOwner == false) {
+      return const Text("Joined",
+          style: TextStyle(fontWeight: FontWeight.w500));
+    } else if (_isOwner == true) {
+      return const Text("Delete",
+          style: TextStyle(fontWeight: FontWeight.w500));
+    } else {
+      return widget.child;
+    }
+  }
+
+  LinearGradient? _buildGradient() {
+    if (_isJoined == true && _isOwner == false) {
+      return Palette.navGradient2;
+    } else if (_isOwner == true) {
+      return Palette.redGradient;
+    } else {
+      return widget.gradient;
+    }
   }
 }
