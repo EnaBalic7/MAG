@@ -29,7 +29,7 @@ builder.Services.AddTransient<IRatingService, RatingService>();
 builder.Services.AddTransient<IDonationService, DonationService>();
 builder.Services.AddTransient<IUserProfilePictureService, UserProfilePictureService>();
 builder.Services.AddTransient<IClubCoverService, ClubCoverService>();
-
+builder.Services.AddTransient<IUserPostActionService, UserPostActionService>();
 
 
 

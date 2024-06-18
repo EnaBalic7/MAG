@@ -95,6 +95,10 @@ namespace MAG.Services
             CreateMap<Database.AnimeWatchlist, Model.AnimeWatchlist>();
             CreateMap<AnimeWatchlistInsertRequest, Database.AnimeWatchlist>();
             CreateMap<AnimeWatchlistUpdateRequest, Database.AnimeWatchlist>();
+
+            CreateMap<Database.UserPostAction, Model.UserPostAction>();
+            CreateMap<UserPostActionInsertRequest, Database.UserPostAction>();
+            CreateMap<UserPostActionUpdateRequest, Database.UserPostAction>();
         }
     }
 }

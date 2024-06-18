@@ -5,13 +5,12 @@ namespace MAG.Services.Database;
 
 public partial class User
 {
+    public static object Identity { get; internal set; }
     public int Id { get; set; }
 
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;
-
-    public string Username { get; set; } = null!;
 
     public string PasswordHash { get; set; } = null!;
 
@@ -22,6 +21,8 @@ public partial class User
     public int ProfilePictureId { get; set; }
 
     public DateTime DateJoined { get; set; }
+
+    public string Username { get; set; } = null!;
 
     public virtual ICollection<ClubUser> ClubUsers { get; set; } = new List<ClubUser>();
 
@@ -42,6 +43,8 @@ public partial class User
     public virtual ICollection<QA> QAs { get; set; } = new List<QA>();
 
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+
+    public virtual ICollection<UserPostAction> UserPostActions { get; set; } = new List<UserPostAction>();
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 

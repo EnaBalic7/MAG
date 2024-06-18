@@ -105,7 +105,7 @@ namespace MAG.Services
                 {
                     AnimeTitleEN = anime.TitleEn,
                     AnimeTitleJP = anime.TitleJp,
-                    Score = anime.Score,
+                    Score = (decimal)anime.Score,
                     NumberOfRatings = _context.Ratings.Where(rating => rating.AnimeId == anime.Id).Count()
                 });
             }

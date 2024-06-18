@@ -19,7 +19,7 @@ public partial class Anime
 
     public string? TrailerUrl { get; set; }
 
-    public decimal Score { get; set; }
+    public decimal? Score { get; set; }
 
     public DateTime BeginAir { get; set; }
 

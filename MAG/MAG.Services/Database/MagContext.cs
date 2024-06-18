@@ -51,6 +51,8 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserPostAction> UserPostActions { get; set; }
+
     public virtual DbSet<UserProfilePicture> UserProfilePictures { get; set; }
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
@@ -73,6 +75,7 @@ public partial class MagContext : DbContext
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(200)
                 .HasColumnName("ImageURL");
+            entity.Property(e => e.Score).HasColumnType("decimal(4, 2)");
             entity.Property(e => e.Season).HasMaxLength(10);
             entity.Property(e => e.Studio).HasMaxLength(50);
             entity.Property(e => e.TitleEn)
@@ -111,6 +114,8 @@ public partial class MagContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
+            entity.Property(e => e.DateFinished).HasColumnType("datetime");
+            entity.Property(e => e.DateStarted).HasColumnType("datetime");
             entity.Property(e => e.WatchStatus).HasMaxLength(30);
             entity.Property(e => e.WatchlistId).HasColumnName("WatchlistID");
 
@@ -162,7 +167,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Club).WithMany(p => p.ClubUsers)
                 .HasForeignKey(d => d.ClubId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Club_User_Club");
 
             entity.HasOne(d => d.User).WithMany(p => p.ClubUsers)
@@ -182,7 +186,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Post).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.PostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Comment_Post");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
@@ -259,7 +262,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Club).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.ClubId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Post_Club");
 
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
@@ -352,12 +354,35 @@ public partial class MagContext : DbContext
             entity.Property(e => e.PasswordHash).HasMaxLength(50);
             entity.Property(e => e.PasswordSalt).HasMaxLength(50);
             entity.Property(e => e.ProfilePictureId).HasColumnName("ProfilePictureID");
-            entity.Property(e => e.Username).HasMaxLength(50);
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("('')")
+                .UseCollation("Latin1_General_CS_AS");
 
             entity.HasOne(d => d.ProfilePicture).WithMany(p => p.Users)
                 .HasForeignKey(d => d.ProfilePictureId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_User_UserProfilePicture");
+        });
+
+        modelBuilder.Entity<UserPostAction>(entity =>
+        {
+            entity.ToTable("UserPostAction");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Action).HasMaxLength(10);
+            entity.Property(e => e.PostId).HasColumnName("PostID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Post).WithMany(p => p.UserPostActions)
+                .HasForeignKey(d => d.PostId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserPostAction_Post");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserPostActions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserPostAction_User");
         });
 
         modelBuilder.Entity<UserProfilePicture>(entity =>
