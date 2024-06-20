@@ -2,29 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/providers/user_provider.dart';
-import 'package:mag_user/widgets/circular_progress_indicator.dart';
+import 'package:mag_user/screens/post_detail_screen.dart';
 import 'package:mag_user/widgets/like_dislike_button.dart';
-import 'package:mag_user/widgets/pagination_buttons.dart';
-import 'package:mag_user/widgets/post_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../models/comment.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
-import 'anime_indicator.dart';
 
-class PostCard extends StatefulWidget {
-  final Post post;
-  const PostCard({Key? key, required this.post}) : super(key: key);
+class ContentCard extends StatefulWidget {
+  final Post? post;
+  final Comment? comment;
+
+  const ContentCard({Key? key, this.post, this.comment})
+      : assert(post != null || comment != null,
+            "Either post or comment must be provided."),
+        assert(!(post != null && comment != null),
+            "Only one of post or comment can be provided."),
+        super(key: key);
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<ContentCard> createState() => _ContentCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _ContentCardState extends State<ContentCard> {
   late final UserProvider _userProvider;
   late Future<SearchResult<User>> _userFuture;
 
@@ -32,7 +37,9 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     _userProvider = context.read<UserProvider>();
     _userFuture = _userProvider.get(filter: {
-      "Id": "${widget.post.userId}",
+      "Id": (widget.post != null)
+          ? "${widget.post!.userId}"
+          : "${widget.comment!.userId}",
       "ProfilePictureIncluded": "true"
     });
 
@@ -69,21 +76,39 @@ class _PostCardState extends State<PostCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildUsername(),
-                          Text(DateFormat('MMM d, y')
-                              .format(widget.post.datePosted!)),
+                          (widget.post != null)
+                              ? Text(DateFormat('MMM d, y')
+                                  .format(widget.post!.datePosted!))
+                              : Text(DateFormat('MMM d, y')
+                                  .format(widget.comment!.dateCommented!)),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: cardWidth,
-                      child: Text(widget.post.content!,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                          style: const TextStyle(fontWeight: FontWeight.w500)),
+                    GestureDetector(
+                      onTap: () {
+                        if (widget.post != null) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  PostDetailScreen(post: widget.post!)));
+                        }
+                      },
+                      child: SizedBox(
+                        width: cardWidth,
+                        child: Text(
+                            (widget.post != null)
+                                ? widget.post!.content!
+                                : widget.comment!.content!,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w500)),
+                      ),
                     ),
                   ],
                 ),
-                LikeDislikeButton(post: widget.post),
+                (widget.post != null)
+                    ? LikeDislikeButton(post: widget.post!)
+                    : LikeDislikeButton(comment: widget.comment!),
               ]),
         ),
       ),

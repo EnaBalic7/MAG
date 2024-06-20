@@ -4,14 +4,14 @@ import 'package:shimmer/shimmer.dart';
 
 import '../utils/colors.dart';
 
-class PostIndicator extends StatefulWidget {
-  const PostIndicator({Key? key}) : super(key: key);
+class ContentIndicator extends StatefulWidget {
+  const ContentIndicator({Key? key}) : super(key: key);
 
   @override
-  State<PostIndicator> createState() => _PostIndicatorState();
+  State<ContentIndicator> createState() => _ContentIndicatorState();
 }
 
-class _PostIndicatorState extends State<PostIndicator> {
+class _ContentIndicatorState extends State<ContentIndicator> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;

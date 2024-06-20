@@ -38,7 +38,6 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
   int page = 0;
   int pageSize = 20;
 
-// Implement proper filters
   Map<String, dynamic> _filter = {};
 
   @override
@@ -49,6 +48,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
     _filter = {
       "ClubId": widget.club.id,
+      "NewestFirst": "true",
     };
 
     _clubUserProvider.addListener(() {
