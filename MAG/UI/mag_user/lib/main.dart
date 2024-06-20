@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/providers/club_cover_provider.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
+import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/anime_list_provider.dart';
@@ -34,7 +35,10 @@ void main() {
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => UserProfilePictureProvider()),
     ChangeNotifierProvider(create: (_) => RatingProvider()),
-    ChangeNotifierProvider(create: (_) => PostProvider()),
+    ChangeNotifierProvider(create: (_) => UserPostActionProvider()),
+    ChangeNotifierProvider(
+        create: (_) => PostProvider(
+            userPostActionProvider: _.read<UserPostActionProvider>())),
     ChangeNotifierProvider(create: (_) => CommentProvider()),
     ChangeNotifierProvider(create: (_) => ClubProvider()),
     ChangeNotifierProvider(create: (_) => RoleProvider()),

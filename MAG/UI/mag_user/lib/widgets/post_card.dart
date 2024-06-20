@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/providers/user_provider.dart';
+import 'package:mag_user/widgets/circular_progress_indicator.dart';
 import 'package:mag_user/widgets/like_dislike_button.dart';
+import 'package:mag_user/widgets/pagination_buttons.dart';
+import 'package:mag_user/widgets/post_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/post.dart';
 import '../models/search_result.dart';
@@ -86,6 +91,9 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget _buildUsername() {
+    final Size screenSize = MediaQuery.of(context).size;
+    double? cardWidth = screenSize.width * 0.95;
+
     return FutureBuilder<SearchResult<User>>(
         future: _userFuture,
         builder: (context, snapshot) {
@@ -94,8 +102,40 @@ class _PostCardState extends State<PostCard> {
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  //Implement proper post indicator
-                  children: List.generate(6, (_) => const AnimeIndicator()),
+                  children: List.generate(
+                    1,
+                    (_) => Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                                height: 32,
+                                width: 32,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100)))
+                            .asGlass(
+                          tintColor: Palette.lightPurple,
+                          clipBorderRadius: BorderRadius.circular(100),
+                          blurX: 3,
+                          blurY: 3,
+                        ),
+                        const SizedBox(width: 5),
+                        Shimmer.fromColors(
+                          baseColor: Palette.lightPurple,
+                          highlightColor: Palette.white,
+                          child: Container(
+                            constraints:
+                                BoxConstraints(maxWidth: cardWidth * 0.3),
+                            child: const SizedBox(
+                              width: 150,
+                              height: 12,
+                            ).asGlass(),
+                          ).asGlass(
+                              clipBorderRadius: BorderRadius.circular(4),
+                              tintColor: Palette.lightPurple),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             );

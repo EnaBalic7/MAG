@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mag_user/providers/post_provider.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:mag_user/widgets/post_card.dart';
+import 'package:mag_user/widgets/post_indicator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/post.dart';
@@ -75,7 +76,7 @@ class _PostCardsState extends State<PostCards> {
               child: Center(
                 child: Wrap(
                   //Implement proper post indicator
-                  children: List.generate(6, (_) => const AnimeIndicator()),
+                  children: List.generate(6, (_) => const PostIndicator()),
                 ),
               ),
             );
