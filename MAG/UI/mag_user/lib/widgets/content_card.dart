@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
+import 'dart:ui' as UI;
 import 'package:intl/intl.dart';
 import 'package:mag_user/providers/user_provider.dart';
 import 'package:mag_user/screens/post_detail_screen.dart';
@@ -17,9 +18,20 @@ import '../utils/util.dart';
 class ContentCard extends StatefulWidget {
   final Post? post;
   final Comment? comment;
+  final Color? cardColor;
+  final bool? navigateToPostDetails;
+  final int? contentMaxLines;
+  final bool? largeProfilePhoto;
 
-  const ContentCard({Key? key, this.post, this.comment})
-      : assert(post != null || comment != null,
+  const ContentCard({
+    Key? key,
+    this.post,
+    this.comment,
+    this.cardColor,
+    this.navigateToPostDetails = true,
+    this.contentMaxLines = 3,
+    this.largeProfilePhoto,
+  })  : assert(post != null || comment != null,
             "Either post or comment must be provided."),
         assert(!(post != null && comment != null),
             "Only one of post or comment can be provided."),
@@ -32,6 +44,8 @@ class ContentCard extends StatefulWidget {
 class _ContentCardState extends State<ContentCard> {
   late final UserProvider _userProvider;
   late Future<SearchResult<User>> _userFuture;
+  bool isExpanded = false;
+  bool isOverflowing = false;
 
   @override
   void initState() {
@@ -49,75 +63,150 @@ class _ContentCardState extends State<ContentCard> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    double? cardWidth = screenSize.width * 0.95;
-    double? cardHeight = screenSize.height * 0.2;
+    double cardWidth = screenSize.width * 0.95;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
       child: Container(
         width: cardWidth,
-        height: cardHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: Palette.lightPurple.withOpacity(0.3)),
-          color: Palette.darkPurple,
+          color: widget.cardColor ?? Palette.darkPurple,
         ),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildUsername(),
-                          (widget.post != null)
-                              ? Text(DateFormat('MMM d, y')
-                                  .format(widget.post!.datePosted!))
-                              : Text(DateFormat('MMM d, y')
-                                  .format(widget.comment!.dateCommented!)),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        if (widget.post != null) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  PostDetailScreen(post: widget.post!)));
-                        }
-                      },
-                      child: SizedBox(
-                        width: cardWidth,
-                        child: Text(
-                            (widget.post != null)
-                                ? widget.post!.content!
-                                : widget.comment!.content!,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  _buildCardTop(),
+                  GestureDetector(
+                    onTap: () {
+                      if (widget.post != null &&
+                          widget.navigateToPostDetails == true) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              PostDetailScreen(post: widget.post!),
+                        ));
+                      }
+                    },
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final text = widget.post != null
+                            ? widget.post!.content!
+                            : widget.comment!.content!;
+                        final textSpan = TextSpan(
+                            text: text,
                             style:
-                                const TextStyle(fontWeight: FontWeight.w500)),
-                      ),
+                                const TextStyle(fontWeight: FontWeight.w500));
+                        final textPainter = TextPainter(
+                          text: textSpan,
+                          maxLines: widget.contentMaxLines,
+                          textDirection: UI.TextDirection.ltr,
+                        )..layout(maxWidth: constraints.maxWidth);
+
+                        isOverflowing = textPainter.didExceedMaxLines;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                text,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines:
+                                    isExpanded ? 10000 : widget.contentMaxLines,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            if (isOverflowing)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isExpanded = !isExpanded;
+                                  });
+                                },
+                                child: isExpanded
+                                    ? const Text("See less",
+                                        style: TextStyle(
+                                            color: Palette.lightYellow))
+                                    : const Text(
+                                        "See more",
+                                        style: TextStyle(color: Palette.rose),
+                                      ),
+                              ),
+                          ],
+                        );
+                      },
                     ),
-                  ],
-                ),
-                (widget.post != null)
-                    ? LikeDislikeButton(post: widget.post!)
-                    : LikeDislikeButton(comment: widget.comment!),
-              ]),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              widget.post != null
+                  ? LikeDislikeButton(post: widget.post!)
+                  : LikeDislikeButton(comment: widget.comment!),
+            ],
+          ),
         ),
+      ).asGlass(
+        blurY: 3,
+        blurX: 3,
+        clipBorderRadius: BorderRadius.circular(15),
+        tintColor: Palette.midnightPurple,
+      ),
+    );
+  }
+
+  Padding _buildCardTop() {
+    if (widget.largeProfilePhoto == true) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                _buildUsername(),
+                Text(
+                  widget.post != null
+                      ? DateFormat('MMM d, y').format(widget.post!.datePosted!)
+                      : DateFormat('MMM d, y')
+                          .format(widget.comment!.dateCommented!),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildUsername(),
+          (widget.largeProfilePhoto != true)
+              ? Text(widget.post != null
+                  ? DateFormat('MMM d, y').format(widget.post!.datePosted!)
+                  : DateFormat('MMM d, y')
+                      .format(widget.comment!.dateCommented!))
+              : const Text("nope"),
+        ],
       ),
     );
   }
 
   Widget _buildUsername() {
     final Size screenSize = MediaQuery.of(context).size;
-    double? cardWidth = screenSize.width * 0.95;
+    double cardWidth = screenSize.width * 0.95;
 
     return FutureBuilder<SearchResult<User>>(
         future: _userFuture,
@@ -170,7 +259,7 @@ class _ContentCardState extends State<ContentCard> {
           } else {
             // Data loaded successfully
             var user = snapshot.data!;
-            if (user.count == 1) {
+            if (user.count == 1 && widget.largeProfilePhoto != true) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -189,8 +278,27 @@ class _ContentCardState extends State<ContentCard> {
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               );
+            } else if (user.count == 1 && widget.largeProfilePhoto == true) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.memory(
+                      imageFromBase64String(
+                          user.result.single.profilePicture!.profilePicture!),
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text("${user.result.single.username}",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              );
             }
-            return Text("");
+            return const Text("User not found");
           }
         });
   }

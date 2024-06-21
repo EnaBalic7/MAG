@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../models/comment.dart';
 import '../models/search_result.dart';
 import '../providers/comment_provider.dart';
+import '../utils/colors.dart';
 import '../utils/util.dart';
 
 typedef FetchPage = Future<SearchResult<Comment>> Function(
@@ -32,12 +33,16 @@ class CommentCards extends StatefulWidget {
   State<CommentCards> createState() => _CommentCardsState();
 }
 
-class _CommentCardsState extends State<CommentCards> {
+class _CommentCardsState extends State<CommentCards>
+    with AutomaticKeepAliveClientMixin<CommentCards> {
   late Future<SearchResult<Comment>> _commentFuture;
   final ScrollController _scrollController = ScrollController();
   late final CommentProvider _commentProvider;
 
   int totalItems = 0;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -127,7 +132,12 @@ class _CommentCardsState extends State<CommentCards> {
   }
 
   List<Widget> _buildCommentCards(List<Comment> commentList) {
-    return List.generate(commentList.length,
-        (index) => ContentCard(comment: commentList[index]));
+    return List.generate(
+      commentList.length,
+      (index) => ContentCard(
+        comment: commentList[index],
+        cardColor: Palette.midnightPurple.withOpacity(0.1),
+      ),
+    );
   }
 }

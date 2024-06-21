@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glass/glass.dart';
 import 'package:mag_user/widgets/anime_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../providers/anime_list_provider.dart';
 import '../providers/anime_watchlist_provider.dart';

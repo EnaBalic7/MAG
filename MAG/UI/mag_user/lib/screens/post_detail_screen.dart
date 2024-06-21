@@ -3,10 +3,12 @@ import 'package:mag_user/models/comment.dart';
 import 'package:mag_user/providers/comment_provider.dart';
 import 'package:mag_user/widgets/comment_cards.dart';
 import 'package:mag_user/widgets/master_screen.dart';
+import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
 import '../models/post.dart';
 import '../models/search_result.dart';
+import '../widgets/content_card.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final Post post;
@@ -33,6 +35,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+
     return MasterScreenWidget(
       showBackArrow: true,
       showNavBar: false,
@@ -41,7 +46,22 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       child: SingleChildScrollView(
         child: Center(
           child: Column(children: [
-            Text("Top Part"),
+            const SizedBox(height: 10),
+            ContentCard(
+              post: widget.post,
+              navigateToPostDetails: false,
+              contentMaxLines: 15,
+              largeProfilePhoto: true,
+            ),
+            MySeparator(
+              width: screenWidth,
+              borderRadius: 50,
+              opacity: 0.5,
+              paddingTop: 5,
+            ),
+            const SizedBox(height: 5),
+            const Text("Comments"),
+            const SizedBox(height: 10),
             CommentCards(
                 fetchComments: fetchComments,
                 fetchPage: fetchPage,
