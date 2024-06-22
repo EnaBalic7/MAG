@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
 import '../utils/util.dart';
-import 'anime_indicator.dart';
 
 typedef FetchPage = Future<SearchResult<Post>> Function(
     Map<String, dynamic> filter);
@@ -75,7 +74,6 @@ class _PostCardsState extends State<PostCards> {
               physics: const NeverScrollableScrollPhysics(),
               child: Center(
                 child: Wrap(
-                  //Implement proper post indicator
                   children: List.generate(6, (_) => const ContentIndicator()),
                 ),
               ),

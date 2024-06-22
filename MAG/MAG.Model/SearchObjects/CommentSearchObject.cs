@@ -15,5 +15,7 @@ namespace MAG.Model.SearchObjects
         public int? UserId { get; set; }
 
         public bool? NewestFirst { get; set; }
+
+        public bool? MostLikedFirst { get; set; }
     }
 }

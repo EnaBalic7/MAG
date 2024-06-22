@@ -87,10 +87,12 @@ class _ContentCardState extends State<ContentCard> {
                     onTap: () {
                       if (widget.post != null &&
                           widget.navigateToPostDetails == true) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              PostDetailScreen(post: widget.post!),
-                        ));
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PostDetailScreen(post: widget.post!),
+                          ),
+                        );
                       }
                     },
                     child: LayoutBuilder(
@@ -147,7 +149,7 @@ class _ContentCardState extends State<ContentCard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               widget.post != null
                   ? LikeDislikeButton(post: widget.post!)
                   : LikeDislikeButton(comment: widget.comment!),
@@ -174,12 +176,6 @@ class _ContentCardState extends State<ContentCard> {
             Column(
               children: [
                 _buildUsername(),
-                Text(
-                  widget.post != null
-                      ? DateFormat('MMM d, y').format(widget.post!.datePosted!)
-                      : DateFormat('MMM d, y')
-                          .format(widget.comment!.dateCommented!),
-                ),
               ],
             )
           ],
@@ -212,47 +208,7 @@ class _ContentCardState extends State<ContentCard> {
         future: _userFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Center(
-                child: Wrap(
-                  children: List.generate(
-                    1,
-                    (_) => Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                                height: 32,
-                                width: 32,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100)))
-                            .asGlass(
-                          tintColor: Palette.lightPurple,
-                          clipBorderRadius: BorderRadius.circular(100),
-                          blurX: 3,
-                          blurY: 3,
-                        ),
-                        const SizedBox(width: 5),
-                        Shimmer.fromColors(
-                          baseColor: Palette.lightPurple,
-                          highlightColor: Palette.white,
-                          child: Container(
-                            constraints:
-                                BoxConstraints(maxWidth: cardWidth * 0.3),
-                            child: const SizedBox(
-                              width: 150,
-                              height: 12,
-                            ).asGlass(),
-                          ).asGlass(
-                              clipBorderRadius: BorderRadius.circular(4),
-                              tintColor: Palette.lightPurple),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
+            return _buildProgressIndicator(cardWidth);
             // Loading state
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}'); // Error state
@@ -293,13 +249,109 @@ class _ContentCardState extends State<ContentCard> {
                     ),
                   ),
                   const SizedBox(width: 5),
-                  Text("${user.result.single.username}",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${user.result.single.username}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17)),
+                      const SizedBox(height: 5),
+                      Text(
+                        widget.post != null
+                            ? DateFormat('MMM d, y')
+                                .format(widget.post!.datePosted!)
+                            : DateFormat('MMM d, y')
+                                .format(widget.comment!.dateCommented!),
+                      ),
+                    ],
+                  ),
                 ],
               );
             }
             return const Text("User not found");
           }
         });
+  }
+
+  Widget _buildProgressIndicator(double cardWidth) {
+    if (widget.largeProfilePhoto == true) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+                  height: 64,
+                  width: 64,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(100)))
+              .asGlass(
+            tintColor: Palette.lightPurple,
+            clipBorderRadius: BorderRadius.circular(100),
+            blurX: 3,
+            blurY: 3,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 5),
+              Shimmer.fromColors(
+                baseColor: Palette.lightPurple,
+                highlightColor: Palette.white,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: cardWidth * 0.3),
+                  child: const SizedBox(
+                    width: 150,
+                    height: 15,
+                  ).asGlass(),
+                ).asGlass(
+                    clipBorderRadius: BorderRadius.circular(4),
+                    tintColor: Palette.lightPurple),
+              ),
+              const SizedBox(height: 8),
+              Shimmer.fromColors(
+                baseColor: Palette.lightPurple,
+                highlightColor: Palette.white,
+                child: SizedBox(
+                  width: cardWidth * 0.25,
+                  height: 10,
+                ).asGlass(
+                  clipBorderRadius: BorderRadius.circular(3),
+                  tintColor: Palette.lightPurple,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+                height: 32,
+                width: 32,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(100)))
+            .asGlass(
+          tintColor: Palette.lightPurple,
+          clipBorderRadius: BorderRadius.circular(100),
+          blurX: 3,
+          blurY: 3,
+        ),
+        const SizedBox(width: 5),
+        Shimmer.fromColors(
+          baseColor: Palette.lightPurple,
+          highlightColor: Palette.white,
+          child: Container(
+            constraints: BoxConstraints(maxWidth: cardWidth * 0.3),
+            child: const SizedBox(
+              width: 150,
+              height: 12,
+            ).asGlass(),
+          ).asGlass(
+              clipBorderRadius: BorderRadius.circular(4),
+              tintColor: Palette.lightPurple),
+        ),
+      ],
+    );
   }
 }

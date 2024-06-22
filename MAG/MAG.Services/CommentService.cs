@@ -37,6 +37,11 @@ namespace MAG.Services
                 query = query.OrderByDescending(x => x.DateCommented);
             }
 
+            if (search?.MostLikedFirst == true)
+            {
+                query = query.OrderByDescending(x => x.LikesCount);
+            }
+
             return base.AddFilter(query, search);
         }
 

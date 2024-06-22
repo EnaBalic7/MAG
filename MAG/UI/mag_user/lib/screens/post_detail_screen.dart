@@ -30,6 +30,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   void initState() {
     _commentProvider = context.read<CommentProvider>();
 
+    _filter = {
+      "PostId": widget.post.id,
+      "MostLikedFirst": "true",
+    };
+
     super.initState();
   }
 
