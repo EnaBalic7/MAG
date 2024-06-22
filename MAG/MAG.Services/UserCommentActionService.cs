@@ -1,0 +1,74 @@
+﻿using AutoMapper;
+using MAG.Model;
+using MAG.Model.Requests;
+using MAG.Model.SearchObjects;
+using MAG.Services.Database;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MAG.Services
+{
+    public class UserCommentActionService : BaseCRUDService<Model.UserCommentAction, Database.UserCommentAction, UserCommentActionSearchObject, UserCommentActionInsertRequest, UserCommentActionUpdateRequest>, IUserCommentActionService
+    {
+        protected MagContext _context;
+        protected IMapper _mapper;
+        public UserCommentActionService(MagContext context, IMapper mapper) : base(context, mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
+        public async Task<bool> CommentUserAction(int commentId, UserCommentActionInsertRequest userCommentAction, string username)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var comment = await _context.Comments.Include(c => c.UserCommentActions).SingleOrDefaultAsync(c => c.Id == commentId);
+
+            if (comment == null)
+            {
+                return false;
+            }
+
+            var existingAction = comment.UserCommentActions.SingleOrDefault(a => a.UserId == user.Id);
+            if (existingAction != null)
+            {
+                _context.UserCommentActions.Remove(existingAction);
+                if (existingAction.Action == "like")
+                {
+                    comment.LikesCount--;
+                }
+                else if (existingAction.Action == "dislike")
+                {
+                    comment.DislikesCount--;
+                }
+            }
+
+            if (userCommentAction.Action == "like")
+            {
+                comment.LikesCount++;
+            }
+            else if (userCommentAction.Action == "dislike")
+            {
+                comment.DislikesCount++;
+            }
+
+            userCommentAction.UserId = user.Id;
+            userCommentAction.CommentId = commentId;
+            _context.UserCommentActions.Add(_mapper.Map<Database.UserCommentAction>(userCommentAction));
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+    }
+
+}

@@ -5,7 +5,6 @@ namespace MAG.Services.Database;
 
 public partial class User
 {
-    public static object Identity { get; internal set; }
     public int Id { get; set; }
 
     public string FirstName { get; set; } = null!;
@@ -43,6 +42,8 @@ public partial class User
     public virtual ICollection<QA> QAs { get; set; } = new List<QA>();
 
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+
+    public virtual ICollection<UserCommentAction> UserCommentActions { get; set; } = new List<UserCommentAction>();
 
     public virtual ICollection<UserPostAction> UserPostActions { get; set; } = new List<UserPostAction>();
 

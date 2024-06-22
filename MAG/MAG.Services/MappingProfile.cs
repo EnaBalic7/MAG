@@ -99,6 +99,10 @@ namespace MAG.Services
             CreateMap<Database.UserPostAction, Model.UserPostAction>();
             CreateMap<UserPostActionInsertRequest, Database.UserPostAction>();
             CreateMap<UserPostActionUpdateRequest, Database.UserPostAction>();
+
+            CreateMap<Database.UserCommentAction, Model.UserCommentAction>();
+            CreateMap<UserCommentActionInsertRequest, Database.UserCommentAction>();
+            CreateMap<UserCommentActionUpdateRequest, Database.UserCommentAction>();
         }
     }
 }

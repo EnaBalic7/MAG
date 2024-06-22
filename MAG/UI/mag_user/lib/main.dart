@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/providers/club_cover_provider.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
+import 'package:mag_user/providers/user_comment_action_provider.dart';
 import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,10 @@ void main() {
     ChangeNotifierProvider(
         create: (_) => PostProvider(
             userPostActionProvider: _.read<UserPostActionProvider>())),
-    ChangeNotifierProvider(create: (_) => CommentProvider()),
+    ChangeNotifierProvider(create: (_) => UserCommentActionProvider()),
+    ChangeNotifierProvider(
+        create: (_) => CommentProvider(
+            userCommentActionProvider: _.read<UserCommentActionProvider>())),
     ChangeNotifierProvider(create: (_) => ClubProvider()),
     ChangeNotifierProvider(create: (_) => RoleProvider()),
     ChangeNotifierProvider(create: (_) => UserRoleProvider()),

@@ -51,6 +51,8 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserCommentAction> UserCommentActions { get; set; }
+
     public virtual DbSet<UserPostAction> UserPostActions { get; set; }
 
     public virtual DbSet<UserProfilePicture> UserProfilePictures { get; set; }
@@ -363,6 +365,26 @@ public partial class MagContext : DbContext
                 .HasForeignKey(d => d.ProfilePictureId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_User_UserProfilePicture");
+        });
+
+        modelBuilder.Entity<UserCommentAction>(entity =>
+        {
+            entity.ToTable("UserCommentAction");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Action).HasMaxLength(10);
+            entity.Property(e => e.CommentId).HasColumnName("CommentID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Comment).WithMany(p => p.UserCommentActions)
+                .HasForeignKey(d => d.CommentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserCommentAction_Comment");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserCommentActions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserCommentAction_User");
         });
 
         modelBuilder.Entity<UserPostAction>(entity =>

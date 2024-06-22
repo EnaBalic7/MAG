@@ -6,6 +6,7 @@ import '../models/comment.dart';
 import '../models/post.dart';
 import '../providers/comment_provider.dart';
 import '../providers/post_provider.dart';
+import '../providers/user_comment_action_provider.dart';
 import '../utils/colors.dart';
 
 class LikeDislikeButton extends StatefulWidget {
@@ -35,8 +36,8 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
 
   late Comment comment;
   late final CommentProvider _commentProvider;
-  // Must implement UserCommentActionProvider
-  // late final UserCommentActionProvider _userCommentActionProvider;
+
+  late final UserCommentActionProvider _userCommentActionProvider;
 
   @override
   void initState() {
@@ -48,6 +49,10 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
 
     _postProvider = context.read<PostProvider>();
     _userPostActionProvider = context.read<UserPostActionProvider>();
+
+    _commentProvider = context.read<CommentProvider>();
+    _userCommentActionProvider = context.read<UserCommentActionProvider>();
+
     _loadUserAction();
 
     super.initState();
@@ -58,8 +63,8 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
     if (widget.post != null) {
       action = await _userPostActionProvider.getUserAction(widget.post!.id!);
     } else {
-      // Implement _userCommentActionProvider
-      //  action = await _userCommentActionProvider.getUserAction(widget.comment!.id!);
+      action =
+          await _userCommentActionProvider.getUserAction(widget.comment!.id!);
     }
 
     setState(() {
@@ -71,8 +76,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
     if (widget.post != null) {
       await _postProvider.toggleLike(post);
     } else {
-      // Implement toggleLike in CommentProvider
-      //  await _commentProvider.toggleLike(comment);
+      await _commentProvider.toggleLike(comment);
     }
 
     _loadUserAction();
@@ -82,8 +86,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
     if (widget.post != null) {
       await _postProvider.toggleDislike(post);
     } else {
-      // Implement toggleDislike in CommentProvider
-      //  await _commentProvider.toggleDislike(comment);
+      await _commentProvider.toggleDislike(comment);
     }
     _loadUserAction();
   }
