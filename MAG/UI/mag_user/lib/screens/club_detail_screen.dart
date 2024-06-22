@@ -49,6 +49,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
     _filter = {
       "ClubId": widget.club.id,
       "NewestFirst": "true",
+      "CommentsIncluded": "true",
     };
 
     _clubUserProvider.addListener(() {

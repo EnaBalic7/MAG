@@ -85,15 +85,9 @@ class _ContentCardState extends State<ContentCard> {
                   _buildCardTop(),
                   GestureDetector(
                     onTap: () {
-                      if (widget.post != null &&
-                          widget.navigateToPostDetails == true) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PostDetailScreen(post: widget.post!),
-                          ),
-                        );
-                      }
+                      setState(() {
+                        isExpanded = !isExpanded;
+                      });
                     },
                     child: LayoutBuilder(
                       builder: (context, constraints) {
@@ -150,9 +144,30 @@ class _ContentCardState extends State<ContentCard> {
                 ],
               ),
               const SizedBox(height: 10),
-              widget.post != null
-                  ? LikeDislikeButton(post: widget.post!)
-                  : LikeDislikeButton(comment: widget.comment!),
+              Row(
+                children: [
+                  widget.post != null
+                      ? LikeDislikeButton(post: widget.post!)
+                      : LikeDislikeButton(comment: widget.comment!),
+                  const SizedBox(width: 25),
+                  (widget.post != null)
+                      ? GestureDetector(
+                          onTap: () {
+                            if (widget.post != null &&
+                                widget.navigateToPostDetails == true) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PostDetailScreen(post: widget.post!),
+                                ),
+                              );
+                            }
+                          },
+                          child:
+                              Text("${widget.post!.comments!.length} Replies"))
+                      : const Text(""),
+                ],
+              ),
             ],
           ),
         ),
