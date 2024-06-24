@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'dart:ui' as UI;
 import 'package:intl/intl.dart';
+import 'package:mag_user/providers/comment_provider.dart';
+import 'package:mag_user/providers/post_provider.dart';
+import 'package:mag_user/providers/user_comment_action_provider.dart';
+import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:mag_user/providers/user_provider.dart';
 import 'package:mag_user/screens/post_detail_screen.dart';
 import 'package:mag_user/widgets/like_dislike_button.dart';
@@ -13,6 +17,7 @@ import '../models/post.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
+import '../utils/icons.dart';
 import '../utils/util.dart';
 
 class ContentCard extends StatefulWidget {
@@ -46,6 +51,8 @@ class _ContentCardState extends State<ContentCard> {
   late Future<SearchResult<User>> _userFuture;
   bool isExpanded = false;
   bool isOverflowing = false;
+  late final PostProvider _postProvider;
+  late final CommentProvider _commentProvider;
 
   @override
   void initState() {
@@ -56,6 +63,9 @@ class _ContentCardState extends State<ContentCard> {
           : "${widget.comment!.userId}",
       "ProfilePictureIncluded": "true"
     });
+
+    _postProvider = context.read<PostProvider>();
+    _commentProvider = context.read<CommentProvider>();
 
     super.initState();
   }
@@ -145,27 +155,33 @@ class _ContentCardState extends State<ContentCard> {
               ),
               const SizedBox(height: 10),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  widget.post != null
-                      ? LikeDislikeButton(post: widget.post!)
-                      : LikeDislikeButton(comment: widget.comment!),
-                  const SizedBox(width: 25),
-                  (widget.post != null)
-                      ? GestureDetector(
-                          onTap: () {
-                            if (widget.post != null &&
-                                widget.navigateToPostDetails == true) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      PostDetailScreen(post: widget.post!),
-                                ),
-                              );
-                            }
-                          },
-                          child:
-                              Text("${widget.post!.comments!.length} Replies"))
-                      : const Text(""),
+                  Row(
+                    children: [
+                      widget.post != null
+                          ? LikeDislikeButton(post: widget.post!)
+                          : LikeDislikeButton(comment: widget.comment!),
+                      const SizedBox(width: 25),
+                      (widget.post != null)
+                          ? GestureDetector(
+                              onTap: () {
+                                if (widget.post != null &&
+                                    widget.navigateToPostDetails == true) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PostDetailScreen(post: widget.post!),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                  "${widget.post!.comments!.length} Replies"))
+                          : const Text(""),
+                    ],
+                  ),
+                  _showPopup(),
                 ],
               ),
             ],
@@ -209,7 +225,7 @@ class _ContentCardState extends State<ContentCard> {
                   ? DateFormat('MMM d, y').format(widget.post!.datePosted!)
                   : DateFormat('MMM d, y')
                       .format(widget.comment!.dateCommented!))
-              : const Text("nope"),
+              : const Text(""),
         ],
       ),
     );
@@ -368,5 +384,81 @@ class _ContentCardState extends State<ContentCard> {
         ),
       ],
     );
+  }
+
+  Widget _buildPopupMenu(dynamic object) {
+    return Container(
+      width: 25,
+      height: 25,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Palette.darkPurple.withOpacity(0.8),
+      ),
+      child: PopupMenuButton<String>(
+        tooltip: "Actions",
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+        ),
+        icon: const Icon(Icons.more_horiz_rounded),
+        splashRadius: 1,
+        padding: EdgeInsets.zero,
+        color: const Color.fromRGBO(50, 48, 90, 1),
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          PopupMenuItem<String>(
+            padding: EdgeInsets.zero,
+            child: ListTile(
+              visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+              hoverColor: Palette.lightRed.withOpacity(0.1),
+              leading: buildTrashIcon(24),
+              title: const Text('Delete',
+                  style: TextStyle(color: Palette.lightRed)),
+              onTap: () {
+                Navigator.pop(context);
+                showConfirmationDialog(
+                    context,
+                    const Icon(Icons.warning_rounded,
+                        color: Palette.lightRed, size: 55),
+                    (widget.post != null)
+                        ? const Text(
+                            "Are you sure you want to delete this post?",
+                            textAlign: TextAlign.center,
+                          )
+                        : const Text(
+                            "Are you sure you want to delete this comment?",
+                            textAlign: TextAlign.center,
+                          ), () async {
+                  try {
+                    if (widget.post != null) {
+                      await _postProvider.delete((object as Post).id!);
+                    } else {
+                      await _commentProvider.delete((object as Comment).id!);
+                    }
+                  } on Exception catch (e) {
+                    showErrorDialog(context, e);
+                  }
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    ).asGlass(
+      blurX: 1,
+      blurY: 1,
+      clipBorderRadius: BorderRadius.circular(20),
+      tintColor: Palette.darkPurple,
+    );
+  }
+
+  Widget _showPopup() {
+    if (widget.post != null && widget.post!.userId == LoggedUser.user!.id) {
+      return Container(child: _buildPopupMenu(widget.post));
+    } else if (widget.comment != null &&
+        widget.comment!.userId == LoggedUser.user!.id) {
+      return Container(child: _buildPopupMenu(widget.comment));
+    }
+
+    return Text("");
   }
 }

@@ -75,7 +75,14 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
       showProfileIcon: false,
       selectedIndex: widget.selectedIndex,
       title: widget.club.name,
+      showNavBar: false,
       showBackArrow: true,
+      showFloatingActionButton: true,
+      floatingActionButtonIcon: const Icon(
+        Icons.post_add_rounded,
+        size: 28,
+        color: Palette.white,
+      ),
       child: SingleChildScrollView(
         child: Column(children: [
           ClipRRect(

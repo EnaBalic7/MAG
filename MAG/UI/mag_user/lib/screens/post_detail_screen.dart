@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../models/post.dart';
 import '../models/search_result.dart';
+import '../utils/colors.dart';
 import '../widgets/content_card.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -48,6 +49,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       showNavBar: false,
       title: "Post",
       showProfileIcon: false,
+      showFloatingActionButton: true,
+      floatingActionButtonIcon: const Icon(
+        Icons.add_comment_rounded,
+        size: 25,
+        color: Palette.white,
+      ),
       child: SingleChildScrollView(
         child: Center(
           child: Column(children: [

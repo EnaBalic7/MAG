@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/widgets/empty.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:mag_user/widgets/content_card.dart';
 import 'package:mag_user/widgets/content_indicator.dart';
@@ -132,6 +133,15 @@ class _CommentCardsState extends State<CommentCards>
   }
 
   List<Widget> _buildCommentCards(List<Comment> commentList) {
+    if (commentList.isEmpty) {
+      return List.generate(
+          1,
+          (index) => Empty(
+                text: Text("No comments yet.."),
+                showGradientButton: false,
+                iconSize: 128,
+              ));
+    }
     return List.generate(
       commentList.length,
       (index) => ContentCard(
