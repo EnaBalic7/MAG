@@ -65,6 +65,9 @@ class MasterScreenWidget extends StatefulWidget {
 
   bool? showHelpIcon;
 
+  /// Called once the leadign icon is pressed, defaults to Navigator.pop() if not passed
+  void Function()? onLeadingPressed;
+
   MasterScreenWidget({
     Key? key,
     required this.child,
@@ -93,6 +96,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.labelPadding,
     this.floatingActionButtonLocation,
     this.showHelpIcon,
+    this.onLeadingPressed,
   }) : super(key: key);
 
   @override
@@ -325,7 +329,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
       return IconButton(
         splashRadius: 24,
         onPressed: () {
-          Navigator.pop(context);
+          if (widget.onLeadingPressed != null) {
+            widget.onLeadingPressed!();
+          } else {
+            Navigator.pop(context);
+          }
         },
         icon: const Icon(
           Icons.arrow_back_rounded,

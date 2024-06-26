@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 
 import '../models/post.dart';
 import '../models/search_result.dart';
-import '../providers/user_comment_action_provider.dart';
-import '../providers/user_post_action_provider.dart';
 import '../utils/util.dart';
 
 typedef FetchPage = Future<SearchResult<Post>> Function(
@@ -40,8 +38,6 @@ class _PostCardsState extends State<PostCards> {
   late Future<SearchResult<Post>> _postFuture;
   final ScrollController _scrollController = ScrollController();
   late final PostProvider _postProvider;
-  late final UserPostActionProvider _userPostActionProvider;
-  late final UserCommentActionProvider _userCommentActionProvider;
 
   int totalItems = 0;
 
@@ -56,16 +52,6 @@ class _PostCardsState extends State<PostCards> {
       setTotalItems();
     });
 
-    _userPostActionProvider = context.read<UserPostActionProvider>();
-    _userCommentActionProvider = context.read<UserCommentActionProvider>();
-
-    _userPostActionProvider.addListener(() {
-      _reloadData();
-    });
-    _userCommentActionProvider.addListener(() {
-      _reloadData();
-    });
-
     super.initState();
   }
 
@@ -78,16 +64,17 @@ class _PostCardsState extends State<PostCards> {
     }
   }
 
-  void _reloadData() {
-    if (mounted) {
-      setState(() {
-        _postFuture = _postProvider.get(filter: {
-          ...widget.filter,
-          "Page": "${widget.page}",
-          "PageSize": "${widget.pageSize}"
-        });
+// Updates only one post
+  void updatePost(Post updatedPost) async {
+    setState(() {
+      _postFuture.then((postResult) {
+        final index =
+            postResult.result.indexWhere((post) => post.id == updatedPost.id);
+        if (index != -1) {
+          postResult.result[index] = updatedPost;
+        }
       });
-    }
+    });
   }
 
   @override
@@ -154,6 +141,11 @@ class _PostCardsState extends State<PostCards> {
 
   List<Widget> _buildPostCards(List<Post> postList) {
     return List.generate(
-        postList.length, (index) => ContentCard(post: postList[index]));
+      postList.length,
+      (index) => ContentCard(
+        post: postList[index],
+        onPostUpdated: (updatedPost) => updatePost(updatedPost),
+      ),
+    );
   }
 }

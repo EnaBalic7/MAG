@@ -24,10 +24,10 @@ class LikeDislikeButton extends StatefulWidget {
         super(key: key);
 
   @override
-  State<LikeDislikeButton> createState() => _LikeDislikeButtonState();
+  State<LikeDislikeButton> createState() => LikeDislikeButtonState();
 }
 
-class _LikeDislikeButtonState extends State<LikeDislikeButton> {
+class LikeDislikeButtonState extends State<LikeDislikeButton> {
   String userAction = 'none';
 
   late Post post;
@@ -53,12 +53,21 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
     _commentProvider = context.read<CommentProvider>();
     _userCommentActionProvider = context.read<UserCommentActionProvider>();
 
-    _loadUserAction();
+    loadUserAction();
 
     super.initState();
   }
 
-  void _loadUserAction() async {
+  @override
+  void didUpdateWidget(LikeDislikeButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.post != oldWidget.post) {
+      post = widget.post!;
+      loadUserAction();
+    }
+  }
+
+  void loadUserAction() async {
     String? action;
     if (widget.post != null) {
       action = await _userPostActionProvider.getUserAction(widget.post!.id!);
@@ -67,9 +76,11 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
           await _userCommentActionProvider.getUserAction(widget.comment!.id!);
     }
 
-    setState(() {
-      userAction = action ?? 'none';
-    });
+    if (mounted) {
+      setState(() {
+        userAction = action ?? 'none';
+      });
+    }
   }
 
   void _toggleLike() async {
@@ -79,7 +90,7 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
       await _commentProvider.toggleLike(comment);
     }
 
-    _loadUserAction();
+    loadUserAction();
   }
 
   void _toggleDislike() async {
@@ -88,7 +99,8 @@ class _LikeDislikeButtonState extends State<LikeDislikeButton> {
     } else {
       await _commentProvider.toggleDislike(comment);
     }
-    _loadUserAction();
+
+    loadUserAction();
   }
 
   @override

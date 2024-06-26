@@ -53,6 +53,7 @@ class _CommentCardsState extends State<CommentCards>
     setTotalItems();
 
     _commentProvider.addListener(() {
+      _reloadData();
       setTotalItems();
     });
 
@@ -64,6 +65,18 @@ class _CommentCardsState extends State<CommentCards>
     if (mounted) {
       setState(() {
         totalItems = commentResult.count;
+      });
+    }
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _commentFuture = _commentProvider.get(filter: {
+          ...widget.filter,
+          "Page": "${widget.page}",
+          "PageSize": "${widget.pageSize}"
+        });
       });
     }
   }

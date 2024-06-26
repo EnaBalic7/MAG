@@ -4,8 +4,6 @@ import 'dart:ui' as UI;
 import 'package:intl/intl.dart';
 import 'package:mag_user/providers/comment_provider.dart';
 import 'package:mag_user/providers/post_provider.dart';
-import 'package:mag_user/providers/user_comment_action_provider.dart';
-import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:mag_user/providers/user_provider.dart';
 import 'package:mag_user/screens/post_detail_screen.dart';
 import 'package:mag_user/widgets/like_dislike_button.dart';
@@ -21,14 +19,15 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 
 class ContentCard extends StatefulWidget {
-  final Post? post;
+  Post? post;
   final Comment? comment;
   final Color? cardColor;
   final bool? navigateToPostDetails;
   final int? contentMaxLines;
   final bool? largeProfilePhoto;
+  final ValueChanged<Post>? onPostUpdated;
 
-  const ContentCard({
+  ContentCard({
     Key? key,
     this.post,
     this.comment,
@@ -36,6 +35,7 @@ class ContentCard extends StatefulWidget {
     this.navigateToPostDetails = true,
     this.contentMaxLines = 3,
     this.largeProfilePhoto,
+    this.onPostUpdated,
   })  : assert(post != null || comment != null,
             "Either post or comment must be provided."),
         assert(!(post != null && comment != null),
@@ -53,9 +53,16 @@ class _ContentCardState extends State<ContentCard> {
   bool isOverflowing = false;
   late final PostProvider _postProvider;
   late final CommentProvider _commentProvider;
+  final GlobalKey<LikeDislikeButtonState> _likeDislikeButtonKey =
+      GlobalKey<LikeDislikeButtonState>();
+  late Post _post;
 
   @override
   void initState() {
+    if (widget.post != null) {
+      _post = widget.post!;
+    }
+
     _userProvider = context.read<UserProvider>();
     _userFuture = _userProvider.get(filter: {
       "Id": (widget.post != null)
@@ -67,7 +74,26 @@ class _ContentCardState extends State<ContentCard> {
     _postProvider = context.read<PostProvider>();
     _commentProvider = context.read<CommentProvider>();
 
+    _commentProvider.addListener(() {
+      _reloadPost();
+    });
+
     super.initState();
+  }
+
+  void _reloadPost() async {
+    if (mounted && widget.post != null) {
+      var updatedPost = await _postProvider.get(
+          filter: {"Id": "${widget.post!.id}", "CommentsIncluded": "true"});
+
+      if (updatedPost.count == 1) {
+        setState(() {
+          widget.post!.likesCount = updatedPost.result.single.likesCount;
+          widget.post!.dislikesCount = updatedPost.result.single.dislikesCount;
+          widget.post!.comments = updatedPost.result.single.comments;
+        });
+      }
+    }
   }
 
   @override
@@ -160,24 +186,42 @@ class _ContentCardState extends State<ContentCard> {
                   Row(
                     children: [
                       widget.post != null
-                          ? LikeDislikeButton(post: widget.post!)
+                          ? LikeDislikeButton(
+                              key: _likeDislikeButtonKey, post: _post)
                           : LikeDislikeButton(comment: widget.comment!),
                       const SizedBox(width: 25),
                       (widget.post != null)
                           ? GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 if (widget.post != null &&
                                     widget.navigateToPostDetails == true) {
-                                  Navigator.of(context).push(
+                                  final currentPost =
+                                      await Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          PostDetailScreen(post: widget.post!),
+                                          PostDetailScreen(post: _post),
                                     ),
                                   );
+
+                                  final updatedPost =
+                                      await _postProvider.get(filter: {
+                                    "Id": "${(currentPost as Post).id!}",
+                                    "CommentsIncluded": "true",
+                                  });
+
+                                  if (updatedPost != null &&
+                                      widget.onPostUpdated != null) {
+                                    setState(() {
+                                      _post = updatedPost.result.single;
+                                    });
+
+                                    widget.onPostUpdated!(_post);
+                                    _likeDislikeButtonKey.currentState
+                                        ?.loadUserAction();
+                                  }
                                 }
                               },
-                              child: Text(
-                                  "${widget.post!.comments!.length} Replies"))
+                              child: Text("${_post.comments!.length} Replies"))
                           : const Text(""),
                     ],
                   ),
@@ -459,6 +503,6 @@ class _ContentCardState extends State<ContentCard> {
       return Container(child: _buildPopupMenu(widget.comment));
     }
 
-    return Text("");
+    return const Text("");
   }
 }

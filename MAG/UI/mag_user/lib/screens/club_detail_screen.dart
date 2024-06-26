@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
 import 'package:mag_user/providers/post_provider.dart';
+import 'package:mag_user/screens/post_detail_screen.dart';
 import 'package:mag_user/widgets/join_club_button.dart';
 import 'package:mag_user/widgets/master_screen.dart';
 import 'package:mag_user/widgets/separator.dart';
@@ -15,6 +16,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
 
+import '../widgets/content_form.dart';
 import '../widgets/post_cards.dart';
 
 class ClubDetailScreen extends StatefulWidget {
@@ -78,6 +80,13 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
       showNavBar: false,
       showBackArrow: true,
       showFloatingActionButton: true,
+      floatingButtonOnPressed: () {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return ContentForm(club: widget.club);
+            });
+      },
       floatingActionButtonIcon: const Icon(
         Icons.post_add_rounded,
         size: 28,
