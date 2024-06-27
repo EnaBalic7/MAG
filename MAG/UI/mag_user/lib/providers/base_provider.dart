@@ -72,7 +72,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
-  Future<T> insert(dynamic request) async {
+  Future<T> insert(dynamic request, {bool notifyAllListeners = true}) async {
     var url = "$_baseUrl$_endpoint";
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -82,14 +82,18 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-      notifyListeners();
+      if (notifyAllListeners == true) {
+        notifyListeners();
+      }
+
       return fromJson(data);
     } else {
       throw Exception("Unknown error");
     }
   }
 
-  Future<T> update(int id, {dynamic request}) async {
+  Future<T> update(int id,
+      {dynamic request, bool notifyAllListeners = true}) async {
     var url = "$_baseUrl$_endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -99,14 +103,18 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-      notifyListeners();
+      if (notifyAllListeners == true) {
+        notifyListeners();
+      }
+
       return fromJson(data);
     } else {
       throw Exception("Unknown error");
     }
   }
 
-  Future<T> delete(int id, {dynamic request}) async {
+  Future<T> delete(int id,
+      {dynamic request, bool notifyAllListeners = true}) async {
     var url = "$_baseUrl$_endpoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -116,7 +124,10 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-      notifyListeners();
+      if (notifyAllListeners == true) {
+        notifyListeners();
+      }
+
       return fromJson(data);
     } else {
       throw Exception("Unknown error");

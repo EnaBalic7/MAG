@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
 import '../utils/util.dart';
+import 'empty.dart';
 
 typedef FetchPage = Future<SearchResult<Post>> Function(
     Map<String, dynamic> filter);
@@ -49,6 +50,7 @@ class _PostCardsState extends State<PostCards> {
     setTotalItems();
 
     _postProvider.addListener(() {
+      _reloadData();
       setTotalItems();
     });
 
@@ -60,6 +62,18 @@ class _PostCardsState extends State<PostCards> {
     if (mounted) {
       setState(() {
         totalItems = postResult.count;
+      });
+    }
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _postFuture = _postProvider.get(filter: {
+          ...widget.filter,
+          "Page": "${widget.page}",
+          "PageSize": "${widget.pageSize}"
+        });
       });
     }
   }
@@ -97,6 +111,14 @@ class _PostCardsState extends State<PostCards> {
           } else {
             // Data loaded successfully
             var postList = snapshot.data!.result;
+
+            if (postList.isEmpty) {
+              return const Empty(
+                  iconSize: 150,
+                  showGradientButton: false,
+                  text: Text("No posts here~"));
+            }
+
             return SingleChildScrollView(
               controller: _scrollController,
               child: Center(

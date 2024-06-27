@@ -31,16 +31,16 @@ class PostProvider extends BaseProvider<Post> {
       await userPostActionProvider.saveUserAction(post.id!, 'like');
     }
 
-    notifyListeners();
+    // notifyListeners();
 
     try {
-      await update(post.id!, request: post.toJson());
+      await update(post.id!, request: post.toJson(), notifyAllListeners: false);
     } catch (e) {
       // Reverts changes in case of error
       post.likesCount = originalLikesCount;
       post.dislikesCount = originalDislikesCount;
       await userPostActionProvider.saveUserAction(post.id!, userAction!);
-      notifyListeners();
+      // notifyListeners();
       throw Exception('Failed to update post on server');
     }
   }
@@ -62,16 +62,16 @@ class PostProvider extends BaseProvider<Post> {
       await userPostActionProvider.saveUserAction(post.id!, 'dislike');
     }
 
-    notifyListeners();
+    //  notifyListeners();
 
     try {
-      await update(post.id!, request: post.toJson());
+      await update(post.id!, request: post.toJson(), notifyAllListeners: false);
     } catch (e) {
       // Reverts changes in case of error
       post.likesCount = originalLikesCount;
       post.dislikesCount = originalDislikesCount;
       await userPostActionProvider.saveUserAction(post.id!, userAction!);
-      notifyListeners();
+      //  notifyListeners();
       throw Exception('Failed to update post on server');
     }
   }

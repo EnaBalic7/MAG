@@ -26,6 +26,7 @@ class ContentCard extends StatefulWidget {
   final int? contentMaxLines;
   final bool? largeProfilePhoto;
   final ValueChanged<Post>? onPostUpdated;
+  final bool? hidePopupMenuButton;
 
   ContentCard({
     Key? key,
@@ -36,6 +37,7 @@ class ContentCard extends StatefulWidget {
     this.contentMaxLines = 3,
     this.largeProfilePhoto,
     this.onPostUpdated,
+    this.hidePopupMenuButton,
   })  : assert(post != null || comment != null,
             "Either post or comment must be provided."),
         assert(!(post != null && comment != null),
@@ -221,11 +223,30 @@ class _ContentCardState extends State<ContentCard> {
                                   }
                                 }
                               },
-                              child: Text("${_post.comments!.length} Replies"))
+                              child: Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 6,
+                                    right: 6,
+                                    top: 3,
+                                    bottom: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Palette.lightPurple
+                                              .withOpacity(0.1)),
+                                      color:
+                                          Palette.lightPurple.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: (_post.comments!.length == 1)
+                                      ? Text("${_post.comments!.length} Reply")
+                                      : Text(
+                                          "${_post.comments!.length} Replies")))
                           : const Text(""),
                     ],
                   ),
-                  _showPopup(),
+                  (widget.hidePopupMenuButton != true)
+                      ? _showPopup()
+                      : Container(),
                 ],
               ),
             ],

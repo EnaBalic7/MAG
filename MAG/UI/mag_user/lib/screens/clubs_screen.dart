@@ -148,6 +148,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
           fetchPage: fetchPage,
           filter: _filterOneClub,
           showPagination: false,
+          showEmpty: false,
         ),
       ],
     );

@@ -378,7 +378,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Comment).WithMany(p => p.UserCommentActions)
                 .HasForeignKey(d => d.CommentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserCommentAction_Comment");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserCommentActions)
@@ -398,7 +397,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Post).WithMany(p => p.UserPostActions)
                 .HasForeignKey(d => d.PostId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserPostAction_Post");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserPostActions)

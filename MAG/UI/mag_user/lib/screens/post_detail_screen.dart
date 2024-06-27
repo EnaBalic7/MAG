@@ -88,6 +88,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 contentMaxLines: 15,
                 largeProfilePhoto: true,
                 onPostUpdated: (updatedPost) => updatePost(updatedPost),
+                hidePopupMenuButton: true,
               ),
               MySeparator(
                 width: screenWidth,

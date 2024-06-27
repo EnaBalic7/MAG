@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:mag_user/providers/club_provider.dart';
+import 'package:mag_user/widgets/empty.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -28,6 +29,9 @@ class ClubCards extends StatefulWidget {
   bool? showPagination;
   bool? showPopupMenuButton;
 
+  /// Shows Empty widget in case there are no clubs
+  bool? showEmpty;
+
   ClubCards({
     Key? key,
     required this.selectedIndex,
@@ -39,6 +43,7 @@ class ClubCards extends StatefulWidget {
     required this.pageSize,
     this.showPagination = true,
     this.showPopupMenuButton = false,
+    this.showEmpty = true,
   }) : super(key: key);
 
   @override
@@ -135,6 +140,11 @@ class _ClubCardsState extends State<ClubCards> {
           } else {
             // Data loaded successfully
             var clubList = snapshot.data!.result;
+
+            if (clubList.isEmpty && widget.showEmpty == true) {
+              return const Empty(
+                  showGradientButton: false, text: Text("No clubs here~"));
+            }
 
             return SingleChildScrollView(
               controller: _scrollController,

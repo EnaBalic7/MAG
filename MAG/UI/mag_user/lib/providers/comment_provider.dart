@@ -30,16 +30,17 @@ class CommentProvider extends BaseProvider<Comment> {
       await userCommentActionProvider.saveUserAction(comment.id!, 'like');
     }
 
-    notifyListeners();
+    //notifyListeners();
 
     try {
-      await update(comment.id!, request: comment.toJson());
+      await update(comment.id!,
+          request: comment.toJson(), notifyAllListeners: false);
     } catch (e) {
       // Reverts changes in case of error
       comment.likesCount = originalLikesCount;
       comment.dislikesCount = originalDislikesCount;
       await userCommentActionProvider.saveUserAction(comment.id!, userAction!);
-      notifyListeners();
+      // notifyListeners();
       throw Exception('Failed to update comment on server');
     }
   }
@@ -62,16 +63,17 @@ class CommentProvider extends BaseProvider<Comment> {
       await userCommentActionProvider.saveUserAction(comment.id!, 'dislike');
     }
 
-    notifyListeners();
+    //notifyListeners();
 
     try {
-      await update(comment.id!, request: comment.toJson());
+      await update(comment.id!,
+          request: comment.toJson(), notifyAllListeners: false);
     } catch (e) {
       // Reverts changes in case of error
       comment.likesCount = originalLikesCount;
       comment.dislikesCount = originalDislikesCount;
       await userCommentActionProvider.saveUserAction(comment.id!, userAction!);
-      notifyListeners();
+      // notifyListeners();
       throw Exception('Failed to update comment on server');
     }
   }
