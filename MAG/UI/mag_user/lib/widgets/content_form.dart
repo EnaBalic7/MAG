@@ -57,78 +57,94 @@ class _ContentFormState extends State<ContentForm> {
             width: 1,
           ),
         ),
-        child: FormBuilder(
-          key: _contentFormKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                (widget.club != null)
-                    ? const Text("Write your post:")
-                    : const Text("Write your comment:"),
-                const SizedBox(height: 10),
-                MyFormBuilderTextField(
-                  name: "content",
-                  minLines: 5,
-                  fillColor: Palette.textFieldPurple.withOpacity(0.3),
-                  maxLines: null,
-                  textAlignVertical: TextAlignVertical.center,
-                  keyboardType: TextInputType.multiline,
-                  borderRadius: 15,
-                  errorBorderRadius: 15,
-                  validator: (val) {
-                    return _buildValidator(val);
-                  },
-                ),
-                const SizedBox(height: 10),
-                GradientButton(
-                  onPressed: () async {
-                    if (_contentFormKey.currentState?.saveAndValidate() ==
-                        true) {
-                      var content = _contentFormKey
-                          .currentState?.fields["content"]?.value;
+        child: _buildChild(context),
+      ),
+    );
+  }
 
-                      try {
-                        if (widget.club != null) {
-                          var post = {
-                            "clubId": widget.club!.id,
-                            "userId": LoggedUser.user!.id,
-                            "content": content,
-                            "likesCount": 0,
-                            "dislikesCount": 0,
-                            "datePosted": DateTime.now().toIso8601String(),
-                          };
-
-                          await _postProvider.insert(post);
-                        } else {
-                          var comment = {
-                            "postId": widget.post!.id,
-                            "userId": LoggedUser.user!.id,
-                            "content": content,
-                            "likesCount": 0,
-                            "dislikesCount": 0,
-                            "dateCommented": DateTime.now().toIso8601String(),
-                          };
-
-                          await _commentProvider.insert(comment);
-                        }
-                      } on Exception catch (e) {
-                        showErrorDialog(context, e);
-                      }
-
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  width: 80,
-                  height: 28,
-                  borderRadius: 50,
-                  gradient: Palette.buttonGradient,
-                  child: const Text("Submit",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
-                )
-              ],
+  Widget _buildChild(BuildContext context) {
+    if (LoggedUser.user!.userRoles!.any(
+      (element) => element.canParticipateInClubs == false,
+    )) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.info, size: 36),
+          Text("You don't have permission to post or comment in clubs.",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Palette.lightPurple)),
+        ],
+      );
+    }
+    return FormBuilder(
+      key: _contentFormKey,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            (widget.club != null)
+                ? const Text("Write your post:")
+                : const Text("Write your comment:"),
+            const SizedBox(height: 10),
+            MyFormBuilderTextField(
+              name: "content",
+              minLines: 5,
+              fillColor: Palette.textFieldPurple.withOpacity(0.3),
+              maxLines: null,
+              textAlignVertical: TextAlignVertical.center,
+              keyboardType: TextInputType.multiline,
+              borderRadius: 15,
+              errorBorderRadius: 15,
+              validator: (val) {
+                return _buildValidator(val);
+              },
             ),
-          ),
+            const SizedBox(height: 10),
+            GradientButton(
+              onPressed: () async {
+                if (_contentFormKey.currentState?.saveAndValidate() == true) {
+                  var content =
+                      _contentFormKey.currentState?.fields["content"]?.value;
+
+                  try {
+                    if (widget.club != null) {
+                      var post = {
+                        "clubId": widget.club!.id,
+                        "userId": LoggedUser.user!.id,
+                        "content": content,
+                        "likesCount": 0,
+                        "dislikesCount": 0,
+                        "datePosted": DateTime.now().toIso8601String(),
+                      };
+
+                      await _postProvider.insert(post);
+                    } else {
+                      var comment = {
+                        "postId": widget.post!.id,
+                        "userId": LoggedUser.user!.id,
+                        "content": content,
+                        "likesCount": 0,
+                        "dislikesCount": 0,
+                        "dateCommented": DateTime.now().toIso8601String(),
+                      };
+
+                      await _commentProvider.insert(comment);
+                    }
+                  } on Exception catch (e) {
+                    showErrorDialog(context, e);
+                  }
+
+                  Navigator.of(context).pop();
+                }
+              },
+              width: 80,
+              height: 28,
+              borderRadius: 50,
+              gradient: Palette.buttonGradient,
+              child: const Text("Submit",
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+            )
+          ],
         ),
       ),
     );

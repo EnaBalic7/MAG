@@ -279,6 +279,11 @@ class _NebulaFormState extends State<NebulaForm> {
                         val.isNotEmpty &&
                         !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
+                    } else if (LoggedUser.user!.userRoles!.any(
+                      (element) =>
+                          element.canReview == false && val!.isNotEmpty,
+                    )) {
+                      return "Not permitted to leave review.";
                     } else if (val != null &&
                         val != "" &&
                         _nebulaFormKey

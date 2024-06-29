@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
+import 'package:mag_user/providers/club_cover_provider.dart';
 import 'package:mag_user/providers/club_provider.dart';
 import 'package:mag_user/widgets/empty.dart';
 import 'package:provider/provider.dart';
@@ -56,6 +57,7 @@ class _ClubCardsState extends State<ClubCards> {
   late final ClubProvider _clubProvider;
   int totalItems = 0;
   late final ClubUserProvider _clubUserProvider;
+  late final ClubCoverProvider _clubCoverProvider;
 
   @override
   void didUpdateWidget(ClubCards oldWidget) {
@@ -76,8 +78,13 @@ class _ClubCardsState extends State<ClubCards> {
     setTotalItems();
     _clubProvider = context.read<ClubProvider>();
     _clubUserProvider = context.read<ClubUserProvider>();
+    _clubCoverProvider = context.read<ClubCoverProvider>();
 
     _clubProvider.addListener(() {
+      _reloadData();
+    });
+
+    _clubCoverProvider.addListener(() {
       _reloadData();
     });
 

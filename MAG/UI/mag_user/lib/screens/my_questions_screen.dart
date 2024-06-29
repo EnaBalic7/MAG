@@ -110,7 +110,13 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                   borderRadius: 15,
                   errorBorderRadius: 15,
                   validator: (val) {
-                    if (val != null &&
+                    if (val == null || val.isEmpty) {
+                      return "This field cannot be empty.";
+                    } else if (LoggedUser.user!.userRoles!.any(
+                      (element) => element.canAskQuestions == false,
+                    )) {
+                      return "You don't have permission to ask questions.";
+                    } else if (val != null &&
                         val.isNotEmpty &&
                         !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
