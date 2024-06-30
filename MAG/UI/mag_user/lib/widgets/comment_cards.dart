@@ -83,6 +83,7 @@ class _CommentCardsState extends State<CommentCards>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder<SearchResult<Comment>>(
         future: _commentFuture,
         builder: (context, snapshot) {
@@ -149,7 +150,7 @@ class _CommentCardsState extends State<CommentCards>
     if (commentList.isEmpty) {
       return List.generate(
           1,
-          (index) => Empty(
+          (index) => const Empty(
                 text: Text("No comments yet.."),
                 showGradientButton: false,
                 iconSize: 128,

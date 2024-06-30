@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
 import 'package:mag_user/providers/post_provider.dart';
-import 'package:mag_user/screens/post_detail_screen.dart';
+import 'package:mag_user/providers/user_provider.dart';
 import 'package:mag_user/widgets/join_club_button.dart';
 import 'package:mag_user/widgets/master_screen.dart';
 import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../models/club.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
+import '../models/user.dart';
 import '../providers/club_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -36,6 +39,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
   late final ClubUserProvider _clubUserProvider;
   late final ClubProvider _clubProvider;
   late final PostProvider _postProvider;
+  late final UserProvider _userProvider;
 
   int page = 0;
   int pageSize = 20;
@@ -47,6 +51,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
     _clubUserProvider = context.read<ClubUserProvider>();
     _clubProvider = context.read<ClubProvider>();
     _postProvider = context.read<PostProvider>();
+    _userProvider = context.read<UserProvider>();
 
     _filter = {
       "ClubId": widget.club.id,
@@ -154,12 +159,22 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10),
+            padding: const EdgeInsets.only(
+              left: 10,
+              top: 10,
+              right: 10,
+            ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildUsersIcon(18),
-                const SizedBox(width: 5),
-                Text("${widget.club.memberCount}")
+                Row(
+                  children: [
+                    buildUsersIcon(18),
+                    const SizedBox(width: 5),
+                    Text("${widget.club.memberCount}")
+                  ],
+                ),
+                _buildClubOwner()
               ],
             ),
           ),
@@ -178,6 +193,47 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
           ),
         ]),
       ),
+    );
+  }
+
+  Row _buildClubOwner() {
+    return Row(
+      children: [
+        Tooltip(message: "Club owner", child: buildCrownIcon(14)),
+        const SizedBox(width: 8),
+        FutureBuilder<SearchResult<User>>(
+            future: _userProvider.get(filter: {"Id": "${widget.club.ownerId}"}),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Shimmer.fromColors(
+                  baseColor: Palette.lightPurple,
+                  highlightColor: Palette.white,
+                  child: Container(
+                    child: const SizedBox(
+                      width: 100,
+                      height: 11,
+                    ).asGlass(),
+                  ).asGlass(
+                      clipBorderRadius: BorderRadius.circular(4),
+                      tintColor: Palette.lightPurple),
+                );
+
+                // Loading state
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); // Error state
+              } else {
+                // Data loaded successfully
+                var user = snapshot.data!;
+
+                if (user.count == 1) {
+                  return Tooltip(
+                      message: "Club owner",
+                      child: Text("${user.result.single.username}"));
+                }
+                return const Text("Owner not found");
+              }
+            }),
+      ],
     );
   }
 

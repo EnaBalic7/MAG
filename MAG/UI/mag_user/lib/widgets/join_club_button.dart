@@ -24,7 +24,7 @@ class JoinClubButton extends StatefulWidget {
   final int userId;
   final int clubId;
 
-  JoinClubButton({
+  const JoinClubButton({
     Key? key,
     this.width,
     this.height,

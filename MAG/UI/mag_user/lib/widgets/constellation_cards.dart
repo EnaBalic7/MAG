@@ -92,7 +92,6 @@ class _ConstellationCardsState extends State<ConstellationCards> {
   Widget build(BuildContext context) {
     return FutureBuilder<SearchResult<Listt>>(
         future: _listFuture,
-        // future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SingleChildScrollView(

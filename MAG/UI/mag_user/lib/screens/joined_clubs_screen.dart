@@ -6,7 +6,6 @@ import '../models/search_result.dart';
 import '../providers/club_provider.dart';
 import '../utils/util.dart';
 import '../widgets/club_cards.dart';
-import '../widgets/master_screen.dart';
 
 class JoinedClubsScreen extends StatefulWidget {
   final int selectedIndex;

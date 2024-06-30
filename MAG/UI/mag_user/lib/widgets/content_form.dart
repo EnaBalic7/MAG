@@ -7,7 +7,6 @@ import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
 import '../models/club.dart';
-import '../models/comment.dart';
 import '../models/post.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';

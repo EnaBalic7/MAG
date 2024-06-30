@@ -33,7 +33,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
     "OrderByMemberCount": "true",
   };
 
-  Map<String, dynamic> _filterOneClub = {
+  final Map<String, dynamic> _filterOneClub = {
     "UserId": "${LoggedUser.user!.id}",
     "CoverIncluded": "true",
     "Page": "0",

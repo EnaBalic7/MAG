@@ -115,7 +115,7 @@ class _NebulaCardsState extends State<NebulaCards>
             var animeWatchlists = snapshot.data!.result;
             if (animeWatchlists.isEmpty) {
               return const Empty(
-                  text: Text("Your Nebula is empty."),
+                  text: Text("Nothing to be found here~"),
                   screen: HomeScreen(selectedIndex: 0),
                   child: Text("Explore Anime"));
             }

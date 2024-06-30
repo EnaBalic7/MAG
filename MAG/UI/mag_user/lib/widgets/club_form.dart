@@ -29,7 +29,6 @@ class ClubForm extends StatefulWidget {
 }
 
 class _ClubFormState extends State<ClubForm> {
-  File? _image;
   String? _base64Image;
   final _clubFormKey = GlobalKey<FormBuilderState>();
   late final ClubCoverProvider _clubCoverProvider;

@@ -5,7 +5,6 @@ import '../screens/login_screen.dart';
 import '../utils/icons.dart';
 import '../widgets/separator.dart';
 import '../models/user.dart';
-import '../screens/profile_screen.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 

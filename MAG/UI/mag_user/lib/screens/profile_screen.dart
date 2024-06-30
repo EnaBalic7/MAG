@@ -13,7 +13,6 @@ import '../models/user_profile_picture.dart';
 import '../providers/user_profile_picture_provider.dart';
 import '../utils/icons.dart';
 import '../widgets/gradient_button.dart';
-import '../widgets/master_screen.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';

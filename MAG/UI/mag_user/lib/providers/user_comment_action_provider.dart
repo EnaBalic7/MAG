@@ -40,7 +40,6 @@ class UserCommentActionProvider extends BaseProvider<UserCommentAction> {
     var response = await http!.post(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
       notifyListeners();
     } else {
       throw Exception("Unknown error");

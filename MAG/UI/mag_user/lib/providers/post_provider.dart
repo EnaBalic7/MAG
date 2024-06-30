@@ -5,7 +5,6 @@ import '../models/post.dart';
 
 class PostProvider extends BaseProvider<Post> {
   final UserPostActionProvider userPostActionProvider;
-  final String _endpoint = "Post";
 
   PostProvider({required this.userPostActionProvider}) : super("Post");
 

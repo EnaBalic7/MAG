@@ -192,12 +192,15 @@ class _InfoScreenState extends State<InfoScreen> {
                   .reduce((value, element) => value + element);
 
               double meanScore = sum / ratingData.result.length;
+              String meanScoreRounded = meanScore.toStringAsFixed(2);
+
               return Text(
-                "$meanScore",
+                meanScoreRounded,
                 style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Palette.lightYellow),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Palette.lightYellow,
+                ),
               );
             } else {
               return const Text(

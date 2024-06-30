@@ -7,7 +7,6 @@ import '../screens/constellation_screen.dart';
 import '../screens/explore_screen.dart';
 import '../screens/nebula_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/testing.dart';
 import '../widgets/user_profile_dialog.dart';
 import '../screens/help_screen.dart';
 import '../utils/colors.dart';

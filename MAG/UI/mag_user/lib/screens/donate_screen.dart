@@ -10,6 +10,6 @@ class DonateScreen extends StatefulWidget {
 class _DonateScreenState extends State<DonateScreen> {
   @override
   Widget build(BuildContext context) {
-    return Text("Donation screen");
+    return const Text("Donation screen");
   }
 }

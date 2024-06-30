@@ -92,7 +92,7 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
             );
           }
           return const Empty(
-              text: Text("Your Nebula is empty."),
+              text: Text("Nothing to be found here~"),
               screen: HomeScreen(selectedIndex: 0),
               child: Text("Explore Anime"));
         }
