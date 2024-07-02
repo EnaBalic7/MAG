@@ -22,6 +22,10 @@ namespace MAG.Services
         {
         }
 
+        public virtual async Task AfterInsert(TDb entity, TInsert insert)
+        {
+        }
+
         public virtual async Task<T> Insert(TInsert insert)
         {
             var set = _context.Set<TDb>();
@@ -33,6 +37,8 @@ namespace MAG.Services
             await BeforeInsert(entity, insert);
 
             await _context.SaveChangesAsync();
+
+            await AfterInsert(entity, insert);
 
             return _mapper.Map<T>(entity);
         }

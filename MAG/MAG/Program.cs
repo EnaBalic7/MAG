@@ -31,7 +31,7 @@ builder.Services.AddTransient<IUserProfilePictureService, UserProfilePictureServ
 builder.Services.AddTransient<IClubCoverService, ClubCoverService>();
 builder.Services.AddTransient<IUserPostActionService, UserPostActionService>();
 builder.Services.AddTransient<IUserCommentActionService, UserCommentActionService>();
-
+builder.Services.AddTransient<IRabbitMQProducer, RabbitMQProducer>();
 
 
 // Add services to the container.

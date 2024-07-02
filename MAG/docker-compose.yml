@@ -1,0 +1,78 @@
+version: '3'
+services:
+  rabbitMQ:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq_container'
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - 5672
+    networks: 
+      - myanimegalaxy_network
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  myanimegalaxy_sql:
+    container_name: myanimegalaxy_db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MyEnaPassword0
+      - MSSQL_PID=Developer
+    ports:
+      - 1405:1433
+    expose:
+      - 1433
+    networks:
+      - myanimegalaxy_network
+
+  myanimegalaxy_api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=myanimegalaxy_sql,1433;Database=MyAnimeGalaxyDB;User=sa;Password=MyEnaPassword0;ConnectRetryCount=0;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest 
+    ports:
+      - 7074:80
+    networks:
+      - myanimegalaxy_network
+    depends_on:
+      - myanimegalaxy_sql
+      - rabbitMQ
+
+  rabbitmq-consumer:
+    restart: unless-stopped
+    build:
+      context: ./RabbitMQConsumer
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - SMTP_SERVER=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=myanimegalaxy0@gmail.com
+      - SMTP_PASSWORD=Myanimegalaxy01258
+    depends_on:
+      - myanimegalaxy_sql
+      - myanimegalaxy_api
+      - rabbitMQ
+    networks:
+      - myanimegalaxy_network
+
+volumes:
+  rabbitmq_data:
+
+networks:
+  myanimegalaxy_network:
+    driver: bridge

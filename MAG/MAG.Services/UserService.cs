@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
@@ -15,11 +16,29 @@ namespace MAG.Services
 {
     public class UserService : BaseCRUDService<Model.User, Database.User, UserSearchObject, UserInsertRequest, UserUpdateRequest>, IUserService
     {
-        private readonly MagContext _context; 
+        private readonly MagContext _context;
 
-        public UserService(MagContext context, IMapper mapper) : base(context, mapper)
+        private readonly IRabbitMQProducer _rabbitMQProducer;
+
+        public UserService(MagContext context, IMapper mapper, IRabbitMQProducer rabbitMQProducer) : base(context, mapper)
         {
             _context = context;
+            _rabbitMQProducer = rabbitMQProducer;
+        }
+
+        public override async Task AfterInsert(Database.User entity, UserInsertRequest insert)
+        {
+            if (insert.Email != null)
+            {
+                Model.Email email = new()
+                {
+                    Subject = "Welcoming email",
+                    Content = "Welcome to MyAnimeGalaxy! We're thrilled to have you join our community of anime enthusiasts. At MyAnimeGalaxy, we believe that every anime fan deserves a place to discover, discuss, and share their passion. With our app, you can: explore a vast collection of anime shows and movies, track your watchlist and keep up with your favorite series, rate and review episodes and series, connect with other anime fans and join discussions, get recommendations tailored to your tastes. We hope you enjoy your journey through the galaxy of anime!",
+                    Recipient = insert.Email,
+                    Sender = "myanimegalaxy0@gmail.com",
+                };
+                _rabbitMQProducer.SendMessage(email);
+            }
         }
 
         public override IQueryable<Database.User> AddInclude(IQueryable<Database.User> query, UserSearchObject? search = null)
