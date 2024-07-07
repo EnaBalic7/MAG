@@ -11,7 +11,7 @@ namespace MAG.Services
         {
             var factory = new ConnectionFactory
             {
-                HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitmq",
+                HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ",
                 Port = int.Parse(Environment.GetEnvironmentVariable("RABBITMQ_PORT") ?? "5672"),
                 UserName = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest",
                 Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest",

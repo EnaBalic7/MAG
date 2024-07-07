@@ -31,7 +31,7 @@ builder.Services.AddTransient<IUserProfilePictureService, UserProfilePictureServ
 builder.Services.AddTransient<IClubCoverService, ClubCoverService>();
 builder.Services.AddTransient<IUserPostActionService, UserPostActionService>();
 builder.Services.AddTransient<IUserCommentActionService, UserCommentActionService>();
-builder.Services.AddTransient<IRabbitMQProducer, RabbitMQProducer>();
+builder.Services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
 
 
 // Add services to the container.
@@ -66,8 +66,11 @@ builder.Services.AddSwaggerGen(c =>
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MagContext>(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddAutoMapper(typeof(IAnimeService));
+
 builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -89,5 +92,23 @@ app.Urls.Add("http://0.0.0.0:5262");
 app.Urls.Add("https://0.0.0.0:7074");
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
+
+    if (!dataContext.Database.CanConnect())
+    {
+        dataContext.Database.Migrate();
+    }
+}
+
+/*using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
+   // dataContext.Database.EnsureCreated();
+    dataContext.Database.Migrate();
+}*/
+
 
 app.Run();

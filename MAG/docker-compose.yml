@@ -38,24 +38,30 @@ services:
     environment:
       - ConnectionStrings:DefaultConnection=Server=myanimegalaxy_sql,1433;Database=MyAnimeGalaxyDB;User=sa;Password=MyEnaPassword0;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=rabbitMQ
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=guest
-      - RABBITMQ_PASSWORD=guest 
+      - RABBITMQ_PASSWORD=guest
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetcore-devcert.pfx
     ports:
-      - 7074:80
+      - "7074:7074"
     networks:
       - myanimegalaxy_network
+    links:
+      - myanimegalaxy_sql
     depends_on:
       - myanimegalaxy_sql
       - rabbitMQ
+    volumes:
+      - ./aspnetcore-devcert.pfx:/root/.aspnet/https/aspnetcore-devcert.pfx
 
   rabbitmq-consumer:
     restart: unless-stopped
     build:
       context: ./RabbitMQConsumer
     environment:
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=rabbitMQ
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
