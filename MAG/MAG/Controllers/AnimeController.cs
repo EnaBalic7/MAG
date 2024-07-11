@@ -2,6 +2,7 @@ using MAG.Model;
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MAG.Controllers

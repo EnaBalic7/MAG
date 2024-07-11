@@ -97,18 +97,10 @@ using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
 
-    if (!dataContext.Database.CanConnect())
-    {
+   // if (!dataContext.Database.CanConnect())
+   // {
         dataContext.Database.Migrate();
-    }
+   // }
 }
-
-/*using (var scope = app.Services.CreateScope())
-{
-    var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
-   // dataContext.Database.EnsureCreated();
-    dataContext.Database.Migrate();
-}*/
-
 
 app.Run();

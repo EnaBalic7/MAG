@@ -55,6 +55,7 @@ services:
       - rabbitMQ
     volumes:
       - ./aspnetcore-devcert.pfx:/root/.aspnet/https/aspnetcore-devcert.pfx
+      - ./SeedImages:/app/SeedImages
 
   rabbitmq-consumer:
     restart: unless-stopped
