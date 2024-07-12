@@ -10,5 +10,7 @@ namespace MAG.Services
 {
     public interface IPreferredGenreService : ICRUDService<Model.PreferredGenre, PreferredGenreSearchObject, PreferredGenreInsertRequest, PreferredGenreUpdateRequest>
     {
+        Task<bool> DeleteByUserId(int userId);
+        Task<bool> UpdatePrefGenresForUser(int userId, List<PreferredGenreInsertRequest> newPrefGenres);
     }
 }

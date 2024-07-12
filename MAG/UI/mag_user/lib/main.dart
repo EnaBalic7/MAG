@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/providers/club_cover_provider.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
+import 'package:mag_user/providers/preferred_genre_provider.dart';
 import 'package:mag_user/providers/user_comment_action_provider.dart';
 import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => AnimeListProvider()),
     ChangeNotifierProvider(create: (_) => ClubCoverProvider()),
     ChangeNotifierProvider(create: (_) => ClubUserProvider()),
+    ChangeNotifierProvider(create: (_) => PreferredGenreProvider()),
   ], child: const MyMaterialApp()));
 }
 
