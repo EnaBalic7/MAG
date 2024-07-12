@@ -377,7 +377,7 @@ namespace MAG.Services.Database
                 new UserProfilePicture()
                 {
                     Id = 1,
-                    ProfilePicture = ImageHelper.ConvertImageToByteArray("SeedImages/blank_profile_pic.jpg")
+                    ProfilePicture = ImageHelper.ConvertImageToByteArray("../SeedImages/blank_profile_pic.jpg")
                 }
          );
         }
@@ -388,7 +388,7 @@ namespace MAG.Services.Database
                 new ClubCover()
                 {
                     Id = 1,
-                    Cover = ImageHelper.ConvertImageToByteArray("SeedImages/cover.jpg")
+                    Cover = ImageHelper.ConvertImageToByteArray("../SeedImages/cover.jpg")
                 }
          );
         }

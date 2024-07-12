@@ -16,8 +16,10 @@ public class Program
             RequestedConnectionTimeout = TimeSpan.FromSeconds(30),
             RequestedHeartbeat = TimeSpan.FromSeconds(60),
             AutomaticRecoveryEnabled = true,
-            NetworkRecoveryInterval = TimeSpan.FromSeconds(10)
+            NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
         };
+
+        factory.ClientProvidedName = "Rabbit Test Consumer";
 
         try
         {
@@ -52,7 +54,13 @@ public class Program
                 channel.BasicConsume(queueName, false, consumer);
 
                 Console.WriteLine("Waiting for messages. Press Q to quit.");
+
+                // Sleep for a long time to keep the application running
                 Thread.Sleep(Timeout.Infinite);
+
+                // Close resources before exiting
+                channel.Close();
+                connection.Close();
             }
         }
         catch (Exception ex)

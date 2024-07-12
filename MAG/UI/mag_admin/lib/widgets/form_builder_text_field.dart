@@ -73,7 +73,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           focusNode: FocusNode(),
           initialValue: widget.initialValue,
           minLines: widget.minLines,
-          autovalidateMode: AutovalidateMode.always,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: widget.validator,
           onChanged: widget.onChanged,
           onSubmitted: widget.onSubmitted,

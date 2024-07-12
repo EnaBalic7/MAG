@@ -93,7 +93,8 @@ app.Urls.Add("https://0.0.0.0:7074");
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+// Keep commented when developing locally
+/*using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
 
@@ -101,6 +102,6 @@ using (var scope = app.Services.CreateScope())
    // {
         dataContext.Database.Migrate();
    // }
-}
+}*/
 
 app.Run();

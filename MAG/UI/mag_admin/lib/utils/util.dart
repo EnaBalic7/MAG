@@ -49,6 +49,7 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
       context: context,
       builder: (BuildContext context) => AlertDialog(
               shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
                   borderRadius: BorderRadius.circular(15)),
               actionsAlignment: MainAxisAlignment.center,
               backgroundColor: Palette.darkPurple,
@@ -77,6 +78,7 @@ Future<void> showInfoDialog(
       barrierDismissible: barrierDismissible,
       builder: (BuildContext context) => AlertDialog(
               shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
                   borderRadius: BorderRadius.circular(15)),
               actionsAlignment: MainAxisAlignment.center,
               backgroundColor: Palette.darkPurple,
@@ -103,7 +105,9 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
     barrierDismissible: false, // Dialog cannot be dismissed by tapping outside
     builder: (BuildContext context) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+            borderRadius: BorderRadius.circular(15)),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         backgroundColor: Palette.darkPurple,
         title: dialogTitle,

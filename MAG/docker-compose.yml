@@ -69,7 +69,7 @@ services:
       - SMTP_SERVER=smtp.gmail.com
       - SMTP_PORT=587
       - SMTP_USERNAME=myanimegalaxy0@gmail.com
-      - SMTP_PASSWORD=Myanimegalaxy01258
+      - SMTP_PASSWORD=ltkdhzwgcznbeonf
     depends_on:
       - myanimegalaxy_sql
       - myanimegalaxy_api

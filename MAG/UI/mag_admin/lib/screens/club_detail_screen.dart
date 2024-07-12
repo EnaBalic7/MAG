@@ -243,6 +243,17 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                     } else {
                       // Data loaded successfully
                       var postList = snapshot.data!.result;
+
+                      if (postList.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Text("No posts here~",
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontStyle: FontStyle.italic,
+                                  color: Palette.lightPurple.withOpacity(0.5))),
+                        );
+                      }
                       return Column(
                         children: [
                           Column(children: _buildPosts(postList)),

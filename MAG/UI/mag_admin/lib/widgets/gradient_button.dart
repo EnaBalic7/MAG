@@ -100,7 +100,9 @@ class _GradientButtonState extends State<GradientButton> {
       child: ElevatedButton(
         onPressed: widget.onPressed,
         style: ElevatedButton.styleFrom(
+          elevation: 0,
           padding: EdgeInsets.zero,
+          minimumSize: const Size(0, 0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
           ),

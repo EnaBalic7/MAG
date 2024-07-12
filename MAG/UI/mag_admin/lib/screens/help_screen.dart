@@ -366,6 +366,8 @@ class _HelpScreenState extends State<HelpScreen> {
               children: [
                 Expanded(
                   child: Text(qa.question.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       style: const TextStyle(
                           fontSize: 17, fontWeight: FontWeight.bold)),
                 ),
