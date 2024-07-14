@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mag_user/models/anime_watchlist.dart';
+import 'package:mag_user/models/preferred_genre.dart';
 import 'package:mag_user/models/rating.dart';
 import 'package:mag_user/providers/anime_watchlist_provider.dart';
+import 'package:mag_user/providers/preferred_genre_provider.dart';
 import 'package:mag_user/providers/rating_provider.dart';
+import 'package:mag_user/utils/icons.dart';
+import 'package:mag_user/widgets/gradient_button.dart';
+import 'package:mag_user/widgets/preferred_genres_form.dart';
 import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/genre.dart';
 import '../models/search_result.dart';
 import '../models/watchlist.dart';
+import '../providers/genre_provider.dart';
 import '../providers/watchlist_provider.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
@@ -21,11 +28,15 @@ class InfoScreen extends StatefulWidget {
 }
 
 class _InfoScreenState extends State<InfoScreen> {
-  late WatchlistProvider _watchlistProvider;
+  late final WatchlistProvider _watchlistProvider;
   late Future<SearchResult<Watchlist>> _watchlistFuture;
-  late AnimeWatchlistProvider _animeWatchlistProvider;
-  late RatingProvider _ratingProvider;
+  late final AnimeWatchlistProvider _animeWatchlistProvider;
+  late final RatingProvider _ratingProvider;
   late Future<SearchResult<Rating>> _ratingFuture;
+  late final PreferredGenreProvider _preferredGenreProvider;
+  late Future<SearchResult<PreferredGenre>> _prefGenresFuture;
+  late final GenreProvider _genreProvider;
+  late final Future<SearchResult<Genre>> _genreFuture;
 
   @override
   void initState() {
@@ -39,7 +50,27 @@ class _InfoScreenState extends State<InfoScreen> {
     _ratingFuture =
         _ratingProvider.get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
+    _genreProvider = context.read<GenreProvider>();
+    _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": true});
+
+    _preferredGenreProvider = context.read<PreferredGenreProvider>();
+    _prefGenresFuture = _preferredGenreProvider
+        .get(filter: {"UserId": "${LoggedUser.user!.id}"});
+
+    _preferredGenreProvider.addListener(() {
+      _updatePreferredGenres();
+    });
+
     super.initState();
+  }
+
+  _updatePreferredGenres() {
+    if (mounted) {
+      setState(() {
+        _prefGenresFuture = _preferredGenreProvider
+            .get(filter: {"UserId": "${LoggedUser.user!.id}"});
+      });
+    }
   }
 
   @override
@@ -63,14 +94,87 @@ class _InfoScreenState extends State<InfoScreen> {
         ),
         Expanded(
           child: Column(
-            children: const [
-              Text("Preferred genres",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Preferred genres",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const PreferredGenresForm();
+                            });
+                      },
+                      child: buildEditIcon(24)),
+                ],
+              ),
+              _buildPrefGenres(),
             ],
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildPrefGenres() {
+    return FutureBuilder<SearchResult<Genre>>(
+        future: _genreFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const MyProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var genres = snapshot.data!.result;
+
+            return FutureBuilder<SearchResult<PreferredGenre>>(
+              future: _prefGenresFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const MyProgressIndicator(); // Loading state
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}'); // Error state
+                } else {
+                  // Data loaded successfully
+                  var preferredGenres = snapshot.data!.result;
+
+                  var genresToDisplay = genres
+                      .where((genre) => preferredGenres
+                          .any((prefGenre) => prefGenre.genreId == genre.id))
+                      .map((genre) => genre.name!);
+
+                  return Wrap(
+                    spacing: 8,
+                    children: [
+                      ...genresToDisplay.map((genreName) {
+                        return GradientButton(
+                          onPressed: () {},
+                          gradient: Palette.navGradient4,
+                          contentPaddingBottom: 2,
+                          contentPaddingLeft: 5,
+                          contentPaddingRight: 5,
+                          contentPaddingTop: 2,
+                          borderRadius: 50,
+                          child: Text(
+                            genreName,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 15),
+                          ),
+                        );
+                      })
+                    ],
+                  );
+                }
+              },
+            );
+          }
+        });
   }
 
   Widget _buildInfo() {
@@ -112,62 +216,82 @@ class _InfoScreenState extends State<InfoScreen> {
   }
 
   Widget _buildTotal(SearchResult<Watchlist> watchlist) {
-    return FutureBuilder<SearchResult<AnimeWatchlist>>(
-        future: _animeWatchlistProvider
-            .get(filter: {"WatchlistId": "${watchlist.result[0].id}"}),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyProgressIndicator(
-              height: 19,
-              width: 19,
-              strokeWidth: 3,
-            ); // Loading state
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}'); // Error state
-          } else {
-            // Data loaded successfully
-            var animeWatchlistData = snapshot.data!;
-            int dataCount = animeWatchlistData.count;
+    if (watchlist.count == 1) {
+      return FutureBuilder<SearchResult<AnimeWatchlist>>(
+          future: _animeWatchlistProvider
+              .get(filter: {"WatchlistId": "${watchlist.result[0].id}"}),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const MyProgressIndicator(
+                height: 19,
+                width: 19,
+                strokeWidth: 3,
+              ); // Loading state
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // Error state
+            } else {
+              // Data loaded successfully
+              var animeWatchlistData = snapshot.data!;
+              int dataCount = animeWatchlistData.count;
 
-            return Text(
-              "$dataCount",
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Palette.turquoiseLight),
-            );
-          }
-        });
+              return Text(
+                "$dataCount",
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Palette.turquoiseLight),
+              );
+            }
+          });
+    }
+    return const Text(
+      "0",
+      style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Palette.turquoiseLight),
+    );
   }
 
   Widget _buildCompleted(SearchResult<Watchlist> watchlist) {
-    return FutureBuilder<SearchResult<AnimeWatchlist>>(
-        future: _animeWatchlistProvider
-            .get(filter: {"WatchlistId": "${watchlist.result[0].id}"}),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MyProgressIndicator(
-              height: 19,
-              width: 19,
-              strokeWidth: 3,
-            ); // Loading state
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}'); // Error state
-          } else {
-            // Data loaded successfully
-            var animeWatchlistData = snapshot.data!.result
-                .where((element) => element.watchStatus == "Completed");
-            int dataCount = animeWatchlistData.length;
+    if (watchlist.count == 1) {
+      return FutureBuilder<SearchResult<AnimeWatchlist>>(
+          future: _animeWatchlistProvider
+              .get(filter: {"WatchlistId": "${watchlist.result[0].id}"}),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const MyProgressIndicator(
+                height: 19,
+                width: 19,
+                strokeWidth: 3,
+              ); // Loading state
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // Error state
+            } else {
+              // Data loaded successfully
+              var animeWatchlistData = snapshot.data!.result
+                  .where((element) => element.watchStatus == "Completed");
+              int dataCount = animeWatchlistData.length;
 
-            return Text(
-              "$dataCount",
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Palette.rose),
-            );
-          }
-        });
+              return Text(
+                "$dataCount",
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Palette.rose),
+              );
+            }
+          });
+    }
+
+    return const Text(
+      "0",
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: Palette.rose,
+      ),
+    );
   }
 
   Widget _buildMean() {

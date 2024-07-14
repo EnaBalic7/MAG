@@ -35,6 +35,8 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
     _preferredGenreProvider = context.read<PreferredGenreProvider>();
 
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": true});
+    _preferredGenreFuture = _preferredGenreProvider
+        .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
     super.initState();
   }
@@ -60,7 +62,8 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Choose genres you like:"),
+              const Text("Choose genres you like:",
+                  style: TextStyle(fontSize: 17)),
               const SizedBox(height: 20),
               FutureBuilder<SearchResult<Genre>>(
                   future: _genreFuture,
@@ -88,31 +91,35 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
                                 var preferredGenres = snapshot.data!.result;
 
                                 return MyFormBuilderFilterChip(
-                                  labelText: "Your Stars",
-                                  name: 'prefGenres',
-                                  fontSize: 20,
-                                  options: [
-                                    ...genres
-                                        .map(
-                                          (genre) => FormBuilderFieldOption(
-                                            value: genre.id.toString(),
-                                            child: Text(genre.name!,
-                                                style: const TextStyle(
-                                                    color: Palette
-                                                        .midnightPurple)),
-                                          ),
-                                        )
+                                    name: 'prefGenres',
+                                    fontSize: 20,
+                                    options: [
+                                      ...genres
+                                          .map(
+                                            (genre) => FormBuilderFieldOption(
+                                              value: genre.id.toString(),
+                                              child: Text(genre.name!,
+                                                  style: const TextStyle(
+                                                      color: Palette
+                                                          .midnightPurple)),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ],
+                                    initialValue: preferredGenres
+                                        .where((preferredGenre) => genres.any(
+                                            (genre) =>
+                                                genre.id ==
+                                                preferredGenre.genreId))
+                                        .map((preferredGenre) =>
+                                            preferredGenre.genreId.toString())
                                         .toList(),
-                                  ],
-                                  initialValue: preferredGenres
-                                      .where((preferredGenre) => genres.any(
-                                          (genre) =>
-                                              genre.id ==
-                                              preferredGenre.genreId))
-                                      .map((preferredGenre) =>
-                                          preferredGenre.genreId.toString())
-                                      .toList(),
-                                );
+                                    validator: (val) {
+                                      if (val != null && val.length < 3) {
+                                        return "Must choose at least 3 genres.";
+                                      }
+                                      return null;
+                                    });
                               }
                             }),
                       );
@@ -122,38 +129,41 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
               GradientButton(
                   onPressed: () async {
                     try {
-                      _prefGenresFormKey.currentState?.saveAndValidate();
+                      if (_prefGenresFormKey.currentState?.saveAndValidate() ==
+                          true) {
+                        var preferredGenres = (_prefGenresFormKey
+                                    .currentState?.value['prefGenres'] as List?)
+                                ?.whereType<String>()
+                                .toList() ??
+                            [];
 
-                      var preferredGenres = (_prefGenresFormKey
-                                  .currentState?.value['prefGenres'] as List?)
-                              ?.whereType<String>()
-                              .toList() ??
-                          [];
+                        List<PreferredGenre> prefGenresInsert = [];
 
-                      List<PreferredGenre> prefGenresInsert = [];
-
-                      if (preferredGenres.isNotEmpty) {
-                        for (var genreId in preferredGenres) {
-                          prefGenresInsert.add(
-                            PreferredGenre(
-                                id: null,
-                                genreId: int.parse(genreId),
-                                userId: LoggedUser.user!.id),
-                          );
+                        if (preferredGenres.isNotEmpty) {
+                          for (var genreId in preferredGenres) {
+                            prefGenresInsert.add(
+                              PreferredGenre(
+                                  id: null,
+                                  genreId: int.parse(genreId),
+                                  userId: LoggedUser.user!.id),
+                            );
+                          }
                         }
+
+                        await _preferredGenreProvider.updatePrefGenresForUser(
+                            LoggedUser.user!.id!, prefGenresInsert);
+
+                        Navigator.of(context).pop();
+
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.task_alt,
+                                color: Palette.lightPurple, size: 50),
+                            const Text(
+                              "Saved successfully!",
+                              textAlign: TextAlign.center,
+                            ));
                       }
-
-                      await _preferredGenreProvider.updatePrefGenresForUser(
-                          LoggedUser.user!.id!, prefGenresInsert);
-
-                      showInfoDialog(
-                          context,
-                          const Icon(Icons.task_alt,
-                              color: Palette.lightPurple, size: 50),
-                          const Text(
-                            "Saved successfully!",
-                            textAlign: TextAlign.center,
-                          ));
                     } on Exception catch (e) {
                       showErrorDialog(context, e);
                     }

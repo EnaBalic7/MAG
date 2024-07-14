@@ -49,6 +49,7 @@ class _NebulaFormState extends State<NebulaForm> {
   late Future<Map<String, dynamic>> _initialValueFuture;
 
   int progress = 0;
+  int? _watchlistId;
 
   @override
   void initState() {
@@ -58,7 +59,10 @@ class _NebulaFormState extends State<NebulaForm> {
 
     _initialValueFuture = setInitialValue();
 
-    // print("Watchlist Id is: ${widget.watchlistId}");
+    _watchlistId = widget.watchlistId;
+
+    //  print("widget.Watchlist Id is: ${widget.watchlistId}");
+    //  print("_Watchlist Id is: ${_watchlistId}");
 
     super.initState();
   }
@@ -82,9 +86,9 @@ class _NebulaFormState extends State<NebulaForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.watchlistId != null && widget.watchlistId != 0) {
+    if (_watchlistId != null && _watchlistId != 0) {
       return _buildAddForm(context);
-    } else if (widget.watchlistId == 0) {
+    } else if (_watchlistId == 0) {
       _addFirstWatchlist();
       return _buildAddForm(context);
     }
@@ -92,11 +96,19 @@ class _NebulaFormState extends State<NebulaForm> {
   }
 
   void _addFirstWatchlist() async {
-    Watchlist watchlist = Watchlist(null, LoggedUser.user!.id, DateTime.now());
-    var usersWatchlist = await _watchlistProvider.insert(watchlist);
-    setState(() {
-      widget.watchlistId = usersWatchlist.id;
-    });
+    // Check if logged user has a watchlist
+    var watchlistObj = await _watchlistProvider
+        .get(filter: {"UserId": "${LoggedUser.user!.id}"});
+
+    // If not, add one
+    if (watchlistObj.count == 0) {
+      Watchlist watchlist =
+          Watchlist(null, LoggedUser.user!.id, DateTime.now());
+      var usersWatchlist = await _watchlistProvider.insert(watchlist);
+      setState(() {
+        _watchlistId = usersWatchlist.id!;
+      });
+    }
   }
 
   Dialog _buildAddForm(BuildContext context) {

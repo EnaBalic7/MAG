@@ -25,6 +25,8 @@ class MyFormBuilderFilterChip extends StatefulWidget {
   /// Refers to padding of each individual chip
   EdgeInsets? padding;
 
+  String? Function(List<dynamic>?)? validator;
+
   MyFormBuilderFilterChip({
     Key? key,
     required this.name,
@@ -37,6 +39,7 @@ class MyFormBuilderFilterChip extends StatefulWidget {
     this.fontSize,
     this.showCheckmark = true,
     this.padding,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -68,11 +71,18 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
             height: 0.2,
           ),
           border: InputBorder.none,
+          errorStyle: const TextStyle(
+            color: Palette.lightRed,
+            height: 0.3,
+            textBaseline: TextBaseline.alphabetic,
+          ),
         ),
         onChanged: widget.onChanged,
         alignment: WrapAlignment.center,
         spacing: 8,
         runSpacing: 0,
+        validator: widget.validator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }
