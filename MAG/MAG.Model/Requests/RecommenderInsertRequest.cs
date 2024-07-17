@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAG.Model.SearchObjects
+namespace MAG.Model.Requests
 {
-    public class DonationSearchObject : BaseSearchObject
+    public class RecommenderInsertRequest
     {
-        public int? UserId { get; set; }
     }
 }

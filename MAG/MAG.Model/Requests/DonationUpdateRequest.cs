@@ -8,6 +8,5 @@ namespace MAG.Model.Requests
 {
     public class DonationUpdateRequest
     {
-        public string Status { get; set; } = null!;
     }
 }

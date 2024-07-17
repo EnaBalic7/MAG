@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace MAG.Model.SearchObjects
 {
-    public class DonationSearchObject : BaseSearchObject
+    public class RecommenderSearchObject : BaseSearchObject
     {
-        public int? UserId { get; set; }
     }
 }

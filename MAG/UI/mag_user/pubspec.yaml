@@ -49,6 +49,7 @@ dependencies:
   shimmer: ^3.0.0
   image: ^4.2.0
   shared_preferences: ^2.1.1
+  flutter_stripe: '3.3.0'
 
 
 

@@ -12,12 +12,11 @@ namespace MAG.Model
 
         public int UserId { get; set; }
 
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public DateTime DateDonated { get; set; }
 
-        public string Status { get; set; } = null!;
+        public string TransactionId { get; set; } = null!;
 
-        public virtual User User { get; set; } = null!;
     }
 }

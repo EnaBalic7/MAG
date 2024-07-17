@@ -28,7 +28,7 @@ namespace MAG.Services.Database
             SeedListAnime(modelBuilder);
             SeedRatings(modelBuilder);
             SeedPreferredGenres(modelBuilder);
-            SeedDonations(modelBuilder);
+           // SeedDonations(modelBuilder);
             SeedClubs(modelBuilder);
             SeedClubUser(modelBuilder);
             SeedPosts(modelBuilder);
@@ -1374,7 +1374,7 @@ namespace MAG.Services.Database
          );
         }
 
-        private void SeedDonations(ModelBuilder modelBuilder)
+     /*   private void SeedDonations(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Donation>().HasData(
                 new Donation()
@@ -1386,7 +1386,7 @@ namespace MAG.Services.Database
                     Status = "Completed"
                 }
          );
-        }
+        }*/
 
         private void SeedClubs(ModelBuilder modelBuilder)
         {

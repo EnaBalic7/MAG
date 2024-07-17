@@ -47,6 +47,8 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Rating> Ratings { get; set; }
 
+    public virtual DbSet<Recommender> Recommenders { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -61,10 +63,9 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Watchlist> Watchlists { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        SeedData(modelBuilder);
-
         modelBuilder.Entity<Anime>(entity =>
         {
             entity.ToTable("Anime");
@@ -199,13 +200,13 @@ public partial class MagContext : DbContext
             entity.ToTable("Donation");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.DateDonated).HasColumnType("datetime");
-            entity.Property(e => e.Status).HasMaxLength(30);
+            entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Donations)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Donation_User");
         });
 
@@ -332,6 +333,21 @@ public partial class MagContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Rating_User");
+        });
+
+        modelBuilder.Entity<Recommender>(entity =>
+        {
+            entity.ToTable("Recommender");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
+            entity.Property(e => e.CoAnimeId1).HasColumnName("CoAnimeID1");
+            entity.Property(e => e.CoAnimeId2).HasColumnName("CoAnimeID2");
+            entity.Property(e => e.CoAnimeId3).HasColumnName("CoAnimeID3");
+
+            entity.HasOne(d => d.Anime).WithMany(p => p.Recommenders)
+                .HasForeignKey(d => d.AnimeId)
+                .HasConstraintName("FK_Recommender_Anime");
         });
 
         modelBuilder.Entity<Role>(entity =>

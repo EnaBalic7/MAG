@@ -228,3 +228,7 @@ Future<Uint8List> compressImage(File imageFile) async {
 
   return Uint8List.fromList(jpeg);
 }
+
+bool digitsOnly(String text) {
+  return RegExp(r'^[0-9]+$').hasMatch(text);
+}

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mag_user/providers/club_cover_provider.dart';
 import 'package:mag_user/providers/club_user_provider.dart';
+import 'package:mag_user/providers/donation_provider.dart';
+import 'package:mag_user/providers/payment_intent_provider.dart';
 import 'package:mag_user/providers/preferred_genre_provider.dart';
 import 'package:mag_user/providers/user_comment_action_provider.dart';
 import 'package:mag_user/providers/user_post_action_provider.dart';
@@ -28,6 +31,9 @@ import './utils/colors.dart';
 import './utils/util.dart';
 
 void main() {
+  Stripe.publishableKey =
+      "pk_test_51PdbM8Rsmg17Kngz2v1yStqdZatUsFfc8GQ8rgIuMjDrw5A8Kk2WKOrKUQsLioI6UpqyZeCGkt9oHAytT6C0OGcJ00CP26W1Cc";
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AnimeProvider()),
     ChangeNotifierProvider(create: (_) => GenreProvider()),
@@ -55,6 +61,8 @@ void main() {
     ChangeNotifierProvider(create: (_) => ClubCoverProvider()),
     ChangeNotifierProvider(create: (_) => ClubUserProvider()),
     ChangeNotifierProvider(create: (_) => PreferredGenreProvider()),
+    ChangeNotifierProvider(create: (_) => PaymentIntentProvider()),
+    ChangeNotifierProvider(create: (_) => DonationProvider()),
   ], child: const MyMaterialApp()));
 }
 

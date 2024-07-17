@@ -5,6 +5,7 @@ using MAG.Services.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddTransient<IClubCoverService, ClubCoverService>();
 builder.Services.AddTransient<IUserPostActionService, UserPostActionService>();
 builder.Services.AddTransient<IUserCommentActionService, UserCommentActionService>();
 builder.Services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
+builder.Services.AddTransient<IRecommenderService, RecommenderService>();
 
 
 // Add services to the container.
@@ -103,5 +105,8 @@ app.MapControllers();
         dataContext.Database.Migrate();
    // }
 }*/
+
+var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_API_KEY") ?? "sk_test_51PdbM8Rsmg17KngzOLAbX3R0nBEkCCTMKKdraMetVJiuoOL3aQqv0Wqj00dn1tkET4znbZvqI9nCeYMH6OLTfxm600Qzmua2Xt";
+StripeConfiguration.ApiKey = stripeSecretKey;
 
 app.Run();
