@@ -12,7 +12,7 @@ class PaymentIntentProvider extends BaseProvider<PaymentIntent> {
     return PaymentIntent.fromJson(data);
   }
 
-  Future<dynamic> createPaymentIntent(dynamic request) async {
+  Future<PaymentIntent> createPaymentIntent(dynamic request) async {
     var url = "${BaseProvider.baseUrl}$_endpoint/CreatePaymentIntent";
     var uri = Uri.parse(url);
     var headers = createHeaders();

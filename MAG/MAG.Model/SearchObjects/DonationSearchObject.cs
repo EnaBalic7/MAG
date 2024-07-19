@@ -9,5 +9,7 @@ namespace MAG.Model.SearchObjects
     public class DonationSearchObject : BaseSearchObject
     {
         public int? UserId { get; set; }
+
+        public bool? NewestFirst { get; set; }
     }
 }

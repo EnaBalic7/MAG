@@ -68,6 +68,11 @@ namespace MAG.Services
                 query = query.Where(donation => donation.UserId == search.UserId);
             }
 
+            if (search?.NewestFirst == true)
+            {
+                query = query.OrderByDescending(donation => donation.DateDonated);
+            }
+
             return base.AddFilter(query, search);
         }
     }
