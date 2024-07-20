@@ -38,6 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double? imageWidth;
   double? containerWidth;
   double? containerHeight;
+  bool usernameTaken = false;
 
   Future getImage() async {
     try {
@@ -60,6 +61,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       print("Error picking or compressing image: $e");
+    }
+  }
+
+  Future<void> checkUsernameAvailability(String val) async {
+    try {
+      var tmp = await _userProvider.get(filter: {"Username": val});
+      if (mounted) {
+        setState(() {
+          usernameTaken = tmp.count > 0;
+        });
+      }
+    } catch (error) {
+      print('Error checking username availability: $error');
     }
   }
 
@@ -206,12 +220,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fillColor: Palette.darkPurple,
                         width: textFieldWidth,
                         height: 43,
-                        readOnly: true,
+                        // readOnly: true,
                         paddingBottom: 25,
                         borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
-                        ]),
+                        onChanged: (val) async {
+                          if (val != null) {
+                            await checkUsernameAvailability(val);
+                          }
+                        },
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return "This field cannot be empty.";
+                          } else if (val.length > 20) {
+                            return 'Username can contain 20 characters max.';
+                          } else if (usernameTaken == true) {
+                            return 'This username is taken.';
+                          } else if (isValidUsername(val) == false) {
+                            return 'Use only letters, numbers, and underscore.';
+                          }
+                          return null;
+                        },
                       ),
                       MyFormBuilderTextField(
                         name: "firstName",
@@ -273,52 +301,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _saveProfileData() async {
-    _formKey.currentState?.saveAndValidate();
-    var request = Map.from(_formKey.currentState!.value);
+    if (_formKey.currentState?.saveAndValidate() == true) {
+      var request = Map.from(_formKey.currentState!.value);
 
-    UserProfilePicture pic;
+      UserProfilePicture pic;
 
-    Map<dynamic, dynamic> userData = {
-      "firstName": request["firstName"],
-      "lastName": request["lastName"],
-      "email": request["email"],
-      "profilePictureId": widget.user.profilePictureId,
-    };
+      Map<dynamic, dynamic> userData = {
+        "firstName": request["firstName"],
+        "lastName": request["lastName"],
+        "username": request["username"],
+        "email": request["email"],
+        "profilePictureId": widget.user.profilePictureId,
+      };
 
-    Map<dynamic, dynamic> profilePic = {"profilePicture": _base64Image};
+      Map<dynamic, dynamic> profilePic = {"profilePicture": _base64Image};
 
-    try {
-      if (_base64Image != widget.user.profilePicture!.profilePicture) {
-        if (widget.user.profilePictureId == 1) {
-          pic = await _userProfilePictureProvider.insert(profilePic);
-          userData["profilePictureId"] = pic.id;
-        } else {
-          await _userProfilePictureProvider
-              .update(widget.user.profilePictureId!, request: profilePic);
-          userData["profilePictureId"] = widget.user.profilePictureId!;
+      try {
+        if (_base64Image != widget.user.profilePicture!.profilePicture) {
+          if (widget.user.profilePictureId == 1) {
+            pic = await _userProfilePictureProvider.insert(profilePic);
+            userData["profilePictureId"] = pic.id;
+          } else {
+            await _userProfilePictureProvider
+                .update(widget.user.profilePictureId!, request: profilePic);
+            userData["profilePictureId"] = widget.user.profilePictureId!;
+          }
         }
-      }
 
-      await _userProvider.update(widget.user.id!, request: userData).then((_) {
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            const Text(
-              "Updated successfully!",
-              textAlign: TextAlign.center,
-            ));
-      }).catchError((error) {
-        showInfoDialog(
-            context,
-            const Icon(Icons.warning_rounded,
-                color: Palette.lightRed, size: 55),
-            Text(
-              error.toString(),
-              textAlign: TextAlign.center,
-            ));
-      });
-    } on Exception catch (e) {
-      showErrorDialog(context, e);
+        await _userProvider
+            .update(widget.user.id!, request: userData)
+            .then((_) {
+          LoggedUser.user!.username = request["username"];
+          Authorization.username = request["username"];
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Updated successfully!",
+                textAlign: TextAlign.center,
+              ));
+        }).catchError((error) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.warning_rounded,
+                  color: Palette.lightRed, size: 55),
+              Text(
+                error.toString(),
+                textAlign: TextAlign.center,
+              ));
+        });
+      } on Exception catch (e) {
+        showErrorDialog(context, e);
+      }
     }
   }
 }

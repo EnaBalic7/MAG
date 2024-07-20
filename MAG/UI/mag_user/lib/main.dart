@@ -103,7 +103,7 @@ class MyMaterialApp extends StatelessWidget {
         textSelectionTheme: TextSelectionThemeData(
             cursorColor: Palette.lightPurple,
             selectionColor: Palette.midnightPurple.withOpacity(0.6),
-            selectionHandleColor: Palette.teal),
+            selectionHandleColor: Colors.transparent),
         appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
                 color: Palette.lightPurple,

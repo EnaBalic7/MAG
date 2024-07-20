@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
+import 'package:mag_user/providers/donation_provider.dart';
 import 'package:mag_user/widgets/circular_progress_indicator.dart';
 import 'package:mag_user/widgets/pagination_buttons.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../models/donation.dart';
@@ -36,16 +38,31 @@ class DonationCards extends StatefulWidget {
 class _DonationCardsState extends State<DonationCards> {
   late Future<SearchResult<Donation>> _donationFuture;
   final ScrollController _scrollController = ScrollController();
+  late final DonationProvider _donationProvider;
 
   int totalItems = 0;
 
   @override
   void initState() {
+    _donationProvider = context.read<DonationProvider>();
     _donationFuture = widget.fetchDonations();
 
     setTotalItems();
 
+    _donationProvider.addListener(() {
+      _reloadData();
+      setTotalItems();
+    });
+
     super.initState();
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _donationFuture = widget.fetchDonations();
+      });
+    }
   }
 
   void setTotalItems() async {
