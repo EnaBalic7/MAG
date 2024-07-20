@@ -239,12 +239,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 DateTime.now().toIso8601String();
 
                             userInsertRequest["profilePictureId"] = 1;
-                            User? admin;
+                            User? user;
 
                             await _userProvider
                                 .insert(userInsertRequest)
-                                .then((response) {
-                              admin = response;
+                                .then((response) async {
+                              user = response;
+
+                              if (user != null) {
+                                Map<dynamic, dynamic> userRole = {
+                                  "userId": "${user!.id}",
+                                  "roleId": 2,
+                                  "canReview": true,
+                                  "canAskQuestions": true,
+                                  "canParticipateInClubs": true
+                                };
+                                await _userRoleProvider.insert(userRole);
+                              }
 
                               showInfoDialog(
                                   context,
@@ -270,17 +281,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     textAlign: TextAlign.center,
                                   ));
                             });
-
-                            if (admin != null) {
-                              Map<dynamic, dynamic> userRole = {
-                                "userId": "${admin!.id}",
-                                "roleId": 1,
-                                "canReview": true,
-                                "canAskQuestions": true,
-                                "canParticipateInClubs": true
-                              };
-                              await _userRoleProvider.insert(userRole);
-                            }
                           } else {
                             showInfoDialog(
                                 context,

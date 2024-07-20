@@ -9,6 +9,24 @@ class MyFormBuilderFilterChip extends StatefulWidget {
   String? labelText;
   final List<dynamic>? initialValue;
   void Function(List<dynamic>?)? onChanged;
+
+  /// Width of FormBuilderFilterChip
+  double? width;
+
+  /// Height of FormBuilderFilterChip
+  double? height;
+
+  /// Label font size
+  double? fontSize;
+
+  /// Shows checkmark when selected, true by default
+  bool? showCheckmark;
+
+  /// Refers to padding of each individual chip
+  EdgeInsets? padding;
+
+  String? Function(List<dynamic>?)? validator;
+
   MyFormBuilderFilterChip({
     Key? key,
     required this.name,
@@ -16,6 +34,12 @@ class MyFormBuilderFilterChip extends StatefulWidget {
     this.labelText,
     this.initialValue,
     this.onChanged,
+    this.width,
+    this.height,
+    this.fontSize,
+    this.showCheckmark = true,
+    this.padding,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -26,24 +50,40 @@ class MyFormBuilderFilterChip extends StatefulWidget {
 class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
   @override
   Widget build(BuildContext context) {
-    return FormBuilderFilterChip(
-      name: widget.name!,
-      initialValue: widget.initialValue ?? [],
-      options: widget.options!,
-      decoration: InputDecoration(
-        labelText: widget.labelText ?? "",
-        fillColor: Colors.transparent,
-        labelStyle: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: Palette.lightPurple,
-          height: 0.2,
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: FormBuilderFilterChip(
+        padding: widget.padding,
+        name: widget.name!,
+        initialValue: widget.initialValue ?? [],
+        showCheckmark: widget.showCheckmark ?? true,
+        options: widget.options!,
+        decoration: InputDecoration(
+          labelText: widget.labelText ?? "",
+          contentPadding: EdgeInsets.zero,
+          floatingLabelAlignment: FloatingLabelAlignment.center,
+          fillColor: Colors.transparent,
+          labelStyle: TextStyle(
+            fontSize: widget.fontSize ?? 0,
+            fontWeight: FontWeight.w500,
+            color: Palette.lightPurple,
+            height: 0.2,
+          ),
+          border: InputBorder.none,
+          errorStyle: const TextStyle(
+            color: Palette.lightRed,
+            height: 0.3,
+            textBaseline: TextBaseline.alphabetic,
+          ),
         ),
-        border: InputBorder.none,
+        onChanged: widget.onChanged,
+        alignment: WrapAlignment.start,
+        spacing: 8,
+        runSpacing: 8,
+        validator: widget.validator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
-      onChanged: widget.onChanged,
-      spacing: 8,
-      runSpacing: 12,
     );
   }
 }

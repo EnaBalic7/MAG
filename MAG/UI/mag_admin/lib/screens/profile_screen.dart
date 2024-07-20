@@ -32,6 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late UserProvider _userProvider;
   File? _image;
   String? _base64Image;
+  bool usernameTaken = false;
 
   Future getImage() async {
     var result = await FilePicker.platform.pickFiles(type: FileType.image);
@@ -57,6 +58,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _userProvider = context.read<UserProvider>();
 
     super.initState();
+  }
+
+  Future<void> checkUsernameAvailability(String val) async {
+    try {
+      var tmp = await _userProvider.get(filter: {"Username": val});
+      if (mounted) {
+        setState(() {
+          usernameTaken = tmp.count > 0;
+        });
+      }
+    } catch (error) {
+      print('Error checking username availability: $error');
+    }
   }
 
   @override
@@ -147,12 +161,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fillColor: Palette.darkPurple,
                             width: 400,
                             height: 50,
-                            readOnly: true,
+                            //readOnly: true,
                             paddingBottom: 25,
                             borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
+                            onChanged: (val) async {
+                              if (val != null) {
+                                await checkUsernameAvailability(val);
+                              }
+                            },
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 20) {
+                                return 'Username can contain 20 characters max.';
+                              } else if (usernameTaken == true) {
+                                return 'This username is taken.';
+                              } else if (isValidUsername(val) == false) {
+                                return 'Use only letters, numbers, and underscore.';
+                              }
+                              return null;
+                            },
                           ),
                           MyFormBuilderTextField(
                             name: "firstName",
@@ -221,6 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Map<dynamic, dynamic> userData = {
       "firstName": request["firstName"],
       "lastName": request["lastName"],
+      "username": request["username"],
       "email": request["email"],
       "profilePictureId": widget.user.profilePictureId,
     };
@@ -240,6 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       await _userProvider.update(widget.user.id!, request: userData).then((_) {
+        Authorization.username = request["username"];
         showInfoDialog(
             context,
             const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),

@@ -1,5 +1,6 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:mag_admin/screens/donations_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/anime_screen.dart';
@@ -125,12 +126,13 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 buildListTile(
                     context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
                 buildListTile(
-                    context, 'Help', buildHelpIcon(24), const HelpScreen()),
-                /*buildListTile(
                     context,
-                    'Testing',
-                    const Icon(Icons.star_rounded, color: Palette.lightPurple),
-                    const TestingGround()),*/
+                    'Donations',
+                    const Icon(Icons.credit_card_rounded,
+                        color: Palette.lightPurple),
+                    const DonationsScreen()),
+                buildListTile(
+                    context, 'Help', buildHelpIcon(24), const HelpScreen()),
               ],
             ),
             Padding(

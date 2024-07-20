@@ -112,11 +112,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             paddingBottom: 25,
                             borderRadius: 50,
                             validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "This field cannot be empty.";
-                              } else if (val.length > 25) {
+                              if (val != null && val.length > 25) {
                                 return 'Email can contain 25 characters max.';
-                              } else if (isValidEmail(val) == false) {
+                              } else if (val != null &&
+                                  val.isNotEmpty &&
+                                  isValidEmail(val) == false) {
                                 return 'Invalid email.';
                               }
                               return null;
@@ -222,8 +222,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                           await _userProvider
                               .insert(userInsertRequest)
-                              .then((response) {
+                              .then((response) async {
                             admin = response;
+
+                            if (admin != null) {
+                              Map<dynamic, dynamic> userRole = {
+                                "userId": "${admin!.id}",
+                                "roleId": 1,
+                                "canReview": true,
+                                "canAskQuestions": true,
+                                "canParticipateInClubs": true
+                              };
+                              await _userRoleProvider.insert(userRole);
+                            }
 
                             showInfoDialog(
                                 context,
@@ -248,17 +259,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   textAlign: TextAlign.center,
                                 ));
                           });
-
-                          if (admin != null) {
-                            Map<dynamic, dynamic> userRole = {
-                              "userId": "${admin!.id}",
-                              "roleId": 1,
-                              "canReview": true,
-                              "canAskQuestions": true,
-                              "canParticipateInClubs": true
-                            };
-                            await _userRoleProvider.insert(userRole);
-                          }
                         } else {
                           showInfoDialog(
                               context,

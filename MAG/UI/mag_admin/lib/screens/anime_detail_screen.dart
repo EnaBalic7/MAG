@@ -337,7 +337,26 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: GradientButton(
+                          onPressed: () {
+                            //_showOverlayForm(context);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: ((context) => const GenresScreen())));
+                          },
+                          width: 75,
+                          height: 32,
+                          gradient: Palette.buttonGradient,
+                          paddingTop: 5,
+                          paddingRight: 8,
+                          borderRadius: 50,
+                          child: const Icon(Icons.add_rounded,
+                              size: 20, color: Palette.white),
+                        ),
+                      ),
                       Expanded(
                         child: FutureBuilder<SearchResult<Genre>>(
                           future: _genreFuture,
@@ -373,31 +392,17 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                             (genre) => genre.genreId.toString())
                                         .toList() ??
                                     [],
+                                validator: (val) {
+                                  if (val != null && val.isEmpty) {
+                                    return "Must select at least one genre.";
+                                  }
+                                  return null;
+                                },
                               );
                             }
                           },
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: GradientButton(
-                          onPressed: () {
-                            //_showOverlayForm(context);
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: ((context) => const GenresScreen())));
-                          },
-                          width: 75,
-                          height: 30,
-                          gradient: Palette.buttonGradient,
-                          borderRadius: 50,
-                          child: const Icon(Icons.add_rounded,
-                              size: 20, color: Palette.white),
-                        ),
-                      )
                     ],
                   ),
                 ],
@@ -410,56 +415,57 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   }
 
   Future<void> _saveAnimeData(BuildContext context) async {
-    _animeFormKey.currentState?.saveAndValidate();
-    var request = Map.from(_animeFormKey.currentState!.value);
-    Anime? response;
+    if (_animeFormKey.currentState?.saveAndValidate() == true) {
+      var request = Map.from(_animeFormKey.currentState!.value);
+      Anime? response;
 
-    try {
-      if (widget.anime == null) {
-        response = await _animeProvider.insert(request);
-        if (mounted) {
-          setState(() {
-            widget.anime = response;
-          });
+      try {
+        if (widget.anime == null) {
+          response = await _animeProvider.insert(request);
+          if (mounted) {
+            setState(() {
+              widget.anime = response;
+            });
+          }
+
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Added successfully!",
+                textAlign: TextAlign.center,
+              ));
+        } else {
+          await _animeProvider.update(widget.anime!.id!, request: request);
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Updated successfully!",
+                textAlign: TextAlign.center,
+              ));
         }
 
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            const Text(
-              "Added successfully!",
-              textAlign: TextAlign.center,
-            ));
-      } else {
-        await _animeProvider.update(widget.anime!.id!, request: request);
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            const Text(
-              "Updated successfully!",
-              textAlign: TextAlign.center,
-            ));
-      }
+        var selectedGenres =
+            (_animeFormKey.currentState?.value['genres'] as List?)
+                    ?.whereType<String>()
+                    .toList() ??
+                [];
 
-      var selectedGenres =
-          (_animeFormKey.currentState?.value['genres'] as List?)
-                  ?.whereType<String>()
-                  .toList() ??
-              [];
+        if (selectedGenres.isNotEmpty) {
+          List<GenreAnime> genreAnimeInsertList = [];
 
-      if (selectedGenres.isNotEmpty) {
-        List<GenreAnime> genreAnimeInsertList = [];
+          for (var genreId in selectedGenres) {
+            genreAnimeInsertList
+                .add(GenreAnime(null, int.parse(genreId), widget.anime!.id!));
+          }
 
-        for (var genreId in selectedGenres) {
-          genreAnimeInsertList
-              .add(GenreAnime(null, int.parse(genreId), widget.anime!.id!));
+          await _genreAnimeProvider.updateGenresForAnime(
+              widget.anime!.id!, genreAnimeInsertList);
         }
-
-        await _genreAnimeProvider.updateGenresForAnime(
-            widget.anime!.id!, genreAnimeInsertList);
+      } on Exception catch (e) {
+        showErrorDialog(context, e);
       }
-    } on Exception catch (e) {
-      showErrorDialog(context, e);
     }
   }
 

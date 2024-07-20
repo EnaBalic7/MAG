@@ -28,7 +28,7 @@ namespace MAG.Services
 
         public override async Task AfterInsert(Database.User entity, UserInsertRequest insert)
         {
-            if (insert.Email != null)
+            if (insert.Email != null && insert.Email != "")
             {
                 Model.Email email = new()
                 {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_admin/providers/donation_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/anime_provider.dart';
@@ -33,6 +34,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => ClubProvider()),
     ChangeNotifierProvider(create: (_) => RoleProvider()),
     ChangeNotifierProvider(create: (_) => UserRoleProvider()),
+    ChangeNotifierProvider(create: (_) => DonationProvider()),
   ], child: const MyMaterialApp()));
 }
 
