@@ -21,5 +21,12 @@ namespace MAG.Controllers
         {
             return await _animeService.GetMostPopularAnime();
         }
+
+
+        [HttpGet("Recommend/{userId}")]
+        public async Task<PagedResult<Model.Anime>> Recommend(int userId)
+        {
+            return await _animeService.Recommend(userId);
+        }
     }
 }

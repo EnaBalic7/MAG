@@ -16,9 +16,9 @@ namespace MAG.Services
 {
     public class UserService : BaseCRUDService<Model.User, Database.User, UserSearchObject, UserInsertRequest, UserUpdateRequest>, IUserService
     {
-        private readonly MagContext _context;
+        protected MagContext _context;
 
-        private readonly IRabbitMQProducer _rabbitMQProducer;
+        protected IRabbitMQProducer _rabbitMQProducer;
 
         public UserService(MagContext context, IMapper mapper, IRabbitMQProducer rabbitMQProducer) : base(context, mapper)
         {

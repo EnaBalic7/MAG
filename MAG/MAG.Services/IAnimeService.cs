@@ -12,5 +12,6 @@ namespace MAG.Services
     public interface IAnimeService : ICRUDService<Model.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>
     {
         Task<List<PopularAnimeData>> GetMostPopularAnime();
+        Task<PagedResult<Model.Anime>> Recommend(int userId);
     }
 }

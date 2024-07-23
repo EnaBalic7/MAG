@@ -33,7 +33,7 @@ builder.Services.AddTransient<IClubCoverService, ClubCoverService>();
 builder.Services.AddTransient<IUserPostActionService, UserPostActionService>();
 builder.Services.AddTransient<IUserCommentActionService, UserCommentActionService>();
 builder.Services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
-builder.Services.AddTransient<IRecommenderService, RecommenderService>();
+
 
 
 // Add services to the container.

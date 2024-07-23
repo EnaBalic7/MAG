@@ -12,7 +12,7 @@ namespace MAG.Services
 {
     public class ListService : BaseCRUDService<Model.List, Database.List, ListSearchObject, ListInsertRequest, ListUpdateRequest>, IListService
     {
-        protected readonly IAnimeListService _animeListService;
+        protected IAnimeListService _animeListService;
         public ListService(MagContext context, IMapper mapper, IAnimeListService animeListService) : base(context, mapper)
         {
             _animeListService = animeListService;

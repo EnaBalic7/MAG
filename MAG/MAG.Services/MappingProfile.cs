@@ -104,7 +104,7 @@ namespace MAG.Services
             CreateMap<UserCommentActionInsertRequest, Database.UserCommentAction>();
             CreateMap<UserCommentActionUpdateRequest, Database.UserCommentAction>();
 
-            CreateMap<Database.Recommender, Model.Recommender>();
+         
         }
     }
 }
