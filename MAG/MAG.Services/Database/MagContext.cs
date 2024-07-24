@@ -97,12 +97,10 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Anime).WithMany(p => p.AnimeLists)
                 .HasForeignKey(d => d.AnimeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Anime_List_Anime");
 
             entity.HasOne(d => d.List).WithMany(p => p.AnimeLists)
                 .HasForeignKey(d => d.ListId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Anime_List_List");
         });
 
@@ -119,7 +117,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Anime).WithMany(p => p.AnimeWatchlists)
                 .HasForeignKey(d => d.AnimeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Anime_Watchlist_Anime");
 
             entity.HasOne(d => d.Watchlist).WithMany(p => p.AnimeWatchlists)
@@ -225,12 +222,10 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Anime).WithMany(p => p.GenreAnimes)
                 .HasForeignKey(d => d.AnimeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Genre_Anime_Anime");
 
             entity.HasOne(d => d.Genre).WithMany(p => p.GenreAnimes)
                 .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Genre_Anime_Genre");
         });
 
@@ -276,7 +271,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Genre).WithMany(p => p.PreferredGenres)
                 .HasForeignKey(d => d.GenreId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PreferredGenres_Genre");
 
             entity.HasOne(d => d.User).WithMany(p => p.PreferredGenres)
@@ -323,7 +317,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Anime).WithMany(p => p.Ratings)
                 .HasForeignKey(d => d.AnimeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Rating_Anime");
 
             entity.HasOne(d => d.User).WithMany(p => p.Ratings)

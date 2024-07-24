@@ -15,11 +15,8 @@ namespace MAG.Services
     public class GenreService : BaseCRUDService<Model.Genre, Database.Genre, GenreSearchObject, GenreInsertRequest, GenreUpdateRequest>, IGenreService
     {
 
-        protected IGenreAnimeService _genreAnimeService;
-
-        public GenreService(MagContext context, IMapper mapper, IGenreAnimeService genreAnimeService) : base(context, mapper)
+        public GenreService(MagContext context, IMapper mapper) : base(context, mapper)
         {
-            _genreAnimeService = genreAnimeService;
         }
 
         public override IQueryable<Database.Genre> AddFilter(IQueryable<Database.Genre> query, GenreSearchObject? search = null)
@@ -30,11 +27,6 @@ namespace MAG.Services
             }
             
             return base.AddFilter(query, search);
-        }
-
-        public override async Task BeforeDelete(Database.Genre entity)
-        {
-            await _genreAnimeService.DeleteByGenreId(entity.Id);
         }
 
         public async Task<List<Model.PopularGenresData>> GetMostPopularGenres()

@@ -87,22 +87,5 @@ namespace MAG.Services
             return false;
         }
 
-        public async Task<bool> DeleteByListId(int listId)
-        {
-            var set = _context.Set<Database.AnimeList>();
-
-            var entityList = await set.Where(animeList => animeList.ListId == listId).ToListAsync();
-
-            if (entityList.Count() != 0)
-            {
-                set.RemoveRange(entityList);
-
-                await _context.SaveChangesAsync();
-
-                return true;
-            }
-
-            return false;
-        }
     }
 }

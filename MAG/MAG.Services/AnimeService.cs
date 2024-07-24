@@ -16,13 +16,10 @@ namespace MAG.Services
 {
     public class AnimeService : BaseCRUDService<Model.Anime, Database.Anime, AnimeSearchObject, AnimeInsertRequest, AnimeUpdateRequest>, IAnimeService
     {
-
-        protected IGenreAnimeService _genreAnimeService;
         protected MagContext _context;
 
-        public AnimeService(MagContext context, IMapper mapper, IGenreAnimeService genreAnimeService) : base(context, mapper)
+        public AnimeService(MagContext context, IMapper mapper) : base(context, mapper)
         {
-            _genreAnimeService = genreAnimeService;
             _context = context;
         }
 
@@ -90,10 +87,6 @@ namespace MAG.Services
             return base.AddInclude(query, search);
         }
 
-        public override async Task BeforeDelete(Database.Anime entity)
-        {
-            await _genreAnimeService.DeleteByAnimeId(entity.Id);
-        }
 
         public async Task<List<PopularAnimeData>> GetMostPopularAnime()
         {

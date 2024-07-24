@@ -11,7 +11,6 @@ namespace MAG.Services
     public interface IGenreAnimeService : ICRUDService<Model.GenreAnime, GenreAnimeSearchObject, GenreAnimeInsertRequest, GenreAnimeUpdateRequest>
     {
         Task<bool> DeleteByAnimeId(int animeId);
-        Task<bool> DeleteByGenreId(int genreId);
         Task<bool> UpdateGenresForAnime(int animeId, List<GenreAnimeInsertRequest> newGenres);
     }
 }

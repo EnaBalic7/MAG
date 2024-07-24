@@ -12,15 +12,8 @@ namespace MAG.Services
 {
     public class ListService : BaseCRUDService<Model.List, Database.List, ListSearchObject, ListInsertRequest, ListUpdateRequest>, IListService
     {
-        protected IAnimeListService _animeListService;
-        public ListService(MagContext context, IMapper mapper, IAnimeListService animeListService) : base(context, mapper)
+        public ListService(MagContext context, IMapper mapper) : base(context, mapper)
         {
-            _animeListService = animeListService;
-        }
-
-        public override async Task BeforeDelete(List entity)
-        {
-             await _animeListService.DeleteByListId(entity.Id);
         }
 
         public override IQueryable<List> AddFilter(IQueryable<List> query, ListSearchObject? search = null)

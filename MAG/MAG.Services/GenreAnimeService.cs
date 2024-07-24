@@ -41,24 +41,6 @@ namespace MAG.Services
             return false;
         }
 
-        public async Task<bool> DeleteByGenreId(int genreId)
-        {
-            var set = _context.Set<Database.GenreAnime>();
-
-            var entityList = await set.Where(x => x.GenreId == genreId).ToListAsync();
-
-            if (entityList.Count() != 0)
-            {
-                set.RemoveRange(entityList);
-
-                await _context.SaveChangesAsync();
-
-                return true;
-            }
-
-            return false;
-        }
-
         public async Task<bool> UpdateGenresForAnime(int animeId, List<GenreAnimeInsertRequest> newGenres)
         {
             await DeleteByAnimeId(animeId);
