@@ -18,11 +18,10 @@ class RecommendedScreen extends StatefulWidget {
 class _RecommendedScreenState extends State<RecommendedScreen> {
   late AnimeProvider _animeProvider;
   int page = 0;
-  int pageSize = 8;
+  int pageSize = 10;
 
   final Map<String, dynamic> _filter = {
     "GenresIncluded": "true",
-    "NewestFirst": "true",
   };
 
   @override
@@ -44,14 +43,10 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
   }
 
   Future<SearchResult<Anime>> fetchAnime() {
-    return _animeProvider.get(filter: {
-      ..._filter,
-      "Page": "$page",
-      "PageSize": "$pageSize",
-    });
+    return _animeProvider.getRecommendedAnime();
   }
 
   Future<SearchResult<Anime>> fetchPage(Map<String, dynamic> filter) {
-    return _animeProvider.get(filter: filter);
+    return _animeProvider.getRecommendedAnime();
   }
 }

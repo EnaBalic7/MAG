@@ -106,6 +106,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool? removeAppBar;
   int _selectedIndex = 0;
 
+  final isSearchMode = ValueNotifier<bool>(false);
+  final searchText = ValueNotifier<String>('');
+
   @override
   void initState() {
     super.initState();
@@ -118,54 +121,67 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         ? screenSize.height * 0.12
         : screenSize.height * 0.08;
 
-    return Scaffold(
-      floatingActionButton: _buildFloatingActionButton(),
-      floatingActionButtonLocation: widget.floatingActionButtonLocation ??
-          FloatingActionButtonLocation.endFloat,
-      appBar: AppBarWithSearchSwitch(
-        toolbarHeight: appBarHeight,
-        closeOnSubmit: true,
-        onSubmitted: widget.onSubmitted,
-        onClosed: widget.onClosed,
-        onChanged: widget.onChanged,
-        onCleared: widget.onCleared,
-        customTextEditingController: widget.controller,
-        titleTextStyle: const TextStyle(fontSize: 16),
-        centerTitle: true,
-        searchInputDecoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(top: 5, left: 15),
-            hintText: "Search",
-            hintStyle:
-                const TextStyle(color: Palette.lightPurple, fontSize: 16),
-            fillColor: Palette.searchBar,
-            constraints: const BoxConstraints(maxHeight: 40, maxWidth: 500),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
-        iconTheme: const IconThemeData(color: Palette.lightPurple),
-        appBarBuilder: (context) {
-          return AppBar(
-            centerTitle: true,
-            leading: _buildLeading(context),
-            title: widget.titleWidget ?? Text(widget.title ?? ""),
-            actions: _buildActions,
-            iconTheme: const IconThemeData(color: Palette.lightPurple),
-            bottom: _buildTabBar(),
-          );
-        },
-      ),
-      bottomNavigationBar: _buildNavigationBar(),
-      body: Stack(children: [
-        Positioned.fill(
-          child: Opacity(
-            opacity: 0.3,
-            child: Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        if (searchText.value != '') {
+          isSearchMode.value = false;
+          searchText.value = '';
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        floatingActionButton: _buildFloatingActionButton(),
+        floatingActionButtonLocation: widget.floatingActionButtonLocation ??
+            FloatingActionButtonLocation.endFloat,
+        appBar: AppBarWithSearchSwitch(
+          customIsSearchModeNotifier: isSearchMode,
+          customTextNotifier: searchText,
+          toolbarHeight: appBarHeight,
+          closeOnSubmit: true,
+          onSubmitted: widget.onSubmitted,
+          onClosed: widget.onClosed,
+          onChanged: widget.onChanged,
+          onCleared: widget.onCleared,
+          customTextEditingController: widget.controller,
+          titleTextStyle: const TextStyle(fontSize: 16),
+          centerTitle: true,
+          searchInputDecoration: InputDecoration(
+              contentPadding: const EdgeInsets.only(top: 5, left: 15),
+              hintText: "Search",
+              hintStyle:
+                  const TextStyle(color: Palette.lightPurple, fontSize: 16),
+              fillColor: Palette.searchBar,
+              constraints: const BoxConstraints(maxHeight: 40, maxWidth: 500),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
+          iconTheme: const IconThemeData(color: Palette.lightPurple),
+          appBarBuilder: (context) {
+            return AppBar(
+              centerTitle: true,
+              leading: _buildLeading(context),
+              title: widget.titleWidget ?? Text(widget.title ?? ""),
+              actions: _buildActions,
+              iconTheme: const IconThemeData(color: Palette.lightPurple),
+              bottom: _buildTabBar(),
+            );
+          },
         ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: widget.child!,
-        )
-      ]),
+        bottomNavigationBar: _buildNavigationBar(),
+        body: Stack(children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.3,
+              child:
+                  Image.asset('assets/images/starsBg.png', fit: BoxFit.cover),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: widget.child!,
+          )
+        ]),
+      ),
     );
   }
 

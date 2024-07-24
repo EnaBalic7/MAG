@@ -168,15 +168,31 @@ namespace MAG.Services
 
             var userConstellationAnime = await _context.AnimeLists.Where(c => c.List.UserId == userId).Include(c => c.Anime).ToListAsync();
 
-            // Get IDs of anime that user has already rated or added to constellation
+            // Get IDs of anime that user has already rated or added to constellation or nebula
             var userRatedAnimeIds = userRatedAnime.Select(ur => ur.Anime.Id).ToList();
             var userConstellationAnimeIds = userConstellationAnime.Select(c => c.Anime.Id).ToList();
 
+            var userWatchlist = await _context.Watchlists.Where(w => w.UserId == userId).Include(w => w.AnimeWatchlists).FirstOrDefaultAsync();
+            var userNebulaAnimeIds = userWatchlist?.AnimeWatchlists.Select(aw => aw.AnimeId).ToList();
+
+
+            List<Database.Anime> allOtherAnime = new List<Database.Anime>();
+
             // Get all other anime
-            var allOtherAnime = await _context.Animes
-                                              .Include(a => a.GenreAnimes)
-                                              .Where(a => !userRatedAnimeIds.Contains(a.Id) && !userConstellationAnimeIds.Contains(a.Id))
-                                              .ToListAsync();
+            if (userNebulaAnimeIds != null)
+            {
+                allOtherAnime = await _context.Animes
+                                            .Include(a => a.GenreAnimes)
+                                            .Where(a => !userRatedAnimeIds.Contains(a.Id) && !userConstellationAnimeIds.Contains(a.Id) && !userNebulaAnimeIds.Contains(a.Id))
+                                            .ToListAsync();
+            }
+            else
+            {
+                allOtherAnime = await _context.Animes
+                                           .Include(a => a.GenreAnimes)
+                                           .Where(a => !userRatedAnimeIds.Contains(a.Id) && !userConstellationAnimeIds.Contains(a.Id))
+                                           .ToListAsync();
+            }
 
             var similarityScores = new List<Tuple<Database.Anime, double>>();
 
