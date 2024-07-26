@@ -15,10 +15,6 @@ public partial class Anime
 
     public int EpisodesNumber { get; set; }
 
-    public string? ImageUrl { get; set; }
-
-    public string? TrailerUrl { get; set; }
-
     public decimal? Score { get; set; }
 
     public DateTime BeginAir { get; set; }
@@ -28,6 +24,10 @@ public partial class Anime
     public string Season { get; set; } = null!;
 
     public string Studio { get; set; } = null!;
+
+    public string? TrailerUrl { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public virtual ICollection<AnimeList> AnimeLists { get; set; } = new List<AnimeList>();
 

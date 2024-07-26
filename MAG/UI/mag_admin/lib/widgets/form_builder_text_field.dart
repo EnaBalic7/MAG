@@ -26,6 +26,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   String? Function(String?)? validator;
   void Function(String?)? onSubmitted;
   void Function(String?)? onSaved;
+  FocusNode? focusNode;
   MyFormBuilderTextField({
     Key? key,
     required this.name,
@@ -50,6 +51,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.borderColor = Colors.transparent,
     this.onSubmitted,
     this.onSaved,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -70,7 +72,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
         height: widget.height,
         child: FormBuilderTextField(
           textAlignVertical: TextAlignVertical.top,
-          focusNode: FocusNode(),
+          focusNode: widget.focusNode,
           initialValue: widget.initialValue,
           minLines: widget.minLines,
           autovalidateMode: AutovalidateMode.onUserInteraction,

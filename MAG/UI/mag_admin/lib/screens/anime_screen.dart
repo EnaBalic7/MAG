@@ -248,17 +248,23 @@ class _AnimeScreenState extends State<AnimeScreen> {
             borderRadius: BorderRadius.circular(15), color: Palette.darkPurple),
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              child: Image.network(
-                anime.imageUrl!,
-                width: 300,
-                height: 300,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-              ),
-            ),
+            (anime.imageUrl != null)
+                ? ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15)),
+                    child: Image.network(
+                      anime.imageUrl!,
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    ),
+                  )
+                : Container(
+                    width: 300,
+                    height: 300,
+                  ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -54,60 +54,10 @@ class _GenresScreenState extends State<GenresScreen> {
       child: Stack(
         children: [
           _buildGenresForm(context),
-          Positioned(
-            left: 120,
-            top: 25,
-            child: Image.asset(
-              "assets/images/mikasa.png",
-              width: 400,
-            ),
-          ),
-          Positioned(
-            right: 130,
-            bottom: 40,
-            child: Image.asset(
-              "assets/images/eren.png",
-              width: 400,
-            ),
-          ),
         ],
       ),
     );
   }
-
-  /*void _showOverlayForm(BuildContext context) {
-    showCupertinoModalPopup(
-      context: context,
-      barrierColor: Palette.black.withOpacity(0.5),
-      builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 1,
-          //width: MediaQuery.of(context).size.width * 1,
-          child: Stack(
-            children: [
-              _buildOverlayForm(context),
-              Positioned(
-                left: 170,
-                top: 25,
-                child: Image.asset(
-                  "assets/images/mikasa.png",
-                  width: 400,
-                ),
-              ),
-              Positioned(
-                right: 270,
-                bottom: 40,
-                child: Image.asset(
-                  "assets/images/eren.png",
-                  width: 300,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }*/
 
   Widget _buildGenresForm(BuildContext context) {
     return Positioned.fill(
@@ -243,17 +193,18 @@ class _GenresScreenState extends State<GenresScreen> {
   }
 
   Future<void> _saveGenre(BuildContext context) async {
-    _genreFormKey.currentState?.saveAndValidate();
-    var request = Map.from(_genreFormKey.currentState!.value);
     try {
-      await _genreProvider.insert(request);
-      showInfoDialog(
-          context,
-          const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-          const Text(
-            "Added successfully!",
-            textAlign: TextAlign.center,
-          ));
+      if (_genreFormKey.currentState?.saveAndValidate() == true) {
+        var request = Map.from(_genreFormKey.currentState!.value);
+        await _genreProvider.insert(request);
+        showInfoDialog(
+            context,
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Text(
+              "Added successfully!",
+              textAlign: TextAlign.center,
+            ));
+      }
     } on Exception catch (e) {
       showErrorDialog(context, e);
     }

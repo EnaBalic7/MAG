@@ -172,3 +172,9 @@ bool isValidEmail(String text) {
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   ).hasMatch(text);
 }
+
+bool isValidImageUrl(String text) {
+  return RegExp(
+    r'^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$',
+  ).hasMatch(text);
+}

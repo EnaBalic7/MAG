@@ -211,19 +211,24 @@ class _AnimeCardsState extends State<AnimeCards>
                       ),
                     ));
                   },
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    child: Image.network(
-                      anime.imageUrl!,
-                      width: cardWidth,
-                      height: cardHeight * 0.85,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
-                    ),
-                  ),
+                  child: (anime.imageUrl != null)
+                      ? ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                          ),
+                          child: Image.network(
+                            anime.imageUrl!,
+                            width: cardWidth,
+                            height: cardHeight * 0.85,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                          ),
+                        )
+                      : SizedBox(
+                          width: cardWidth,
+                          height: cardHeight * 0.85,
+                        ),
                 ),
                 Positioned(
                   bottom: (cardHeight * 0.1 < 23.4)

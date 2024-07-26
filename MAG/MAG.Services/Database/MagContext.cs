@@ -70,9 +70,7 @@ public partial class MagContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.BeginAir).HasColumnType("datetime");
             entity.Property(e => e.FinishAir).HasColumnType("datetime");
-            entity.Property(e => e.ImageUrl)
-                .HasMaxLength(200)
-                .HasColumnName("ImageURL");
+            entity.Property(e => e.ImageUrl).HasColumnName("ImageURL");
             entity.Property(e => e.Score).HasColumnType("decimal(4, 2)");
             entity.Property(e => e.Season).HasMaxLength(10);
             entity.Property(e => e.Studio).HasMaxLength(50);
@@ -82,9 +80,7 @@ public partial class MagContext : DbContext
             entity.Property(e => e.TitleJp)
                 .HasMaxLength(200)
                 .HasColumnName("TitleJP");
-            entity.Property(e => e.TrailerUrl)
-                .HasMaxLength(200)
-                .HasColumnName("TrailerURL");
+            entity.Property(e => e.TrailerUrl).HasColumnName("TrailerURL");
         });
 
         modelBuilder.Entity<AnimeList>(entity =>

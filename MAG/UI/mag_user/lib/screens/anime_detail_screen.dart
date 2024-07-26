@@ -115,15 +115,17 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(15)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.network(
-                        widget.anime.imageUrl!,
-                        width: imgWidth,
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
-                    ),
+                    child: (widget.anime.imageUrl != null)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.network(
+                              widget.anime.imageUrl!,
+                              width: imgWidth,
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                            ),
+                          )
+                        : const SizedBox(),
                   ),
                 ),
                 Padding(
@@ -341,7 +343,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Visibility(
-      visible: widget.anime.trailerUrl != "",
+      visible: widget.anime.trailerUrl != null && widget.anime.trailerUrl != "",
       child: Center(
         child: Padding(
           padding:
@@ -380,7 +382,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           ),
                         ),
                         RemainingDuration(),
-                        GestureDetector(
+                        /*GestureDetector(
                             onTap: () {
                               _youtubePlayerController.pause();
                               _enterFullScreen();
@@ -389,7 +391,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               padding: EdgeInsets.only(left: 5),
                               child: Icon(Icons.fullscreen_rounded,
                                   color: Palette.white, size: 30),
-                            ))
+                            ))*/
                       ],
                     );
                   },
@@ -411,10 +413,10 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     String videoLink = "${widget.anime.trailerUrl}";
 
     // Using custom method
-    String videoId = extractVideoId(videoLink);
+    //  String videoId = extractVideoId(videoLink);
 
     // Using method from package:
-    // String videoId = YoutubePlayer.convertUrlToId(videoLink) ?? "";
+    String videoId = YoutubePlayer.convertUrlToId(videoLink) ?? "";
 
     Navigator.push(
         context,

@@ -44,6 +44,19 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   final ScrollController _scrollController = ScrollController();
 
   double _savedScrollPosition = 0.0;
+  String? imageUrlValue;
+
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
+  final FocusNode _focusNode5 = FocusNode();
+  final FocusNode _focusNode6 = FocusNode();
+  final FocusNode _focusNode7 = FocusNode();
+  final FocusNode _focusNode8 = FocusNode();
+  final FocusNode _focusNode9 = FocusNode();
+  final FocusNode _focusNode10 = FocusNode();
+  final FocusNode _focusNode11 = FocusNode();
 
   @override
   void initState() {
@@ -60,6 +73,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       'season': widget.anime?.season ?? "Spring",
       'studio': widget.anime?.studio ?? ""
     };
+    imageUrlValue = widget.anime?.imageUrl ?? "";
     _image = _buildImage();
     _title = _buildTitle();
     _animeProvider = context.read<AnimeProvider>();
@@ -75,6 +89,23 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+    _focusNode5.dispose();
+    _focusNode6.dispose();
+    _focusNode7.dispose();
+    _focusNode8.dispose();
+    _focusNode9.dispose();
+    _focusNode10.dispose();
+    _focusNode11.dispose();
+
+    super.dispose();
   }
 
   void _updateAnimeGenres() async {
@@ -142,6 +173,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  focusNode: _focusNode1,
                                   onChanged: (newTitle) {
                                     if (mounted) {
                                       setState(() {
@@ -166,6 +198,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  focusNode: _focusNode2,
                                   validator: (val) {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
@@ -183,6 +216,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingBottom: 50,
                                   borderRadius: 50,
                                   keyboardType: TextInputType.number,
+                                  focusNode: _focusNode3,
                                   validator: (val) {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
@@ -204,6 +238,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingBottom: 50,
                                   borderRadius: 50,
                                   keyboardType: TextInputType.number,
+                                  focusNode: _focusNode4,
                                 ),
                                 MyDateTimePicker(
                                   name: "beginAir",
@@ -264,6 +299,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  focusNode: _focusNode5,
                                   validator: (val) {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
@@ -280,14 +316,19 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.required(context),
-                                    FormBuilderValidators.url(context),
-                                  ]),
+                                  focusNode: _focusNode6,
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return "This field cannot be empty.";
+                                    } else if (!isValidImageUrl(val)) {
+                                      return "URL is not valid.";
+                                    }
+                                    return null;
+                                  },
                                   onChanged: (newValue) {
                                     if (mounted) {
                                       setState(() {
-                                        widget.anime?.imageUrl = newValue;
+                                        imageUrlValue = newValue;
                                         _image =
                                             _buildImage(imageUrl: newValue!);
                                       });
@@ -303,6 +344,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  focusNode: _focusNode7,
                                   validator: FormBuilderValidators.compose([
                                     FormBuilderValidators.url(context),
                                   ]),
@@ -329,6 +371,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           paddingTop: 40,
                           paddingLeft: 0,
                           paddingBottom: 20,
+                          focusNode: _focusNode8,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context),
                           ]),
@@ -485,7 +528,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
 //^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$
   Image _buildImage({String imageUrl = ""}) {
     if (imageUrl == "") {
-      if (widget.anime?.imageUrl == null) {
+      if (widget.anime?.imageUrl == null ||
+          imageUrlValue == null ||
+          imageUrlValue == "") {
         return Image.asset(
           "assets/images/emptyImg.png",
           width: 400,
@@ -493,7 +538,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       } else if (widget.anime!.imageUrl!.startsWith(
           RegExp(r'^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$'))) {
         return Image.network(
-          widget.anime?.imageUrl ?? "",
+          imageUrlValue ?? "",
           width: 400,
           height: 500,
           fit: BoxFit.cover,
@@ -521,4 +566,28 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       }
     }
   }
+
+  /* Image _buildImage({String imageUrl = ""}) {
+    if (imageUrl == "") {
+      if (widget.anime?.imageUrl == null || widget.anime?.imageUrl == "") {
+        return Image.asset(
+          "assets/images/emptyImg.png",
+          width: 400,
+        );
+      } else
+        return Image.network(
+          widget.anime?.imageUrl ?? "",
+          width: 400,
+          height: 500,
+          fit: BoxFit.cover,
+        );
+    } else {
+      return Image.network(
+        imageUrl,
+        width: 400,
+        height: 500,
+        fit: BoxFit.cover,
+      );
+    }
+  }*/
 }
