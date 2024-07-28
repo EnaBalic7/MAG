@@ -34,6 +34,7 @@ class _HelpScreenState extends State<HelpScreen> {
   final _qAfilterFormKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
   final TextEditingController _qaController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   int page = 0;
   int pageSize = 6;
@@ -63,6 +64,12 @@ class _HelpScreenState extends State<HelpScreen> {
       _reloadQAList();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   void setTotalItems() async {
@@ -178,6 +185,7 @@ class _HelpScreenState extends State<HelpScreen> {
                           borderRadius: 15,
                           minLines: 40,
                           maxLines: 40,
+                          focusNode: _focusNode,
                           borderColor: Palette.lightPurple.withOpacity(0.3),
                         ),
                       ),
@@ -198,27 +206,28 @@ class _HelpScreenState extends State<HelpScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      _qAFormKey.currentState?.saveAndValidate();
-                      var tmp = Map.from(_qAFormKey.currentState!.value);
-                      var request = {
-                        "answer": tmp["answer"].toString(),
-                        "question": _initialValue["question"].toString(),
-                        "displayed": true,
-                      };
-                      try {
-                        if (qaID != null) {
-                          await _qaProvider.update(qaID!, request: request);
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.task_alt,
-                                  color: Palette.lightPurple, size: 50),
-                              const Text(
-                                "Answered successfully!",
-                                textAlign: TextAlign.center,
-                              ));
+                      if (_qAFormKey.currentState?.saveAndValidate() == true) {
+                        var tmp = Map.from(_qAFormKey.currentState!.value);
+                        var request = {
+                          "answer": tmp["answer"].toString(),
+                          "question": _initialValue["question"].toString(),
+                          "displayed": true,
+                        };
+                        try {
+                          if (qaID != null) {
+                            await _qaProvider.update(qaID!, request: request);
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.task_alt,
+                                    color: Palette.lightPurple, size: 50),
+                                const Text(
+                                  "Answered successfully!",
+                                  textAlign: TextAlign.center,
+                                ));
+                          }
+                        } on Exception catch (e) {
+                          showErrorDialog(context, e);
                         }
-                      } on Exception catch (e) {
-                        showErrorDialog(context, e);
                       }
                     },
                   ),
@@ -547,29 +556,31 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   Future<void> _deleteQA(QA qa, BuildContext context) async {
-    if (mounted) {
+    /* if (mounted) {
       setState(() {
         qaID = qa.id;
       });
-    }
+    }*/
 
     try {
       if (qaID != null) {
-        showConfirmationDialog(
+        await _qaProvider.delete(qa.id!);
+        if (mounted) {
+          if (qa.id! == qaID) {
+            setState(() {
+              qaID = null;
+              _questionTitle = "";
+            });
+          }
+        }
+
+        showInfoDialog(
             context,
-            const Icon(Icons.warning_rounded,
-                color: Palette.lightRed, size: 55),
-            const Text("Are you sure you want to delete this question?"),
-            () async {
-          await _qaProvider.delete(qaID!);
-          showInfoDialog(
-              context,
-              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-              const Text(
-                "Question has been deleted.",
-                textAlign: TextAlign.center,
-              ));
-        });
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Text(
+              "Question has been deleted.",
+              textAlign: TextAlign.center,
+            ));
       }
     } on Exception catch (e) {
       showErrorDialog(context, e);

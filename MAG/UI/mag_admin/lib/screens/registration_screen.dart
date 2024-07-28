@@ -23,6 +23,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late UserProvider _userProvider;
   bool usernameTaken = false;
   late UserRoleProvider _userRoleProvider;
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
+  final FocusNode _focusNode5 = FocusNode();
+  final FocusNode _focusNode6 = FocusNode();
 
   @override
   void initState() {
@@ -30,6 +36,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     _userRoleProvider = context.read<UserRoleProvider>();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+    _focusNode5.dispose();
+    _focusNode6.dispose();
+
+    super.dispose();
   }
 
   Future<void> checkUsernameAvailability(String val) async {
@@ -84,6 +102,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode1,
                             onChanged: (val) async {
                               if (val != null) {
                                 await checkUsernameAvailability(val);
@@ -94,10 +113,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 return "This field cannot be empty.";
                               } else if (val.length > 20) {
                                 return 'Username can contain 20 characters max.';
-                              } else if (usernameTaken == true) {
-                                return 'This username is taken.';
                               } else if (isValidUsername(val) == false) {
                                 return 'Use only letters, numbers, and underscore.';
+                              } else if (usernameTaken == true) {
+                                return 'This username is taken.';
                               }
                               return null;
                             },
@@ -111,6 +130,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode2,
                             validator: (val) {
                               if (val != null && val.length > 25) {
                                 return 'Email can contain 25 characters max.';
@@ -130,6 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode3,
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
@@ -150,6 +171,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode4,
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
@@ -170,6 +192,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             paddingBottom: 25,
                             borderRadius: 50,
                             obscureText: true,
+                            focusNode: _focusNode5,
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
@@ -194,6 +217,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             paddingBottom: 25,
                             borderRadius: 50,
                             obscureText: true,
+                            focusNode: _focusNode6,
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";

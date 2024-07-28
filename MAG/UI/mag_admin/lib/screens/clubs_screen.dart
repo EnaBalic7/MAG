@@ -193,10 +193,11 @@ class _ClubsScreenState extends State<ClubsScreen> {
                     alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          bottom: 10, left: 0, right: 0, top: 5),
+                          bottom: 10, left: 5, right: 0, top: 5),
                       child: Text(
                         club.name!,
-                        overflow: TextOverflow.clip,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),

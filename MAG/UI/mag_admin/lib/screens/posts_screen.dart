@@ -52,9 +52,28 @@ class _PostsScreenState extends State<PostsScreen> {
     _clubProvider = context.read<ClubProvider>();
     _userProvider = context.read<UserProvider>();
 
+    _postProvider.addListener(() {
+      _reloadData();
+      setTotalItems();
+    });
+
     setTotalItems();
 
     super.initState();
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _postFuture = _postProvider.get(filter: {
+          "UserId": "${widget.user.id}",
+          "NewestFirst": "true",
+          "CommentsIncluded": "true",
+          "Page": "$page",
+          "PageSize": "$pageSize"
+        });
+      });
+    }
   }
 
   void setTotalItems() async {

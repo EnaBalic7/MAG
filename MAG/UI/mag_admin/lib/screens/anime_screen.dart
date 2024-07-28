@@ -261,7 +261,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
                       alignment: Alignment.center,
                     ),
                   )
-                : Container(
+                : const SizedBox(
                     width: 300,
                     height: 300,
                   ),
@@ -286,10 +286,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
                     alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          bottom: 10, left: 0, right: 0, top: 5),
+                          bottom: 10, left: 5, right: 0, top: 5),
                       child: Text(
                         anime.titleEn!,
-                        overflow: TextOverflow.clip,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),

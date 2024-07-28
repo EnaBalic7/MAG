@@ -24,6 +24,7 @@ class _GenresScreenState extends State<GenresScreen> {
   final _genreFormKey = GlobalKey<FormBuilderState>();
   late GenreProvider _genreProvider;
   late Future<SearchResult<Genre>> _genreFuture;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -44,6 +45,12 @@ class _GenresScreenState extends State<GenresScreen> {
             _genreProvider.get(filter: {"SortAlphabetically": "true"});
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -105,6 +112,7 @@ class _GenresScreenState extends State<GenresScreen> {
                                       width: 300,
                                       height: 50,
                                       borderRadius: 50,
+                                      focusNode: _focusNode,
                                       validator: FormBuilderValidators.compose([
                                         FormBuilderValidators.required(context),
                                       ]),

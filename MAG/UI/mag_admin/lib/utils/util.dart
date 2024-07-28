@@ -173,8 +173,15 @@ bool isValidEmail(String text) {
   ).hasMatch(text);
 }
 
-bool isValidImageUrl(String text) {
+bool isValidImageUrl(String url) {
   return RegExp(
     r'^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$',
-  ).hasMatch(text);
+  ).hasMatch(url);
+}
+
+bool isValidYouTubeUrl(String url) {
+  RegExp youtubeRegex =
+      RegExp(r'^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$');
+
+  return youtubeRegex.hasMatch(url);
 }

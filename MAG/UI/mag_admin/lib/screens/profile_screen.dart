@@ -33,6 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? _image;
   String? _base64Image;
   bool usernameTaken = false;
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
 
   Future getImage() async {
     var result = await FilePicker.platform.pickFiles(type: FileType.image);
@@ -58,6 +62,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _userProvider = context.read<UserProvider>();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+
+    super.dispose();
   }
 
   Future<void> checkUsernameAvailability(String val) async {
@@ -164,6 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             //readOnly: true,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode1,
                             onChanged: (val) async {
                               if (val != null) {
                                 await checkUsernameAvailability(val);
@@ -190,6 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 50,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode2,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(context),
                             ]),
@@ -202,6 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 50,
                             paddingBottom: 25,
                             borderRadius: 50,
+                            focusNode: _focusNode3,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(context),
                             ]),
@@ -213,9 +230,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: 400,
                             height: 50,
                             borderRadius: 50,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
-                            ]),
+                            focusNode: _focusNode4,
+                            validator: (val) {
+                              if (val != null && val.length > 25) {
+                                return 'Email can contain 25 characters max.';
+                              } else if (val != null &&
+                                  val.isNotEmpty &&
+                                  isValidEmail(val) == false) {
+                                return 'Invalid email.';
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       )),

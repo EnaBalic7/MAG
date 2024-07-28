@@ -55,9 +55,27 @@ class _CommentsScreenState extends State<CommentsScreen> {
     _userProvider = context.read<UserProvider>();
     _clubProvider = context.read<ClubProvider>();
 
+    _commentProvider.addListener(() {
+      _reloadData();
+      setTotalItems();
+    });
+
     setTotalItems();
 
     super.initState();
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _commentFuture = _commentProvider.get(filter: {
+          "UserId": "${widget.user.id}",
+          "NewestFirst": "true",
+          "Page": "$page",
+          "PageSize": "$pageSize"
+        });
+      });
+    }
   }
 
   void setTotalItems() async {

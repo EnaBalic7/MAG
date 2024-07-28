@@ -26,6 +26,7 @@ class _AskedByOthersScreenState extends State<AskedByOthersScreen> {
     "CategoryIncluded": "true",
     "AskedByOthers": "true",
     "AnsweredOnly": "true",
+    "DisplayedOnly": "true",
   };
 
   @override

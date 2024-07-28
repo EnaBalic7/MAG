@@ -39,6 +39,8 @@ class UserDetailScreen extends StatefulWidget {
 class _UserDetailScreenState extends State<UserDetailScreen> {
   late RatingProvider _ratingProvider;
   late Future<SearchResult<Rating>> _ratingFuture;
+  late Future<SearchResult<Post>> _postFuture;
+  late Future<SearchResult<Comment>> _commentFuture;
   late PostProvider _postProvider;
   late CommentProvider _commentProvider;
   late AnimeProvider _animeProvider;
@@ -76,13 +78,35 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     });
 
     _postProvider = context.read<PostProvider>();
+    _postFuture = _postProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
+      "Page": "0",
+      "PageSize": "1"
+    });
+
     _commentProvider = context.read<CommentProvider>();
+    _commentFuture = _commentProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
+      "Page": "0",
+      "PageSize": "1"
+    });
+
     _animeProvider = context.read<AnimeProvider>();
     _clubProvider = context.read<ClubProvider>();
     _userProvider = context.read<UserProvider>();
 
     _ratingProvider.addListener(() {
       _reloadReview();
+    });
+
+    _postProvider.addListener(() {
+      _reloadPost();
+    });
+
+    _commentProvider.addListener(() {
+      _reloadComment();
     });
 
     super.initState();
@@ -99,6 +123,36 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     if (mounted) {
       setState(() {
         _ratingFuture = rating;
+      });
+    }
+  }
+
+  void _reloadPost() {
+    var post = _postProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
+      "Page": "0",
+      "PageSize": "1"
+    });
+
+    if (mounted) {
+      setState(() {
+        _postFuture = post;
+      });
+    }
+  }
+
+  void _reloadComment() {
+    var comment = _commentProvider.get(filter: {
+      "UserId": "${widget.user.id}",
+      "NewestFirst": "true",
+      "Page": "0",
+      "PageSize": "1"
+    });
+
+    if (mounted) {
+      setState(() {
+        _commentFuture = comment;
       });
     }
   }
@@ -325,12 +379,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
   FutureBuilder<SearchResult<Comment>> _commentFutureBuilder() {
     return FutureBuilder<SearchResult<Comment>>(
-        future: _commentProvider.get(filter: {
-          "UserId": "${widget.user.id}",
-          "NewestFirst": "true",
-          "Page": "0",
-          "PageSize": "1"
-        }),
+        future: _commentFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const MyProgressIndicator(); // Loading state
@@ -359,12 +408,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
   FutureBuilder<SearchResult<Post>> _postFutureBuilder() {
     return FutureBuilder<SearchResult<Post>>(
-        future: _postProvider.get(filter: {
-          "UserId": "${widget.user.id}",
-          "NewestFirst": "true",
-          "Page": "0",
-          "PageSize": "1"
-        }),
+        future: _postFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const MyProgressIndicator(); // Loading state

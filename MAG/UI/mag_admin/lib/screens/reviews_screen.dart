@@ -295,10 +295,18 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   controller: ScrollController(),
                   child: Column(
                     children: [
-                      Text(
-                        "${rating.reviewText}",
-                        style: const TextStyle(fontSize: 15),
-                      ),
+                      (rating.reviewText != null && rating.reviewText != "")
+                          ? Text(
+                              "${rating.reviewText}",
+                              style: const TextStyle(fontSize: 15),
+                            )
+                          : Text(
+                              "User left no review text...",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Palette.lightPurple.withOpacity(0.5),
+                                  fontStyle: FontStyle.italic),
+                            ),
                     ],
                   ),
                 ),

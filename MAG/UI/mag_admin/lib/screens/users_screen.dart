@@ -231,7 +231,8 @@ class _UsersScreenState extends State<UsersScreen> {
                         bottom: 10, left: 35, right: 0, top: 5),
                     child: Text(
                       user.username!,
-                      overflow: TextOverflow.clip,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),

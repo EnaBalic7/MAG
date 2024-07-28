@@ -45,6 +45,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
 
   double _savedScrollPosition = 0.0;
   String? imageUrlValue;
+  String? titleEnValue;
 
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
@@ -54,9 +55,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   final FocusNode _focusNode6 = FocusNode();
   final FocusNode _focusNode7 = FocusNode();
   final FocusNode _focusNode8 = FocusNode();
-  final FocusNode _focusNode9 = FocusNode();
-  final FocusNode _focusNode10 = FocusNode();
-  final FocusNode _focusNode11 = FocusNode();
 
   @override
   void initState() {
@@ -74,6 +72,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       'studio': widget.anime?.studio ?? ""
     };
     imageUrlValue = widget.anime?.imageUrl ?? "";
+    titleEnValue = widget.anime?.titleEn ?? "";
     _image = _buildImage();
     _title = _buildTitle();
     _animeProvider = context.read<AnimeProvider>();
@@ -101,9 +100,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _focusNode6.dispose();
     _focusNode7.dispose();
     _focusNode8.dispose();
-    _focusNode9.dispose();
-    _focusNode10.dispose();
-    _focusNode11.dispose();
 
     super.dispose();
   }
@@ -177,7 +173,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   onChanged: (newTitle) {
                                     if (mounted) {
                                       setState(() {
-                                        widget.anime?.titleEn = newTitle;
+                                        titleEnValue = newTitle;
                                         _title = _buildTitle(title: newTitle!);
                                       });
                                     }
@@ -185,6 +181,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   validator: (val) {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
+                                    } else if (val.length > 200) {
+                                      return "Character limit exceeded: ${val.length}/200";
                                     }
                                     return null;
                                   },
@@ -202,6 +200,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   validator: (val) {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
+                                    } else if (val.length > 200) {
+                                      return "Character limit exceeded: ${val.length}/200";
                                     }
                                     return null;
                                   },
@@ -295,7 +295,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   labelText: "Studio",
                                   fillColor: Palette.darkPurple,
                                   width: maxTextFieldWidth,
-                                  height: 45,
+                                  height: 50,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
@@ -303,6 +303,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   validator: (val) {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
+                                    } else if (val.length > 50) {
+                                      return "Character limit exceeded: ${val.length}/200";
                                     }
                                     return null;
                                   },
@@ -336,19 +338,23 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   },
                                 ),
                                 MyFormBuilderTextField(
-                                  name: "trailerUrl",
-                                  labelText: "Trailer URL",
-                                  fillColor: Palette.darkPurple,
-                                  width: maxTextFieldWidth,
-                                  height: 50,
-                                  paddingLeft: 40,
-                                  paddingBottom: 50,
-                                  borderRadius: 50,
-                                  focusNode: _focusNode7,
-                                  validator: FormBuilderValidators.compose([
-                                    FormBuilderValidators.url(context),
-                                  ]),
-                                ),
+                                    name: "trailerUrl",
+                                    labelText: "Trailer URL",
+                                    fillColor: Palette.darkPurple,
+                                    width: maxTextFieldWidth,
+                                    height: 50,
+                                    paddingLeft: 40,
+                                    paddingBottom: 50,
+                                    borderRadius: 50,
+                                    focusNode: _focusNode7,
+                                    validator: (val) {
+                                      if (val != null &&
+                                          val.isNotEmpty &&
+                                          !isValidYouTubeUrl(val)) {
+                                        return "Not a valid YouTube URL.";
+                                      }
+                                      return null;
+                                    }),
                               ],
                             );
                           },
@@ -509,6 +515,14 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       } on Exception catch (e) {
         showErrorDialog(context, e);
       }
+    } else {
+      showInfoDialog(
+          context,
+          const Icon(Icons.warning_rounded, color: Palette.lightRed, size: 50),
+          const Text(
+            "There are validation errors.",
+            textAlign: TextAlign.center,
+          ));
     }
   }
 
@@ -517,7 +531,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       if (widget.anime?.titleEn?.isEmpty ?? true) {
         return const Text("Untitled");
       } else {
-        return Text("${widget.anime?.titleEn}");
+        return Text("$titleEnValue");
       }
     } else {
       return Text(title);
