@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/club_provider.dart';
-import 'package:mag_user/providers/club_user_provider.dart';
-import 'package:mag_user/widgets/circular_progress_indicator.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/club_provider.dart';
+import '../providers/club_user_provider.dart';
+import '../widgets/circular_progress_indicator.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';
 
@@ -119,6 +120,7 @@ class _JoinClubButtonState extends State<JoinClubButton> {
             textAlign: TextAlign.center,
           ), () async {
         try {
+          Navigator.of(context).pop();
           await _clubProvider.delete(widget.clubId);
         } on Exception catch (e) {
           showErrorDialog(context, e);

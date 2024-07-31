@@ -166,6 +166,7 @@ class _QuestionCardsState extends State<QuestionCards>
   Widget _buildQACard(QA qa) {
     return GestureDetector(
       onTap: () {
+        FocusScope.of(context).unfocus();
         showDialog(
             context: context,
             builder: (BuildContext context) {

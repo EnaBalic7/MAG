@@ -107,10 +107,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   return "This field cannot be empty.";
                                 } else if (val.length > 20) {
                                   return 'Username can contain 20 characters max.';
-                                } else if (usernameTaken == true) {
-                                  return 'This username is taken.';
                                 } else if (isValidUsername(val) == false) {
                                   return 'Use only letters, numbers, and underscore.';
+                                } else if (usernameTaken == true) {
+                                  return 'This username is taken.';
                                 }
                                 return null;
                               },
@@ -127,11 +127,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               textCapitalization: TextCapitalization.none,
                               borderRadius: 50,
                               validator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return "This field cannot be empty.";
-                                } else if (val.length > 25) {
+                                if (val != null && val.length > 25) {
                                   return 'Email can contain 25 characters max.';
-                                } else if (isValidEmail(val) == false) {
+                                } else if (val != null &&
+                                    isValidEmail(val) == false) {
                                   return 'Invalid email.';
                                 }
                                 return null;

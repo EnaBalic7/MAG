@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/models/anime_watchlist.dart';
-import 'package:mag_user/models/preferred_genre.dart';
-import 'package:mag_user/models/rating.dart';
-import 'package:mag_user/providers/anime_watchlist_provider.dart';
-import 'package:mag_user/providers/preferred_genre_provider.dart';
-import 'package:mag_user/providers/rating_provider.dart';
-import 'package:mag_user/utils/icons.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
-import 'package:mag_user/widgets/preferred_genres_form.dart';
-import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/anime_watchlist.dart';
+import '../models/preferred_genre.dart';
+import '../models/rating.dart';
+import '../providers/anime_watchlist_provider.dart';
+import '../providers/preferred_genre_provider.dart';
+import '../providers/rating_provider.dart';
+import '../utils/icons.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/preferred_genres_form.dart';
+import '../widgets/separator.dart';
 import '../models/genre.dart';
 import '../models/search_result.dart';
 import '../models/watchlist.dart';
@@ -154,7 +154,6 @@ class _InfoScreenState extends State<InfoScreen> {
                     children: [
                       ...genresToDisplay.map((genreName) {
                         return GradientButton(
-                          onPressed: () {},
                           gradient: Palette.navGradient4,
                           contentPaddingBottom: 2,
                           contentPaddingLeft: 5,
@@ -164,7 +163,9 @@ class _InfoScreenState extends State<InfoScreen> {
                           child: Text(
                             genreName,
                             style: const TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 15),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Palette.lightPurple),
                           ),
                         );
                       })

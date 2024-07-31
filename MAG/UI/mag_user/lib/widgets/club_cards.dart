@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/providers/club_cover_provider.dart';
-import 'package:mag_user/providers/club_provider.dart';
-import 'package:mag_user/widgets/empty.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../providers/club_cover_provider.dart';
+import '../providers/club_provider.dart';
+import '../widgets/empty.dart';
 import '../providers/club_user_provider.dart';
 import '../screens/club_detail_screen.dart';
 import '../utils/icons.dart';

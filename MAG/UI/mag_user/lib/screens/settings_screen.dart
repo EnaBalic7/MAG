@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/donate_screen.dart';
-import 'package:mag_user/screens/info_screen.dart';
-import 'package:mag_user/screens/profile_screen.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/master_screen.dart';
+
+import '../screens/donate_screen.dart';
+import '../screens/info_screen.dart';
+import '../screens/profile_screen.dart';
+import '../utils/util.dart';
+import '../widgets/master_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);

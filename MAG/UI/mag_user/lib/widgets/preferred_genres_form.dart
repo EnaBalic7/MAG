@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/providers/genre_provider.dart';
-import 'package:mag_user/providers/preferred_genre_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/genre_provider.dart';
+import '../providers/preferred_genre_provider.dart';
 import '../models/genre.dart';
 import '../models/preferred_genre.dart';
 import '../models/search_result.dart';

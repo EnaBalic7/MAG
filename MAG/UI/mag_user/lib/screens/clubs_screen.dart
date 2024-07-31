@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/my_clubs_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/my_clubs_screen.dart';
 import '../providers/club_provider.dart';
 import '../utils/colors.dart';
 import '../utils/util.dart';

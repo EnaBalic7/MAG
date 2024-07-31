@@ -587,9 +587,6 @@ class _NebulaFormState extends State<NebulaForm> {
                               ),
                             );
                           },
-                          onChanged: (val) {
-                            _nebulaFormKey.currentState?.saveAndValidate();
-                          },
                           validator: (val) {
                             final watchStatus = _nebulaFormKey
                                 .currentState!.fields['watchStatus']?.value;

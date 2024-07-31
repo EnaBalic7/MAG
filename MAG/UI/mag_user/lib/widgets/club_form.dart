@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/providers/club_provider.dart';
-import 'package:mag_user/providers/club_user_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/club_provider.dart';
+import '../providers/club_user_provider.dart';
 import '../models/club.dart';
 import '../models/club_cover.dart';
 import '../providers/club_cover_provider.dart';
@@ -96,11 +96,8 @@ class _ClubFormState extends State<ClubForm> {
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
                   height: 43,
                   borderRadius: 50,
-                  onChanged: (val) {
-                    _clubFormKey.currentState?.saveAndValidate();
-                  },
                   validator: (val) {
-                    if (val == null || val.isEmpty) {
+                    if (val == null || isEmptyOrWhiteSpace(val)) {
                       return "This field cannot be empty.";
                     } else if (val != "" && !isValidReviewText(val)) {
                       return "Illegal characters.";
@@ -121,11 +118,8 @@ class _ClubFormState extends State<ClubForm> {
                   keyboardType: TextInputType.multiline,
                   borderRadius: 20,
                   errorBorderRadius: 20,
-                  onChanged: (val) {
-                    _clubFormKey.currentState?.saveAndValidate();
-                  },
                   validator: (val) {
-                    if (val == null || val.isEmpty) {
+                    if (val == null || isEmptyOrWhiteSpace(val)) {
                       return "This field cannot be empty.";
                     } else if (val.isNotEmpty && !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
@@ -168,9 +162,6 @@ class _ClubFormState extends State<ClubForm> {
                         ),
                       ),
                     );
-                  },
-                  onChanged: (val) {
-                    _clubFormKey.currentState?.saveAndValidate();
                   },
                   validator: (val) {
                     int maxSizeInBytes = 300000; // 300 KB

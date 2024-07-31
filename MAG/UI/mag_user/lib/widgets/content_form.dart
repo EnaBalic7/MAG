@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_user/providers/comment_provider.dart';
-import 'package:mag_user/providers/post_provider.dart';
-import 'package:mag_user/widgets/form_builder_text_field.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/comment_provider.dart';
+import '../providers/post_provider.dart';
+import '../widgets/form_builder_text_field.dart';
+import '../widgets/gradient_button.dart';
 import '../models/club.dart';
 import '../models/post.dart';
 import '../utils/colors.dart';
@@ -152,6 +152,8 @@ class _ContentFormState extends State<ContentForm> {
   String? _buildValidator(String? val) {
     if (val != null && val.isNotEmpty && !isValidReviewText(val)) {
       return "Some special characters are not allowed.";
+    } else if (val != null && isEmptyOrWhiteSpace(val)) {
+      return "This field cannot be empty.";
     } else if (val != null && val.isNotEmpty && val.length > 500) {
       return "Exceeded character limit: ${val.length}/500";
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/settings_screen.dart';
 
+import '../screens/settings_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/icons.dart';
 import '../widgets/separator.dart';

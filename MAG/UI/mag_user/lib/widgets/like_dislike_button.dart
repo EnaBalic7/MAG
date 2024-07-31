@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/user_post_action_provider.dart';
 import '../models/comment.dart';
 import '../models/post.dart';
 import '../providers/comment_provider.dart';

@@ -30,6 +30,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   TextAlignVertical textAlignVertical;
   TextCapitalization textCapitalization;
   double? errorBorderRadius;
+  FocusNode? focusNode;
 
   MyFormBuilderTextField({
     Key? key,
@@ -58,6 +59,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.textAlignVertical = TextAlignVertical.center,
     this.textCapitalization = TextCapitalization.sentences,
     this.errorBorderRadius,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -80,7 +82,7 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           selectionHeightStyle: BoxHeightStyle.includeLineSpacingBottom,
           textAlignVertical: widget.textAlignVertical,
           textCapitalization: widget.textCapitalization,
-          focusNode: FocusNode(),
+          focusNode: widget.focusNode ?? FocusNode(),
           initialValue: widget.initialValue,
           minLines: widget.minLines,
           autovalidateMode: AutovalidateMode.onUserInteraction,

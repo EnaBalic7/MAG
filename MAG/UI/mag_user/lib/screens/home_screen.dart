@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/models/preferred_genre.dart';
-import 'package:mag_user/providers/preferred_genre_provider.dart';
-import 'package:mag_user/utils/util.dart';
 import 'package:provider/provider.dart';
 
+import '../models/preferred_genre.dart';
+import '../providers/preferred_genre_provider.dart';
+import '../utils/util.dart';
 import '../models/search_result.dart';
 import '../screens/recommended_screen.dart';
 import '../screens/top_anime_screen.dart';

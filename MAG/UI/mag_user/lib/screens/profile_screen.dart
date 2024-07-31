@@ -233,10 +233,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return "This field cannot be empty.";
                           } else if (val.length > 20) {
                             return 'Username can contain 20 characters max.';
-                          } else if (usernameTaken == true) {
-                            return 'This username is taken.';
                           } else if (isValidUsername(val) == false) {
                             return 'Use only letters, numbers, and underscore.';
+                          } else if (usernameTaken == true) {
+                            return 'This username is taken.';
                           }
                           return null;
                         },
@@ -273,7 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 43,
                         borderRadius: 50,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
+                          FormBuilderValidators.email(context),
                         ]),
                       ),
                     ],
@@ -332,7 +332,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .update(widget.user.id!, request: userData)
             .then((_) {
           LoggedUser.user!.username = request["username"];
+          LoggedUser.user!.firstName = request["firstName"];
+          LoggedUser.user!.lastName = request["lastName"];
+          LoggedUser.user!.email = request["email"];
+          LoggedUser.user!.profilePicture?.profilePicture = _base64Image;
           Authorization.username = request["username"];
+
           showInfoDialog(
               context,
               const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),

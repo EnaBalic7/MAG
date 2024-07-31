@@ -129,7 +129,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    left: 10,
+                    right: 10,
+                  ),
                   child: Text("${widget.anime.titleEn}",
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w500)),

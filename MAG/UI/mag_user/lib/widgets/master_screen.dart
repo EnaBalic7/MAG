@@ -1,8 +1,8 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:mag_user/screens/clubs_screen.dart';
 import 'package:responsive_navigation_bar/responsive_navigation_bar.dart';
 
+import '../screens/clubs_screen.dart';
 import '../screens/constellation_screen.dart';
 import '../screens/explore_screen.dart';
 import '../screens/nebula_screen.dart';

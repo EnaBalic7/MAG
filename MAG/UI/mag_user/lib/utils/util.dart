@@ -194,6 +194,10 @@ bool isValidReviewText(String text) {
   return RegExp(r"^[a-zA-Z0-9\s.,!?;:'()-]*$").hasMatch(text);
 }
 
+bool isEmptyOrWhiteSpace(String text) {
+  return RegExp(r"^\s*$").hasMatch(text);
+}
+
 bool isImageSizeValid(String? base64String, int maxSizeInBytes) {
   if (base64String == null) {
     return true;

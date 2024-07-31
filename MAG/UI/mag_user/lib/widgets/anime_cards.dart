@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/widgets/anime_indicator.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/anime_indicator.dart';
 import '../providers/anime_list_provider.dart';
 import '../providers/anime_watchlist_provider.dart';
 import '../providers/listt_provider.dart';

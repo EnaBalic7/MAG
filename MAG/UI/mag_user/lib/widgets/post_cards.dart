@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/post_provider.dart';
-import 'package:mag_user/widgets/pagination_buttons.dart';
-import 'package:mag_user/widgets/content_card.dart';
-import 'package:mag_user/widgets/content_indicator.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/post_provider.dart';
+import '../widgets/pagination_buttons.dart';
+import '../widgets/content_card.dart';
+import '../widgets/content_indicator.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
 import '../utils/util.dart';

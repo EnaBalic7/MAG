@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_user/providers/club_user_provider.dart';
-import 'package:mag_user/providers/post_provider.dart';
-import 'package:mag_user/providers/user_provider.dart';
-import 'package:mag_user/widgets/join_club_button.dart';
-import 'package:mag_user/widgets/master_screen.dart';
-import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../providers/club_user_provider.dart';
+import '../providers/post_provider.dart';
+import '../providers/user_provider.dart';
+import '../widgets/join_club_button.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/separator.dart';
 import '../models/club.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
@@ -18,7 +18,6 @@ import '../providers/club_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
-
 import '../widgets/content_form.dart';
 import '../widgets/post_cards.dart';
 

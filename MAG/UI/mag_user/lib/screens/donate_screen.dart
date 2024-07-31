@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:mag_user/models/payment_intent.dart' as payment_intent;
-import 'package:mag_user/providers/donation_provider.dart';
-import 'package:mag_user/providers/payment_intent_provider.dart';
-import 'package:mag_user/utils/util.dart';
-import 'package:mag_user/widgets/gradient_button.dart';
-import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/payment_intent.dart' as payment_intent;
+import '../providers/donation_provider.dart';
+import '../providers/payment_intent_provider.dart';
+import '../utils/util.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/separator.dart';
 import '../models/donation.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
-import 'package:mag_user/providers/donation_provider.dart';
-import 'package:mag_user/widgets/circular_progress_indicator.dart';
-import 'package:mag_user/widgets/pagination_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../providers/donation_provider.dart';
+import '../widgets/pagination_buttons.dart';
 import '../models/donation.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';

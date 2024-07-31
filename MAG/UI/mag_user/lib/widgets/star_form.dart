@@ -71,6 +71,8 @@ class _StarFormState extends State<StarForm> {
                     validator: (val) {
                       if (val != null && val != "" && !isValidReviewText(val)) {
                         return "Illegal characters.";
+                      } else if (val != null && isEmptyOrWhiteSpace(val)) {
+                        return "This field cannot be empty.";
                       } else if (val != null && val != "" && val.length > 15) {
                         return "Name is too long.";
                       }

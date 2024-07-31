@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/models/comment.dart';
-import 'package:mag_user/providers/comment_provider.dart';
-import 'package:mag_user/widgets/comment_cards.dart';
-import 'package:mag_user/widgets/content_form.dart';
-import 'package:mag_user/widgets/master_screen.dart';
-import 'package:mag_user/widgets/separator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/comment.dart';
+import '../providers/comment_provider.dart';
+import '../widgets/comment_cards.dart';
+import '../widgets/content_form.dart';
+import '../widgets/master_screen.dart';
+import '../widgets/separator.dart';
 import '../models/post.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';
