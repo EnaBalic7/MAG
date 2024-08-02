@@ -96,7 +96,7 @@ app.Urls.Add("https://0.0.0.0:7074");
 app.MapControllers();
 
 // Keep commented when developing locally
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
 
@@ -104,7 +104,7 @@ app.MapControllers();
    // {
         dataContext.Database.Migrate();
    // }
-}*/
+}
 
 var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_API_KEY") ?? "sk_test_51PdbM8Rsmg17KngzOLAbX3R0nBEkCCTMKKdraMetVJiuoOL3aQqv0Wqj00dn1tkET4znbZvqI9nCeYMH6OLTfxm600Qzmua2Xt";
 StripeConfiguration.ApiKey = stripeSecretKey;

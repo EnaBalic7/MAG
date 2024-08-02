@@ -43,6 +43,10 @@ namespace MAG.Services
             return _mapper.Map<T>(entity);
         }
 
+        public virtual async Task AfterUpdate(TDb entity, TUpdate update)
+        {
+        }
+
         public virtual async Task<T> Update(int id, TUpdate update)
         {
             var set = _context.Set<TDb>();
@@ -60,10 +64,16 @@ namespace MAG.Services
             
             await _context.SaveChangesAsync();
 
+            await AfterUpdate(entity, update);
+
             return _mapper.Map<T>(entity);
         }
 
         public virtual async Task BeforeDelete(TDb entity)
+        {
+        }
+
+        public virtual async Task AfterDelete(TDb entity)
         {
         }
 
@@ -85,6 +95,8 @@ namespace MAG.Services
             await BeforeDelete(entity);
 
             await _context.SaveChangesAsync();
+
+            await AfterDelete(entity);
 
             return _mapper.Map<T>(entity);
         }

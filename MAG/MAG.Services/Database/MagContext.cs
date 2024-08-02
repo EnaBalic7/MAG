@@ -63,6 +63,9 @@ public partial class MagContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        SeedData(modelBuilder);
+
         modelBuilder.Entity<Anime>(entity =>
         {
             entity.ToTable("Anime");

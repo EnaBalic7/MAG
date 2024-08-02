@@ -267,7 +267,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user.email}"),
+                            title: Text(widget.user.email ?? '-'),
                             subtitle: Text("E-mail",
                                 style: TextStyle(
                                     color:

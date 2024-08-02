@@ -28,7 +28,7 @@ namespace MAG.Services.Database
             SeedListAnime(modelBuilder);
             SeedRatings(modelBuilder);
             SeedPreferredGenres(modelBuilder);
-           // SeedDonations(modelBuilder);
+            SeedDonations(modelBuilder);
             SeedClubs(modelBuilder);
             SeedClubUser(modelBuilder);
             SeedPosts(modelBuilder);
@@ -377,7 +377,7 @@ namespace MAG.Services.Database
                 new UserProfilePicture()
                 {
                     Id = 1,
-                    ProfilePicture = ImageHelper.ConvertImageToByteArray("../SeedImages/blank_profile_pic.jpg")
+                    ProfilePicture = ImageHelper.ConvertImageToByteArray("SeedImages/blank_profile_pic.jpg")
                 }
          );
         }
@@ -388,7 +388,7 @@ namespace MAG.Services.Database
                 new ClubCover()
                 {
                     Id = 1,
-                    Cover = ImageHelper.ConvertImageToByteArray("../SeedImages/cover.jpg")
+                    Cover = ImageHelper.ConvertImageToByteArray("SeedImages/cover.jpg")
                 }
          );
         }
@@ -1370,11 +1370,83 @@ namespace MAG.Services.Database
                     Id = 3,
                     GenreId = 11,
                     UserId = 2
+                },
+                new PreferredGenre()
+                {
+                    Id = 4,
+                    GenreId = 12,
+                    UserId = 2
+                },
+                new PreferredGenre()
+                {
+                    Id = 5,
+                    GenreId = 7,
+                    UserId = 2
+                },
+                new PreferredGenre()
+                {
+                    Id = 6,
+                    GenreId = 12,
+                    UserId = 3
+                },
+                new PreferredGenre()
+                {
+                    Id = 7,
+                    GenreId = 11,
+                    UserId = 3
+                },
+                new PreferredGenre()
+                {
+                    Id = 8,
+                    GenreId = 11,
+                    UserId = 4
+                },
+                new PreferredGenre()
+                {
+                    Id = 9,
+                    GenreId = 6,
+                    UserId = 3
+                },
+                new PreferredGenre()
+                {
+                    Id = 10,
+                    GenreId = 6,
+                    UserId = 4
+                },
+                new PreferredGenre()
+                {
+                    Id = 11,
+                    GenreId = 6,
+                    UserId = 5
+                },
+                new PreferredGenre()
+                {
+                    Id = 12,
+                    GenreId = 1,
+                    UserId = 3
+                },
+                new PreferredGenre()
+                {
+                    Id = 13,
+                    GenreId = 1,
+                    UserId = 4
+                },
+                new PreferredGenre()
+                {
+                    Id = 14,
+                    GenreId = 1,
+                    UserId = 5
+                },
+                new PreferredGenre()
+                {
+                    Id = 15,
+                    GenreId = 1,
+                    UserId = 6
                 }
          );
         }
 
-     /*   private void SeedDonations(ModelBuilder modelBuilder)
+        private void SeedDonations(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Donation>().HasData(
                 new Donation()
@@ -1383,10 +1455,10 @@ namespace MAG.Services.Database
                     UserId = 2,
                     Amount = 20,
                     DateDonated = new DateTime(2024, 7, 11),
-                    Status = "Completed"
+                    TransactionId = "txn_3PijFYRsmg17Kngz1idOozHb"
                 }
          );
-        }*/
+        }
 
         private void SeedClubs(ModelBuilder modelBuilder)
         {

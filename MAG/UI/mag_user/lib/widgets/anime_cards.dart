@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/providers/rating_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/anime_indicator.dart';
@@ -58,6 +59,7 @@ class _AnimeCardsState extends State<AnimeCards>
   late AnimeWatchlistProvider _animeWatchlistProvider;
   late final ListtProvider _listtProvider;
   late final AnimeListProvider _animeListProvider;
+  late final RatingProvider _ratingProvider;
 
   int totalItems = 0;
 
@@ -81,6 +83,7 @@ class _AnimeCardsState extends State<AnimeCards>
     _animeWatchlistProvider = context.read<AnimeWatchlistProvider>();
     _listtProvider = context.read<ListtProvider>();
     _animeListProvider = context.read<AnimeListProvider>();
+    _ratingProvider = context.read<RatingProvider>();
 
     getWatchlistId();
 
@@ -90,7 +93,23 @@ class _AnimeCardsState extends State<AnimeCards>
       setTotalItems();
     });
 
+    _ratingProvider.addListener(_listener);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _ratingProvider.removeListener(_listener);
+    super.dispose();
+  }
+
+  void _listener() {
+    if (mounted) {
+      setState(() {
+        _animeFuture = widget.fetchAnime();
+      });
+    }
   }
 
   void getWatchlistId() async {

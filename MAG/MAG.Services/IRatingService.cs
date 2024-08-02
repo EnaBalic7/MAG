@@ -10,5 +10,7 @@ namespace MAG.Services
 {
     public interface IRatingService : ICRUDService<Model.Rating, RatingSearchObject, RatingInsertRequest, RatingUpdateRequest>
     {
+        void UpdateAnimeScore(int animeId);
+        decimal CalculateAnimeScore(int animeId);
     }
 }
