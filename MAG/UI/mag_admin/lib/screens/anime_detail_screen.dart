@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/genre_anime_provider.dart';
@@ -21,6 +22,7 @@ import '../widgets/form_builder_filter_chip.dart';
 import '../widgets/form_builder_text_field.dart';
 import '../widgets/gradient_button.dart';
 
+// ignore: must_be_immutable
 class AnimeDetailScreen extends StatefulWidget {
   Anime? anime;
   AnimeDetailScreen({Key? key, this.anime}) : super(key: key);
@@ -379,7 +381,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           paddingBottom: 20,
                           focusNode: _focusNode8,
                           validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
+                            FormBuilderValidators.required(
+                                errorText: "This field cannot be empty"),
                           ]),
                         ),
                       ),
@@ -426,7 +429,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 options: [
                                   ...genreList
                                       .map(
-                                        (genre) => FormBuilderFieldOption(
+                                        (genre) => FormBuilderChipOption(
                                           value: genre.id.toString(),
                                           child: Text(genre.name!,
                                               style: const TextStyle(
@@ -580,28 +583,4 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       }
     }
   }
-
-  /* Image _buildImage({String imageUrl = ""}) {
-    if (imageUrl == "") {
-      if (widget.anime?.imageUrl == null || widget.anime?.imageUrl == "") {
-        return Image.asset(
-          "assets/images/emptyImg.png",
-          width: 400,
-        );
-      } else
-        return Image.network(
-          widget.anime?.imageUrl ?? "",
-          width: 400,
-          height: 500,
-          fit: BoxFit.cover,
-        );
-    } else {
-      return Image.network(
-        imageUrl,
-        width: 400,
-        height: 500,
-        fit: BoxFit.cover,
-      );
-    }
-  }*/
 }

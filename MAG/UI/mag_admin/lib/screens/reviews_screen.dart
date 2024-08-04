@@ -16,6 +16,7 @@ import '../widgets/circular_progress_indicator.dart';
 import 'anime_detail_screen.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class ReviewsScreen extends StatefulWidget {
   User user;
 

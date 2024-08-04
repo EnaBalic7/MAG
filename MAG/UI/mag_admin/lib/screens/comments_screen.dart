@@ -8,7 +8,6 @@ import '../models/post.dart';
 import '../providers/club_provider.dart';
 import '../providers/comment_provider.dart';
 import '../providers/post_provider.dart';
-import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../widgets/master_screen.dart';
 import '../models/comment.dart';
@@ -19,6 +18,7 @@ import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
 
+// ignore: must_be_immutable
 class CommentsScreen extends StatefulWidget {
   User user;
   CommentsScreen({Key? key, required this.user}) : super(key: key);
@@ -31,7 +31,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
   late CommentProvider _commentProvider;
   late Future<SearchResult<Comment>> _commentFuture;
   late PostProvider _postProvider;
-  late UserProvider _userProvider;
   int? clubId;
   int? ownerId;
   late ClubProvider _clubProvider;
@@ -52,7 +51,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
     });
 
     _postProvider = context.read<PostProvider>();
-    _userProvider = context.read<UserProvider>();
     _clubProvider = context.read<ClubProvider>();
 
     _commentProvider.addListener(() {

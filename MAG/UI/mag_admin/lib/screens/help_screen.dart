@@ -201,9 +201,9 @@ class _HelpScreenState extends State<HelpScreen> {
                     child: const Text(
                       "Save",
                       style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          color: Palette.white),
                     ),
                     onPressed: () async {
                       if (_qAFormKey.currentState?.saveAndValidate() == true) {

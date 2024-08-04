@@ -4,7 +4,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/role_provider.dart';
 import '../providers/user_profile_picture_provider.dart';
 import '../providers/user_provider.dart';
 import '../providers/user_role_provider.dart';
@@ -15,7 +14,6 @@ import '../widgets/master_screen.dart';
 import '../widgets/pagination_buttons.dart';
 import '../widgets/separator.dart';
 import '../widgets/circular_progress_indicator.dart';
-import '../models/role.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
 import '../models/user_role.dart';
@@ -35,10 +33,7 @@ class _UsersScreenState extends State<UsersScreen> {
   late Future<SearchResult<User>> _userFuture;
   final TextEditingController _userController = TextEditingController();
   final _userRoleFormKey = GlobalKey<FormBuilderState>();
-  late RoleProvider _roleProvider;
-  late Future<SearchResult<Role>> _roleFuture;
   late UserRoleProvider _userRoleProvider;
-  late Future<SearchResult<UserRole>> _userRoleFuture;
   Map<String, dynamic> _userRoleInitialValue = {};
   late UserProfilePictureProvider _userProfilePictureProvider;
   bool? adminRoleSelected;
@@ -58,8 +53,6 @@ class _UsersScreenState extends State<UsersScreen> {
       "PageSize": "$pageSize"
     });
     setTotalItems();
-    _roleProvider = context.read<RoleProvider>();
-    _roleFuture = _roleProvider.get();
 
     _userRoleProvider = context.read<UserRoleProvider>();
 
@@ -520,7 +513,8 @@ class _UsersScreenState extends State<UsersScreen> {
                     },
                     child: const Text(
                       'Save',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white),
                     ),
                   ),
                 ],
@@ -565,7 +559,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   name: "administrator",
                   title: const Text(
                     "Administrator role",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15, color: Palette.lightPurple),
                   ),
                   subtitle: Text(
                     "Gives user administrator privileges.",
@@ -595,7 +589,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   name: "user",
                   title: const Text(
                     "User role",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15, color: Palette.lightPurple),
                   ),
                   subtitle: Text(
                     "Gives user basic privileges.",
@@ -636,7 +630,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   name: "canParticipateInClubs",
                   title: const Text(
                     "Club participation",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15, color: Palette.lightPurple),
                   ),
                   subtitle: Text(
                     "Allows the user to create clubs, make posts and comments.",
@@ -665,7 +659,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   name: "canReview",
                   title: const Text(
                     "Reviewing",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15, color: Palette.lightPurple),
                   ),
                   subtitle: Text(
                     "Allows the user to leave reviews for anime series.",
@@ -694,7 +688,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   name: "canAskQuestions",
                   title: const Text(
                     "Help section participation",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15, color: Palette.lightPurple),
                   ),
                   subtitle: Text(
                     "Allows the user to ask administrator(s) questions.",
@@ -735,8 +729,11 @@ class _UsersScreenState extends State<UsersScreen> {
       color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
+          //  padding: EdgeInsets.zero,
+
           child: ListTile(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
             leading: const Icon(Icons.text_snippet_rounded,
@@ -753,8 +750,10 @@ class _UsersScreenState extends State<UsersScreen> {
           ),
         ),
         PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
+          // padding: EdgeInsets.zero,
           child: ListTile(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
             leading: const Icon(
@@ -793,13 +792,6 @@ class _UsersScreenState extends State<UsersScreen> {
                     "canParticipateInClubs": userRole.canParticipateInClubs,
                     "roleId": "${userRole.roleId}"
                   };
-
-                  /* Navigator.of(context).push(MaterialPageRoute(
-                      builder: (builder) => UserRoleForm(
-                          context: context,
-                          user: user,
-                          userRoleFormKey: _userRoleFormKey,
-                          userRoleProvider: _userRoleProvider)));*/
 
                   _showOverlayForm(context, user);
                 }

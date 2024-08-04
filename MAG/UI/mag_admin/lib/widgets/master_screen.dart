@@ -17,6 +17,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'gradient_button.dart';
 
+// ignore: must_be_immutable
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
   String? title;
@@ -121,8 +122,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     context, 'Anime', buildAnimeIcon(24), const AnimeScreen()),
                 buildListTile(
                     context, 'Users', buildUsersIcon(24), const UsersScreen()),
-                buildListTile(
-                    context, 'Reports', buildReportsIcon(24), ReportsScreen()),
+                buildListTile(context, 'Reports', buildReportsIcon(24),
+                    const ReportsScreen()),
                 buildListTile(
                     context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
                 buildListTile(
@@ -253,7 +254,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 (hoverStates[title] == true) ? Palette.menuGradient : null,
             borderRadius: BorderRadius.circular(50)),
         child: ListTile(
-          title: Text(title, style: const TextStyle(fontSize: 16)),
+          title: Text(title,
+              style: const TextStyle(fontSize: 16, color: Palette.lightPurple)),
           leading: leading,
           onTap: () {
             if (title == 'Log out') {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyFormBuilderDropdown extends StatefulWidget {
   String name;
   String? labelText;
@@ -56,6 +57,8 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDropdown(
+          borderRadius: BorderRadius.circular(25),
+          focusColor: Palette.darkPurple,
           icon: widget.icon,
           dropdownColor: widget.dropdownColor ?? Palette.darkPurple,
           items: widget.items,

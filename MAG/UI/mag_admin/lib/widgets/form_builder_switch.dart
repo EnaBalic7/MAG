@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyFormBuilderSwitch extends StatefulWidget {
   String name;
   Widget title;
@@ -41,7 +42,6 @@ class _MyFormBuilderSwitchState extends State<MyFormBuilderSwitch> {
         border: InputBorder.none,
         errorStyle: TextStyle(
           color: Palette.lightRed,
-          height: 0.1,
         ),
       ),
       activeColor: Palette.teal,

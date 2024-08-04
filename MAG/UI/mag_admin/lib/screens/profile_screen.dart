@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/form_builder_text_field.dart';
 
+// ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   User user;
   ProfileScreen({Key? key, required this.user}) : super(key: key);
@@ -152,10 +154,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       paddingTop: 10,
                                       paddingBottom: 10,
                                       gradient: Palette.buttonGradient2,
-                                      child: Row(
+                                      child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Icon(Icons.photo,
                                               color: Palette.lightPurple),
                                           SizedBox(width: 5),
@@ -207,7 +209,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: 50,
                             focusNode: _focusNode2,
                             validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
+                              FormBuilderValidators.required(
+                                  errorText: "This field cannot be empty."),
                             ]),
                           ),
                           MyFormBuilderTextField(
@@ -220,7 +223,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: 50,
                             focusNode: _focusNode3,
                             validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(context),
+                              FormBuilderValidators.required(
+                                  errorText: "This field cannot be empty."),
                             ]),
                           ),
                           MyFormBuilderTextField(

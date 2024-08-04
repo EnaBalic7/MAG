@@ -3,9 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyFormBuilderFilterChip extends StatefulWidget {
   String? name;
-  List<FormBuilderFieldOption<dynamic>>? options;
+  List<FormBuilderChipOption<dynamic>> options;
   String? labelText;
   final List<dynamic>? initialValue;
   void Function(List<dynamic>?)? onChanged;
@@ -54,11 +55,14 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
       width: widget.width,
       height: widget.height,
       child: FormBuilderFilterChip(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+        ),
         padding: widget.padding,
         name: widget.name!,
         initialValue: widget.initialValue ?? [],
         showCheckmark: widget.showCheckmark ?? true,
-        options: widget.options!,
+        options: widget.options,
         decoration: InputDecoration(
           labelText: widget.labelText ?? "",
           contentPadding: EdgeInsets.zero,

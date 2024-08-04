@@ -242,8 +242,9 @@ class _ClubsScreenState extends State<ClubsScreen> {
       color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
           child: ListTile(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
             leading: const Icon(Icons.text_snippet_rounded,
@@ -260,8 +261,9 @@ class _ClubsScreenState extends State<ClubsScreen> {
           ),
         ),
         PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
           child: ListTile(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),

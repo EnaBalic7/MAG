@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../providers/club_provider.dart';
 import '../providers/post_provider.dart';
-import '../providers/user_provider.dart';
 import '../screens/club_detail_screen.dart';
 import '../screens/post_detail_screen.dart';
 import '../utils/icons.dart';
@@ -18,6 +17,7 @@ import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
 
+// ignore: must_be_immutable
 class PostsScreen extends StatefulWidget {
   User user;
   PostsScreen({Key? key, required this.user}) : super(key: key);
@@ -30,8 +30,6 @@ class _PostsScreenState extends State<PostsScreen> {
   late PostProvider _postProvider;
   late Future<SearchResult<Post>> _postFuture;
   late ClubProvider _clubProvider;
-  late Future<SearchResult<Post>> _clubFuture;
-  late UserProvider _userProvider;
   int? ownerId;
 
   int page = 0;
@@ -50,7 +48,6 @@ class _PostsScreenState extends State<PostsScreen> {
     });
 
     _clubProvider = context.read<ClubProvider>();
-    _userProvider = context.read<UserProvider>();
 
     _postProvider.addListener(() {
       _reloadData();

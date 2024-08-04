@@ -11,6 +11,7 @@ import '../widgets/gradient_button.dart';
 import '../widgets/text_field.dart';
 import 'anime_screen.dart';
 
+// ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
@@ -127,7 +128,9 @@ class LoginScreen extends StatelessWidget {
                       child: const Text("Log In",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500))),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Palette.white))),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: TextButton(

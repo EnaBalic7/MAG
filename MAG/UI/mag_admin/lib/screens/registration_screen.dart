@@ -232,76 +232,81 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ],
                       )),
                   GradientButton(
-                      onPressed: () async {
-                        if (_formKey.currentState?.saveAndValidate() == true) {
-                          _formKey.currentState?.saveAndValidate();
-                          var userInsertRequest =
-                              Map.from(_formKey.currentState!.value);
+                    onPressed: () async {
+                      if (_formKey.currentState?.saveAndValidate() == true) {
+                        _formKey.currentState?.saveAndValidate();
+                        var userInsertRequest =
+                            Map.from(_formKey.currentState!.value);
 
-                          userInsertRequest["dateJoined"] =
-                              DateTime.now().toIso8601String();
+                        userInsertRequest["dateJoined"] =
+                            DateTime.now().toIso8601String();
 
-                          userInsertRequest["profilePictureId"] = 1;
-                          User? admin;
+                        userInsertRequest["profilePictureId"] = 1;
+                        User? admin;
 
-                          await _userProvider
-                              .insert(userInsertRequest)
-                              .then((response) async {
-                            admin = response;
+                        await _userProvider
+                            .insert(userInsertRequest)
+                            .then((response) async {
+                          admin = response;
 
-                            if (admin != null) {
-                              Map<dynamic, dynamic> userRole = {
-                                "userId": "${admin!.id}",
-                                "roleId": 1,
-                                "canReview": true,
-                                "canAskQuestions": true,
-                                "canParticipateInClubs": true
-                              };
-                              await _userRoleProvider.insert(userRole);
-                            }
+                          if (admin != null) {
+                            Map<dynamic, dynamic> userRole = {
+                              "userId": "${admin!.id}",
+                              "roleId": 1,
+                              "canReview": true,
+                              "canAskQuestions": true,
+                              "canParticipateInClubs": true
+                            };
+                            await _userRoleProvider.insert(userRole);
+                          }
 
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.task_alt,
-                                    color: Palette.lightPurple, size: 50),
-                                const Text(
-                                  "Successfully registered.",
-                                  textAlign: TextAlign.center,
-                                ), onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
-                            }, barrierDismissible: false);
-                          }).catchError((error) {
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.warning_rounded,
-                                    color: Palette.lightRed, size: 55),
-                                Text(
-                                  error.toString(),
-                                  textAlign: TextAlign.center,
-                                ));
-                          });
-                        } else {
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Successfully registered.",
+                                textAlign: TextAlign.center,
+                              ), onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          }, barrierDismissible: false);
+                        }).catchError((error) {
                           showInfoDialog(
                               context,
                               const Icon(Icons.warning_rounded,
                                   color: Palette.lightRed, size: 55),
-                              const Text(
-                                "There are validation errors.",
+                              Text(
+                                error.toString(),
                                 textAlign: TextAlign.center,
                               ));
-                        }
-                      },
-                      width: 110,
-                      height: 32,
-                      borderRadius: 50,
-                      gradient: Palette.buttonGradient,
-                      child: const Text("Register",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500))),
+                        });
+                      } else {
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.warning_rounded,
+                                color: Palette.lightRed, size: 55),
+                            const Text(
+                              "There are validation errors.",
+                              textAlign: TextAlign.center,
+                            ));
+                      }
+                    },
+                    width: 110,
+                    height: 32,
+                    borderRadius: 50,
+                    gradient: Palette.buttonGradient,
+                    child: const Text(
+                      "Register",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Palette.white),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: TextButton(

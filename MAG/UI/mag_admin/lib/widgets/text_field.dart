@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyTextField extends StatefulWidget {
   String? hintText;
   Color? fillColor;
@@ -39,7 +40,7 @@ class _MyTextFieldState extends State<MyTextField> {
         decoration: InputDecoration(
             hintText: widget.hintText ?? "",
             hintStyle: const TextStyle(
-                height: 1,
+                height: 0,
                 fontWeight: FontWeight.w400,
                 color: Palette.lightPurple),
             fillColor: widget.fillColor,

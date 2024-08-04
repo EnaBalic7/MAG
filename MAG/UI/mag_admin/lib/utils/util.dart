@@ -66,7 +66,9 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
                         child: const Text("OK",
-                            style: TextStyle(fontWeight: FontWeight.w500)))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Palette.white)))),
               ]));
 }
 
@@ -94,7 +96,9 @@ Future<void> showInfoDialog(
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
                         child: const Text("OK",
-                            style: TextStyle(fontWeight: FontWeight.w500)))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Palette.white)))),
               ]));
 }
 
@@ -114,16 +118,21 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
         content: content,
         actions: <Widget>[
           Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10),
-              child: GradientButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  width: 85,
-                  height: 28,
-                  borderRadius: 15,
-                  gradient: Palette.buttonGradient2,
-                  child: const Text("No"))),
+            padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10),
+            child: GradientButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              width: 85,
+              height: 28,
+              borderRadius: 15,
+              gradient: Palette.buttonGradient2,
+              child: const Text(
+                "No",
+                style: TextStyle(color: Palette.white),
+              ),
+            ),
+          ),
           Padding(
               padding: const EdgeInsets.only(right: 16, bottom: 10, top: 10),
               child: GradientButton(
@@ -136,7 +145,8 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   borderRadius: 15,
                   gradient: Palette.buttonGradient,
                   child: const Text("Yes",
-                      style: TextStyle(fontWeight: FontWeight.w500)))),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white)))),
         ],
       );
     },

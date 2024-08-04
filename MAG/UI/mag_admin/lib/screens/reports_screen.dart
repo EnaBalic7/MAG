@@ -26,7 +26,7 @@ import '../widgets/master_screen.dart';
 import '../utils/icons.dart';
 
 class ReportsScreen extends StatefulWidget {
-  ReportsScreen({Key? key}) : super(key: key);
+  const ReportsScreen({Key? key}) : super(key: key);
 
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
@@ -55,8 +55,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   List<String> genreTitles = [];
   late Future<List<PopularGenresData>> popularGenresDataFuture;
   List<PopularGenresData> popularGenresData = [];
-  Text genreBarChartText = Text("");
-  Text animeBarChartText = Text("");
+  Text genreBarChartText = const Text("");
+  Text animeBarChartText = const Text("");
 
   @override
   void initState() {
@@ -174,7 +174,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   'Report - ${DateFormat('MMM d, y').format(DateTime.now())}',
                                   style: pw.TextStyle(
                                       color: PdfColor.fromHex("#C0B9FF"),
-                                      fontSize: 22)),
+                                      fontSize: 22,
+                                      font: ttfFont)),
                             ]),
                             pw.Container(
                                 width: 900,
@@ -424,7 +425,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             getTitlesWidget: ((value, meta) {
                               if (value.toInt() >= 0 &&
                                   value.toInt() < genreTitles.length) {
-                                return Container(
+                                return SizedBox(
                                   width: 150,
                                   child: Row(
                                     children: [
@@ -657,7 +658,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           gradient: Palette.buttonGradient,
           borderRadius: 50,
           child: const Text("Past year",
-              style: TextStyle(fontWeight: FontWeight.w500)),
+              style:
+                  TextStyle(fontWeight: FontWeight.w500, color: Palette.white)),
         ),
         const SizedBox(width: 20),
         GradientButton(
@@ -676,7 +678,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           gradient: Palette.buttonGradient,
           borderRadius: 50,
           child: const Text("Past month",
-              style: TextStyle(fontWeight: FontWeight.w500)),
+              style:
+                  TextStyle(fontWeight: FontWeight.w500, color: Palette.white)),
         ),
         const SizedBox(width: 20),
         GradientButton(
@@ -695,7 +698,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
           gradient: Palette.buttonGradient,
           borderRadius: 50,
           child: const Text("Past week",
-              style: TextStyle(fontWeight: FontWeight.w500)),
+              style:
+                  TextStyle(fontWeight: FontWeight.w500, color: Palette.white)),
         ),
       ],
     );
@@ -921,13 +925,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ),
                                 shadow: const Shadow(
                                     color: Palette.teal, blurRadius: 30),
-                                dotData: FlDotData(show: true),
+                                dotData: const FlDotData(show: true),
                               )
                             ]),
-
-                        swapAnimationDuration:
-                            const Duration(milliseconds: 150), // Optional
-                        swapAnimationCurve: Curves.linear, // Optional
                       ),
                     ),
                   ],

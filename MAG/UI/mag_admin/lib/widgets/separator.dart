@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MySeparator extends StatefulWidget {
   double? height;
   double? width;

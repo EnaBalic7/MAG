@@ -19,6 +19,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../widgets/circular_progress_indicator.dart';
 
+// ignore: must_be_immutable
 class ClubDetailScreen extends StatefulWidget {
   Club club;
 

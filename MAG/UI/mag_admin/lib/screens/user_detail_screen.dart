@@ -21,13 +21,13 @@ import '../models/post.dart';
 import '../models/rating.dart';
 import '../models/search_result.dart';
 import '../models/user.dart';
-import '../providers/user_provider.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 import 'anime_detail_screen.dart';
 
+// ignore: must_be_immutable
 class UserDetailScreen extends StatefulWidget {
   User user;
   UserDetailScreen({Key? key, required this.user}) : super(key: key);
@@ -47,7 +47,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   late ClubProvider _clubProvider;
   int? clubId;
   int? ownerId;
-  late UserProvider _userProvider;
 
   Rating? rating;
   Post? post;
@@ -95,7 +94,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
     _animeProvider = context.read<AnimeProvider>();
     _clubProvider = context.read<ClubProvider>();
-    _userProvider = context.read<UserProvider>();
 
     _ratingProvider.addListener(() {
       _reloadReview();
@@ -198,7 +196,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user.username}"),
+                            title: Text("${widget.user.username}",
+                                style: const TextStyle(
+                                    color: Palette.lightPurple)),
                             subtitle: Text("Username",
                                 style: TextStyle(
                                     color:
@@ -221,7 +221,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user.firstName}"),
+                            title: Text("${widget.user.firstName}",
+                                style: const TextStyle(
+                                    color: Palette.lightPurple)),
                             subtitle: Text("First name",
                                 style: TextStyle(
                                     color:
@@ -244,7 +246,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text("${widget.user.lastName}"),
+                            title: Text("${widget.user.lastName}",
+                                style: const TextStyle(
+                                    color: Palette.lightPurple)),
                             subtitle: Text("Last name",
                                 style: TextStyle(
                                     color:
@@ -267,7 +271,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text(widget.user.email ?? '-'),
+                            title: Text(widget.user.email ?? '-',
+                                style: const TextStyle(
+                                    color: Palette.lightPurple)),
                             subtitle: Text("E-mail",
                                 style: TextStyle(
                                     color:
@@ -290,8 +296,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text(DateFormat('MMM d, y')
-                                .format(widget.user.dateJoined!)),
+                            title: Text(
+                                DateFormat('MMM d, y')
+                                    .format(widget.user.dateJoined!),
+                                style: const TextStyle(
+                                    color: Palette.lightPurple)),
                             subtitle: Text("Date joined",
                                 style: TextStyle(
                                     color:

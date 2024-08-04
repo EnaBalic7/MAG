@@ -21,6 +21,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 
+// ignore: must_be_immutable
 class PostDetailScreen extends StatefulWidget {
   Post post;
   int ownerId;

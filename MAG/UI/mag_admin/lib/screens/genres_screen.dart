@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 
 import '../models/genre.dart';
@@ -114,7 +115,9 @@ class _GenresScreenState extends State<GenresScreen> {
                                       borderRadius: 50,
                                       focusNode: _focusNode,
                                       validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(context),
+                                        FormBuilderValidators.required(
+                                            errorText:
+                                                "This field cannot be empty."),
                                       ]),
                                     ),
                                     const SizedBox(width: 5),
@@ -166,7 +169,7 @@ class _GenresScreenState extends State<GenresScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
               //width: 100,
-              height: 30,
+              height: 35,
               padding: const EdgeInsets.all(5.4),
               decoration: BoxDecoration(
                   color: Palette.textFieldPurple.withOpacity(0.3),

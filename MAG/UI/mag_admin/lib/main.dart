@@ -65,13 +65,15 @@ class MyMaterialApp extends StatelessWidget {
             selectionColor: Palette.midnightPurple,
             selectionHandleColor: Palette.midnightPurple),
         appBarTheme: const AppBarTheme(
+            backgroundColor: Palette.darkPurple,
             titleTextStyle: TextStyle(
                 color: Palette.lightPurple,
                 fontSize: 20,
                 fontWeight: FontWeight.w500)),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-                primary: Palette.teal.withOpacity(0.5),
+                iconColor: Palette.white,
+                backgroundColor: Palette.teal.withOpacity(0.5),
                 textStyle: const TextStyle(color: Palette.white))),
         drawerTheme: DrawerThemeData(
           backgroundColor: Palette.midnightPurple,

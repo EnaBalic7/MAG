@@ -13,6 +13,7 @@ import '../utils/util.dart';
 typedef FetchPage = Future<SearchResult<Donation>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class DonationCards extends StatefulWidget {
   final Future<SearchResult<Donation>> Function() fetchDonations;
   final FetchPage fetchPage;

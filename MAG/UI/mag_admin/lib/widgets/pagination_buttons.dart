@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyPaginationButtons extends StatefulWidget {
   int page;
   int pageSize;
