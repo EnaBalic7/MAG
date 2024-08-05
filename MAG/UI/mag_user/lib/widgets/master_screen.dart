@@ -14,6 +14,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 import 'gradient_button.dart';
 
+// ignore: must_be_immutable
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
   String? title;
@@ -68,7 +69,7 @@ class MasterScreenWidget extends StatefulWidget {
   void Function()? onLeadingPressed;
 
   MasterScreenWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.title,
     this.titleWidget,
@@ -96,7 +97,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.floatingActionButtonLocation,
     this.showHelpIcon,
     this.onLeadingPressed,
-  }) : super(key: key);
+  });
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -200,8 +201,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               fontWeight: FontWeight.w500,
             ),
             outerPadding: const EdgeInsets.all(0),
-            borderRadius: 0,
-            borderRadiusItem: 50,
+            borderRadius: 30,
             selectedIndex: (widget.selectedIndex != null)
                 ? widget.selectedIndex!
                 : _selectedIndex,
@@ -273,6 +273,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   TabBar? _buildTabBar() {
     return (widget.showTabBar == true)
         ? TabBar(
+            tabAlignment:
+                (widget.isScrollable ?? false) ? TabAlignment.start : null,
+            dividerColor: Colors.transparent,
             isScrollable: widget.isScrollable ?? false,
             indicatorSize: TabBarIndicatorSize.tab,
             controller: widget.tabController,

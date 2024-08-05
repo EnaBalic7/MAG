@@ -18,7 +18,7 @@ import '../widgets/pagination_buttons.dart';
 
 class RatingsScreen extends StatefulWidget {
   final Anime anime;
-  const RatingsScreen({Key? key, required this.anime}) : super(key: key);
+  const RatingsScreen({super.key, required this.anime});
 
   @override
   State<RatingsScreen> createState() => _RatingsScreenState();
@@ -261,7 +261,9 @@ class _RatingsScreenState extends State<RatingsScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 }

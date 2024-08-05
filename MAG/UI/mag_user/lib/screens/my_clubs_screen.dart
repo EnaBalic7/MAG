@@ -6,8 +6,7 @@ import '../widgets/master_screen.dart';
 
 class MyClubsScreen extends StatefulWidget {
   final int selectedIndex;
-  const MyClubsScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const MyClubsScreen({super.key, required this.selectedIndex});
 
   @override
   State<MyClubsScreen> createState() => _MyClubsScreenState();

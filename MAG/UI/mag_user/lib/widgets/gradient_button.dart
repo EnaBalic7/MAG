@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class GradientButton extends StatefulWidget {
   void Function()? onPressed;
   double? width;
@@ -20,7 +21,7 @@ class GradientButton extends StatefulWidget {
   bool? hideBorder;
 
   GradientButton({
-    Key? key,
+    super.key,
     this.onPressed,
     this.width,
     this.height,
@@ -36,7 +37,7 @@ class GradientButton extends StatefulWidget {
     this.contentPaddingTop,
     this.contentPaddingBottom,
     this.hideBorder = false,
-  }) : super(key: key);
+  });
 
   @override
   State<GradientButton> createState() => _GradientButtonState();

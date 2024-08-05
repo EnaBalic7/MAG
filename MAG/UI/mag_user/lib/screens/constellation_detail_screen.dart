@@ -18,12 +18,13 @@ class ConstellationDetailScreen extends StatefulWidget {
   final int selectedIndex;
   final Listt star;
   final List<AnimeList> animeListRandomObj;
+
   const ConstellationDetailScreen({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.star,
     required this.animeListRandomObj,
-  }) : super(key: key);
+  });
 
   @override
   State<ConstellationDetailScreen> createState() =>

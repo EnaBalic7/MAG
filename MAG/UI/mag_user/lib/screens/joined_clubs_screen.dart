@@ -9,8 +9,7 @@ import '../widgets/club_cards.dart';
 
 class JoinedClubsScreen extends StatefulWidget {
   final int selectedIndex;
-  const JoinedClubsScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const JoinedClubsScreen({super.key, required this.selectedIndex});
 
   @override
   State<JoinedClubsScreen> createState() => _JoinedClubsScreenState();

@@ -12,7 +12,7 @@ import '../widgets/gradient_button.dart';
 import '../widgets/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -100,28 +100,40 @@ class _LoginScreenState extends State<LoginScreen> {
                               LoggedUser.user = userResult.result.single;
                             }
                             if (mounted) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
+                              Future.delayed(Duration.zero, () {
+                                if (mounted) {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
                                       builder: (context) =>
-                                          const HomeScreen(selectedIndex: 0)));
+                                          const HomeScreen(selectedIndex: 0),
+                                    ),
+                                  );
+                                }
+                              });
                             }
                           } on Exception catch (e) {
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.warning_rounded,
-                                    color: Palette.lightRed, size: 55),
-                                SizedBox(
-                                  width: 300,
-                                  child: (e.toString().contains("Unauthorized"))
-                                      ? Text(
-                                          "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
-                                          textAlign: TextAlign.center,
-                                        )
-                                      : Text(
-                                          e.toString(),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                ));
+                            Future.delayed(Duration.zero, () {
+                              if (mounted) {
+                                showInfoDialog(
+                                    context,
+                                    const Icon(Icons.warning_rounded,
+                                        color: Palette.lightRed, size: 55),
+                                    SizedBox(
+                                      width: 300,
+                                      child: (e
+                                              .toString()
+                                              .contains("Unauthorized"))
+                                          ? Text(
+                                              "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
+                                              textAlign: TextAlign.center,
+                                            )
+                                          : Text(
+                                              e.toString(),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                    ));
+                              }
+                            });
                           }
                         },
                         width: 90,
@@ -131,7 +143,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Text("Log In",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500))),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Palette.white))),
                     Padding(
                       padding: const EdgeInsets.only(top: 0),
                       child: TextButton(

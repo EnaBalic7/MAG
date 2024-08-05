@@ -56,6 +56,7 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
       height: widget.height,
       child: FormBuilderFilterChip(
         shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(50),
         ),
         padding: widget.padding,

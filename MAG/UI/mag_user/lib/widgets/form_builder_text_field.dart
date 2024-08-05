@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyFormBuilderTextField extends StatefulWidget {
   String name;
   String? labelText;
@@ -33,7 +34,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   FocusNode? focusNode;
 
   MyFormBuilderTextField({
-    Key? key,
+    super.key,
     required this.name,
     this.labelText,
     this.fillColor,
@@ -60,7 +61,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.errorBorderRadius,
     this.focusNode,
-  }) : super(key: key);
+  });
 
   @override
   State<MyFormBuilderTextField> createState() => _MyFormBuilderTextFieldState();

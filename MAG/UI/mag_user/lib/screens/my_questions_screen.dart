@@ -17,7 +17,7 @@ import '../widgets/circular_progress_indicator.dart';
 import '../widgets/gradient_button.dart';
 
 class MyQuestionsScreen extends StatefulWidget {
-  const MyQuestionsScreen({Key? key}) : super(key: key);
+  const MyQuestionsScreen({super.key});
 
   @override
   State<MyQuestionsScreen> createState() => _MyQuestionsScreenState();
@@ -131,13 +131,9 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                         (element) => element.canAskQuestions == false,
                       )) {
                         return "You don't have permission to ask questions.";
-                      } else if (val != null &&
-                          val.isNotEmpty &&
-                          !isValidReviewText(val)) {
+                      } else if (val.isNotEmpty && !isValidReviewText(val)) {
                         return "Some special characters are not allowed.";
-                      } else if (val != null &&
-                          val.isNotEmpty &&
-                          val.length > 200) {
+                      } else if (val.isNotEmpty && val.length > 200) {
                         return "Exceeded character limit: ${val.length}/200";
                       }
                       return null;
@@ -223,16 +219,20 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                 try {
                   await _qAProvider.insert(qa);
 
-                  showInfoDialog(
-                      context,
-                      const Icon(Icons.task_alt,
-                          color: Palette.lightPurple, size: 50),
-                      const Text(
-                        "Added successfully!",
-                        textAlign: TextAlign.center,
-                      ));
+                  if (mounted) {
+                    showInfoDialog(
+                        context,
+                        const Icon(Icons.task_alt,
+                            color: Palette.lightPurple, size: 50),
+                        const Text(
+                          "Added successfully!",
+                          textAlign: TextAlign.center,
+                        ));
+                  }
                 } on Exception catch (e) {
-                  showErrorDialog(context, e);
+                  if (mounted) {
+                    showErrorDialog(context, e);
+                  }
                 }
               }
             },
@@ -242,7 +242,8 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
             gradient: Palette.buttonGradient,
             child: const Text(
               "Submit",
-              style: TextStyle(fontWeight: FontWeight.w500),
+              style:
+                  TextStyle(fontWeight: FontWeight.w500, color: Palette.white),
             ),
           ),
         ],

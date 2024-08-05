@@ -14,14 +14,13 @@ class LikeDislikeButton extends StatefulWidget {
   final Comment? comment;
 
   const LikeDislikeButton({
-    Key? key,
+    super.key,
     this.post,
     this.comment,
   })  : assert(post != null || comment != null,
             "Either post or comment must be provided."),
         assert(!(post != null && comment != null),
-            "Only one of post or comment can be provided."),
-        super(key: key);
+            "Only one of post or comment can be provided.");
 
   @override
   State<LikeDislikeButton> createState() => LikeDislikeButtonState();

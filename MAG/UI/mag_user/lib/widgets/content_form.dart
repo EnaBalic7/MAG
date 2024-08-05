@@ -14,12 +14,11 @@ import '../utils/util.dart';
 class ContentForm extends StatefulWidget {
   final Post? post;
   final Club? club;
-  const ContentForm({Key? key, this.post, this.club})
+  const ContentForm({super.key, this.post, this.club})
       : assert(post != null || club != null,
             "Either post or club must be provided."),
         assert(!(post != null && club != null),
-            "Only one of post or club can be provided."),
-        super(key: key);
+            "Only one of post or club can be provided.");
 
   @override
   State<ContentForm> createState() => _ContentFormState();
@@ -65,9 +64,9 @@ class _ContentFormState extends State<ContentForm> {
     if (LoggedUser.user!.userRoles!.any(
       (element) => element.canParticipateInClubs == false,
     )) {
-      return Column(
+      return const Column(
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children: [
           Icon(Icons.info, size: 36),
           Text("You don't have permission to post or comment in clubs.",
               textAlign: TextAlign.center,
@@ -141,7 +140,8 @@ class _ContentFormState extends State<ContentForm> {
               borderRadius: 50,
               gradient: Palette.buttonGradient,
               child: const Text("Submit",
-                  style: TextStyle(fontWeight: FontWeight.w500)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, color: Palette.white)),
             )
           ],
         ),

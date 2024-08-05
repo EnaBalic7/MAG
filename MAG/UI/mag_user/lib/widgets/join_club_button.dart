@@ -26,7 +26,7 @@ class JoinClubButton extends StatefulWidget {
   final int clubId;
 
   const JoinClubButton({
-    Key? key,
+    super.key,
     this.width,
     this.height,
     this.borderRadius = 0,
@@ -43,7 +43,7 @@ class JoinClubButton extends StatefulWidget {
     this.hideBorder = false,
     required this.clubId,
     required this.userId,
-  }) : super(key: key);
+  });
 
   @override
   State<JoinClubButton> createState() => _JoinClubButtonState();

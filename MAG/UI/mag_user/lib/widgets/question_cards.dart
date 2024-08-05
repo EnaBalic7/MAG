@@ -17,6 +17,7 @@ import 'gradient_button.dart';
 typedef FetchPage = Future<SearchResult<QA>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class QuestionCards extends StatefulWidget {
   final Future<SearchResult<QA>> Function() fetchQA;
   final Future<Map<String, dynamic>> Function()? getFilter;
@@ -27,7 +28,7 @@ class QuestionCards extends StatefulWidget {
   bool showPopupIcon;
 
   QuestionCards({
-    Key? key,
+    super.key,
     required this.fetchQA,
     this.getFilter,
     required this.fetchPage,
@@ -35,7 +36,7 @@ class QuestionCards extends StatefulWidget {
     required this.page,
     required this.pageSize,
     this.showPopupIcon = true,
-  }) : super(key: key);
+  });
 
   @override
   State<QuestionCards> createState() => _QuestionCardsState();
@@ -346,7 +347,6 @@ class _QuestionCardsState extends State<QuestionCards>
         color: Palette.popupMenu,
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
             child: ListTile(
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightRed.withOpacity(0.1),

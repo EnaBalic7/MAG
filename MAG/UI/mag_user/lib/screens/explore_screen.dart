@@ -15,8 +15,7 @@ import '../widgets/form_builder_filter_chip.dart';
 
 class ExploreScreen extends StatefulWidget {
   final int selectedIndex;
-  const ExploreScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const ExploreScreen({super.key, required this.selectedIndex});
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
@@ -118,16 +117,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     const EdgeInsets.only(top: 0, bottom: 0, left: 1, right: 1),
                 name: 'genres',
                 options: [
-                  ...genres
-                      .map(
-                        (genre) => FormBuilderFieldOption(
-                          value: genre.id.toString(),
-                          child: Text(genre.name!,
-                              style: const TextStyle(
-                                  color: Palette.midnightPurple)),
-                        ),
-                      )
-                      .toList(),
+                  ...genres.map(
+                    (genre) => FormBuilderChipOption(
+                      value: genre.id.toString(),
+                      child: Text(genre.name!,
+                          style:
+                              const TextStyle(color: Palette.midnightPurple)),
+                    ),
+                  ),
                 ],
               ),
             );

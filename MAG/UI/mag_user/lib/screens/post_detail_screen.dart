@@ -14,7 +14,7 @@ import '../widgets/content_card.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final Post post;
-  const PostDetailScreen({Key? key, required this.post}) : super(key: key);
+  const PostDetailScreen({super.key, required this.post});
 
   @override
   State<PostDetailScreen> createState() => _PostDetailScreenState();

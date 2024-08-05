@@ -8,8 +8,7 @@ import '../widgets/anime_cards.dart';
 
 class RecommendedScreen extends StatefulWidget {
   final int selectedIndex;
-  const RecommendedScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const RecommendedScreen({super.key, required this.selectedIndex});
 
   @override
   State<RecommendedScreen> createState() => _RecommendedScreenState();

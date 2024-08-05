@@ -14,8 +14,7 @@ import 'home_screen.dart';
 
 class NebulaCompletedScreen extends StatefulWidget {
   final int selectedIndex;
-  const NebulaCompletedScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const NebulaCompletedScreen({super.key, required this.selectedIndex});
 
   @override
   State<NebulaCompletedScreen> createState() => _NebulaCompletedScreenState();
@@ -63,11 +62,11 @@ class _NebulaCompletedScreenState extends State<NebulaCompletedScreen> {
       future: _filterFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
+          return const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: Center(
               child: Wrap(
-                children: const [
+                children: [
                   NebulaIndicator(),
                   NebulaIndicator(),
                   NebulaIndicator(),

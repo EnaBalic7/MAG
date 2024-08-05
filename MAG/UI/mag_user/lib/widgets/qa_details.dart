@@ -6,7 +6,7 @@ import '../utils/colors.dart';
 
 class QADetails extends StatefulWidget {
   final QA qa;
-  const QADetails({Key? key, required this.qa}) : super(key: key);
+  const QADetails({super.key, required this.qa});
 
   @override
   State<QADetails> createState() => _QADetailsState();
@@ -61,13 +61,15 @@ class _QADetailsState extends State<QADetails> {
               GradientButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    FocusScope.of(context).unfocus();
                   },
                   width: 55,
                   height: 25,
                   borderRadius: 50,
                   gradient: Palette.buttonGradient,
                   child: const Text("OK",
-                      style: TextStyle(fontWeight: FontWeight.w500))),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white))),
             ],
           ),
         ));

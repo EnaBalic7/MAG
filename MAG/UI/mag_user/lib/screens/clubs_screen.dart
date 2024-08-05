@@ -15,7 +15,7 @@ import '../widgets/master_screen.dart';
 
 class ClubsScreen extends StatefulWidget {
   final int selectedIndex;
-  const ClubsScreen({Key? key, required this.selectedIndex}) : super(key: key);
+  const ClubsScreen({super.key, required this.selectedIndex});
 
   @override
   State<ClubsScreen> createState() => _ClubsScreenState();

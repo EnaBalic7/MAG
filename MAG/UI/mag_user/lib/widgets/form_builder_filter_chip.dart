@@ -3,9 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyFormBuilderFilterChip extends StatefulWidget {
   String? name;
-  List<FormBuilderFieldOption<dynamic>>? options;
+  List<FormBuilderChipOption<dynamic>> options;
   String? labelText;
   final List<dynamic>? initialValue;
   void Function(List<dynamic>?)? onChanged;
@@ -27,8 +28,10 @@ class MyFormBuilderFilterChip extends StatefulWidget {
 
   String? Function(List<dynamic>?)? validator;
 
+  FocusNode? focusNode;
+
   MyFormBuilderFilterChip({
-    Key? key,
+    super.key,
     required this.name,
     required this.options,
     this.labelText,
@@ -40,7 +43,8 @@ class MyFormBuilderFilterChip extends StatefulWidget {
     this.showCheckmark = true,
     this.padding,
     this.validator,
-  }) : super(key: key);
+    this.focusNode,
+  });
 
   @override
   State<MyFormBuilderFilterChip> createState() =>
@@ -54,11 +58,16 @@ class _MyFormBuilderFilterChipState extends State<MyFormBuilderFilterChip> {
       width: widget.width,
       height: widget.height,
       child: FormBuilderFilterChip(
+        focusNode: widget.focusNode,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.transparent),
+          borderRadius: BorderRadius.circular(50),
+        ),
         padding: widget.padding,
         name: widget.name!,
         initialValue: widget.initialValue ?? [],
         showCheckmark: widget.showCheckmark ?? true,
-        options: widget.options!,
+        options: widget.options,
         decoration: InputDecoration(
           labelText: widget.labelText ?? "",
           contentPadding: EdgeInsets.zero,

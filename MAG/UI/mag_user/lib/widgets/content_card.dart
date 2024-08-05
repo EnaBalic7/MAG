@@ -18,6 +18,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/util.dart';
 
+// ignore: must_be_immutable
 class ContentCard extends StatefulWidget {
   Post? post;
   final Comment? comment;
@@ -29,7 +30,7 @@ class ContentCard extends StatefulWidget {
   final bool? hidePopupMenuButton;
 
   ContentCard({
-    Key? key,
+    super.key,
     this.post,
     this.comment,
     this.cardColor,
@@ -41,8 +42,7 @@ class ContentCard extends StatefulWidget {
   })  : assert(post != null || comment != null,
             "Either post or comment must be provided."),
         assert(!(post != null && comment != null),
-            "Only one of post or comment can be provided."),
-        super(key: key);
+            "Only one of post or comment can be provided.");
 
   @override
   State<ContentCard> createState() => _ContentCardState();
@@ -211,8 +211,7 @@ class _ContentCardState extends State<ContentCard> {
                                     "CommentsIncluded": "true",
                                   });
 
-                                  if (updatedPost != null &&
-                                      widget.onPostUpdated != null) {
+                                  if (widget.onPostUpdated != null) {
                                     setState(() {
                                       _post = updatedPost.result.single;
                                     });

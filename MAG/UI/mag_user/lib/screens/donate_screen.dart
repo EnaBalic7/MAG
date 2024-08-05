@@ -16,7 +16,7 @@ import '../widgets/donation_cards.dart';
 import '../widgets/form_builder_text_field.dart';
 
 class DonateScreen extends StatefulWidget {
-  const DonateScreen({Key? key}) : super(key: key);
+  const DonateScreen({super.key});
 
   @override
   State<DonateScreen> createState() => _DonateScreenState();
@@ -27,6 +27,7 @@ class _DonateScreenState extends State<DonateScreen> {
       GlobalKey<FormBuilderState>();
   late final PaymentIntentProvider _paymentIntentProvider;
   late final DonationProvider _donationProvider;
+  final FocusNode _focusNode1 = FocusNode();
 
   int page = 0;
   int pageSize = 10;
@@ -35,6 +36,12 @@ class _DonateScreenState extends State<DonateScreen> {
     "UserId": "${LoggedUser.user!.id}",
     "NewestFirst": true,
   };
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -87,6 +94,7 @@ class _DonateScreenState extends State<DonateScreen> {
         FormBuilder(
           key: _donationFormKey,
           child: MyFormBuilderTextField(
+            focusNode: _focusNode1,
             width: screenWidth * 0.8,
             labelText: "Amount",
             name: "amount",
@@ -135,10 +143,15 @@ class _DonateScreenState extends State<DonateScreen> {
                     ),
                   ));
 
-                  _displayPaymentSheet(context, paymentIntent);
+                  if (mounted) {
+                    _displayPaymentSheet(context, paymentIntent);
+                  }
                 }
               } on Exception catch (e) {
-                showErrorDialog(context, e);
+                if (mounted) {
+                  showErrorDialog(context, e);
+                }
+
                 print(e);
               }
             },
@@ -147,7 +160,8 @@ class _DonateScreenState extends State<DonateScreen> {
             gradient: Palette.buttonGradient,
             borderRadius: 50,
             child: const Text("Donate",
-                style: TextStyle(fontWeight: FontWeight.w500))),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500, color: Palette.white))),
       ],
     );
   }
@@ -183,35 +197,51 @@ class _DonateScreenState extends State<DonateScreen> {
       });
     } on StripeException catch (e) {
       if (e.toString().contains("cancel")) {
-        showInfoDialog(
-            context,
-            const Icon(Icons.warning_rounded,
-                color: Palette.lightRed, size: 55),
-            const SizedBox(
-              width: 300,
-              child: Text(
-                "Payment canceled!",
-                textAlign: TextAlign.center,
-              ),
-            ));
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showInfoDialog(
+                context,
+                const Icon(Icons.warning_rounded,
+                    color: Palette.lightRed, size: 55),
+                const SizedBox(
+                  width: 300,
+                  child: Text(
+                    "Payment canceled!",
+                    textAlign: TextAlign.center,
+                  ),
+                ));
+          }
+        });
       } else {
-        showErrorDialog(context, e);
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showErrorDialog(context, e);
+          }
+        });
       }
     } on Exception catch (e) {
       if (e.toString().contains("cancel")) {
-        showInfoDialog(
-            context,
-            const Icon(Icons.warning_rounded,
-                color: Palette.lightRed, size: 55),
-            const SizedBox(
-              width: 300,
-              child: Text(
-                "Payment canceled!",
-                textAlign: TextAlign.center,
-              ),
-            ));
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showInfoDialog(
+                context,
+                const Icon(Icons.warning_rounded,
+                    color: Palette.lightRed, size: 55),
+                const SizedBox(
+                  width: 300,
+                  child: Text(
+                    "Payment canceled!",
+                    textAlign: TextAlign.center,
+                  ),
+                ));
+          }
+        });
       } else {
-        showErrorDialog(context, e);
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showErrorDialog(context, e);
+          }
+        });
       }
     }
   }

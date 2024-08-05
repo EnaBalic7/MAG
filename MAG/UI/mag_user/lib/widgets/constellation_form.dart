@@ -16,7 +16,7 @@ import 'form_builder_filter_chip.dart';
 
 class ConstellationForm extends StatefulWidget {
   final Anime anime;
-  const ConstellationForm({Key? key, required this.anime}) : super(key: key);
+  const ConstellationForm({super.key, required this.anime});
 
   @override
   State<ConstellationForm> createState() => _ConstellationFormState();
@@ -114,7 +114,7 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                   options: [
                                     ...stars
                                         .map(
-                                          (star) => FormBuilderFieldOption(
+                                          (star) => FormBuilderChipOption(
                                             value: star.id.toString(),
                                             child: Text(star.name!,
                                                 style: const TextStyle(
@@ -156,18 +156,6 @@ class _ConstellationFormState extends State<ConstellationForm> {
                           animeListInsert.add(AnimeList(
                               null, int.parse(listId), widget.anime.id, null));
                         }
-
-                        /*if (animeListInsert.isNotEmpty &&
-                              animeListInsert.length == 1) {
-                            print(
-                                "AnimeList with only ONE: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
-                          } else if (animeListInsert.isNotEmpty &&
-                              animeListInsert.length == 2) {
-                            print(
-                                "AnimeList with TWO: ${animeListInsert[0].id}, ${animeListInsert[0].listId}, ${animeListInsert[0].animeId}, ${animeListInsert[0].anime}");
-                            print(
-                                "AnimeList with TWO: ${animeListInsert[1].id}, ${animeListInsert[1].listId}, ${animeListInsert[1].animeId}, ${animeListInsert[1].anime}");
-                          }*/
                       }
 
                       await _animeListProvider.updateListsForAnime(
@@ -190,7 +178,8 @@ class _ConstellationFormState extends State<ConstellationForm> {
                   borderRadius: 50,
                   gradient: Palette.buttonGradient,
                   child: const Text("Save",
-                      style: TextStyle(fontWeight: FontWeight.w500)))
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white)))
             ],
           ),
         ),

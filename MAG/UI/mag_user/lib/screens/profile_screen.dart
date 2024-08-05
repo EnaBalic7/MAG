@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +19,10 @@ import '../utils/colors.dart';
 import '../utils/util.dart';
 import '../widgets/form_builder_text_field.dart';
 
+// ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   User user;
-  ProfileScreen({Key? key, required this.user}) : super(key: key);
+  ProfileScreen({super.key, required this.user});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -31,7 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Map<String, dynamic> _initialValue = {};
   late UserProfilePictureProvider _userProfilePictureProvider;
   late UserProvider _userProvider;
-  File? _image;
   String? _base64Image;
   late Size screenSize;
   double? textFieldWidth;
@@ -39,6 +40,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double? containerWidth;
   double? containerHeight;
   bool usernameTaken = false;
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
 
   Future getImage() async {
     try {
@@ -75,6 +80,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (error) {
       print('Error checking username availability: $error');
     }
+  }
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -197,10 +212,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       Palette.buttonPurple,
                                       Palette.buttonPurple,
                                     ]),
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Icon(Icons.photo, color: Palette.white),
                                         SizedBox(width: 5),
                                         Text("Change photo",
@@ -215,6 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 30),
                       MyFormBuilderTextField(
+                        focusNode: _focusNode1,
                         name: "username",
                         labelText: "Username",
                         fillColor: Palette.darkPurple,
@@ -242,6 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                       ),
                       MyFormBuilderTextField(
+                        focusNode: _focusNode2,
                         name: "firstName",
                         labelText: "First name",
                         fillColor: Palette.darkPurple,
@@ -250,10 +267,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         paddingBottom: 25,
                         borderRadius: 50,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
+                          FormBuilderValidators.required(
+                              errorText: "This field cannot be empty."),
                         ]),
                       ),
                       MyFormBuilderTextField(
+                        focusNode: _focusNode3,
                         name: "lastName",
                         labelText: "Last name",
                         fillColor: Palette.darkPurple,
@@ -262,10 +281,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         paddingBottom: 25,
                         borderRadius: 50,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context),
+                          FormBuilderValidators.required(
+                              errorText: "This field cannot be empty."),
                         ]),
                       ),
                       MyFormBuilderTextField(
+                        focusNode: _focusNode4,
                         name: "email",
                         labelText: "E-mail",
                         fillColor: Palette.darkPurple,
@@ -273,7 +294,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 43,
                         borderRadius: 50,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.email(context),
+                          FormBuilderValidators.email(
+                            errorText: "Invalid email.",
+                            checkNullOrEmpty: false,
+                          ),
                         ]),
                       ),
                     ],
@@ -356,7 +380,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ));
         });
       } on Exception catch (e) {
-        showErrorDialog(context, e);
+        if (mounted) {
+          showErrorDialog(context, e);
+        }
       }
     }
   }

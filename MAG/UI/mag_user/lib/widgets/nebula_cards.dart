@@ -21,6 +21,7 @@ import 'nebula_form.dart';
 typedef FetchPage = Future<SearchResult<AnimeWatchlist>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class NebulaCards extends StatefulWidget {
   final int selectedIndex;
   final Future<SearchResult<AnimeWatchlist>> Function() fetch;
@@ -28,15 +29,16 @@ class NebulaCards extends StatefulWidget {
   final Map<String, dynamic> filter;
   int page;
   int pageSize;
+
   NebulaCards({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.fetch,
     required this.fetchPage,
     required this.filter,
     required this.page,
     required this.pageSize,
-  }) : super(key: key);
+  });
 
   @override
   State<NebulaCards> createState() => _NebulaCardsState();
@@ -157,7 +159,9 @@ class _NebulaCardsState extends State<NebulaCards>
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

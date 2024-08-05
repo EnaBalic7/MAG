@@ -24,11 +24,12 @@ import '../widgets/post_cards.dart';
 class ClubDetailScreen extends StatefulWidget {
   final Club club;
   final int selectedIndex;
+
   const ClubDetailScreen({
-    Key? key,
+    super.key,
     required this.club,
     required this.selectedIndex,
-  }) : super(key: key);
+  });
 
   @override
   State<ClubDetailScreen> createState() => _ClubDetailScreenState();

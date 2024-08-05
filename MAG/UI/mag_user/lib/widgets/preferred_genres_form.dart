@@ -14,7 +14,7 @@ import 'form_builder_filter_chip.dart';
 import 'gradient_button.dart';
 
 class PreferredGenresForm extends StatefulWidget {
-  const PreferredGenresForm({Key? key}) : super(key: key);
+  const PreferredGenresForm({super.key});
 
   @override
   State<PreferredGenresForm> createState() => _PreferredGenresFormState();
@@ -96,7 +96,7 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
                                     options: [
                                       ...genres
                                           .map(
-                                            (genre) => FormBuilderFieldOption(
+                                            (genre) => FormBuilderChipOption(
                                               value: genre.id.toString(),
                                               child: Text(genre.name!,
                                                   style: const TextStyle(
@@ -173,7 +173,8 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
                   borderRadius: 50,
                   gradient: Palette.buttonGradient,
                   child: const Text("Save",
-                      style: TextStyle(fontWeight: FontWeight.w500)))
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white)))
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../utils/icons.dart';
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyDateTimePicker extends StatefulWidget {
   String? name;
   String? labelText;
@@ -20,8 +21,10 @@ class MyDateTimePicker extends StatefulWidget {
   String? Function(DateTime?)? validator;
   void Function(DateTime?)? onChanged;
   GlobalKey<FormBuilderState>? formKey;
+  FocusNode? focusNode;
+
   MyDateTimePicker({
-    Key? key,
+    super.key,
     required this.name,
     this.width = 100,
     this.height = 40,
@@ -36,7 +39,8 @@ class MyDateTimePicker extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.formKey,
-  }) : super(key: key);
+    this.focusNode,
+  });
 
   @override
   State<MyDateTimePicker> createState() => _MyDateTimePickerState();
@@ -55,6 +59,7 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDateTimePicker(
+          focusNode: widget.focusNode,
           style: const TextStyle(fontSize: 14, height: 1),
           validator: widget.validator,
           valueTransformer: (selectedDate) {

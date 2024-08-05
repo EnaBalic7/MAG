@@ -18,8 +18,7 @@ import 'empty.dart';
 
 class ConstellationCards extends StatefulWidget {
   final int selectedIndex;
-  const ConstellationCards({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const ConstellationCards({super.key, required this.selectedIndex});
 
   @override
   State<ConstellationCards> createState() => _ConstellationCardsState();
@@ -332,7 +331,6 @@ class _ConstellationCardsState extends State<ConstellationCards> {
         color: const Color.fromRGBO(50, 48, 90, 1),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
             child: ListTile(
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightPurple.withOpacity(0.1),
@@ -355,7 +353,6 @@ class _ConstellationCardsState extends State<ConstellationCards> {
             ),
           ),
           PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
             child: ListTile(
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightRed.withOpacity(0.1),

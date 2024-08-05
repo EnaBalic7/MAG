@@ -6,7 +6,7 @@ import '../utils/colors.dart';
 import '../utils/icons.dart';
 
 class NebulaIndicator extends StatefulWidget {
-  const NebulaIndicator({Key? key}) : super(key: key);
+  const NebulaIndicator({super.key});
 
   @override
   State<NebulaIndicator> createState() => _NebulaIndicatorState();

@@ -45,12 +45,13 @@ void main() {
     ChangeNotifierProvider(create: (_) => RatingProvider()),
     ChangeNotifierProvider(create: (_) => UserPostActionProvider()),
     ChangeNotifierProvider(
-        create: (_) => PostProvider(
-            userPostActionProvider: _.read<UserPostActionProvider>())),
+        create: (context) => PostProvider(
+            userPostActionProvider: context.read<UserPostActionProvider>())),
     ChangeNotifierProvider(create: (_) => UserCommentActionProvider()),
     ChangeNotifierProvider(
-        create: (_) => CommentProvider(
-            userCommentActionProvider: _.read<UserCommentActionProvider>())),
+        create: (context) => CommentProvider(
+            userCommentActionProvider:
+                context.read<UserCommentActionProvider>())),
     ChangeNotifierProvider(create: (_) => ClubProvider()),
     ChangeNotifierProvider(create: (_) => RoleProvider()),
     ChangeNotifierProvider(create: (_) => UserRoleProvider()),
@@ -67,7 +68,7 @@ void main() {
 }
 
 class MyMaterialApp extends StatelessWidget {
-  const MyMaterialApp({Key? key}) : super(key: key);
+  const MyMaterialApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +106,15 @@ class MyMaterialApp extends StatelessWidget {
             selectionColor: Palette.midnightPurple.withOpacity(0.6),
             selectionHandleColor: Colors.transparent),
         appBarTheme: const AppBarTheme(
+            backgroundColor: Palette.darkPurple,
             titleTextStyle: TextStyle(
                 color: Palette.lightPurple,
                 fontSize: 20,
                 fontWeight: FontWeight.w500)),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-                primary: Palette.teal.withOpacity(0.5),
+                iconColor: Palette.white,
+                backgroundColor: Palette.teal.withOpacity(0.5),
                 textStyle: const TextStyle(color: Palette.white))),
         drawerTheme: DrawerThemeData(
           backgroundColor: Palette.midnightPurple,
@@ -120,10 +123,10 @@ class MyMaterialApp extends StatelessWidget {
         iconTheme: const IconThemeData(color: Palette.lightPurple),
         scrollbarTheme: ScrollbarThemeData(
             crossAxisMargin: -10,
-            thickness: MaterialStateProperty.all(7),
-            trackBorderColor: MaterialStateProperty.all(Palette.white),
-            thumbColor: MaterialStateProperty.all(
-                Palette.lightPurple.withOpacity(0.5))),
+            thickness: WidgetStateProperty.all(7),
+            trackBorderColor: WidgetStateProperty.all(Palette.white),
+            thumbColor:
+                WidgetStateProperty.all(Palette.lightPurple.withOpacity(0.5))),
         inputDecorationTheme: const InputDecorationTheme(
             filled: true,
             fillColor: Palette.darkPurple,

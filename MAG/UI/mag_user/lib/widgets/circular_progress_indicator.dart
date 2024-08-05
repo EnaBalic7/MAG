@@ -9,12 +9,12 @@ class MyProgressIndicator extends StatefulWidget {
   final Color? color;
 
   const MyProgressIndicator({
-    Key? key,
+    super.key,
     this.height,
     this.width,
     this.strokeWidth,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   State<MyProgressIndicator> createState() => _MyProgressIndicatorState();

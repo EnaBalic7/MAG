@@ -7,8 +7,7 @@ import '../widgets/star_form.dart';
 
 class ConstellationScreen extends StatefulWidget {
   final int selectedIndex;
-  const ConstellationScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const ConstellationScreen({super.key, required this.selectedIndex});
 
   @override
   State<ConstellationScreen> createState() => _ConstellationScreenState();

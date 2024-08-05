@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyPaginationButtons extends StatefulWidget {
   int page;
   int pageSize;
@@ -9,15 +10,16 @@ class MyPaginationButtons extends StatefulWidget {
   Future<void> Function(int) fetchPage;
   Widget? noResults;
   bool? hasSearch;
+
   MyPaginationButtons({
-    Key? key,
+    super.key,
     required this.page,
     required this.pageSize,
     required this.totalItems,
     required this.fetchPage,
     this.noResults,
     required this.hasSearch,
-  }) : super(key: key);
+  });
 
   @override
   State<MyPaginationButtons> createState() => _MyPaginationButtonsState();
@@ -39,7 +41,7 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
                   padding: const EdgeInsets.only(right: 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Palette.textFieldPurple.withOpacity(0.7),
+                      backgroundColor: Palette.textFieldPurple.withOpacity(0.7),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
                     ),
@@ -55,7 +57,8 @@ class _MyPaginationButtonsState extends State<MyPaginationButtons> {
                   padding: const EdgeInsets.only(left: 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Palette.textFieldPurple.withOpacity(0.7),
+                        backgroundColor:
+                            Palette.textFieldPurple.withOpacity(0.7),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50))),
                     onPressed: widget.page + 1 ==

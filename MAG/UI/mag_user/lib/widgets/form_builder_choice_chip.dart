@@ -3,17 +3,19 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyFormBuilderChoiceChip extends StatefulWidget {
   String? name;
-  List<FormBuilderFieldOption<dynamic>>? options;
+  List<FormBuilderChipOption<Object>> options;
   String? labelText;
   final dynamic initialValue;
   void Function(dynamic)? onChanged;
   String? Function(dynamic)? validator;
   Color? selectedColor;
+  FocusNode? focusNode;
 
   MyFormBuilderChoiceChip({
-    Key? key,
+    super.key,
     required this.name,
     required this.options,
     this.labelText,
@@ -21,7 +23,8 @@ class MyFormBuilderChoiceChip extends StatefulWidget {
     this.onChanged,
     this.validator,
     this.selectedColor,
-  }) : super(key: key);
+    this.focusNode,
+  });
 
   @override
   State<MyFormBuilderChoiceChip> createState() =>
@@ -32,9 +35,14 @@ class _MyFormBuilderChoiceChipState extends State<MyFormBuilderChoiceChip> {
   @override
   Widget build(BuildContext context) {
     return FormBuilderChoiceChip(
+      focusNode: widget.focusNode,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(50),
+      ),
       name: widget.name!,
       initialValue: widget.initialValue ?? "",
-      options: widget.options!,
+      options: widget.options,
       selectedColor: widget.selectedColor ?? Palette.stardust,
       padding: const EdgeInsets.all(4),
       autovalidateMode: AutovalidateMode.onUserInteraction,

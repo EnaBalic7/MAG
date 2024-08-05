@@ -14,6 +14,7 @@ import '../utils/util.dart';
 typedef FetchPage = Future<SearchResult<Comment>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class CommentCards extends StatefulWidget {
   final Future<SearchResult<Comment>> Function() fetchComments;
   Map<String, dynamic> filter;
@@ -22,13 +23,13 @@ class CommentCards extends StatefulWidget {
   int pageSize;
 
   CommentCards({
-    Key? key,
+    super.key,
     required this.fetchComments,
     required this.fetchPage,
     required this.filter,
     required this.page,
     required this.pageSize,
-  }) : super(key: key);
+  });
 
   @override
   State<CommentCards> createState() => _CommentCardsState();

@@ -10,8 +10,7 @@ import '../utils/util.dart';
 
 class UserProfileDialog extends StatefulWidget {
   final User loggedUser;
-  const UserProfileDialog({Key? key, required this.loggedUser})
-      : super(key: key);
+  const UserProfileDialog({super.key, required this.loggedUser});
 
   @override
   State<UserProfileDialog> createState() => _UserProfileDialogState();
@@ -103,14 +102,14 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Palette.buttonPurple,
+                    backgroundColor: Palette.buttonPurple,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
                   ),
-                  child: Row(
+                  child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    children: const [
-                      Text('Settings'),
+                    children: [
+                      Text('Settings', style: TextStyle(color: Palette.white)),
                       SizedBox(width: 5),
                       Icon(Icons.settings_rounded, size: 15),
                     ],
@@ -127,14 +126,15 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                     ));
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Palette.buttonPurple,
+                    backgroundColor: Palette.buttonPurple,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text('Log Out'),
+                      const Text('Log Out',
+                          style: TextStyle(color: Palette.white)),
                       const SizedBox(width: 5),
                       buildLogoutIcon(16, color: Palette.white),
                     ],

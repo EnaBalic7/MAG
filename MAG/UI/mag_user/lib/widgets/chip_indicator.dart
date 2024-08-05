@@ -5,7 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../utils/colors.dart';
 
 class ChipIndicator extends StatelessWidget {
-  const ChipIndicator({Key? key}) : super(key: key);
+  const ChipIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {

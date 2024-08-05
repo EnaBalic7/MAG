@@ -13,6 +13,7 @@ import 'empty.dart';
 typedef FetchPage = Future<SearchResult<Post>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class PostCards extends StatefulWidget {
   final int selectedIndex;
   final Future<SearchResult<Post>> Function() fetchPosts;
@@ -22,14 +23,14 @@ class PostCards extends StatefulWidget {
   int pageSize;
 
   PostCards({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.fetchPosts,
     required this.fetchPage,
     required this.filter,
     required this.page,
     required this.pageSize,
-  }) : super(key: key);
+  });
 
   @override
   State<PostCards> createState() => _PostCardsState();

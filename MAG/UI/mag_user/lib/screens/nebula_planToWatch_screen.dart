@@ -14,8 +14,7 @@ import 'home_screen.dart';
 
 class NebulaPlanToWatchScreen extends StatefulWidget {
   final int selectedIndex;
-  const NebulaPlanToWatchScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const NebulaPlanToWatchScreen({super.key, required this.selectedIndex});
 
   @override
   State<NebulaPlanToWatchScreen> createState() =>
@@ -64,11 +63,11 @@ class _NebulaPlanToWatchScreenState extends State<NebulaPlanToWatchScreen> {
       future: _filterFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(),
+          return const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: Center(
               child: Wrap(
-                children: const [
+                children: [
                   NebulaIndicator(),
                   NebulaIndicator(),
                   NebulaIndicator(),

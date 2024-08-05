@@ -16,13 +16,14 @@ import '../utils/colors.dart';
 import '../utils/util.dart';
 import 'form_builder_text_field.dart';
 
+// ignore: must_be_immutable
 class ClubForm extends StatefulWidget {
   /// If not null, it means editing is in question
   Club? club;
   ClubForm({
-    Key? key,
+    super.key,
     this.club,
-  }) : super(key: key);
+  });
 
   @override
   State<ClubForm> createState() => _ClubFormState();
@@ -35,6 +36,18 @@ class _ClubFormState extends State<ClubForm> {
   late final ClubProvider _clubProvider;
   late final ClubUserProvider _clubUserProvider;
   Map<String, dynamic> _initialValue = {};
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -96,6 +109,7 @@ class _ClubFormState extends State<ClubForm> {
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
                   height: 43,
                   borderRadius: 50,
+                  focusNode: _focusNode1,
                   validator: (val) {
                     if (val == null || isEmptyOrWhiteSpace(val)) {
                       return "This field cannot be empty.";
@@ -118,6 +132,7 @@ class _ClubFormState extends State<ClubForm> {
                   keyboardType: TextInputType.multiline,
                   borderRadius: 20,
                   errorBorderRadius: 20,
+                  focusNode: _focusNode2,
                   validator: (val) {
                     if (val == null || isEmptyOrWhiteSpace(val)) {
                       return "This field cannot be empty.";
@@ -131,6 +146,7 @@ class _ClubFormState extends State<ClubForm> {
                 ),
                 FormBuilderField(
                   name: "cover",
+                  focusNode: _focusNode3,
                   builder: (FormFieldState<dynamic> field) {
                     return InputDecorator(
                       decoration: InputDecoration(
@@ -158,7 +174,8 @@ class _ClubFormState extends State<ClubForm> {
                               color: Palette.lightPurple,
                             ),
                           ),
-                          title: const Text("Upload cover photo"),
+                          title: const Text("Upload cover photo",
+                              style: TextStyle(color: Palette.lightPurple)),
                         ),
                       ),
                     );
@@ -274,9 +291,13 @@ class _ClubFormState extends State<ClubForm> {
                   gradient: Palette.buttonGradient,
                   child: (widget.club == null)
                       ? const Text("Create",
-                          style: TextStyle(fontWeight: FontWeight.w500))
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Palette.white))
                       : const Text("Save",
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Palette.white)),
                 ),
               ],
             ),

@@ -27,8 +27,9 @@ class Empty extends StatefulWidget {
 
   /// GradientButton child widget, usually Text
   final Widget? child;
+
   const Empty({
-    Key? key,
+    super.key,
     this.text,
     this.screen,
     this.showGradientButton = true,
@@ -37,7 +38,7 @@ class Empty extends StatefulWidget {
     this.width,
     this.gradient,
     this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<Empty> createState() => _EmptyState();

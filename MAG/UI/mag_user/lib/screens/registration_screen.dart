@@ -13,7 +13,7 @@ import '../widgets/form_builder_text_field.dart';
 import '../widgets/gradient_button.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({Key? key}) : super(key: key);
+  const RegistrationScreen({super.key});
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -30,6 +30,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   double? containerHeight;
 
   double? textFieldWidth;
+
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
+  final FocusNode _focusNode5 = FocusNode();
+  final FocusNode _focusNode6 = FocusNode();
 
   @override
   void initState() {
@@ -50,6 +57,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } catch (error) {
       print('Error checking username availability: $error');
     }
+  }
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+    _focusNode5.dispose();
+    _focusNode6.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -97,6 +116,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               paddingBottom: 25,
                               keyboardType: TextInputType.text,
                               borderRadius: 50,
+                              focusNode: _focusNode1,
                               onChanged: (val) async {
                                 if (val != null) {
                                   await checkUsernameAvailability(val);
@@ -126,6 +146,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               keyboardType: TextInputType.emailAddress,
                               textCapitalization: TextCapitalization.none,
                               borderRadius: 50,
+                              focusNode: _focusNode2,
                               validator: (val) {
                                 if (val != null && val.length > 25) {
                                   return 'Email can contain 25 characters max.';
@@ -146,6 +167,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               paddingBottom: 25,
                               keyboardType: TextInputType.text,
                               borderRadius: 50,
+                              focusNode: _focusNode3,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "This field cannot be empty.";
@@ -167,6 +189,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               paddingBottom: 25,
                               keyboardType: TextInputType.text,
                               borderRadius: 50,
+                              focusNode: _focusNode4,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "This field cannot be empty.";
@@ -188,6 +211,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               paddingBottom: 25,
                               borderRadius: 50,
                               obscureText: true,
+                              focusNode: _focusNode5,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "This field cannot be empty.";
@@ -213,6 +237,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               paddingBottom: 25,
                               borderRadius: 50,
                               obscureText: true,
+                              focusNode: _focusNode6,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "This field cannot be empty.";
@@ -298,7 +323,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         child: const Text("Register",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500))),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Palette.white))),
                     Padding(
                       padding: const EdgeInsets.only(top: 0),
                       child: TextButton(

@@ -8,7 +8,7 @@ import '../utils/util.dart';
 import '../widgets/question_cards.dart';
 
 class AskedByOthersScreen extends StatefulWidget {
-  const AskedByOthersScreen({Key? key}) : super(key: key);
+  const AskedByOthersScreen({super.key});
 
   @override
   State<AskedByOthersScreen> createState() => _AskedByOthersScreenState();

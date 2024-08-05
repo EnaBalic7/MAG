@@ -14,6 +14,7 @@ import '../utils/util.dart';
 typedef FetchPage = Future<SearchResult<Donation>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class DonationCards extends StatefulWidget {
   final Future<SearchResult<Donation>> Function() fetchDonations;
   final FetchPage fetchPage;
@@ -22,13 +23,13 @@ class DonationCards extends StatefulWidget {
   int pageSize;
 
   DonationCards({
-    Key? key,
+    super.key,
     required this.fetchDonations,
     required this.fetchPage,
     required this.filter,
     required this.page,
     required this.pageSize,
-  }) : super(key: key);
+  });
 
   @override
   State<DonationCards> createState() => _DonationCardsState();

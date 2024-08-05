@@ -8,8 +8,7 @@ import '../widgets/anime_cards.dart';
 
 class TopAnimeScreen extends StatefulWidget {
   final int selectedIndex;
-  const TopAnimeScreen({Key? key, required this.selectedIndex})
-      : super(key: key);
+  const TopAnimeScreen({super.key, required this.selectedIndex});
 
   @override
   State<TopAnimeScreen> createState() => _TopAnimeScreenState();

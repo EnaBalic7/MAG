@@ -21,7 +21,7 @@ import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 
 class InfoScreen extends StatefulWidget {
-  const InfoScreen({Key? key}) : super(key: key);
+  const InfoScreen({super.key});
 
   @override
   State<InfoScreen> createState() => _InfoScreenState();

@@ -14,7 +14,7 @@ class StarForm extends StatefulWidget {
 
   /// Must be passed for editing
   final int? listId;
-  const StarForm({Key? key, this.initialValue, this.listId}) : super(key: key);
+  const StarForm({super.key, this.initialValue, this.listId});
 
   @override
   State<StarForm> createState() => _StarFormState();
@@ -114,9 +114,13 @@ class _StarFormState extends State<StarForm> {
                   gradient: Palette.buttonGradient,
                   child: (widget.initialValue == null)
                       ? const Text("Add",
-                          style: TextStyle(fontWeight: FontWeight.w500))
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Palette.white))
                       : const Text("Save",
-                          style: TextStyle(fontWeight: FontWeight.w500))),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Palette.white))),
             ],
           ),
         ));

@@ -25,6 +25,7 @@ import 'nebula_form.dart';
 typedef FetchPage = Future<SearchResult<Anime>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class AnimeCards extends StatefulWidget {
   final int selectedIndex;
   final Future<SearchResult<Anime>> Function() fetchAnime;
@@ -35,7 +36,7 @@ class AnimeCards extends StatefulWidget {
   int pageSize;
 
   AnimeCards({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.fetchAnime,
     required this.fetchPage,
@@ -43,7 +44,7 @@ class AnimeCards extends StatefulWidget {
     required this.page,
     required this.pageSize,
     this.getFilter,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimeCards> createState() => _AnimeCardsState();
@@ -250,9 +251,7 @@ class _AnimeCardsState extends State<AnimeCards>
                         ),
                 ),
                 Positioned(
-                  bottom: (cardHeight * 0.1 < 23.4)
-                      ? -(cardHeight * 0.025)
-                      : (cardHeight * 0.015),
+                  bottom: (cardHeight * 0.1 < 23.4) ? -(cardHeight * 0.025) : 0,
                   left: 0,
                   right: 0,
                   child: SizedBox(
@@ -351,9 +350,9 @@ class _AnimeCardsState extends State<AnimeCards>
                             width: 1,
                           ),
                         ),
-                        child: Column(
+                        child: const Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: const [
+                          children: [
                             Empty(
                                 text: Text("Your Constellation is empty."),
                                 screen: ConstellationScreen(selectedIndex: 3),
@@ -362,11 +361,15 @@ class _AnimeCardsState extends State<AnimeCards>
                         )));
               });
         } else if (constellations.count > 0) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return ConstellationForm(anime: anime);
-              });
+          Future.delayed(Duration.zero, () {
+            if (mounted) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ConstellationForm(anime: anime);
+                  });
+            }
+          });
         }
       },
       child: Container(
@@ -399,51 +402,59 @@ class _AnimeCardsState extends State<AnimeCards>
         var animeWatchlist = await _animeWatchlistProvider
             .get(filter: {"WatchlistId": watchlistId, "AnimeId": anime.id});
         if (animeWatchlist.result.isNotEmpty) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                insetPadding: const EdgeInsets.all(17),
-                alignment: Alignment.center,
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Palette.darkPurple,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Palette.lightPurple.withOpacity(0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                          "You already added this anime to your Nebula."),
-                      GradientButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => const NebulaScreen(
-                                        selectedIndex: 1,
-                                      )));
-                        },
-                        borderRadius: 50,
-                        width: 130,
-                        paddingTop: 10,
-                        height: 30,
-                        gradient: Palette.buttonGradient,
-                        child: const Text("Go to Nebula",
-                            style: TextStyle(fontWeight: FontWeight.w500)),
+          Future.delayed(Duration.zero, () {
+            if (mounted) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    insetPadding: const EdgeInsets.all(17),
+                    alignment: Alignment.center,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Palette.darkPurple,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Palette.lightPurple.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
-                    ],
-                  ),
-                ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "You already added this anime to your Nebula.",
+                            textAlign: TextAlign.center,
+                          ),
+                          GradientButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => const NebulaScreen(
+                                            selectedIndex: 1,
+                                          )));
+                            },
+                            borderRadius: 50,
+                            width: 130,
+                            paddingTop: 10,
+                            height: 30,
+                            gradient: Palette.buttonGradient,
+                            child: const Text("Go to Nebula",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Palette.white)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
-            },
-          );
+            }
+          });
         } else {
           showDialog(
             context: context,

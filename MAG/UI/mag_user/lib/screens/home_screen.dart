@@ -12,7 +12,7 @@ import '../widgets/preferred_genres_form.dart';
 
 class HomeScreen extends StatefulWidget {
   final int selectedIndex;
-  const HomeScreen({Key? key, required this.selectedIndex}) : super(key: key);
+  const HomeScreen({super.key, required this.selectedIndex});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -39,12 +39,14 @@ class _HomeScreenState extends State<HomeScreen>
         .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
     if (_prefGenres.count < 3) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: ((context) {
-            return const PreferredGenresForm();
-          }));
+      if (mounted) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: ((context) {
+              return const PreferredGenresForm();
+            }));
+      }
     }
   }
 

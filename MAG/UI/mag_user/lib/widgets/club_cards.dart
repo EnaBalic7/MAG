@@ -19,6 +19,7 @@ import 'club_form.dart';
 typedef FetchPage = Future<SearchResult<Club>> Function(
     Map<String, dynamic> filter);
 
+// ignore: must_be_immutable
 class ClubCards extends StatefulWidget {
   final int selectedIndex;
   final Future<SearchResult<Club>> Function() fetchClubs;
@@ -34,7 +35,7 @@ class ClubCards extends StatefulWidget {
   bool? showEmpty;
 
   ClubCards({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.fetchClubs,
     this.getFilter,
@@ -45,7 +46,7 @@ class ClubCards extends StatefulWidget {
     this.showPagination = true,
     this.showPopupMenuButton = false,
     this.showEmpty = true,
-  }) : super(key: key);
+  });
 
   @override
   State<ClubCards> createState() => _ClubCardsState();
@@ -432,7 +433,6 @@ class _ClubCardsState extends State<ClubCards> {
         color: const Color.fromRGBO(50, 48, 90, 1),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
             child: ListTile(
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightPurple.withOpacity(0.1),
@@ -452,7 +452,6 @@ class _ClubCardsState extends State<ClubCards> {
             ),
           ),
           PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
             child: ListTile(
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightRed.withOpacity(0.1),

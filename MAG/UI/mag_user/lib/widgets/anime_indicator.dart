@@ -5,7 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../utils/colors.dart';
 
 class AnimeIndicator extends StatefulWidget {
-  const AnimeIndicator({Key? key}) : super(key: key);
+  const AnimeIndicator({super.key});
 
   @override
   State<AnimeIndicator> createState() => _AnimeIndicatorState();
@@ -57,9 +57,9 @@ class _AnimeIndicatorState extends State<AnimeIndicator> {
                   right: 0,
                   child: SizedBox(
                     height: cardHeight * 0.135,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [],
+                      children: [],
                     ),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class MyTextField extends StatefulWidget {
   String? hintText;
   Color? fillColor;
@@ -14,7 +15,7 @@ class MyTextField extends StatefulWidget {
   TextCapitalization textCapitalization;
 
   MyTextField({
-    Key? key,
+    super.key,
     this.hintText,
     this.fillColor,
     this.obscureText,
@@ -24,7 +25,7 @@ class MyTextField extends StatefulWidget {
     this.controller,
     this.keyboardType = TextInputType.text,
     this.textCapitalization = TextCapitalization.none,
-  }) : super(key: key);
+  });
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -46,7 +47,7 @@ class _MyTextFieldState extends State<MyTextField> {
         decoration: InputDecoration(
             hintText: widget.hintText ?? "",
             hintStyle: const TextStyle(
-                height: 2.8,
+                height: 0,
                 fontWeight: FontWeight.w400,
                 color: Palette.lightPurple),
             fillColor: widget.fillColor,

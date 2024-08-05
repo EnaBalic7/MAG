@@ -73,7 +73,9 @@ Future<void> showErrorDialog(BuildContext context, Exception e) async {
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
                         child: const Text("OK",
-                            style: TextStyle(fontWeight: FontWeight.w500)))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Palette.white)))),
               ]));
 }
 
@@ -101,7 +103,9 @@ Future<void> showInfoDialog(
                         borderRadius: 15,
                         gradient: Palette.buttonGradient,
                         child: const Text("OK",
-                            style: TextStyle(fontWeight: FontWeight.w500)))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Palette.white)))),
               ]));
 }
 
@@ -130,7 +134,8 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   height: 28,
                   borderRadius: 15,
                   gradient: Palette.buttonGradient2,
-                  child: const Text("No"))),
+                  child: const Text("No",
+                      style: TextStyle(color: Palette.white)))),
           Padding(
               padding: const EdgeInsets.only(right: 16, bottom: 5, top: 5),
               child: GradientButton(
@@ -143,7 +148,8 @@ Future<void> showConfirmationDialog(BuildContext context, Widget? dialogTitle,
                   borderRadius: 15,
                   gradient: Palette.buttonGradient,
                   child: const Text("Yes",
-                      style: TextStyle(fontWeight: FontWeight.w500)))),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white)))),
         ],
       );
     },

@@ -5,7 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import '../utils/colors.dart';
 
 class ContentIndicator extends StatefulWidget {
-  const ContentIndicator({Key? key}) : super(key: key);
+  const ContentIndicator({super.key});
 
   @override
   State<ContentIndicator> createState() => _ContentIndicatorState();

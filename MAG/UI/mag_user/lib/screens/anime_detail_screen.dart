@@ -28,9 +28,9 @@ import '../widgets/gradient_button.dart';
 class AnimeDetailScreen extends StatefulWidget {
   final Anime anime;
   final int selectedIndex;
+
   const AnimeDetailScreen(
-      {Key? key, required this.selectedIndex, required this.anime})
-      : super(key: key);
+      {super.key, required this.selectedIndex, required this.anime});
 
   @override
   State<AnimeDetailScreen> createState() => _AnimeDetailScreenState();
@@ -386,7 +386,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           ),
                         ),
                         RemainingDuration(),
-                        /*GestureDetector(
+                        GestureDetector(
                             onTap: () {
                               _youtubePlayerController.pause();
                               _enterFullScreen();
@@ -395,7 +395,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                               padding: EdgeInsets.only(left: 5),
                               child: Icon(Icons.fullscreen_rounded,
                                   color: Palette.white, size: 30),
-                            ))*/
+                            ))
                       ],
                     );
                   },

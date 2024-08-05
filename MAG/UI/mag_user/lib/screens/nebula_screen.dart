@@ -10,7 +10,7 @@ import '../widgets/master_screen.dart';
 
 class NebulaScreen extends StatefulWidget {
   final int selectedIndex;
-  const NebulaScreen({Key? key, required this.selectedIndex}) : super(key: key);
+  const NebulaScreen({super.key, required this.selectedIndex});
 
   @override
   State<NebulaScreen> createState() => _NebulaScreenState();

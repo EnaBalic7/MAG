@@ -4,6 +4,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../utils/colors.dart';
 
+// ignore: must_be_immutable
 class VideoScreen extends StatefulWidget {
   final String videoId;
   ValueNotifier<int> playbackPosition;
@@ -11,12 +12,12 @@ class VideoScreen extends StatefulWidget {
   final Function(int position, bool isPlaying) updatePlaybackStatus;
 
   VideoScreen({
-    Key? key,
+    super.key,
     required this.videoId,
     required this.playbackPosition,
     required this.isPlaying,
     required this.updatePlaybackStatus,
-  }) : super(key: key);
+  });
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();

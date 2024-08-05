@@ -19,6 +19,7 @@ import 'circular_progress_indicator.dart';
 import 'form_builder_choice_chip.dart';
 import 'gradient_button.dart';
 
+// ignore: must_be_immutable
 class NebulaForm extends StatefulWidget {
   final Anime anime;
 
@@ -31,11 +32,11 @@ class NebulaForm extends StatefulWidget {
   final AnimeWatchlist? animeWatchlist;
 
   NebulaForm({
-    Key? key,
+    super.key,
     required this.anime,
     this.watchlistId,
     this.animeWatchlist,
-  }) : super(key: key);
+  });
 
   @override
   State<NebulaForm> createState() => _NebulaFormState();
@@ -50,6 +51,37 @@ class _NebulaFormState extends State<NebulaForm> {
 
   int progress = 0;
   int? _watchlistId;
+
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode3 = FocusNode();
+  final FocusNode _focusNode4 = FocusNode();
+  final FocusNode _focusNode5 = FocusNode();
+  final FocusNode _focusNode6 = FocusNode();
+  final FocusNode _focusNode7 = FocusNode();
+  final FocusNode _focusNode8 = FocusNode();
+  final FocusNode _focusNode9 = FocusNode();
+  final FocusNode _focusNode10 = FocusNode();
+  final FocusNode _focusNode11 = FocusNode();
+  final FocusNode _focusNode12 = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    _focusNode3.dispose();
+    _focusNode4.dispose();
+    _focusNode5.dispose();
+    _focusNode6.dispose();
+    _focusNode7.dispose();
+    _focusNode8.dispose();
+    _focusNode9.dispose();
+    _focusNode10.dispose();
+    _focusNode11.dispose();
+    _focusNode12.dispose();
+
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -150,8 +182,8 @@ class _NebulaFormState extends State<NebulaForm> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Text(
                       "Watch status",
                       style: TextStyle(fontWeight: FontWeight.w500),
@@ -159,13 +191,14 @@ class _NebulaFormState extends State<NebulaForm> {
                   ],
                 ),
                 MyFormBuilderChoiceChip(
+                  focusNode: _focusNode1,
                   name: "watchStatus",
                   options: const [
-                    FormBuilderFieldOption(value: "Watching"),
-                    FormBuilderFieldOption(value: "Completed"),
-                    FormBuilderFieldOption(value: "On Hold"),
-                    FormBuilderFieldOption(value: "Dropped"),
-                    FormBuilderFieldOption(value: "Plan to Watch"),
+                    FormBuilderChipOption(value: "Watching"),
+                    FormBuilderChipOption(value: "Completed"),
+                    FormBuilderChipOption(value: "On Hold"),
+                    FormBuilderChipOption(value: "Dropped"),
+                    FormBuilderChipOption(value: "Plan to Watch"),
                   ],
                   onChanged: (val) {
                     _nebulaFormKey.currentState?.saveAndValidate();
@@ -177,8 +210,8 @@ class _NebulaFormState extends State<NebulaForm> {
                     return null;
                   },
                 ),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Text(
                       "Progress",
                       style: TextStyle(fontWeight: FontWeight.w500),
@@ -186,6 +219,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   ],
                 ),
                 FormBuilderField(
+                  focusNode: _focusNode2,
                   name: "progress",
                   builder: (FormFieldState<dynamic> field) {
                     return InputDecorator(
@@ -231,8 +265,8 @@ class _NebulaFormState extends State<NebulaForm> {
                   borderRadius: 50,
                   opacity: 0.5,
                 ),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Text(
                       "Score & review (optional)",
                       style: TextStyle(fontWeight: FontWeight.w500),
@@ -240,19 +274,20 @@ class _NebulaFormState extends State<NebulaForm> {
                   ],
                 ),
                 MyFormBuilderChoiceChip(
+                  focusNode: _focusNode3,
                   name: "ratingValue",
                   selectedColor: Palette.lightYellow,
                   options: const [
-                    FormBuilderFieldOption(value: 10),
-                    FormBuilderFieldOption(value: 9),
-                    FormBuilderFieldOption(value: 8),
-                    FormBuilderFieldOption(value: 7),
-                    FormBuilderFieldOption(value: 6),
-                    FormBuilderFieldOption(value: 5),
-                    FormBuilderFieldOption(value: 4),
-                    FormBuilderFieldOption(value: 3),
-                    FormBuilderFieldOption(value: 2),
-                    FormBuilderFieldOption(value: 1),
+                    FormBuilderChipOption(value: 10),
+                    FormBuilderChipOption(value: 9),
+                    FormBuilderChipOption(value: 8),
+                    FormBuilderChipOption(value: 7),
+                    FormBuilderChipOption(value: 6),
+                    FormBuilderChipOption(value: 5),
+                    FormBuilderChipOption(value: 4),
+                    FormBuilderChipOption(value: 3),
+                    FormBuilderChipOption(value: 2),
+                    FormBuilderChipOption(value: 1),
                   ],
                   onChanged: (val) {
                     _nebulaFormKey.currentState?.saveAndValidate();
@@ -276,6 +311,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   height: 10,
                 ),
                 MyFormBuilderTextField(
+                  focusNode: _focusNode4,
                   name: "reviewText",
                   labelText: "Review",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
@@ -322,8 +358,8 @@ class _NebulaFormState extends State<NebulaForm> {
                   borderRadius: 50,
                   opacity: 0.5,
                 ),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Text(
                       "Date (optional)",
                       style: TextStyle(fontWeight: FontWeight.w500),
@@ -334,6 +370,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   height: 30,
                 ),
                 MyDateTimePicker(
+                  focusNode: _focusNode5,
                   name: "dateStarted",
                   formKey: _nebulaFormKey,
                   labelText: "Began watching",
@@ -358,6 +395,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   height: 20,
                 ),
                 MyDateTimePicker(
+                  focusNode: _focusNode6,
                   name: "dateFinished",
                   formKey: _nebulaFormKey,
                   labelText: "Finished watching",
@@ -462,7 +500,8 @@ class _NebulaFormState extends State<NebulaForm> {
                   gradient: Palette.buttonGradient,
                   child: const Text(
                     "Add to Nebula",
-                    style: TextStyle(fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500, color: Palette.white),
                   ),
                 ),
               ],
@@ -525,8 +564,8 @@ class _NebulaFormState extends State<NebulaForm> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Text(
                               "Watch status",
                               style: TextStyle(fontWeight: FontWeight.w500),
@@ -534,14 +573,15 @@ class _NebulaFormState extends State<NebulaForm> {
                           ],
                         ),
                         MyFormBuilderChoiceChip(
+                          focusNode: _focusNode7,
                           name: "watchStatus",
                           initialValue: initialValue?["watchStatus"],
                           options: const [
-                            FormBuilderFieldOption(value: "Watching"),
-                            FormBuilderFieldOption(value: "Completed"),
-                            FormBuilderFieldOption(value: "On Hold"),
-                            FormBuilderFieldOption(value: "Dropped"),
-                            FormBuilderFieldOption(value: "Plan to Watch"),
+                            FormBuilderChipOption(value: "Watching"),
+                            FormBuilderChipOption(value: "Completed"),
+                            FormBuilderChipOption(value: "On Hold"),
+                            FormBuilderChipOption(value: "Dropped"),
+                            FormBuilderChipOption(value: "Plan to Watch"),
                           ],
                           onChanged: (val) {
                             _nebulaFormKey.currentState?.saveAndValidate();
@@ -555,8 +595,8 @@ class _NebulaFormState extends State<NebulaForm> {
                             return null;
                           },
                         ),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Text(
                               "Progress",
                               style: TextStyle(fontWeight: FontWeight.w500),
@@ -564,6 +604,7 @@ class _NebulaFormState extends State<NebulaForm> {
                           ],
                         ),
                         FormBuilderField(
+                          focusNode: _focusNode8,
                           name: "progress",
                           builder: (FormFieldState<dynamic> field) {
                             return InputDecorator(
@@ -605,8 +646,8 @@ class _NebulaFormState extends State<NebulaForm> {
                           borderRadius: 50,
                           opacity: 0.5,
                         ),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Text(
                               "Score & review (optional)",
                               style: TextStyle(fontWeight: FontWeight.w500),
@@ -614,20 +655,21 @@ class _NebulaFormState extends State<NebulaForm> {
                           ],
                         ),
                         MyFormBuilderChoiceChip(
+                          focusNode: _focusNode9,
                           name: "ratingValue",
                           initialValue: initialValue?["ratingValue"],
                           selectedColor: Palette.lightYellow,
                           options: const [
-                            FormBuilderFieldOption(value: 10),
-                            FormBuilderFieldOption(value: 9),
-                            FormBuilderFieldOption(value: 8),
-                            FormBuilderFieldOption(value: 7),
-                            FormBuilderFieldOption(value: 6),
-                            FormBuilderFieldOption(value: 5),
-                            FormBuilderFieldOption(value: 4),
-                            FormBuilderFieldOption(value: 3),
-                            FormBuilderFieldOption(value: 2),
-                            FormBuilderFieldOption(value: 1),
+                            FormBuilderChipOption(value: 10),
+                            FormBuilderChipOption(value: 9),
+                            FormBuilderChipOption(value: 8),
+                            FormBuilderChipOption(value: 7),
+                            FormBuilderChipOption(value: 6),
+                            FormBuilderChipOption(value: 5),
+                            FormBuilderChipOption(value: 4),
+                            FormBuilderChipOption(value: 3),
+                            FormBuilderChipOption(value: 2),
+                            FormBuilderChipOption(value: 1),
                           ],
                           onChanged: (val) {
                             _nebulaFormKey.currentState?.saveAndValidate();
@@ -637,6 +679,7 @@ class _NebulaFormState extends State<NebulaForm> {
                           height: 10,
                         ),
                         MyFormBuilderTextField(
+                          focusNode: _focusNode10,
                           name: "reviewText",
                           labelText: "Review",
                           fillColor: Palette.textFieldPurple.withOpacity(0.5),
@@ -672,8 +715,8 @@ class _NebulaFormState extends State<NebulaForm> {
                           borderRadius: 50,
                           opacity: 0.5,
                         ),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             Text(
                               "Date (optional)",
                               style: TextStyle(fontWeight: FontWeight.w500),
@@ -684,6 +727,7 @@ class _NebulaFormState extends State<NebulaForm> {
                           height: 30,
                         ),
                         MyDateTimePicker(
+                          focusNode: _focusNode11,
                           name: "dateStarted",
                           formKey: _nebulaFormKey,
                           labelText: "Began watching",
@@ -699,6 +743,7 @@ class _NebulaFormState extends State<NebulaForm> {
                           height: 20,
                         ),
                         MyDateTimePicker(
+                          focusNode: _focusNode12,
                           name: "dateFinished",
                           formKey: _nebulaFormKey,
                           labelText: "Finished watching",
@@ -763,7 +808,9 @@ class _NebulaFormState extends State<NebulaForm> {
                               gradient: Palette.redGradient,
                               child: const Text(
                                 "Remove",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Palette.white),
                               ),
                             ),
                             GradientButton(
@@ -900,7 +947,9 @@ class _NebulaFormState extends State<NebulaForm> {
                               gradient: Palette.buttonGradient,
                               child: const Text(
                                 "Save",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Palette.white),
                               ),
                             ),
                           ],
