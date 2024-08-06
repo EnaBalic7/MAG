@@ -145,7 +145,8 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                   gradient: Palette.buttonGradient,
                   borderRadius: 50,
                   child: const Text("Join",
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Palette.white)),
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MAG.Services.Migrations
 {
     [DbContext(typeof(MagContext))]
-    partial class MagContextModelSnapshot : ModelSnapshot
+    [Migration("20240806002542_ClubCovers")]
+    partial class ClubCovers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +92,7 @@ namespace MAG.Services.Migrations
                             EpisodesNumber = 25,
                             FinishAir = new DateTime(2013, 9, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://cdn.myanimelist.net/images/anime/1907/134102l.jpg",
-                            Score = 10m,
+                            Score = 0m,
                             Season = "Spring",
                             Studio = "Wit Studio",
                             Synopsis = "Centuries ago, mankind was slaughtered to near extinction by monstrous humanoid creatures called Titans, forcing humans to hide in fear behind enormous concentric walls. What makes these giants truly terrifying is that their taste for human flesh is not born out of hunger but what appears to be out of pleasure. To ensure their survival, the remnants of humanity began living within defensive barriers, resulting in one hundred years without a single titan encounter. However, that fragile calm is soon shattered when a colossal Titan manages to breach the supposedly impregnable outer wall, reigniting the fight for survival against the man-eating abominations.\r\n\r\nAfter witnessing a horrific personal loss at the hands of the invading creatures, Eren Yeager dedicates his life to their eradication by enlisting into the Survey Corps, an elite military unit that combats the merciless humanoids outside the protection of the walls. Eren, his adopted sister Mikasa Ackerman, and his childhood friend Armin Arlert join the brutal war against the Titans and race to discover a way of defeating them before the last walls are breached.",
@@ -149,7 +152,7 @@ namespace MAG.Services.Migrations
                             EpisodesNumber = 13,
                             FinishAir = new DateTime(2016, 9, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://cdn.myanimelist.net/images/anime/3/82149l.jpg",
-                            Score = 1m,
+                            Score = 0m,
                             Season = "Summer",
                             Studio = "TMS Entertainment",
                             Synopsis = "Dismissed as a hopeless loser by those around him, 27-year-old Arata Kaizaki bounces around from one job to another after quitting his first company. His unremarkable existence takes a sharp turn when he meets Ryou Yoake, a member of the ReLife Research Institute, who offers Arata the opportunity to change his life for the better with the help of a mysterious pill. Taking it without a second thought, Arata awakens the next day to find that his appearance has reverted to that of a 17-year-old.    Arata soon learns that he is now the subject of a unique experiment and must attend high school as a transfer student for one year. Though he initially believes it will be a cinch due to his superior life experience, Arata is proven horribly wrong on his first day: he flunks all his tests, is completely out of shape, and can't keep up with the new school policies that have cropped up in the last 10 years. Furthermore, Ryou has been assigned to observe him, bringing Arata endless annoyance. ReLIFE follows Arata's struggle to adjust to his hectic new lifestyle and avoid repeating his past mistakes, all while slowly discovering more about his fellow classmates.",
@@ -179,7 +182,7 @@ namespace MAG.Services.Migrations
                             EpisodesNumber = 170,
                             FinishAir = new DateTime(2021, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://cdn.myanimelist.net/images/anime/1232/93334l.jpg",
-                            Score = 9m,
+                            Score = 0m,
                             Season = "Fall",
                             Studio = "Pierrot",
                             Synopsis = "Asta and Yuno were abandoned at the same church on the same day. Raised together as children, they came to know of the \"Wizard King\"—a title given to the strongest mage in the kingdom—and promised that they would compete against each other for the position of the next Wizard King. However, as they grew up, the stark difference between them became evident. While Yuno is able to wield magic with amazing power and control, Asta cannot use magic at all and desperately tries to awaken his powers by training physically.    When they reach the age of 15, Yuno is bestowed a spectacular Grimoire with a four-leaf clover, while Asta receives nothing. However, soon after, Yuno is attacked by a person named Lebuty, whose main purpose is to obtain Yuno's Grimoire. Asta tries to fight Lebuty, but he is outmatched. Though without hope and on the brink of defeat, he finds the strength to continue when he hears Yuno's voice. Unleashing his inner emotions in a rage, Asta receives a five-leaf clover Grimoire, a \"Black Clover\" giving him enough power to defeat Lebuty. A few days later, the two friends head out into the world, both seeking the same goal—to become the Wizard King!",
@@ -224,7 +227,7 @@ namespace MAG.Services.Migrations
                             EpisodesNumber = 13,
                             FinishAir = new DateTime(2018, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImageUrl = "https://cdn.myanimelist.net/images/anime/1795/95088l.jpg",
-                            Score = 8m,
+                            Score = 0m,
                             Season = "Winter",
                             Studio = "Kyoto Animation",
                             Synopsis = "The Great War finally came to an end after four long years of conflict; fractured in two, the continent of Telesis slowly began to flourish once again. Caught up in the bloodshed was Violet Evergarden, a young girl raised for the sole purpose of decimating enemy lines. Hospitalized and maimed in a bloody skirmish during the War's final leg, she was left with only words from the person she held dearest, but with no understanding of their meaning.    Recovering from her wounds, Violet starts a new life working at CH Postal Services after a falling out with her new intended guardian family. There, she witnesses by pure chance the work of an \"Auto Memory Doll,\" amanuenses that transcribe people's thoughts and feelings into words on paper. Moved by the notion, Violet begins work as an Auto Memory Doll, a trade that will take her on an adventure, one that will reshape the lives of her clients and hopefully lead to self-discovery.",
@@ -1917,7 +1920,7 @@ namespace MAG.Services.Migrations
                             PasswordHash = "my/ELwTcrvtQ7tlVYibJNnISjtw=",
                             PasswordSalt = "u9Rht8UH9bvKrDQnbeNh7A==",
                             ProfilePictureId = 1,
-                            Username = "desktop"
+                            Username = "Administrator"
                         },
                         new
                         {
@@ -1928,7 +1931,7 @@ namespace MAG.Services.Migrations
                             PasswordHash = "my/ELwTcrvtQ7tlVYibJNnISjtw=",
                             PasswordSalt = "u9Rht8UH9bvKrDQnbeNh7A==",
                             ProfilePictureId = 1,
-                            Username = "mobile"
+                            Username = "Mika"
                         },
                         new
                         {

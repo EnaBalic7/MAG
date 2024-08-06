@@ -36,7 +36,7 @@ services:
     build:
       context: .
     environment:
-      - ConnectionStrings:DefaultConnection=Server=myanimegalaxy_sql,1433;Database=MyAnimeGalaxyDB;User=sa;Password=MyEnaPassword0;ConnectRetryCount=0;TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=myanimegalaxy_sql,1433;Database=200027;User=sa;Password=MyEnaPassword0;ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitMQ
       - RABBITMQ_PORT=5672

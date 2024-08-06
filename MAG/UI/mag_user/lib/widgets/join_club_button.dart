@@ -218,10 +218,10 @@ class _JoinClubButtonState extends State<JoinClubButton> {
   Widget? _buildChild() {
     if (_isJoined == true && _isOwner == false) {
       return const Text("Joined",
-          style: TextStyle(fontWeight: FontWeight.w500));
+          style: TextStyle(fontWeight: FontWeight.w500, color: Palette.white));
     } else if (_isOwner == true) {
       return const Text("Delete",
-          style: TextStyle(fontWeight: FontWeight.w500));
+          style: TextStyle(fontWeight: FontWeight.w500, color: Palette.white));
     } else {
       return widget.child;
     }

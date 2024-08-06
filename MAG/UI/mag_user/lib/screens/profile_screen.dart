@@ -47,7 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future getImage() async {
     try {
-      var result = await FilePicker.platform.pickFiles(type: FileType.image);
+      var result = await FilePicker.platform
+          .pickFiles(type: FileType.image, compressionQuality: 0);
 
       if (result != null && result.files.single.path != null) {
         File originalImage = File(result.files.single.path!);

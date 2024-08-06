@@ -47,7 +47,7 @@ namespace MAG.Services.Database
                      EpisodesNumber = 25,
                      ImageUrl = "https://cdn.myanimelist.net/images/anime/1907/134102l.jpg",
                      TrailerUrl = "https://youtu.be/LHtdKWJdif4",
-                     Score = 0,
+                     Score = 10,
                      BeginAir = new DateTime(2013, 4, 13),
                      FinishAir = new DateTime(2013, 9, 29),
                      Season = "Spring",
@@ -107,7 +107,7 @@ namespace MAG.Services.Database
                      EpisodesNumber = 13,
                      ImageUrl = "https://cdn.myanimelist.net/images/anime/3/82149l.jpg",
                      TrailerUrl = "https://youtu.be/fZCgXuxMAZY",
-                     Score = 0,
+                     Score = 1,
                      BeginAir = new DateTime(2016, 7, 2),
                      FinishAir = new DateTime(2016, 9, 24),
                      Season = "Summer",
@@ -137,7 +137,7 @@ namespace MAG.Services.Database
                      EpisodesNumber = 170,
                      ImageUrl = "https://cdn.myanimelist.net/images/anime/1232/93334l.jpg",
                      TrailerUrl = "https://youtu.be/vUjAxk1qYzQ",
-                     Score = 0,
+                     Score = 9,
                      BeginAir = new DateTime(2017, 10, 3),
                      FinishAir = new DateTime(2021, 3, 30),
                      Season = "Fall",
@@ -182,7 +182,7 @@ namespace MAG.Services.Database
                      EpisodesNumber = 13,
                      ImageUrl = "https://cdn.myanimelist.net/images/anime/1795/95088l.jpg",
                      TrailerUrl = "https://youtu.be/g5xWqjFglsk",
-                     Score = 0,
+                     Score = 8,
                      BeginAir = new DateTime(2018, 1, 11),
                      FinishAir = new DateTime(2018, 4, 5),
                      Season = "Winter",
@@ -389,6 +389,11 @@ namespace MAG.Services.Database
                 {
                     Id = 1,
                     Cover = ImageHelper.ConvertImageToByteArray("SeedImages/cover.jpg")
+                },
+                new ClubCover()
+                {
+                    Id = 2,
+                    Cover = ImageHelper.ConvertImageToByteArray("SeedImages/cover.jpg")
                 }
          );
         }
@@ -409,7 +414,7 @@ namespace MAG.Services.Database
                     Email = "ena.balic@edu.fit.ba",
                     ProfilePictureId = 1,
                     DateJoined = new DateTime(2024, 7, 11),
-                    Username = "Administrator",
+                    Username = "desktop",
                 },
                 new User()
                 {
@@ -421,7 +426,7 @@ namespace MAG.Services.Database
                     Email = null,
                     ProfilePictureId = 1,
                     DateJoined = new DateTime(2024, 7, 11),
-                    Username = "Mika",
+                    Username = "mobile",
                 },
                 new User()
                 {
@@ -1481,7 +1486,7 @@ namespace MAG.Services.Database
                     Description = "Welcome and open to all well-mannered souls, for discussing all types of Anime and Manga :)",
                     MemberCount = 0,
                     DateCreated = new DateTime(2024, 7, 11),
-                    CoverId = 1
+                    CoverId = 2
                 }
          );
         }
