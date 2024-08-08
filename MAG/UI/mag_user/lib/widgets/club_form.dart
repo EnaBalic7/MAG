@@ -241,16 +241,24 @@ class _ClubFormState extends State<ClubForm> {
 
                           await _clubUserProvider.insert(clubUserObj);
 
-                          Navigator.of(context).pop();
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          });
 
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.task_alt,
-                                  color: Palette.lightPurple, size: 50),
-                              const Text(
-                                "Club created!",
-                                textAlign: TextAlign.center,
-                              ));
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.task_alt,
+                                      color: Palette.lightPurple, size: 50),
+                                  const Text(
+                                    "Club created!",
+                                    textAlign: TextAlign.center,
+                                  ));
+                            }
+                          });
                         } else if (widget.club != null) {
                           // Update club name and description
                           var clubUpdateObj = {
@@ -270,19 +278,27 @@ class _ClubFormState extends State<ClubForm> {
                                 .update(widget.club!.coverId!, request: cover);
                           }
 
-                          Navigator.of(context).pop();
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.task_alt,
-                                  color: Palette.lightPurple, size: 50),
-                              const Text(
-                                "Club info updated!",
-                                textAlign: TextAlign.center,
-                              ));
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) {
+                              Navigator.of(context).pop();
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.task_alt,
+                                      color: Palette.lightPurple, size: 50),
+                                  const Text(
+                                    "Club info updated!",
+                                    textAlign: TextAlign.center,
+                                  ));
+                            }
+                          });
                         }
                       }
                     } on Exception catch (e) {
-                      showErrorDialog(context, e);
+                      Future.delayed(Duration.zero, () {
+                        if (mounted) {
+                          showErrorDialog(context, e);
+                        }
+                      });
                     }
                   },
                   width: 80,

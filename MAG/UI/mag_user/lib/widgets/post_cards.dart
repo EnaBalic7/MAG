@@ -158,7 +158,9 @@ class _PostCardsState extends State<PostCards> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

@@ -93,9 +93,6 @@ class _NebulaFormState extends State<NebulaForm> {
 
     _watchlistId = widget.watchlistId;
 
-    //  print("widget.Watchlist Id is: ${widget.watchlistId}");
-    //  print("_Watchlist Id is: ${_watchlistId}");
-
     super.initState();
   }
 
@@ -447,7 +444,7 @@ class _NebulaFormState extends State<NebulaForm> {
                               : null,
                         };
 
-                        var ratingValue;
+                        dynamic ratingValue;
 
                         if (_nebulaFormKey
                                 .currentState!.fields["ratingValue"]?.value ==
@@ -478,18 +475,26 @@ class _NebulaFormState extends State<NebulaForm> {
                           await _ratingProvider.insert(rating);
                         }
 
-                        Navigator.of(context).pop();
+                        Future.delayed(Duration.zero, () {
+                          if (mounted) {
+                            Navigator.of(context).pop();
 
-                        showInfoDialog(
-                            context,
-                            const Icon(Icons.task_alt,
-                                color: Palette.lightPurple, size: 50),
-                            const Text(
-                              "Added successfully!",
-                              textAlign: TextAlign.center,
-                            ));
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.task_alt,
+                                    color: Palette.lightPurple, size: 50),
+                                const Text(
+                                  "Added successfully!",
+                                  textAlign: TextAlign.center,
+                                ));
+                          }
+                        });
                       } on Exception catch (e) {
-                        showErrorDialog(context, e);
+                        Future.delayed(Duration.zero, () {
+                          if (mounted) {
+                            showErrorDialog(context, e);
+                          }
+                        });
                       }
                     }
                   },
@@ -785,20 +790,28 @@ class _NebulaFormState extends State<NebulaForm> {
                                           .delete(rating.result[0].id!);
                                     }
 
-                                    Navigator.of(context).pop();
+                                    Future.delayed(Duration.zero, () {
+                                      if (mounted) {
+                                        Navigator.of(context).pop();
 
-                                    showInfoDialog(
-                                        context,
-                                        const Icon(Icons.task_alt,
-                                            color: Palette.lightPurple,
-                                            size: 50),
-                                        const Text(
-                                          "Removed successfully!",
-                                          textAlign: TextAlign.center,
-                                        ));
+                                        showInfoDialog(
+                                            context,
+                                            const Icon(Icons.task_alt,
+                                                color: Palette.lightPurple,
+                                                size: 50),
+                                            const Text(
+                                              "Removed successfully!",
+                                              textAlign: TextAlign.center,
+                                            ));
+                                      }
+                                    });
                                   }
                                 } on Exception catch (e) {
-                                  showErrorDialog(context, e);
+                                  Future.delayed(Duration.zero, () {
+                                    if (mounted) {
+                                      showErrorDialog(context, e);
+                                    }
+                                  });
                                 }
                               },
                               borderRadius: 50,
@@ -869,7 +882,7 @@ class _NebulaFormState extends State<NebulaForm> {
                                           "AnimeId": "${widget.anime.id}"
                                         });
 
-                                    var ratingValue;
+                                    dynamic ratingValue;
 
                                     if (_nebulaFormKey.currentState!
                                             .fields["ratingValue"]?.value ==
@@ -924,19 +937,27 @@ class _NebulaFormState extends State<NebulaForm> {
                                       }
                                     }
 
-                                    Navigator.of(context).pop();
+                                    Future.delayed(Duration.zero, () {
+                                      if (mounted) {
+                                        Navigator.of(context).pop();
 
-                                    showInfoDialog(
-                                        context,
-                                        const Icon(Icons.task_alt,
-                                            color: Palette.lightPurple,
-                                            size: 50),
-                                        const Text(
-                                          "Updated successfully!",
-                                          textAlign: TextAlign.center,
-                                        ));
+                                        showInfoDialog(
+                                            context,
+                                            const Icon(Icons.task_alt,
+                                                color: Palette.lightPurple,
+                                                size: 50),
+                                            const Text(
+                                              "Updated successfully!",
+                                              textAlign: TextAlign.center,
+                                            ));
+                                      }
+                                    });
                                   } on Exception catch (e) {
-                                    showErrorDialog(context, e);
+                                    Future.delayed(Duration.zero, () {
+                                      if (mounted) {
+                                        showErrorDialog(context, e);
+                                      }
+                                    });
                                   }
                                 }
                               },

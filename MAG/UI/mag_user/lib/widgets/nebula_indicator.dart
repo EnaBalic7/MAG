@@ -22,7 +22,6 @@ class _NebulaIndicatorState extends State<NebulaIndicator> {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
-        //constraints: BoxConstraints(maxHeight: 200),
         width: containerWidth,
         height: containerHeight,
         decoration: BoxDecoration(color: Palette.buttonPurple.withOpacity(0.1)),

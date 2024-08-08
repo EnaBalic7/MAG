@@ -143,7 +143,9 @@ class _CommentCardsState extends State<CommentCards>
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

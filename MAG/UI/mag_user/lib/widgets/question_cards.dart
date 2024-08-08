@@ -153,7 +153,9 @@ class _QuestionCardsState extends State<QuestionCards>
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -366,7 +368,11 @@ class _QuestionCardsState extends State<QuestionCards>
                   try {
                     await _qAProvider.delete(qa.id!);
                   } on Exception catch (e) {
-                    showErrorDialog(context, e);
+                    Future.delayed(Duration.zero, () {
+                      if (mounted) {
+                        showErrorDialog(context, e);
+                      }
+                    });
                   }
                 });
               },

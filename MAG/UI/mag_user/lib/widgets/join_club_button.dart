@@ -123,7 +123,9 @@ class _JoinClubButtonState extends State<JoinClubButton> {
           Navigator.of(context).pop();
           await _clubProvider.delete(widget.clubId);
         } on Exception catch (e) {
-          showErrorDialog(context, e);
+          if (mounted) {
+            showErrorDialog(context, e);
+          }
         }
       });
     }

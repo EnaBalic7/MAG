@@ -112,17 +112,14 @@ class _ConstellationFormState extends State<ConstellationForm> {
                                   name: 'stars',
                                   fontSize: 20,
                                   options: [
-                                    ...stars
-                                        .map(
-                                          (star) => FormBuilderChipOption(
-                                            value: star.id.toString(),
-                                            child: Text(star.name!,
-                                                style: const TextStyle(
-                                                    color: Palette
-                                                        .midnightPurple)),
-                                          ),
-                                        )
-                                        .toList(),
+                                    ...stars.map(
+                                      (star) => FormBuilderChipOption(
+                                        value: star.id.toString(),
+                                        child: Text(star.name!,
+                                            style: const TextStyle(
+                                                color: Palette.midnightPurple)),
+                                      ),
+                                    ),
                                   ],
                                   initialValue: selectedStars
                                       .where((animeList) => stars.any(
@@ -161,16 +158,24 @@ class _ConstellationFormState extends State<ConstellationForm> {
                       await _animeListProvider.updateListsForAnime(
                           widget.anime.id!, animeListInsert);
 
-                      showInfoDialog(
-                          context,
-                          const Icon(Icons.task_alt,
-                              color: Palette.lightPurple, size: 50),
-                          const Text(
-                            "Saved successfully!",
-                            textAlign: TextAlign.center,
-                          ));
+                      Future.delayed(Duration.zero, () {
+                        if (mounted) {
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Saved successfully!",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
+                      });
                     } on Exception catch (e) {
-                      showErrorDialog(context, e);
+                      Future.delayed(Duration.zero, () {
+                        if (mounted) {
+                          showErrorDialog(context, e);
+                        }
+                      });
                     }
                   },
                   width: 60,

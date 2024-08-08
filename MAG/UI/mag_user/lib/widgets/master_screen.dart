@@ -122,6 +122,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         ? screenSize.height * 0.12
         : screenSize.height * 0.08;
 
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         if (searchText.value != '') {

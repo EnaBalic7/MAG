@@ -552,8 +552,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     }
   }
 
-//^https?:\/\/.*\.(png|jpg|jpeg|gif|bmp|webp)$
-//^https:\/\/cdn\.myanimelist\.net\/images\/anime\/.*\.jpg$
   Image _buildImage({String imageUrl = ""}) {
     if (imageUrl == "") {
       if (widget.anime?.imageUrl == null ||

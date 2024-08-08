@@ -143,7 +143,9 @@ class _DonationCardsState extends State<DonationCards> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

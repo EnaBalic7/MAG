@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import '../providers/donation_provider.dart';
 import '../widgets/circular_progress_indicator.dart';
 import '../widgets/pagination_buttons.dart';
-import 'package:provider/provider.dart';
-
 import '../models/donation.dart';
 import '../models/search_result.dart';
 import '../utils/colors.dart';

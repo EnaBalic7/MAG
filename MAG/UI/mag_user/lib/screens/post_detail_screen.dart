@@ -52,6 +52,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
 
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, _postUpdated ?? widget.post);

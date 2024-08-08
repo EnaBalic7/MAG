@@ -129,10 +129,18 @@ class _ContentFormState extends State<ContentForm> {
                       await _commentProvider.insert(comment);
                     }
                   } on Exception catch (e) {
-                    showErrorDialog(context, e);
+                    Future.delayed(Duration.zero, () {
+                      if (mounted) {
+                        showErrorDialog(context, e);
+                      }
+                    });
                   }
 
-                  Navigator.of(context).pop();
+                  Future.delayed(Duration.zero, () {
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  });
                 }
               },
               width: 80,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:mag_admin/providers/qa_category_provider.dart';
-import 'package:mag_admin/screens/qa_categories_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/qa_category_provider.dart';
+import '../screens/qa_categories_screen.dart';
 import '../providers/qa_provider.dart';
 import '../utils/icons.dart';
 import '../widgets/form_builder_dropdown.dart';

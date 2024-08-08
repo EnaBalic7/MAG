@@ -94,17 +94,15 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
                                     name: 'prefGenres',
                                     fontSize: 20,
                                     options: [
-                                      ...genres
-                                          .map(
-                                            (genre) => FormBuilderChipOption(
-                                              value: genre.id.toString(),
-                                              child: Text(genre.name!,
-                                                  style: const TextStyle(
-                                                      color: Palette
-                                                          .midnightPurple)),
-                                            ),
-                                          )
-                                          .toList(),
+                                      ...genres.map(
+                                        (genre) => FormBuilderChipOption(
+                                          value: genre.id.toString(),
+                                          child: Text(genre.name!,
+                                              style: const TextStyle(
+                                                  color:
+                                                      Palette.midnightPurple)),
+                                        ),
+                                      ),
                                     ],
                                     initialValue: preferredGenres
                                         .where((preferredGenre) => genres.any(
@@ -153,19 +151,27 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
                         await _preferredGenreProvider.updatePrefGenresForUser(
                             LoggedUser.user!.id!, prefGenresInsert);
 
-                        Navigator.of(context).pop();
+                        Future.delayed(Duration.zero, () {
+                          if (mounted) {
+                            Navigator.of(context).pop();
 
-                        showInfoDialog(
-                            context,
-                            const Icon(Icons.task_alt,
-                                color: Palette.lightPurple, size: 50),
-                            const Text(
-                              "Saved successfully!",
-                              textAlign: TextAlign.center,
-                            ));
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.task_alt,
+                                    color: Palette.lightPurple, size: 50),
+                                const Text(
+                                  "Saved successfully!",
+                                  textAlign: TextAlign.center,
+                                ));
+                          }
+                        });
                       }
                     } on Exception catch (e) {
-                      showErrorDialog(context, e);
+                      Future.delayed(Duration.zero, () {
+                        if (mounted) {
+                          showErrorDialog(context, e);
+                        }
+                      });
                     }
                   },
                   width: 60,

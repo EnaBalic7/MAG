@@ -103,10 +103,18 @@ class _StarFormState extends State<StarForm> {
                             request: list);
                       }
                     } on Exception catch (e) {
-                      showErrorDialog(context, e);
+                      Future.delayed(Duration.zero, () {
+                        if (mounted) {
+                          showErrorDialog(context, e);
+                        }
+                      });
                     }
 
-                    Navigator.of(context).pop();
+                    Future.delayed(Duration.zero, () {
+                      if (mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    });
                   },
                   width: 60,
                   height: 30,

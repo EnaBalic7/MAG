@@ -196,7 +196,9 @@ class _ClubCardsState extends State<ClubCards> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -472,7 +474,11 @@ class _ClubCardsState extends State<ClubCards> {
                   try {
                     await _clubProvider.delete(club.id!);
                   } on Exception catch (e) {
-                    showErrorDialog(context, e);
+                    Future.delayed(Duration.zero, () {
+                      if (mounted) {
+                        showErrorDialog(context, e);
+                      }
+                    });
                   }
                 });
               },

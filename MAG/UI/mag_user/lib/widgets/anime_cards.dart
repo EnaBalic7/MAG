@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_user/providers/rating_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/rating_provider.dart';
 import '../widgets/anime_indicator.dart';
 import '../providers/anime_list_provider.dart';
 import '../providers/anime_watchlist_provider.dart';
@@ -190,7 +190,9 @@ class _AnimeCardsState extends State<AnimeCards>
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -332,34 +334,39 @@ class _AnimeCardsState extends State<AnimeCards>
             .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
         if (constellations.count == 0) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                    insetPadding: const EdgeInsets.all(17),
-                    alignment: Alignment.center,
-                    elevation: 0,
-                    backgroundColor: Colors.transparent,
-                    child: Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Palette.darkPurple,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Palette.lightPurple.withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Empty(
-                                text: Text("Your Constellation is empty."),
-                                screen: ConstellationScreen(selectedIndex: 3),
-                                child: Text("Make Stars")),
-                          ],
-                        )));
-              });
+          Future.delayed(Duration.zero, () {
+            if (mounted) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                        insetPadding: const EdgeInsets.all(17),
+                        alignment: Alignment.center,
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Palette.darkPurple,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: Palette.lightPurple.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Empty(
+                                    text: Text("Your Constellation is empty."),
+                                    screen:
+                                        ConstellationScreen(selectedIndex: 3),
+                                    child: Text("Make Stars")),
+                              ],
+                            )));
+                  });
+            }
+          });
         } else if (constellations.count > 0) {
           Future.delayed(Duration.zero, () {
             if (mounted) {
@@ -456,15 +463,19 @@ class _AnimeCardsState extends State<AnimeCards>
             }
           });
         } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return NebulaForm(
-                anime: anime,
-                watchlistId: watchlistId,
+          Future.delayed(Duration.zero, () {
+            if (mounted) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return NebulaForm(
+                    anime: anime,
+                    watchlistId: watchlistId,
+                  );
+                },
               );
-            },
-          );
+            }
+          });
         }
       },
       child: Container(

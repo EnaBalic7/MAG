@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/master_screen.dart';
 import '../models/donation.dart';
 import '../models/search_result.dart';
 import '../providers/donation_provider.dart';

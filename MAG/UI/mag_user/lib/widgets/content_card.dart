@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'dart:ui' as UI;
+import 'dart:ui' as ui;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -139,7 +139,7 @@ class _ContentCardState extends State<ContentCard> {
                         final textPainter = TextPainter(
                           text: textSpan,
                           maxLines: widget.contentMaxLines,
-                          textDirection: UI.TextDirection.ltr,
+                          textDirection: ui.TextDirection.ltr,
                         )..layout(maxWidth: constraints.maxWidth);
 
                         isOverflowing = textPainter.didExceedMaxLines;
@@ -499,7 +499,11 @@ class _ContentCardState extends State<ContentCard> {
                       await _commentProvider.delete((object as Comment).id!);
                     }
                   } on Exception catch (e) {
-                    showErrorDialog(context, e);
+                    Future.delayed(Duration.zero, () {
+                      if (mounted) {
+                        showErrorDialog(context, e);
+                      }
+                    });
                   }
                 });
               },

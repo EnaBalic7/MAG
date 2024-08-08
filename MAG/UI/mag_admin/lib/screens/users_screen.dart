@@ -301,7 +301,6 @@ class _UsersScreenState extends State<UsersScreen> {
       builder: (BuildContext context) {
         return SizedBox(
           height: MediaQuery.of(context).size.height * 1,
-          //width: MediaQuery.of(context).size.width * 1,
           child: Stack(
             children: [
               _buildOverlayForm(context, user),
@@ -343,7 +342,6 @@ class _UsersScreenState extends State<UsersScreen> {
               padding: const EdgeInsets.only(
                   top: 5, bottom: 16, left: 16, right: 16),
               width: 500.0,
-              // height: 815.0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -741,8 +739,6 @@ class _UsersScreenState extends State<UsersScreen> {
       color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          //  padding: EdgeInsets.zero,
-
           child: ListTile(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -762,7 +758,6 @@ class _UsersScreenState extends State<UsersScreen> {
           ),
         ),
         PopupMenuItem<String>(
-          // padding: EdgeInsets.zero,
           child: ListTile(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

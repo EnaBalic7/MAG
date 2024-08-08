@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:mag_admin/models/qa_category.dart';
-import 'package:mag_admin/models/search_result.dart';
-import 'package:mag_admin/providers/qa_category_provider.dart';
-import 'package:mag_admin/utils/colors.dart';
-import 'package:mag_admin/utils/icons.dart';
-import 'package:mag_admin/utils/util.dart';
-import 'package:mag_admin/widgets/circular_progress_indicator.dart';
-import 'package:mag_admin/widgets/form_builder_text_field.dart';
-import 'package:mag_admin/widgets/gradient_button.dart';
-import 'package:mag_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
+
+import '../models/qa_category.dart';
+import '../models/search_result.dart';
+import '../providers/qa_category_provider.dart';
+import '../utils/colors.dart';
+import '../utils/icons.dart';
+import '../utils/util.dart';
+import '../widgets/circular_progress_indicator.dart';
+import '../widgets/form_builder_text_field.dart';
+import '../widgets/gradient_button.dart';
+import '../widgets/master_screen.dart';
 
 class QACategoriesScreen extends StatefulWidget {
   const QACategoriesScreen({super.key});
