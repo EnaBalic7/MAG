@@ -22,7 +22,7 @@ import '../utils/icons.dart';
 import '../utils/util.dart';
 
 class UsersScreen extends StatefulWidget {
-  const UsersScreen({Key? key}) : super(key: key);
+  const UsersScreen({super.key});
 
   @override
   State<UsersScreen> createState() => _UsersScreenState();
@@ -34,7 +34,6 @@ class _UsersScreenState extends State<UsersScreen> {
   final TextEditingController _userController = TextEditingController();
   final _userRoleFormKey = GlobalKey<FormBuilderState>();
   late UserRoleProvider _userRoleProvider;
-  Map<String, dynamic> _userRoleInitialValue = {};
   late UserProfilePictureProvider _userProfilePictureProvider;
   bool? adminRoleSelected;
   bool? userRoleSelected;
@@ -59,10 +58,12 @@ class _UsersScreenState extends State<UsersScreen> {
     _userProfilePictureProvider = context.read<UserProfilePictureProvider>();
     _userProfilePictureProvider.addListener(() {
       _reloadUsers();
+      setTotalItems();
     });
 
     _userProvider.addListener(() {
       _reloadUsers();
+      setTotalItems();
     });
 
     super.initState();
@@ -155,7 +156,9 @@ class _UsersScreenState extends State<UsersScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -177,7 +180,9 @@ class _UsersScreenState extends State<UsersScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -208,7 +213,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                   )
-                : Container(
+                : const SizedBox(
                     width: 230,
                     height: 190,
                   ),
@@ -294,7 +299,7 @@ class _UsersScreenState extends State<UsersScreen> {
       context: context,
       barrierColor: Palette.black.withOpacity(0.5),
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 1,
           //width: MediaQuery.of(context).size.width * 1,
           child: Stack(
@@ -390,8 +395,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     gradient: Palette.buttonGradient,
                     onPressed: () async {
                       _userRoleFormKey.currentState?.saveAndValidate();
-                      var request =
-                          Map.from(_userRoleFormKey.currentState!.value);
+
                       if (_userRoleFormKey.currentState?.saveAndValidate() ==
                           true) {
                         try {
@@ -489,16 +493,24 @@ class _UsersScreenState extends State<UsersScreen> {
                             await _userRoleProvider.insert(userRole);
                           }
 
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.task_alt,
-                                  color: Palette.lightPurple, size: 50),
-                              const Text(
-                                "Updated successfully!",
-                                textAlign: TextAlign.center,
-                              ));
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.task_alt,
+                                      color: Palette.lightPurple, size: 50),
+                                  const Text(
+                                    "Updated successfully!",
+                                    textAlign: TextAlign.center,
+                                  ));
+                            }
+                          });
                         } on Exception catch (e) {
-                          showErrorDialog(context, e);
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) {
+                              showErrorDialog(context, e);
+                            }
+                          });
                         }
                       } else {
                         showInfoDialog(
@@ -780,23 +792,26 @@ class _UsersScreenState extends State<UsersScreen> {
                   filter: {"UserId": "${user.id}", "RoleIncluded": "true"},
                 );
 
-                Navigator.pop(context); //Closes loading indicator dialog
+                Future.delayed(Duration.zero, () {
+                  if (mounted) {
+                    Navigator.pop(context); //Closes loading indicator dialog
+                  }
+                });
 
                 if (result.result.isEmpty) {
                 } else {
-                  UserRole userRole = result.result.first;
-
-                  _userRoleInitialValue = {
-                    "canReview": userRole.canReview,
-                    "canAskQuestions": userRole.canAskQuestions,
-                    "canParticipateInClubs": userRole.canParticipateInClubs,
-                    "roleId": "${userRole.roleId}"
-                  };
-
-                  _showOverlayForm(context, user);
+                  Future.delayed(Duration.zero, () {
+                    if (mounted) {
+                      _showOverlayForm(context, user);
+                    }
+                  });
                 }
               } on Exception catch (e) {
-                showErrorDialog(context, e);
+                Future.delayed(Duration.zero, () {
+                  if (mounted) {
+                    showErrorDialog(context, e);
+                  }
+                });
               }
             },
           ),

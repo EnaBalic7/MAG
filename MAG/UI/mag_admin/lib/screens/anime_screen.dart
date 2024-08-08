@@ -14,7 +14,7 @@ import '../widgets/circular_progress_indicator.dart';
 import 'anime_detail_screen.dart';
 
 class AnimeScreen extends StatefulWidget {
-  const AnimeScreen({Key? key}) : super(key: key);
+  const AnimeScreen({super.key});
 
   @override
   State<AnimeScreen> createState() => _AnimeScreenState();
@@ -40,9 +40,11 @@ class _AnimeScreenState extends State<AnimeScreen> {
 
     _animeProvider.addListener(() {
       _reloadAnimeList();
+      setTotalItems();
     });
     _genreAnimeProvider.addListener(() {
       _reloadAnimeList();
+      setTotalItems();
     });
 
     _animeFuture = _animeProvider.get(filter: {
@@ -148,7 +150,9 @@ class _AnimeScreenState extends State<AnimeScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -171,7 +175,9 @@ class _AnimeScreenState extends State<AnimeScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -195,8 +201,10 @@ class _AnimeScreenState extends State<AnimeScreen> {
       color: const Color.fromRGBO(50, 48, 90, 1),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
           child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightPurple.withOpacity(0.1),
             leading: const Icon(Icons.text_snippet_rounded,
@@ -213,8 +221,10 @@ class _AnimeScreenState extends State<AnimeScreen> {
           ),
         ),
         PopupMenuItem<String>(
-          padding: EdgeInsets.zero,
           child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             hoverColor: Palette.lightRed.withOpacity(0.1),
             leading: buildTrashIcon(24),

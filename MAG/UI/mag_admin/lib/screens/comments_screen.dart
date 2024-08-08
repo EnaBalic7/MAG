@@ -21,7 +21,7 @@ import '../widgets/pagination_buttons.dart';
 // ignore: must_be_immutable
 class CommentsScreen extends StatefulWidget {
   User user;
-  CommentsScreen({Key? key, required this.user}) : super(key: key);
+  CommentsScreen({super.key, required this.user});
 
   @override
   State<CommentsScreen> createState() => _CommentsScreenState();
@@ -163,7 +163,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

@@ -61,8 +61,8 @@ class _QuestionCardsState extends State<QuestionCards>
     setTotalItems();
 
     _qAProvider.addListener(() {
-      setTotalItems();
       _reloadData();
+      setTotalItems();
     });
 
     super.initState();

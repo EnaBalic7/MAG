@@ -20,7 +20,7 @@ class MyDateTimePicker extends StatefulWidget {
   double? paddingBottom;
   String? Function(DateTime?)? validator;
   MyDateTimePicker({
-    Key? key,
+    super.key,
     required this.name,
     this.width = 100,
     this.height = 40,
@@ -33,7 +33,7 @@ class MyDateTimePicker extends StatefulWidget {
     this.initialValue,
     this.fillColor,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<MyDateTimePicker> createState() => _MyDateTimePickerState();

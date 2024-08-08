@@ -13,7 +13,7 @@ import 'anime_screen.dart';
 
 // ignore: must_be_immutable
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({super.key});
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -86,39 +86,46 @@ class LoginScreen extends StatelessWidget {
 
                           if (userRoles
                               .any((userRole) => userRole.roleId == 1)) {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const AnimeScreen()));
+                            Future.delayed(Duration.zero, () {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AnimeScreen()));
+                            });
                           } else {
+                            Future.delayed(Duration.zero, () {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.warning_rounded,
+                                      color: Palette.lightRed, size: 55),
+                                  const SizedBox(
+                                    width: 300,
+                                    child: Text(
+                                      "User is registered but does not have administrator privileges.",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ));
+                            });
+                          }
+                        } on Exception catch (e) {
+                          Future.delayed(Duration.zero, () {
                             showInfoDialog(
                                 context,
                                 const Icon(Icons.warning_rounded,
                                     color: Palette.lightRed, size: 55),
-                                const SizedBox(
+                                SizedBox(
                                   width: 300,
-                                  child: Text(
-                                    "User is registered but does not have administrator privileges.",
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  child: (e.toString().contains("Unauthorized"))
+                                      ? Text(
+                                          "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text(
+                                          e.toString(),
+                                          textAlign: TextAlign.center,
+                                        ),
                                 ));
-                          }
-                        } on Exception catch (e) {
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.warning_rounded,
-                                  color: Palette.lightRed, size: 55),
-                              SizedBox(
-                                width: 300,
-                                child: (e.toString().contains("Unauthorized"))
-                                    ? Text(
-                                        "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
-                                        textAlign: TextAlign.center,
-                                      )
-                                    : Text(
-                                        e.toString(),
-                                        textAlign: TextAlign.center,
-                                      ),
-                              ));
+                          });
                         }
                       },
                       width: 110,

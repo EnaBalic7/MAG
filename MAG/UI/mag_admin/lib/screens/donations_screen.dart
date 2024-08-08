@@ -9,7 +9,7 @@ import '../utils/colors.dart';
 import '../widgets/donation_cards.dart';
 
 class DonationsScreen extends StatefulWidget {
-  const DonationsScreen({Key? key}) : super(key: key);
+  const DonationsScreen({super.key});
 
   @override
   State<DonationsScreen> createState() => _DonationsScreenState();
@@ -34,8 +34,8 @@ class _DonationsScreenState extends State<DonationsScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      titleWidget: Row(
-        children: const [
+      titleWidget: const Row(
+        children: [
           Icon(Icons.credit_card_rounded, color: Palette.lightPurple),
           SizedBox(width: 5),
           Text("Donations"),

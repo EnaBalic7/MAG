@@ -14,7 +14,7 @@ class MyFormBuilderSwitch extends StatefulWidget {
   String? Function(bool?)? validator;
 
   MyFormBuilderSwitch({
-    Key? key,
+    super.key,
     required this.name,
     required this.title,
     this.subtitle,
@@ -22,7 +22,7 @@ class MyFormBuilderSwitch extends StatefulWidget {
     this.enabled,
     this.onChanged,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<MyFormBuilderSwitch> createState() => _MyFormBuilderSwitchState();

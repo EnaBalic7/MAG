@@ -63,7 +63,6 @@ public partial class MagContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         SeedData(modelBuilder);
 
         modelBuilder.Entity<Anime>(entity =>
@@ -288,7 +287,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.QAs)
                 .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Q&A_Q&ACategory");
 
             entity.HasOne(d => d.User).WithMany(p => p.QAs)

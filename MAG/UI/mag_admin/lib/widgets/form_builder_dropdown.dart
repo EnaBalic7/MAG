@@ -21,7 +21,7 @@ class MyFormBuilderDropdown extends StatefulWidget {
   void Function()? onTap;
   List<DropdownMenuItem<String>> items;
   MyFormBuilderDropdown({
-    Key? key,
+    super.key,
     required this.name,
     this.labelText,
     this.fillColor,
@@ -38,7 +38,7 @@ class MyFormBuilderDropdown extends StatefulWidget {
     this.onTap,
     this.icon,
     required this.items,
-  }) : super(key: key);
+  });
 
   @override
   State<MyFormBuilderDropdown> createState() => _MyFormBuilderDropdownState();

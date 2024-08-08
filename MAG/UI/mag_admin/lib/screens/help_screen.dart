@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_admin/providers/qa_category_provider.dart';
+import 'package:mag_admin/screens/qa_categories_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/qa_provider.dart';
@@ -17,7 +19,7 @@ import '../utils/util.dart';
 import '../widgets/circular_progress_indicator.dart';
 
 class HelpScreen extends StatefulWidget {
-  const HelpScreen({Key? key}) : super(key: key);
+  const HelpScreen({super.key});
 
   @override
   State<HelpScreen> createState() => _HelpScreenState();
@@ -32,9 +34,10 @@ class _HelpScreenState extends State<HelpScreen> {
   String? _questionTitle = "";
   final _qAFormKey = GlobalKey<FormBuilderState>();
   final _qAfilterFormKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
+  final Map<String, dynamic> _selectedQAFilter = {"QAfilter": "All"};
   final TextEditingController _qaController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  late final QAcategoryProvider _qaCategoryProvider;
 
   int page = 0;
   int pageSize = 6;
@@ -62,7 +65,16 @@ class _HelpScreenState extends State<HelpScreen> {
 
     context.read<QAProvider>().addListener(() {
       _reloadQAList();
+      setTotalItems();
     });
+
+    _qaCategoryProvider = context.read<QAcategoryProvider>();
+
+    _qaCategoryProvider.addListener(() {
+      _reloadQAList();
+      setTotalItems();
+    });
+
     super.initState();
   }
 
@@ -216,17 +228,25 @@ class _HelpScreenState extends State<HelpScreen> {
                         try {
                           if (qaID != null) {
                             await _qaProvider.update(qaID!, request: request);
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.task_alt,
-                                    color: Palette.lightPurple, size: 50),
-                                const Text(
-                                  "Answered successfully!",
-                                  textAlign: TextAlign.center,
-                                ));
+                            Future.delayed(Duration.zero, () {
+                              if (mounted) {
+                                showInfoDialog(
+                                    context,
+                                    const Icon(Icons.task_alt,
+                                        color: Palette.lightPurple, size: 50),
+                                    const Text(
+                                      "Answered successfully!",
+                                      textAlign: TextAlign.center,
+                                    ));
+                              }
+                            });
                           }
                         } on Exception catch (e) {
-                          showErrorDialog(context, e);
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) {
+                              showErrorDialog(context, e);
+                            }
+                          });
                         }
                       }
                     },
@@ -254,41 +274,57 @@ class _HelpScreenState extends State<HelpScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              FormBuilder(
-                                key: _qAfilterFormKey,
-                                initialValue: _selectedQAFilter,
-                                child: MyFormBuilderDropdown(
-                                  name: "QAfilter",
-                                  width: 130,
-                                  height: 50,
-                                  borderRadius: 15,
-                                  paddingRight: 15,
-                                  dropdownColor: Palette.disabledControl,
-                                  onChanged: (filter) {
-                                    if (mounted) {
-                                      setState(() {
-                                        _selectedQAFilter["QAfilter"] =
-                                            filter.toString();
-                                      });
-                                    }
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  FormBuilder(
+                                    key: _qAfilterFormKey,
+                                    initialValue: _selectedQAFilter,
+                                    child: MyFormBuilderDropdown(
+                                      name: "QAfilter",
+                                      width: 130,
+                                      height: 50,
+                                      borderRadius: 15,
+                                      paddingRight: 15,
+                                      dropdownColor: Palette.disabledControl,
+                                      onChanged: (filter) {
+                                        if (mounted) {
+                                          setState(() {
+                                            _selectedQAFilter["QAfilter"] =
+                                                filter.toString();
+                                          });
+                                        }
 
-                                    _filterQA(filter!);
-                                  },
-                                  icon: const Icon(Icons.filter_alt,
-                                      color: Palette.lightPurple),
-                                  items: const [
-                                    DropdownMenuItem(
-                                        value: 'All', child: Text('All')),
-                                    DropdownMenuItem(
-                                        value: 'Unanswered',
-                                        child: Text('Unanswered')),
-                                    DropdownMenuItem(
-                                        value: 'Hidden', child: Text('Hidden')),
-                                    DropdownMenuItem(
-                                        value: 'Displayed',
-                                        child: Text('Displayed')),
-                                  ],
-                                ),
+                                        _filterQA(filter!);
+                                      },
+                                      icon: const Icon(Icons.filter_alt,
+                                          color: Palette.lightPurple),
+                                      items: const [
+                                        DropdownMenuItem(
+                                            value: 'All', child: Text('All')),
+                                        DropdownMenuItem(
+                                            value: 'Unanswered',
+                                            child: Text('Unanswered')),
+                                        DropdownMenuItem(
+                                            value: 'Hidden',
+                                            child: Text('Hidden')),
+                                        DropdownMenuItem(
+                                            value: 'Displayed',
+                                            child: Text('Displayed')),
+                                      ],
+                                    ),
+                                  ),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const QACategoriesScreen()));
+                                      },
+                                      child: const Text("Manage QA categories",
+                                          style: TextStyle(
+                                              color: Palette.lightPurple))),
+                                ],
                               ),
                               LayoutBuilder(builder: (BuildContext context,
                                   BoxConstraints constraints) {
@@ -574,16 +610,25 @@ class _HelpScreenState extends State<HelpScreen> {
           }
         }
 
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            const Text(
-              "Question has been deleted.",
-              textAlign: TextAlign.center,
-            ));
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showInfoDialog(
+                context,
+                const Icon(Icons.task_alt,
+                    color: Palette.lightPurple, size: 50),
+                const Text(
+                  "Question has been deleted.",
+                  textAlign: TextAlign.center,
+                ));
+          }
+        });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      Future.delayed(Duration.zero, () {
+        if (mounted) {
+          showErrorDialog(context, e);
+        }
+      });
     }
   }
 
@@ -603,21 +648,30 @@ class _HelpScreenState extends State<HelpScreen> {
     try {
       if (qaID != null) {
         await _qaProvider.update(qaID!, request: request);
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            (qa.displayed == true)
-                ? const Text(
-                    "Question has been hidden.",
-                    textAlign: TextAlign.center,
-                  )
-                : const Text(
-                    "Question has been shown.",
-                    textAlign: TextAlign.center,
-                  ));
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showInfoDialog(
+                context,
+                const Icon(Icons.task_alt,
+                    color: Palette.lightPurple, size: 50),
+                (qa.displayed == true)
+                    ? const Text(
+                        "Question has been hidden.",
+                        textAlign: TextAlign.center,
+                      )
+                    : const Text(
+                        "Question has been shown.",
+                        textAlign: TextAlign.center,
+                      ));
+          }
+        });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      Future.delayed(Duration.zero, () {
+        if (mounted) {
+          showErrorDialog(context, e);
+        }
+      });
     }
   }
 
@@ -719,7 +773,9 @@ class _HelpScreenState extends State<HelpScreen> {
         }
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 }

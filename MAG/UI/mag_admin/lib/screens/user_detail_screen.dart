@@ -30,7 +30,7 @@ import 'anime_detail_screen.dart';
 // ignore: must_be_immutable
 class UserDetailScreen extends StatefulWidget {
   User user;
-  UserDetailScreen({Key? key, required this.user}) : super(key: key);
+  UserDetailScreen({super.key, required this.user});
 
   @override
   State<UserDetailScreen> createState() => _UserDetailScreenState();
@@ -485,11 +485,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
             .push(MaterialPageRoute(builder: (context) => screenName));
       },
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(Palette.lightPurple),
+        foregroundColor: WidgetStateProperty.all<Color>(Palette.lightPurple),
         splashFactory: InkRipple.splashFactory,
-        overlayColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed)) {
+        overlayColor: WidgetStateProperty.resolveWith<Color>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.pressed)) {
               return Colors
                   .transparent; // Set to transparent for the pressed state
             }
@@ -497,9 +497,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           },
         ),
       ),
-      child: Row(
+      child: const Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: const [
+        children: [
           Text(
             "See more",
             style: TextStyle(fontSize: 16),

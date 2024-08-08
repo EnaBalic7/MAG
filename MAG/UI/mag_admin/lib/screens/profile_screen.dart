@@ -21,7 +21,7 @@ import '../widgets/form_builder_text_field.dart';
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   User user;
-  ProfileScreen({Key? key, required this.user}) : super(key: key);
+  ProfileScreen({super.key, required this.user});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -317,7 +317,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ));
       });
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 }

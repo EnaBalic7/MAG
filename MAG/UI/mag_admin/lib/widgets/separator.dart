@@ -16,7 +16,7 @@ class MySeparator extends StatefulWidget {
   Color? color;
   double? opacity;
   MySeparator({
-    Key? key,
+    super.key,
     this.height = 1,
     this.width = 100,
     this.borderRadius = 0,
@@ -28,7 +28,7 @@ class MySeparator extends StatefulWidget {
     this.marginHorizontal = 0,
     this.color = Palette.lightPurple,
     this.opacity = 1,
-  }) : super(key: key);
+  });
 
   @override
   State<MySeparator> createState() => _MySeparatorState();

@@ -22,13 +22,13 @@ class DonationCards extends StatefulWidget {
   int pageSize;
 
   DonationCards({
-    Key? key,
+    super.key,
     required this.fetchDonations,
     required this.fetchPage,
     required this.filter,
     required this.page,
     required this.pageSize,
-  }) : super(key: key);
+  });
 
   @override
   State<DonationCards> createState() => _DonationCardsState();
@@ -131,7 +131,9 @@ class _DonationCardsState extends State<DonationCards> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

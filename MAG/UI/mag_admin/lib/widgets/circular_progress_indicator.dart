@@ -8,11 +8,11 @@ class MyProgressIndicator extends StatefulWidget {
   final double? strokeWidth;
 
   const MyProgressIndicator({
-    Key? key,
+    super.key,
     this.height,
     this.width,
     this.strokeWidth,
-  }) : super(key: key);
+  });
 
   @override
   State<MyProgressIndicator> createState() => _MyProgressIndicatorState();

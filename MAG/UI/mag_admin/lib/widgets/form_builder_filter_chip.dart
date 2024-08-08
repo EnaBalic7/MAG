@@ -29,7 +29,7 @@ class MyFormBuilderFilterChip extends StatefulWidget {
   String? Function(List<dynamic>?)? validator;
 
   MyFormBuilderFilterChip({
-    Key? key,
+    super.key,
     required this.name,
     required this.options,
     this.labelText,
@@ -41,7 +41,7 @@ class MyFormBuilderFilterChip extends StatefulWidget {
     this.showCheckmark = true,
     this.padding,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<MyFormBuilderFilterChip> createState() =>

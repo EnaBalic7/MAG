@@ -10,13 +10,13 @@ class MyPaginationButtons extends StatefulWidget {
   Future<void> Function(int) fetchPage;
   Widget? noResults;
   MyPaginationButtons({
-    Key? key,
+    super.key,
     required this.page,
     required this.pageSize,
     required this.totalItems,
     required this.fetchPage,
     this.noResults,
-  }) : super(key: key);
+  });
 
   @override
   State<MyPaginationButtons> createState() => _MyPaginationButtonsState();

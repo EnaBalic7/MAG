@@ -83,6 +83,7 @@ class _ClubCardsState extends State<ClubCards> {
 
     _clubProvider.addListener(() {
       _reloadData();
+      setTotalItems();
     });
 
     _clubCoverProvider.addListener(() {

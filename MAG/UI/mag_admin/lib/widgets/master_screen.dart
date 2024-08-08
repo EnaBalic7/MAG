@@ -36,7 +36,7 @@ class MasterScreenWidget extends StatefulWidget {
   bool? showProfileIcon;
   String? floatingButtonTooltip;
   MasterScreenWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.title,
     this.titleWidget,
@@ -53,7 +53,7 @@ class MasterScreenWidget extends StatefulWidget {
     this.floatingButtonOnPressed,
     this.showProfileIcon = true,
     this.floatingButtonTooltip,
-  }) : super(key: key);
+  });
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -203,11 +203,13 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             if (userTmp.count == 1) {
               User user = userTmp.result.first;
 
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(user: user),
-                ),
-              );
+              if (mounted) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(user: user),
+                  ),
+                );
+              }
             }
           },
           child: MouseRegion(

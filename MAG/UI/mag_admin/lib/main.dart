@@ -39,7 +39,7 @@ void main() {
 }
 
 class MyMaterialApp extends StatelessWidget {
-  const MyMaterialApp({Key? key}) : super(key: key);
+  const MyMaterialApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +82,10 @@ class MyMaterialApp extends StatelessWidget {
         iconTheme: const IconThemeData(color: Palette.lightPurple),
         scrollbarTheme: ScrollbarThemeData(
             crossAxisMargin: -10,
-            thickness: MaterialStateProperty.all(7),
-            trackBorderColor: MaterialStateProperty.all(Palette.white),
-            thumbColor: MaterialStateProperty.all(
-                Palette.lightPurple.withOpacity(0.5))),
+            thickness: WidgetStateProperty.all(7),
+            trackBorderColor: WidgetStateProperty.all(Palette.white),
+            thumbColor:
+                WidgetStateProperty.all(Palette.lightPurple.withOpacity(0.5))),
         inputDecorationTheme: const InputDecorationTheme(
             filled: true,
             fillColor: Palette.darkPurple,

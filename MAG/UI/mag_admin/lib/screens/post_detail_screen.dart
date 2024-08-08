@@ -26,10 +26,10 @@ class PostDetailScreen extends StatefulWidget {
   Post post;
   int ownerId;
   PostDetailScreen({
-    Key? key,
+    super.key,
     required this.post,
     required this.ownerId,
-  }) : super(key: key);
+  });
 
   @override
   State<PostDetailScreen> createState() => _PostDetailScreenState();
@@ -194,7 +194,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -600,14 +602,18 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       () async {
                       Navigator.pop(context);
                       await _postProvider.delete((object as Post).id!);
-                      showInfoDialog(
-                          context,
-                          const Icon(Icons.task_alt,
-                              color: Palette.lightPurple, size: 50),
-                          const Text(
-                            "Post has been deleted.",
-                            textAlign: TextAlign.center,
-                          ));
+                      Future.delayed(Duration.zero, () {
+                        if (mounted) {
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Post has been deleted.",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
+                      });
                     })
                   : showConfirmationDialog(
                       context,

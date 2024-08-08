@@ -20,7 +20,7 @@ import '../widgets/pagination_buttons.dart';
 // ignore: must_be_immutable
 class PostsScreen extends StatefulWidget {
   User user;
-  PostsScreen({Key? key, required this.user}) : super(key: key);
+  PostsScreen({super.key, required this.user});
 
   @override
   State<PostsScreen> createState() => _PostsScreenState();
@@ -161,7 +161,9 @@ class _PostsScreenState extends State<PostsScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

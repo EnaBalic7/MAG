@@ -25,7 +25,7 @@ import '../widgets/gradient_button.dart';
 // ignore: must_be_immutable
 class AnimeDetailScreen extends StatefulWidget {
   Anime? anime;
-  AnimeDetailScreen({Key? key, this.anime}) : super(key: key);
+  AnimeDetailScreen({super.key, this.anime});
 
   @override
   State<AnimeDetailScreen> createState() => _AnimeDetailScreenState();
@@ -427,17 +427,14 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 labelText: "Genres",
                                 name: 'genres',
                                 options: [
-                                  ...genreList
-                                      .map(
-                                        (genre) => FormBuilderChipOption(
-                                          value: genre.id.toString(),
-                                          child: Text(genre.name!,
-                                              style: const TextStyle(
-                                                  color:
-                                                      Palette.midnightPurple)),
-                                        ),
-                                      )
-                                      .toList(),
+                                  ...genreList.map(
+                                    (genre) => FormBuilderChipOption(
+                                      value: genre.id.toString(),
+                                      child: Text(genre.name!,
+                                          style: const TextStyle(
+                                              color: Palette.midnightPurple)),
+                                    ),
+                                  ),
                                 ],
                                 initialValue: widget.anime?.genreAnimes
                                         ?.map(
@@ -480,22 +477,32 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             });
           }
 
-          showInfoDialog(
-              context,
-              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-              const Text(
-                "Added successfully!",
-                textAlign: TextAlign.center,
-              ));
+          Future.delayed(Duration.zero, () {
+            if (mounted) {
+              showInfoDialog(
+                  context,
+                  const Icon(Icons.task_alt,
+                      color: Palette.lightPurple, size: 50),
+                  const Text(
+                    "Added successfully!",
+                    textAlign: TextAlign.center,
+                  ));
+            }
+          });
         } else {
           await _animeProvider.update(widget.anime!.id!, request: request);
-          showInfoDialog(
-              context,
-              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-              const Text(
-                "Updated successfully!",
-                textAlign: TextAlign.center,
-              ));
+          Future.delayed(Duration.zero, () {
+            if (mounted) {
+              showInfoDialog(
+                  context,
+                  const Icon(Icons.task_alt,
+                      color: Palette.lightPurple, size: 50),
+                  const Text(
+                    "Updated successfully!",
+                    textAlign: TextAlign.center,
+                  ));
+            }
+          });
         }
 
         var selectedGenres =
@@ -516,7 +523,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               widget.anime!.id!, genreAnimeInsertList);
         }
       } on Exception catch (e) {
-        showErrorDialog(context, e);
+        Future.delayed(Duration.zero, () {
+          if (mounted) {
+            showErrorDialog(context, e);
+          }
+        });
       }
     } else {
       showInfoDialog(

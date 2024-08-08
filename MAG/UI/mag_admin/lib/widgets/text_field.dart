@@ -12,15 +12,14 @@ class MyTextField extends StatefulWidget {
   double? borderRadius;
   TextEditingController? controller;
   MyTextField(
-      {Key? key,
+      {super.key,
       this.hintText,
       this.fillColor,
       this.obscureText,
       this.width,
       this.height,
       this.borderRadius,
-      this.controller})
-      : super(key: key);
+      this.controller});
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();

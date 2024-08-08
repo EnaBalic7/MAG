@@ -23,7 +23,7 @@ import '../widgets/circular_progress_indicator.dart';
 class ClubDetailScreen extends StatefulWidget {
   Club club;
 
-  ClubDetailScreen({Key? key, required this.club}) : super(key: key);
+  ClubDetailScreen({super.key, required this.club});
 
   @override
   State<ClubDetailScreen> createState() => _ClubDetailScreenState();
@@ -57,10 +57,12 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
 
     _postProvider.addListener(() {
       _reloadPosts();
+      setTotalItems();
     });
 
     _commentProvider.addListener(() {
       _reloadPosts();
+      setTotalItems();
     });
 
     setTotalItems();
@@ -295,7 +297,9 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -26,7 +25,7 @@ import '../widgets/master_screen.dart';
 import '../utils/icons.dart';
 
 class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({Key? key}) : super(key: key);
+  const ReportsScreen({super.key});
 
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
@@ -404,16 +403,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ],
                         ),
                       ),
-                      gridData: FlGridData(
+                      gridData: const FlGridData(
                           show: true,
                           drawVerticalLine: true,
                           verticalInterval: 1),
                       titlesData: FlTitlesData(
                         show: true,
-                        rightTitles: AxisTitles(axisNameWidget: const Text("")),
-                        leftTitles: AxisTitles(
+                        rightTitles: const AxisTitles(axisNameWidget: Text("")),
+                        leftTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: true, interval: 1),
-                          axisNameWidget: const Text(
+                          axisNameWidget: Text(
                               "Number of users who like the genre",
                               style: TextStyle(fontWeight: FontWeight.w500)),
                           axisNameSize: 22,
@@ -449,9 +448,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             }),
                           ),
                         ),
-                        topTitles: AxisTitles(
+                        topTitles: const AxisTitles(
                           axisNameSize: 30,
-                          axisNameWidget: const Text(
+                          axisNameWidget: Text(
                             "Top 5 most popular genres",
                             style: TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 18),
@@ -730,12 +729,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   ],
                 ),
               ),
-              gridData: FlGridData(
+              gridData: const FlGridData(
                   show: true, drawVerticalLine: true, verticalInterval: 1),
               titlesData: FlTitlesData(
                 show: true,
-                rightTitles: AxisTitles(axisNameWidget: const Text("")),
-                leftTitles: AxisTitles(axisNameWidget: const Text("")),
+                rightTitles: const AxisTitles(axisNameWidget: Text("")),
+                leftTitles: const AxisTitles(axisNameWidget: Text("")),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     reservedSize: 100,
@@ -743,7 +742,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     getTitlesWidget: ((value, meta) {
                       if (value.toInt() >= 0 &&
                           value.toInt() < animeTitles.length) {
-                        return Container(
+                        return SizedBox(
                           width: 150,
                           child: Row(
                             children: [
@@ -767,9 +766,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     }),
                   ),
                 ),
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   axisNameSize: 30,
-                  axisNameWidget: const Text(
+                  axisNameWidget: Text(
                     "Top 5 most popular anime",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
@@ -804,10 +803,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
           List<UserRegistrationData> data =
               (snapshot.data as List<UserRegistrationData>);
 
-          data.forEach((data) {
+          for (var data in data) {
             // Convert dates to local time zone
             data.date = data.date?.toLocal();
-          });
+          }
 
           return Screenshot(
             controller: _screenshotController,
@@ -821,7 +820,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       height: 500,
                       child: LineChart(
                         LineChartData(
-                            gridData: FlGridData(
+                            gridData: const FlGridData(
                                 show: true,
                                 drawVerticalLine: true,
                                 verticalInterval: 1),
@@ -891,10 +890,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ),
                               ),
                               rightTitles:
-                                  AxisTitles(axisNameWidget: const Text("")),
-                              topTitles: AxisTitles(
+                                  const AxisTitles(axisNameWidget: Text("")),
+                              topTitles: const AxisTitles(
                                   axisNameSize: 30,
-                                  axisNameWidget: const Text(
+                                  axisNameWidget: Text(
                                     "Number of registered users in time",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,

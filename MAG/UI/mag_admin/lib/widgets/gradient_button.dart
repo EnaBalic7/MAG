@@ -20,7 +20,7 @@ class GradientButton extends StatefulWidget {
   double? contentPaddingBottom;
 
   GradientButton({
-    Key? key,
+    super.key,
     this.onPressed,
     this.width,
     this.height,
@@ -35,7 +35,7 @@ class GradientButton extends StatefulWidget {
     this.contentPaddingRight,
     this.contentPaddingTop,
     this.contentPaddingBottom,
-  }) : super(key: key);
+  });
 
   @override
   State<GradientButton> createState() => _GradientButtonState();

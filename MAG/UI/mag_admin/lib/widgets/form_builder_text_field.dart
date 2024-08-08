@@ -29,7 +29,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   void Function(String?)? onSaved;
   FocusNode? focusNode;
   MyFormBuilderTextField({
-    Key? key,
+    super.key,
     required this.name,
     this.labelText,
     this.fillColor,
@@ -53,7 +53,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.onSubmitted,
     this.onSaved,
     this.focusNode,
-  }) : super(key: key);
+  });
 
   @override
   State<MyFormBuilderTextField> createState() => _MyFormBuilderTextFieldState();

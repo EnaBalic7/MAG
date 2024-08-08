@@ -22,8 +22,8 @@ class ReviewsScreen extends StatefulWidget {
 
   ReviewsScreen({
     required this.user,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<ReviewsScreen> createState() => _ReviewsScreenState();
@@ -54,6 +54,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
     _ratingProvider.addListener(() {
       _reloadReviews();
+      setTotalItems();
     });
 
     super.initState();
@@ -161,7 +162,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         });
       }
     } on Exception catch (e) {
-      showErrorDialog(context, e);
+      if (mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
