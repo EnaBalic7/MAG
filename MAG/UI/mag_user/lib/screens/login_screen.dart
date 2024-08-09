@@ -99,41 +99,34 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (userResult.count == 1) {
                               LoggedUser.user = userResult.result.single;
                             }
-                            if (mounted) {
-                              Future.delayed(Duration.zero, () {
-                                if (mounted) {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const HomeScreen(selectedIndex: 0),
-                                    ),
-                                  );
-                                }
-                              });
+                            if (context.mounted) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const HomeScreen(selectedIndex: 0),
+                                ),
+                              );
                             }
                           } on Exception catch (e) {
-                            Future.delayed(Duration.zero, () {
-                              if (mounted) {
-                                showInfoDialog(
-                                    context,
-                                    const Icon(Icons.warning_rounded,
-                                        color: Palette.lightRed, size: 55),
-                                    SizedBox(
-                                      width: 300,
-                                      child: (e
-                                              .toString()
-                                              .contains("Unauthorized"))
-                                          ? Text(
-                                              "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
-                                              textAlign: TextAlign.center,
-                                            )
-                                          : Text(
-                                              e.toString(),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                    ));
-                              }
-                            });
+                            if (context.mounted) {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.warning_rounded,
+                                      color: Palette.lightRed, size: 55),
+                                  SizedBox(
+                                    width: 300,
+                                    child:
+                                        (e.toString().contains("Unauthorized"))
+                                            ? Text(
+                                                "Username or password is incorrect, or the user is not registered.\n\n ${e.toString()}",
+                                                textAlign: TextAlign.center,
+                                              )
+                                            : Text(
+                                                e.toString(),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                  ));
+                            }
                           }
                         },
                         width: 90,

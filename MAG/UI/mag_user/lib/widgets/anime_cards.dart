@@ -334,49 +334,44 @@ class _AnimeCardsState extends State<AnimeCards>
             .get(filter: {"UserId": "${LoggedUser.user!.id}"});
 
         if (constellations.count == 0) {
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                        insetPadding: const EdgeInsets.all(17),
-                        alignment: Alignment.center,
-                        elevation: 0,
-                        backgroundColor: Colors.transparent,
-                        child: Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Palette.darkPurple,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: Palette.lightPurple.withOpacity(0.3),
-                                width: 1,
-                              ),
+          if (mounted) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                      insetPadding: const EdgeInsets.all(17),
+                      alignment: Alignment.center,
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                      child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Palette.darkPurple,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Palette.lightPurple.withOpacity(0.3),
+                              width: 1,
                             ),
-                            child: const Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Empty(
-                                    text: Text("Your Constellation is empty."),
-                                    screen:
-                                        ConstellationScreen(selectedIndex: 3),
-                                    child: Text("Make Stars")),
-                              ],
-                            )));
-                  });
-            }
-          });
+                          ),
+                          child: const Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Empty(
+                                  text: Text("Your Constellation is empty."),
+                                  screen: ConstellationScreen(selectedIndex: 3),
+                                  child: Text("Make Stars")),
+                            ],
+                          )));
+                });
+          }
         } else if (constellations.count > 0) {
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ConstellationForm(anime: anime);
-                  });
-            }
-          });
+          if (mounted) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ConstellationForm(anime: anime);
+                });
+          }
         }
       },
       child: Container(
@@ -409,73 +404,69 @@ class _AnimeCardsState extends State<AnimeCards>
         var animeWatchlist = await _animeWatchlistProvider
             .get(filter: {"WatchlistId": watchlistId, "AnimeId": anime.id});
         if (animeWatchlist.result.isNotEmpty) {
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    insetPadding: const EdgeInsets.all(17),
-                    alignment: Alignment.center,
-                    elevation: 0,
-                    backgroundColor: Colors.transparent,
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Palette.darkPurple,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Palette.lightPurple.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            "You already added this anime to your Nebula.",
-                            textAlign: TextAlign.center,
-                          ),
-                          GradientButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => const NebulaScreen(
-                                            selectedIndex: 1,
-                                          )));
-                            },
-                            borderRadius: 50,
-                            width: 130,
-                            paddingTop: 10,
-                            height: 30,
-                            gradient: Palette.buttonGradient,
-                            child: const Text("Go to Nebula",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Palette.white)),
-                          ),
-                        ],
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  insetPadding: const EdgeInsets.all(17),
+                  alignment: Alignment.center,
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Palette.darkPurple,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Palette.lightPurple.withOpacity(0.3),
+                        width: 1,
                       ),
                     ),
-                  );
-                },
-              );
-            }
-          });
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          "You already added this anime to your Nebula.",
+                          textAlign: TextAlign.center,
+                        ),
+                        GradientButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (context) => const NebulaScreen(
+                                          selectedIndex: 1,
+                                        )));
+                          },
+                          borderRadius: 50,
+                          width: 130,
+                          paddingTop: 10,
+                          height: 30,
+                          gradient: Palette.buttonGradient,
+                          child: const Text("Go to Nebula",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Palette.white)),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
         } else {
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return NebulaForm(
-                    anime: anime,
-                    watchlistId: watchlistId,
-                  );
-                },
-              );
-            }
-          });
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return NebulaForm(
+                  anime: anime,
+                  watchlistId: watchlistId,
+                );
+              },
+            );
+          }
         }
       },
       child: Container(

@@ -101,6 +101,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
     _postProvider.addListener(() {
       _reloadPost();
+      _reloadComment();
     });
 
     _commentProvider.addListener(() {

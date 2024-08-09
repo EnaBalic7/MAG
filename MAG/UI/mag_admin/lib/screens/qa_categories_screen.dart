@@ -221,25 +221,21 @@ class _QACategoriesScreenState extends State<QACategoriesScreen> {
       if (_qaCategoryFormKey.currentState?.saveAndValidate() == true) {
         var request = Map.from(_qaCategoryFormKey.currentState!.value);
         await _qaCategoryProvider.insert(request);
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.task_alt,
-                    color: Palette.lightPurple, size: 50),
-                const Text(
-                  "Added successfully!",
-                  textAlign: TextAlign.center,
-                ));
-          }
-        });
+
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Added successfully!",
+                textAlign: TextAlign.center,
+              ));
+        }
       }
     } on Exception catch (e) {
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          showErrorDialog(context, e);
-        }
-      });
+      if (context.mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -248,25 +244,21 @@ class _QACategoriesScreenState extends State<QACategoriesScreen> {
       if (_qaCategoryFormKey.currentState?.saveAndValidate() == true) {
         var request = Map.from(_qaCategoryFormKey.currentState!.value);
         await _qaCategoryProvider.update(categoryId!, request: request);
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.task_alt,
-                    color: Palette.lightPurple, size: 50),
-                const Text(
-                  "Saved successfully!",
-                  textAlign: TextAlign.center,
-                ));
-          }
-        });
+
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Saved successfully!",
+                textAlign: TextAlign.center,
+              ));
+        }
       }
     } on Exception catch (e) {
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          showErrorDialog(context, e);
-        }
-      });
+      if (context.mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

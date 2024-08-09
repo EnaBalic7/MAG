@@ -474,11 +474,9 @@ class _ClubCardsState extends State<ClubCards> {
                   try {
                     await _clubProvider.delete(club.id!);
                   } on Exception catch (e) {
-                    Future.delayed(Duration.zero, () {
-                      if (mounted) {
-                        showErrorDialog(context, e);
-                      }
-                    });
+                    if (context.mounted) {
+                      showErrorDialog(context, e);
+                    }
                   }
                 });
               },

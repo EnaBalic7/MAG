@@ -602,18 +602,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       () async {
                       Navigator.pop(context);
                       await _postProvider.delete((object as Post).id!);
-                      Future.delayed(Duration.zero, () {
-                        if (mounted) {
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.task_alt,
-                                  color: Palette.lightPurple, size: 50),
-                              const Text(
-                                "Post has been deleted.",
-                                textAlign: TextAlign.center,
-                              ));
-                        }
-                      });
+
+                      if (context.mounted) {
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.task_alt,
+                                color: Palette.lightPurple, size: 50),
+                            const Text(
+                              "Post has been deleted.",
+                              textAlign: TextAlign.center,
+                            ));
+                      }
                     })
                   : showConfirmationDialog(
                       context,

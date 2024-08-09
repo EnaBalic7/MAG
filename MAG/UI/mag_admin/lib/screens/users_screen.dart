@@ -491,24 +491,20 @@ class _UsersScreenState extends State<UsersScreen> {
                             await _userRoleProvider.insert(userRole);
                           }
 
-                          Future.delayed(Duration.zero, () {
-                            if (mounted) {
-                              showInfoDialog(
-                                  context,
-                                  const Icon(Icons.task_alt,
-                                      color: Palette.lightPurple, size: 50),
-                                  const Text(
-                                    "Updated successfully!",
-                                    textAlign: TextAlign.center,
-                                  ));
-                            }
-                          });
+                          if (context.mounted) {
+                            showInfoDialog(
+                                context,
+                                const Icon(Icons.task_alt,
+                                    color: Palette.lightPurple, size: 50),
+                                const Text(
+                                  "Updated successfully!",
+                                  textAlign: TextAlign.center,
+                                ));
+                          }
                         } on Exception catch (e) {
-                          Future.delayed(Duration.zero, () {
-                            if (mounted) {
-                              showErrorDialog(context, e);
-                            }
-                          });
+                          if (context.mounted) {
+                            showErrorDialog(context, e);
+                          }
                         }
                       } else {
                         showInfoDialog(
@@ -787,26 +783,20 @@ class _UsersScreenState extends State<UsersScreen> {
                   filter: {"UserId": "${user.id}", "RoleIncluded": "true"},
                 );
 
-                Future.delayed(Duration.zero, () {
-                  if (mounted) {
-                    Navigator.pop(context); //Closes loading indicator dialog
-                  }
-                });
+                if (context.mounted) {
+                  Navigator.pop(context); //Closes loading indicator dialog
+                }
 
                 if (result.result.isEmpty) {
                 } else {
-                  Future.delayed(Duration.zero, () {
-                    if (mounted) {
-                      _showOverlayForm(context, user);
-                    }
-                  });
+                  if (context.mounted) {
+                    _showOverlayForm(context, user);
+                  }
                 }
               } on Exception catch (e) {
-                Future.delayed(Duration.zero, () {
-                  if (mounted) {
-                    showErrorDialog(context, e);
-                  }
-                });
+                if (context.mounted) {
+                  showErrorDialog(context, e);
+                }
               }
             },
           ),

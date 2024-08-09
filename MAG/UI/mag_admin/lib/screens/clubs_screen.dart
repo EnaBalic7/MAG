@@ -38,9 +38,26 @@ class _ClubsScreenState extends State<ClubsScreen> {
       "PageSize": "$pageSize"
     });
 
+    _clubProvider.addListener(() {
+      _reloadData();
+      setTotalItems();
+    });
+
     setTotalItems();
 
     super.initState();
+  }
+
+  void _reloadData() {
+    if (mounted) {
+      setState(() {
+        _clubFuture = _clubProvider.get(filter: {
+          "CoverIncluded": "true",
+          "Page": "$page",
+          "PageSize": "$pageSize"
+        });
+      });
+    }
   }
 
   void setTotalItems() async {

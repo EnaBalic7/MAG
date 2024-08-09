@@ -208,25 +208,21 @@ class _GenresScreenState extends State<GenresScreen> {
       if (_genreFormKey.currentState?.saveAndValidate() == true) {
         var request = Map.from(_genreFormKey.currentState!.value);
         await _genreProvider.insert(request);
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.task_alt,
-                    color: Palette.lightPurple, size: 50),
-                const Text(
-                  "Added successfully!",
-                  textAlign: TextAlign.center,
-                ));
-          }
-        });
+
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Added successfully!",
+                textAlign: TextAlign.center,
+              ));
+        }
       }
     } on Exception catch (e) {
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          showErrorDialog(context, e);
-        }
-      });
+      if (context.mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 }

@@ -499,11 +499,9 @@ class _ContentCardState extends State<ContentCard> {
                       await _commentProvider.delete((object as Comment).id!);
                     }
                   } on Exception catch (e) {
-                    Future.delayed(Duration.zero, () {
-                      if (mounted) {
-                        showErrorDialog(context, e);
-                      }
-                    });
+                    if (context.mounted) {
+                      showErrorDialog(context, e);
+                    }
                   }
                 });
               },

@@ -151,27 +151,23 @@ class _PreferredGenresFormState extends State<PreferredGenresForm> {
                         await _preferredGenreProvider.updatePrefGenresForUser(
                             LoggedUser.user!.id!, prefGenresInsert);
 
-                        Future.delayed(Duration.zero, () {
-                          if (mounted) {
-                            Navigator.of(context).pop();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
 
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.task_alt,
-                                    color: Palette.lightPurple, size: 50),
-                                const Text(
-                                  "Saved successfully!",
-                                  textAlign: TextAlign.center,
-                                ));
-                          }
-                        });
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Saved successfully!",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
                       }
                     } on Exception catch (e) {
-                      Future.delayed(Duration.zero, () {
-                        if (mounted) {
-                          showErrorDialog(context, e);
-                        }
-                      });
+                      if (context.mounted) {
+                        showErrorDialog(context, e);
+                      }
                     }
                   },
                   width: 60,

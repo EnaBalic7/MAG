@@ -197,51 +197,43 @@ class _DonateScreenState extends State<DonateScreen> {
       });
     } on StripeException catch (e) {
       if (e.toString().contains("cancel")) {
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.warning_rounded,
-                    color: Palette.lightRed, size: 55),
-                const SizedBox(
-                  width: 300,
-                  child: Text(
-                    "Payment canceled!",
-                    textAlign: TextAlign.center,
-                  ),
-                ));
-          }
-        });
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.warning_rounded,
+                  color: Palette.lightRed, size: 55),
+              const SizedBox(
+                width: 300,
+                child: Text(
+                  "Payment canceled!",
+                  textAlign: TextAlign.center,
+                ),
+              ));
+        }
       } else {
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showErrorDialog(context, e);
-          }
-        });
+        if (context.mounted) {
+          showErrorDialog(context, e);
+        }
       }
     } on Exception catch (e) {
       if (e.toString().contains("cancel")) {
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.warning_rounded,
-                    color: Palette.lightRed, size: 55),
-                const SizedBox(
-                  width: 300,
-                  child: Text(
-                    "Payment canceled!",
-                    textAlign: TextAlign.center,
-                  ),
-                ));
-          }
-        });
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.warning_rounded,
+                  color: Palette.lightRed, size: 55),
+              const SizedBox(
+                width: 300,
+                child: Text(
+                  "Payment canceled!",
+                  textAlign: TextAlign.center,
+                ),
+              ));
+        }
       } else {
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showErrorDialog(context, e);
-          }
-        });
+        if (context.mounted) {
+          showErrorDialog(context, e);
+        }
       }
     }
   }

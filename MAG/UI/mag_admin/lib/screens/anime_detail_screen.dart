@@ -477,32 +477,29 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             });
           }
 
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              showInfoDialog(
-                  context,
-                  const Icon(Icons.task_alt,
-                      color: Palette.lightPurple, size: 50),
-                  const Text(
-                    "Added successfully!",
-                    textAlign: TextAlign.center,
-                  ));
-            }
-          });
+          if (context.mounted) {
+            showInfoDialog(
+                context,
+                const Icon(Icons.task_alt,
+                    color: Palette.lightPurple, size: 50),
+                const Text(
+                  "Added successfully!",
+                  textAlign: TextAlign.center,
+                ));
+          }
         } else {
           await _animeProvider.update(widget.anime!.id!, request: request);
-          Future.delayed(Duration.zero, () {
-            if (mounted) {
-              showInfoDialog(
-                  context,
-                  const Icon(Icons.task_alt,
-                      color: Palette.lightPurple, size: 50),
-                  const Text(
-                    "Updated successfully!",
-                    textAlign: TextAlign.center,
-                  ));
-            }
-          });
+
+          if (context.mounted) {
+            showInfoDialog(
+                context,
+                const Icon(Icons.task_alt,
+                    color: Palette.lightPurple, size: 50),
+                const Text(
+                  "Updated successfully!",
+                  textAlign: TextAlign.center,
+                ));
+          }
         }
 
         var selectedGenres =
@@ -523,11 +520,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               widget.anime!.id!, genreAnimeInsertList);
         }
       } on Exception catch (e) {
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showErrorDialog(context, e);
-          }
-        });
+        if (context.mounted) {
+          showErrorDialog(context, e);
+        }
       }
     } else {
       showInfoDialog(

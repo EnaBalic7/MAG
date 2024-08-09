@@ -158,24 +158,20 @@ class _ConstellationFormState extends State<ConstellationForm> {
                       await _animeListProvider.updateListsForAnime(
                           widget.anime.id!, animeListInsert);
 
-                      Future.delayed(Duration.zero, () {
-                        if (mounted) {
-                          showInfoDialog(
-                              context,
-                              const Icon(Icons.task_alt,
-                                  color: Palette.lightPurple, size: 50),
-                              const Text(
-                                "Saved successfully!",
-                                textAlign: TextAlign.center,
-                              ));
-                        }
-                      });
+                      if (context.mounted) {
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.task_alt,
+                                color: Palette.lightPurple, size: 50),
+                            const Text(
+                              "Saved successfully!",
+                              textAlign: TextAlign.center,
+                            ));
+                      }
                     } on Exception catch (e) {
-                      Future.delayed(Duration.zero, () {
-                        if (mounted) {
-                          showErrorDialog(context, e);
-                        }
-                      });
+                      if (context.mounted) {
+                        showErrorDialog(context, e);
+                      }
                     }
                   },
                   width: 60,

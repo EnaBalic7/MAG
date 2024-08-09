@@ -475,26 +475,22 @@ class _NebulaFormState extends State<NebulaForm> {
                           await _ratingProvider.insert(rating);
                         }
 
-                        Future.delayed(Duration.zero, () {
-                          if (mounted) {
-                            Navigator.of(context).pop();
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
 
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.task_alt,
-                                    color: Palette.lightPurple, size: 50),
-                                const Text(
-                                  "Added successfully!",
-                                  textAlign: TextAlign.center,
-                                ));
-                          }
-                        });
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.task_alt,
+                                  color: Palette.lightPurple, size: 50),
+                              const Text(
+                                "Added successfully!",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
                       } on Exception catch (e) {
-                        Future.delayed(Duration.zero, () {
-                          if (mounted) {
-                            showErrorDialog(context, e);
-                          }
-                        });
+                        if (context.mounted) {
+                          showErrorDialog(context, e);
+                        }
                       }
                     }
                   },
@@ -790,28 +786,24 @@ class _NebulaFormState extends State<NebulaForm> {
                                           .delete(rating.result[0].id!);
                                     }
 
-                                    Future.delayed(Duration.zero, () {
-                                      if (mounted) {
-                                        Navigator.of(context).pop();
+                                    if (context.mounted) {
+                                      Navigator.of(context).pop();
 
-                                        showInfoDialog(
-                                            context,
-                                            const Icon(Icons.task_alt,
-                                                color: Palette.lightPurple,
-                                                size: 50),
-                                            const Text(
-                                              "Removed successfully!",
-                                              textAlign: TextAlign.center,
-                                            ));
-                                      }
-                                    });
+                                      showInfoDialog(
+                                          context,
+                                          const Icon(Icons.task_alt,
+                                              color: Palette.lightPurple,
+                                              size: 50),
+                                          const Text(
+                                            "Removed successfully!",
+                                            textAlign: TextAlign.center,
+                                          ));
+                                    }
                                   }
                                 } on Exception catch (e) {
-                                  Future.delayed(Duration.zero, () {
-                                    if (mounted) {
-                                      showErrorDialog(context, e);
-                                    }
-                                  });
+                                  if (context.mounted) {
+                                    showErrorDialog(context, e);
+                                  }
                                 }
                               },
                               borderRadius: 50,
@@ -937,27 +929,23 @@ class _NebulaFormState extends State<NebulaForm> {
                                       }
                                     }
 
-                                    Future.delayed(Duration.zero, () {
-                                      if (mounted) {
-                                        Navigator.of(context).pop();
+                                    if (context.mounted) {
+                                      Navigator.of(context).pop();
 
-                                        showInfoDialog(
-                                            context,
-                                            const Icon(Icons.task_alt,
-                                                color: Palette.lightPurple,
-                                                size: 50),
-                                            const Text(
-                                              "Updated successfully!",
-                                              textAlign: TextAlign.center,
-                                            ));
-                                      }
-                                    });
+                                      showInfoDialog(
+                                          context,
+                                          const Icon(Icons.task_alt,
+                                              color: Palette.lightPurple,
+                                              size: 50),
+                                          const Text(
+                                            "Updated successfully!",
+                                            textAlign: TextAlign.center,
+                                          ));
+                                    }
                                   } on Exception catch (e) {
-                                    Future.delayed(Duration.zero, () {
-                                      if (mounted) {
-                                        showErrorDialog(context, e);
-                                      }
-                                    });
+                                    if (context.mounted) {
+                                      showErrorDialog(context, e);
+                                    }
                                   }
                                 }
                               },

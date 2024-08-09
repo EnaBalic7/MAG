@@ -40,7 +40,7 @@ class _HelpScreenState extends State<HelpScreen> {
   late final QAcategoryProvider _qaCategoryProvider;
 
   int page = 0;
-  int pageSize = 6;
+  int pageSize = 1;
   int totalItems = 0;
   bool isSearching = false;
 
@@ -63,7 +63,7 @@ class _HelpScreenState extends State<HelpScreen> {
       "displayed": true,
     };
 
-    context.read<QAProvider>().addListener(() {
+    _qaProvider.addListener(() {
       _reloadQAList();
       setTotalItems();
     });
@@ -228,25 +228,22 @@ class _HelpScreenState extends State<HelpScreen> {
                         try {
                           if (qaID != null) {
                             await _qaProvider.update(qaID!, request: request);
-                            Future.delayed(Duration.zero, () {
-                              if (mounted) {
-                                showInfoDialog(
-                                    context,
-                                    const Icon(Icons.task_alt,
-                                        color: Palette.lightPurple, size: 50),
-                                    const Text(
-                                      "Answered successfully!",
-                                      textAlign: TextAlign.center,
-                                    ));
-                              }
-                            });
+
+                            if (context.mounted) {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.task_alt,
+                                      color: Palette.lightPurple, size: 50),
+                                  const Text(
+                                    "Answered successfully!",
+                                    textAlign: TextAlign.center,
+                                  ));
+                            }
                           }
                         } on Exception catch (e) {
-                          Future.delayed(Duration.zero, () {
-                            if (mounted) {
-                              showErrorDialog(context, e);
-                            }
-                          });
+                          if (context.mounted) {
+                            showErrorDialog(context, e);
+                          }
                         }
                       }
                     },
@@ -459,8 +456,10 @@ class _HelpScreenState extends State<HelpScreen> {
                           itemBuilder: (BuildContext context) =>
                               <PopupMenuEntry<String>>[
                             PopupMenuItem<String>(
-                              padding: EdgeInsets.zero,
                               child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                 visualDensity: const VisualDensity(
                                     horizontal: -4, vertical: -4),
                                 hoverColor:
@@ -475,8 +474,10 @@ class _HelpScreenState extends State<HelpScreen> {
                               ),
                             ),
                             PopupMenuItem<String>(
-                              padding: EdgeInsets.zero,
                               child: ListTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                 hoverColor: Palette.lightRed.withOpacity(0.1),
                                 leading: buildTrashIcon(24),
                                 title: const Text('Delete',
@@ -599,36 +600,30 @@ class _HelpScreenState extends State<HelpScreen> {
     }*/
 
     try {
-      if (qaID != null) {
-        await _qaProvider.delete(qa.id!);
-        if (mounted) {
-          if (qa.id! == qaID) {
-            setState(() {
-              qaID = null;
-              _questionTitle = "";
-            });
-          }
+      await _qaProvider.delete(qa.id!);
+      if (mounted) {
+        if (qa.id! == qaID) {
+          setState(() {
+            qaID = null;
+            _questionTitle = "";
+            _qAFormKey.currentState?.fields["answer"]?.didChange("");
+          });
         }
+      }
 
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.task_alt,
-                    color: Palette.lightPurple, size: 50),
-                const Text(
-                  "Question has been deleted.",
-                  textAlign: TextAlign.center,
-                ));
-          }
-        });
+      if (context.mounted) {
+        showInfoDialog(
+            context,
+            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+            const Text(
+              "Question has been deleted.",
+              textAlign: TextAlign.center,
+            ));
       }
     } on Exception catch (e) {
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          showErrorDialog(context, e);
-        }
-      });
+      if (context.mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 
@@ -648,30 +643,26 @@ class _HelpScreenState extends State<HelpScreen> {
     try {
       if (qaID != null) {
         await _qaProvider.update(qaID!, request: request);
-        Future.delayed(Duration.zero, () {
-          if (mounted) {
-            showInfoDialog(
-                context,
-                const Icon(Icons.task_alt,
-                    color: Palette.lightPurple, size: 50),
-                (qa.displayed == true)
-                    ? const Text(
-                        "Question has been hidden.",
-                        textAlign: TextAlign.center,
-                      )
-                    : const Text(
-                        "Question has been shown.",
-                        textAlign: TextAlign.center,
-                      ));
-          }
-        });
+
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              (qa.displayed == true)
+                  ? const Text(
+                      "Question has been hidden.",
+                      textAlign: TextAlign.center,
+                    )
+                  : const Text(
+                      "Question has been shown.",
+                      textAlign: TextAlign.center,
+                    ));
+        }
       }
     } on Exception catch (e) {
-      Future.delayed(Duration.zero, () {
-        if (mounted) {
-          showErrorDialog(context, e);
-        }
-      });
+      if (context.mounted) {
+        showErrorDialog(context, e);
+      }
     }
   }
 

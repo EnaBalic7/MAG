@@ -374,11 +374,9 @@ class _ConstellationCardsState extends State<ConstellationCards> {
                   try {
                     await _listProvider.delete(list.id!);
                   } on Exception catch (e) {
-                    Future.delayed(Duration.zero, () {
-                      if (mounted) {
-                        showErrorDialog(context, e);
-                      }
-                    });
+                    if (context.mounted) {
+                      showErrorDialog(context, e);
+                    }
                   }
                 });
               },

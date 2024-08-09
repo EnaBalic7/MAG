@@ -281,20 +281,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 await _userRoleProvider.insert(userRole);
                               }
 
-                              showInfoDialog(
-                                  context,
-                                  const Icon(Icons.task_alt,
-                                      color: Palette.lightPurple, size: 50),
-                                  const Text(
-                                    "Successfully registered.",
-                                    textAlign: TextAlign.center,
-                                  ), onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen()));
-                              }, barrierDismissible: false);
+                              if (context.mounted) {
+                                showInfoDialog(
+                                    context,
+                                    const Icon(Icons.task_alt,
+                                        color: Palette.lightPurple, size: 50),
+                                    const Text(
+                                      "Successfully registered.",
+                                      textAlign: TextAlign.center,
+                                    ), onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen()));
+                                }, barrierDismissible: false);
+                              }
                             }).catchError((error) {
                               showInfoDialog(
                                   context,

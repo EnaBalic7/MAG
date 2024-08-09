@@ -86,14 +86,14 @@ class LoginScreen extends StatelessWidget {
 
                           if (userRoles
                               .any((userRole) => userRole.roleId == 1)) {
-                            Future.delayed(Duration.zero, () {
+                            if (context.mounted) {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const AnimeScreen()));
-                            });
+                            }
                           } else {
-                            Future.delayed(Duration.zero, () {
+                            if (context.mounted) {
                               showInfoDialog(
                                   context,
                                   const Icon(Icons.warning_rounded,
@@ -105,10 +105,10 @@ class LoginScreen extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                     ),
                                   ));
-                            });
+                            }
                           }
                         } on Exception catch (e) {
-                          Future.delayed(Duration.zero, () {
+                          if (context.mounted) {
                             showInfoDialog(
                                 context,
                                 const Icon(Icons.warning_rounded,
@@ -125,7 +125,7 @@ class LoginScreen extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                         ),
                                 ));
-                          });
+                          }
                         }
                       },
                       width: 110,
