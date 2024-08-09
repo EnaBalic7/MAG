@@ -67,6 +67,16 @@ class _ClubsScreenState extends State<ClubsScreen> {
       setState(() {
         totalItems = clubResult.count;
       });
+
+      int totalPages = (totalItems / pageSize).ceil();
+
+      // Ensure the page index is within valid range
+      if (page >= totalPages && totalPages > 0) {
+        setState(() {
+          page--;
+        });
+      }
+      _reloadData();
     }
   }
 

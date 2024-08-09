@@ -40,7 +40,7 @@ class _HelpScreenState extends State<HelpScreen> {
   late final QAcategoryProvider _qaCategoryProvider;
 
   int page = 0;
-  int pageSize = 1;
+  int pageSize = 6;
   int totalItems = 0;
   bool isSearching = false;
 
@@ -90,6 +90,16 @@ class _HelpScreenState extends State<HelpScreen> {
       setState(() {
         totalItems = qaResult.count;
       });
+
+      int totalPages = (totalItems / pageSize).ceil();
+
+      // Ensure the page index is within valid range
+      if (page >= totalPages && totalPages > 0) {
+        setState(() {
+          page--;
+        });
+      }
+      _reloadQAList();
     }
   }
 
@@ -593,12 +603,6 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   Future<void> _deleteQA(QA qa, BuildContext context) async {
-    /* if (mounted) {
-      setState(() {
-        qaID = qa.id;
-      });
-    }*/
-
     try {
       await _qaProvider.delete(qa.id!);
       if (mounted) {

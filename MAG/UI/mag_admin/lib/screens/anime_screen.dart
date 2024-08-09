@@ -65,6 +65,16 @@ class _AnimeScreenState extends State<AnimeScreen> {
       setState(() {
         totalItems = animeResult.count;
       });
+
+      int totalPages = (totalItems / pageSize).ceil();
+
+      // Ensure the page index is within valid range
+      if (page >= totalPages && totalPages > 0) {
+        setState(() {
+          page--;
+        });
+      }
+      _reloadAnimeList();
     }
   }
 

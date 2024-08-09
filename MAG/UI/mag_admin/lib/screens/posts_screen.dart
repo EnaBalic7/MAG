@@ -371,8 +371,10 @@ class _PostsScreenState extends State<PostsScreen> {
               color: const Color.fromRGBO(50, 48, 90, 1),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem<String>(
-                  padding: EdgeInsets.zero,
                   child: ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                     hoverColor: Palette.lightRed.withOpacity(0.1),
                     leading: buildTrashIcon(24),
                     title: const Text('Delete',
