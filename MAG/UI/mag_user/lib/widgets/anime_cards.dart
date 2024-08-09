@@ -359,7 +359,9 @@ class _AnimeCardsState extends State<AnimeCards>
                               Empty(
                                   text: Text("Your Constellation is empty."),
                                   screen: ConstellationScreen(selectedIndex: 3),
-                                  child: Text("Make Stars")),
+                                  child: Text("Make Stars",
+                                      style: TextStyle(
+                                          color: Palette.lightPurple))),
                             ],
                           )));
                 });

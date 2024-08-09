@@ -111,6 +111,7 @@ class _ConstellationCardsState extends State<ConstellationCards> {
                 text: Text(
                   "Your Constellation is empty.\nTry adding some Stars!",
                   textAlign: TextAlign.center,
+                  style: TextStyle(color: Palette.lightPurple),
                 ),
                 showGradientButton: false,
               );

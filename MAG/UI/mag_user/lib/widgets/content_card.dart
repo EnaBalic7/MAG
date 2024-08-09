@@ -470,7 +470,6 @@ class _ContentCardState extends State<ContentCard> {
         color: const Color.fromRGBO(50, 48, 90, 1),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
-            padding: EdgeInsets.zero,
             child: ListTile(
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightRed.withOpacity(0.1),

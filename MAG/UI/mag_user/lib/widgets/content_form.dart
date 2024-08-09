@@ -156,9 +156,9 @@ class _ContentFormState extends State<ContentForm> {
   String? _buildValidator(String? val) {
     if (val != null && val.isNotEmpty && !isValidReviewText(val)) {
       return "Some special characters are not allowed.";
-    } else if (val != null && isEmptyOrWhiteSpace(val)) {
+    } else if (val == null || isEmptyOrWhiteSpace(val)) {
       return "This field cannot be empty.";
-    } else if (val != null && val.isNotEmpty && val.length > 500) {
+    } else if (val.isNotEmpty && val.length > 500) {
       return "Exceeded character limit: ${val.length}/500";
     }
     return null;

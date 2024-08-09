@@ -33,7 +33,7 @@ class _StarFormState extends State<StarForm> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    double textFieldWidth = screenSize.width * 0.5;
+    double textFieldWidth = screenSize.width * 0.6;
 
     return Dialog(
         insetPadding: const EdgeInsets.all(17),
@@ -71,9 +71,9 @@ class _StarFormState extends State<StarForm> {
                     validator: (val) {
                       if (val != null && val != "" && !isValidReviewText(val)) {
                         return "Illegal characters.";
-                      } else if (val != null && isEmptyOrWhiteSpace(val)) {
+                      } else if (val == null || isEmptyOrWhiteSpace(val)) {
                         return "This field cannot be empty.";
-                      } else if (val != null && val != "" && val.length > 15) {
+                      } else if (val != "" && val.length > 15) {
                         return "Name is too long.";
                       }
                       return null;
@@ -91,6 +91,9 @@ class _StarFormState extends State<StarForm> {
                             LoggedUser.user!.id,
                             _starFormKey.currentState?.fields["name"]?.value,
                             DateTime.now()));
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       } else if (_starFormKey.currentState?.saveAndValidate() ==
                               true &&
                           widget.initialValue != null &&
@@ -101,15 +104,14 @@ class _StarFormState extends State<StarForm> {
                         };
                         await _listtProvider.update(widget.listId!,
                             request: list);
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       }
                     } on Exception catch (e) {
                       if (context.mounted) {
                         showErrorDialog(context, e);
                       }
-                    }
-
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
                     }
                   },
                   width: 60,

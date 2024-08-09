@@ -32,6 +32,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   TextCapitalization textCapitalization;
   double? errorBorderRadius;
   FocusNode? focusNode;
+  double? errorHeight;
 
   MyFormBuilderTextField({
     super.key,
@@ -61,6 +62,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.errorBorderRadius,
     this.focusNode,
+    this.errorHeight,
   });
 
   @override
@@ -114,9 +116,9 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
                 borderSide: const BorderSide(color: Palette.lightRed),
                 borderRadius:
                     BorderRadius.circular(widget.errorBorderRadius ?? 50)),
-            errorStyle: const TextStyle(
+            errorStyle: TextStyle(
               color: Palette.lightRed,
-              height: 0.3,
+              height: widget.errorHeight ?? 0.3,
               textBaseline: TextBaseline.alphabetic,
             ),
             errorBorder: OutlineInputBorder(

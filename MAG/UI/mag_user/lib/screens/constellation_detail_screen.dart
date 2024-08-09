@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:mag_user/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/anime_indicator.dart';
@@ -125,7 +128,8 @@ class _ConstellationDetailScreenState extends State<ConstellationDetailScreen> {
               return const Empty(
                   text: Text("This Star is empty."),
                   screen: HomeScreen(selectedIndex: 0),
-                  child: Text("Explore Anime"));
+                  child: Text("Explore Anime",
+                      style: TextStyle(color: Palette.lightPurple)));
             }
             return AnimeCards(
               selectedIndex: widget.selectedIndex,

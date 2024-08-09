@@ -114,6 +114,7 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: MyFormBuilderTextField(
                     name: "question",
+                    errorHeight: 1,
                     minLines: 5,
                     fillColor: Palette.textFieldPurple.withOpacity(0.3),
                     maxLines: null,
