@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mag_user/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/watchlist_provider.dart';
@@ -93,7 +94,8 @@ class _NebulaAllScreenState extends State<NebulaAllScreen> {
           return const Empty(
               text: Text("Nothing to be found here~"),
               screen: HomeScreen(selectedIndex: 0),
-              child: Text("Explore Anime"));
+              child: Text("Explore Anime",
+                  style: TextStyle(color: Palette.lightPurple)));
         }
       },
     );

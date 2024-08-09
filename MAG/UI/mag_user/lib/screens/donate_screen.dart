@@ -56,24 +56,26 @@ class _DonateScreenState extends State<DonateScreen> {
     Size size = MediaQuery.of(context).size;
     double width = size.width;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildTop(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MySeparator(
-              width: width * 0.8,
-              borderRadius: 50,
-              opacity: 0.7,
-              paddingBottom: 10,
-              paddingTop: 10,
-            ),
-          ],
-        ),
-        _buildBottom(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildTop(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MySeparator(
+                width: width * 0.8,
+                borderRadius: 50,
+                opacity: 0.7,
+                paddingBottom: 10,
+                paddingTop: 10,
+              ),
+            ],
+          ),
+          _buildBottom(),
+        ],
+      ),
     );
   }
 

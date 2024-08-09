@@ -119,7 +119,8 @@ class _NebulaCardsState extends State<NebulaCards>
               return const Empty(
                   text: Text("Nothing to be found here~"),
                   screen: HomeScreen(selectedIndex: 0),
-                  child: Text("Explore Anime"));
+                  child: Text("Explore Anime",
+                      style: TextStyle(color: Palette.lightPurple)));
             }
             return SingleChildScrollView(
               controller: _scrollController,

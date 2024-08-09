@@ -294,12 +294,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: textFieldWidth,
                         height: 43,
                         borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.email(
-                            errorText: "Invalid email.",
-                            checkNullOrEmpty: false,
-                          ),
-                        ]),
+                        validator: (val) {
+                          if (val != null && val.length > 25) {
+                            return 'Email can contain 25 characters max.';
+                          } else if (val != null &&
+                              isValidEmail(val) == false) {
+                            return 'Invalid email.';
+                          }
+                          return null;
+                        },
                       ),
                     ],
                   )),

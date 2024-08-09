@@ -471,6 +471,9 @@ class _ContentCardState extends State<ContentCard> {
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
             child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightRed.withOpacity(0.1),
               leading: buildTrashIcon(24),

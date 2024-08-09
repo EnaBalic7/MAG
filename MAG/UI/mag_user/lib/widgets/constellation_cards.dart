@@ -335,6 +335,9 @@ class _ConstellationCardsState extends State<ConstellationCards> {
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
             child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightPurple.withOpacity(0.1),
               leading:
@@ -357,6 +360,9 @@ class _ConstellationCardsState extends State<ConstellationCards> {
           ),
           PopupMenuItem<String>(
             child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               hoverColor: Palette.lightRed.withOpacity(0.1),
               leading: buildTrashIcon(24),
