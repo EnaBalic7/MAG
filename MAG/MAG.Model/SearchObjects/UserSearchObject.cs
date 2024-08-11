@@ -23,5 +23,7 @@ namespace MAG.Model.SearchObjects
         public bool? WatchlistsIncluded { get; set; }
 
         public bool? ProfilePictureIncluded { get; set; }
+
+        public string? Email { get; set; }
     }
 }

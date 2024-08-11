@@ -22,6 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late UserProvider _userProvider;
   bool usernameTaken = false;
+  bool emailTaken = false;
   late UserRoleProvider _userRoleProvider;
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
@@ -60,6 +61,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     } catch (error) {
       print('Error checking username availability: $error');
+    }
+  }
+
+  Future<void> checkEmailAvailability(String val) async {
+    try {
+      var tmp = await _userProvider.get(filter: {"Email": val});
+      if (mounted) {
+        setState(() {
+          emailTaken = tmp.count > 0;
+        });
+      }
+    } catch (error) {
+      print('Error checking email availability: $error');
     }
   }
 
@@ -131,6 +145,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode2,
+                            onChanged: (val) async {
+                              if (val != null && val != "" && val.isNotEmpty) {
+                                await checkEmailAvailability(val);
+                              }
+                            },
                             validator: (val) {
                               if (val != null && val.length > 25) {
                                 return 'Email can contain 25 characters max.';
@@ -138,6 +157,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   val.isNotEmpty &&
                                   isValidEmail(val) == false) {
                                 return 'Invalid email.';
+                              } else if (emailTaken == true) {
+                                return 'This email is taken.';
                               }
                               return null;
                             },

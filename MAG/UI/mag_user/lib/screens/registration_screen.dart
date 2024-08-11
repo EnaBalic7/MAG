@@ -23,6 +23,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late UserProvider _userProvider;
   bool usernameTaken = false;
+  bool emailTaken = false;
   late UserRoleProvider _userRoleProvider;
 
   late Size screenSize;
@@ -56,6 +57,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     } catch (error) {
       print('Error checking username availability: $error');
+    }
+  }
+
+  Future<void> checkEmailAvailability(String val) async {
+    try {
+      var tmp = await _userProvider.get(filter: {"Email": val});
+      if (mounted) {
+        setState(() {
+          emailTaken = tmp.count > 0;
+        });
+      }
+    } catch (error) {
+      print('Error checking email availability: $error');
     }
   }
 
@@ -147,16 +161,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               textCapitalization: TextCapitalization.none,
                               borderRadius: 50,
                               focusNode: _focusNode2,
+                              onChanged: (val) async {
+                                if (val != null &&
+                                    val != "" &&
+                                    val.isNotEmpty) {
+                                  await checkEmailAvailability(val);
+                                }
+                              },
                               validator: (val) {
-                              if (val != null && val.length > 25) {
-                                return 'Email can contain 25 characters max.';
-                              } else if (val != null &&
-                                  val.isNotEmpty &&
-                                  isValidEmail(val) == false) {
-                                return 'Invalid email.';
-                              }
-                              return null;
-                            },
+                                if (val != null && val.length > 25) {
+                                  return 'Email can contain 25 characters max.';
+                                } else if (val != null &&
+                                    val.isNotEmpty &&
+                                    isValidEmail(val) == false) {
+                                  return 'Invalid email.';
+                                } else if (emailTaken == true) {
+                                  return 'This email is taken.';
+                                }
+                                return null;
+                              },
                             ),
                             MyFormBuilderTextField(
                               name: "firstName",

@@ -35,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? _image;
   String? _base64Image;
   bool usernameTaken = false;
+  bool emailTaken = false;
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
   final FocusNode _focusNode3 = FocusNode();
@@ -86,6 +87,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (error) {
       print('Error checking username availability: $error');
+    }
+  }
+
+  Future<void> checkEmailAvailability(String val) async {
+    try {
+      var tmp = await _userProvider.get(filter: {"Email": val});
+      if (mounted) {
+        setState(() {
+          emailTaken = tmp.count > 0;
+        });
+      }
+    } catch (error) {
+      print('Error checking email availability: $error');
     }
   }
 
@@ -235,6 +249,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 50,
                             borderRadius: 50,
                             focusNode: _focusNode4,
+                            onChanged: (val) async {
+                              if (val != null && val != "" && val.isNotEmpty) {
+                                await checkEmailAvailability(val);
+                              }
+                            },
                             validator: (val) {
                               if (val != null && val.length > 25) {
                                 return 'Email can contain 25 characters max.';
@@ -242,6 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   val.isNotEmpty &&
                                   isValidEmail(val) == false) {
                                 return 'Invalid email.';
+                              } else if (emailTaken == true) {
+                                return 'This email is taken.';
                               }
                               return null;
                             },

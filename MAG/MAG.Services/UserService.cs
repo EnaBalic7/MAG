@@ -120,6 +120,11 @@ namespace MAG.Services
                 query = query.Where(x => x.Username == search.Username);
             }
 
+            if (!string.IsNullOrWhiteSpace(search?.Email))
+            {
+                query = query.Where(x => x.Email == search.Email);
+            }
+
             if (!string.IsNullOrWhiteSpace(search?.FirstName))
             {
                 query = query.Where(x => x.FirstName.StartsWith(search.FirstName));
