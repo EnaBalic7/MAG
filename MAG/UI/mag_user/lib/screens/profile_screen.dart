@@ -298,6 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           if (val != null && val.length > 25) {
                             return 'Email can contain 25 characters max.';
                           } else if (val != null &&
+                              val.isNotEmpty &&
                               isValidEmail(val) == false) {
                             return 'Invalid email.';
                           }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mag_user/models/search_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_comment_action.dart';
@@ -43,6 +44,27 @@ class UserCommentActionProvider extends BaseProvider<UserCommentAction> {
       notifyListeners();
     } else {
       throw Exception("Unknown error");
+    }
+  }
+
+  Future<void> syncUserActions() async {
+    try {
+      SearchResult<UserCommentAction> actions =
+          await super.get(filter: {"UserId": "${LoggedUser.user!.id!}"});
+
+      final prefs = await SharedPreferences.getInstance();
+
+      for (var key in prefs.getKeys()) {
+        if (key.startsWith('comment_')) {
+          await prefs.remove(key);
+        }
+      }
+
+      for (var action in actions.result) {
+        await prefs.setString('comment_${action.commentId}', action.action!);
+      }
+    } catch (e) {
+      print("Error syncing user comment actions: $e");
     }
   }
 }

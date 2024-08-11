@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mag_user/models/search_result.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_post_action.dart';
@@ -43,6 +44,27 @@ class UserPostActionProvider extends BaseProvider<UserPostAction> {
       notifyListeners();
     } else {
       throw Exception("Unknown error");
+    }
+  }
+
+  Future<void> syncUserActions() async {
+    try {
+      SearchResult<UserPostAction> actions =
+          await super.get(filter: {"UserId": "${LoggedUser.user!.id!}"});
+
+      final prefs = await SharedPreferences.getInstance();
+
+      for (var key in prefs.getKeys()) {
+        if (key.startsWith('post_')) {
+          await prefs.remove(key);
+        }
+      }
+
+      for (var action in actions.result) {
+        await prefs.setString('post_${action.postId}', action.action!);
+      }
+    } catch (e) {
+      print("Error syncing user post actions: $e");
     }
   }
 }

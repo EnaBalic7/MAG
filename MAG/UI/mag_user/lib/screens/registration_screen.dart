@@ -148,14 +148,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               borderRadius: 50,
                               focusNode: _focusNode2,
                               validator: (val) {
-                                if (val != null && val.length > 25) {
-                                  return 'Email can contain 25 characters max.';
-                                } else if (val != null &&
-                                    isValidEmail(val) == false) {
-                                  return 'Invalid email.';
-                                }
-                                return null;
-                              },
+                              if (val != null && val.length > 25) {
+                                return 'Email can contain 25 characters max.';
+                              } else if (val != null &&
+                                  val.isNotEmpty &&
+                                  isValidEmail(val) == false) {
+                                return 'Invalid email.';
+                              }
+                              return null;
+                            },
                             ),
                             MyFormBuilderTextField(
                               name: "firstName",

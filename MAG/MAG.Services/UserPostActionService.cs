@@ -21,6 +21,16 @@ namespace MAG.Services
             _mapper = mapper;
         }
 
+        public override IQueryable<UserPostAction> AddFilter(IQueryable<UserPostAction> query, UserPostActionSearchObject? search = null)
+        {
+            if(search?.UserId != null)
+            {
+                query = query.Where(upa => upa.UserId == search.UserId);
+            }
+            
+            return base.AddFilter(query, search);
+        }
+
         public async Task<bool> PostUserAction(int postId, UserPostActionInsertRequest userPostAction, string username)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);

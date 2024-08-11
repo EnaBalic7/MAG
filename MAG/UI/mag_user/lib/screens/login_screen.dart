@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
+import 'package:mag_user/models/user_post_action.dart';
+import 'package:mag_user/providers/user_comment_action_provider.dart';
+import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/home_screen.dart';
@@ -23,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   late AnimeProvider _animeProvider;
   late UserProvider _userProvider;
+  late UserPostActionProvider _userPostActionProvider;
+  late UserCommentActionProvider _userCommentActionProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _animeProvider = context.read<AnimeProvider>();
     _userProvider = context.read<UserProvider>();
+    _userPostActionProvider = context.read<UserPostActionProvider>();
+    _userCommentActionProvider = context.read<UserCommentActionProvider>();
 
     return Scaffold(
       body: Stack(
@@ -106,6 +113,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       const HomeScreen(selectedIndex: 0),
                                 ),
                               );
+
+                              await _userPostActionProvider.syncUserActions();
+                              await _userCommentActionProvider
+                                  .syncUserActions();
                             }
                           } on Exception catch (e) {
                             if (context.mounted) {

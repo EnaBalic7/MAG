@@ -272,7 +272,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                         child: Column(children: [
                           ListTile(
                             horizontalTitleGap: 25,
-                            title: Text(widget.user.email ?? '-',
+                            title: Text(
+                                (widget.user.email?.trim().isEmpty == true)
+                                    ? '-'
+                                    : widget.user.email ?? '-',
                                 style: const TextStyle(
                                     color: Palette.lightPurple)),
                             subtitle: Text("E-mail",
@@ -685,9 +688,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                             ),
                                           );
                                         },
-                                        child: MouseRegion(
+                                        child: const MouseRegion(
                                           cursor: SystemMouseCursors.click,
-                                          child: Text("Post #${post.id}"),
+                                          child: Text("Post"),
                                         ),
                                       );
                                     } else {

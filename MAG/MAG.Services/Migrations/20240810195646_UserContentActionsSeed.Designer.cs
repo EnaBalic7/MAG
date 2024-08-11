@@ -4,6 +4,7 @@ using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MAG.Services.Migrations
 {
     [DbContext(typeof(MagContext))]
-    partial class MagContextModelSnapshot : ModelSnapshot
+    [Migration("20240810195646_UserContentActionsSeed")]
+    partial class UserContentActionsSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -749,7 +752,7 @@ namespace MAG.Services.Migrations
                             Content = "I don't know, maybe. He seems like an empathetic person, so choosing either side would have been devastating. Maybe Julius thought he suffered enough.",
                             DateCommented = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DislikesCount = 0,
-                            LikesCount = 1,
+                            LikesCount = 0,
                             PostId = 1,
                             UserId = 4
                         },
@@ -758,7 +761,7 @@ namespace MAG.Services.Migrations
                             Id = 2,
                             Content = "I completely agree.",
                             DateCommented = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DislikesCount = 1,
+                            DislikesCount = 0,
                             LikesCount = 0,
                             PostId = 2,
                             UserId = 5
@@ -769,7 +772,7 @@ namespace MAG.Services.Migrations
                             Content = "Yeah, and because of his incompetence I had to step in and become the captain of the Golden Dawn. I expected more backbone from a man in such a high position.",
                             DateCommented = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DislikesCount = 0,
-                            LikesCount = 1,
+                            LikesCount = 0,
                             PostId = 1,
                             UserId = 7
                         },
@@ -778,7 +781,7 @@ namespace MAG.Services.Migrations
                             Id = 4,
                             Content = "Agreed. That's why I work ten times as hard as anyone else. The one with most achievements is going to become the next Wizard King, and that's going to be me.",
                             DateCommented = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DislikesCount = 1,
+                            DislikesCount = 0,
                             LikesCount = 0,
                             PostId = 4,
                             UserId = 7
@@ -1412,7 +1415,7 @@ namespace MAG.Services.Migrations
                             Content = "Do you think Captain Vangeance got away easy after he betrayed the Clover Kingdom? He barely even got a slap on the wrist!",
                             DatePosted = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DislikesCount = 0,
-                            LikesCount = 1,
+                            LikesCount = 0,
                             UserId = 6
                         },
                         new
@@ -1421,7 +1424,7 @@ namespace MAG.Services.Migrations
                             ClubId = 1,
                             Content = "I think William should have stayed the Golden Dawn captain. He's basically a GD icon, with his unique mask and abilities. Do you agree?",
                             DatePosted = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DislikesCount = 1,
+                            DislikesCount = 0,
                             LikesCount = 0,
                             UserId = 4
                         },
@@ -1432,7 +1435,7 @@ namespace MAG.Services.Migrations
                             Content = "Who do you like better, Mimosa or Noelle?",
                             DatePosted = new DateTime(2024, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DislikesCount = 0,
-                            LikesCount = 1,
+                            LikesCount = 0,
                             UserId = 3
                         },
                         new

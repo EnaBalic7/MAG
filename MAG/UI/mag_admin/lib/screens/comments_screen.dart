@@ -252,9 +252,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                           ),
                                         );
                                       },
-                                      child: MouseRegion(
+                                      child: const MouseRegion(
                                         cursor: SystemMouseCursors.click,
-                                        child: Text("Post #${postObj.id}"),
+                                        child: Text("Post"),
                                       ),
                                     );
                                   } else {

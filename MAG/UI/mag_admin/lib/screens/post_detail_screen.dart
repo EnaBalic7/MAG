@@ -108,7 +108,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         children: [
           buildPostIcon(22),
           const SizedBox(width: 5),
-          Text("Post #${widget.post.id}"),
+          const Text("Post"),
         ],
       ),
       showBackArrow: true,

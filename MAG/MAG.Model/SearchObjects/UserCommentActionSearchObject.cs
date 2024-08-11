@@ -8,5 +8,6 @@ namespace MAG.Model.SearchObjects
 {
     public class UserCommentActionSearchObject : BaseSearchObject
     {
+        public int? UserId { get; set; }
     }
 }

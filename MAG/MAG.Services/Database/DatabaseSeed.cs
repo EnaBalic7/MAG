@@ -33,6 +33,8 @@ namespace MAG.Services.Database
             SeedClubUser(modelBuilder);
             SeedPosts(modelBuilder);
             SeedComments(modelBuilder);
+            SeedUserPostActions(modelBuilder);
+            SeedUserCommentActions(modelBuilder);
         }
 
         private void SeedAnime(ModelBuilder modelBuilder)
@@ -1542,7 +1544,7 @@ namespace MAG.Services.Database
                     ClubId = 1,
                     UserId = 6,
                     Content = "Do you think Captain Vangeance got away easy after he betrayed the Clover Kingdom? He barely even got a slap on the wrist!",
-                    LikesCount = 0,
+                    LikesCount = 1,
                     DislikesCount = 0,
                     DatePosted = new DateTime(2024, 7, 11)
                 },
@@ -1553,7 +1555,7 @@ namespace MAG.Services.Database
                     UserId = 4,
                     Content = "I think William should have stayed the Golden Dawn captain. He's basically a GD icon, with his unique mask and abilities. Do you agree?",
                     LikesCount = 0,
-                    DislikesCount = 0,
+                    DislikesCount = 1,
                     DatePosted = new DateTime(2024, 7, 11)
                 },
                 new Post()
@@ -1562,7 +1564,7 @@ namespace MAG.Services.Database
                     ClubId = 1,
                     UserId = 3,
                     Content = "Who do you like better, Mimosa or Noelle?",
-                    LikesCount = 0,
+                    LikesCount = 1,
                     DislikesCount = 0,
                     DatePosted = new DateTime(2024, 7, 11)
                 },
@@ -1588,7 +1590,7 @@ namespace MAG.Services.Database
                     PostId = 1,
                     UserId = 4,
                     Content = "I don't know, maybe. He seems like an empathetic person, so choosing either side would have been devastating. Maybe Julius thought he suffered enough.",
-                    LikesCount = 0,
+                    LikesCount = 1,
                     DislikesCount = 0,
                     DateCommented = new DateTime(2024, 7, 11)
                 },
@@ -1599,7 +1601,7 @@ namespace MAG.Services.Database
                     UserId = 5,
                     Content = "I completely agree.",
                     LikesCount = 0,
-                    DislikesCount = 0,
+                    DislikesCount = 1,
                     DateCommented = new DateTime(2024, 7, 11)
                 },
                 new Comment()
@@ -1608,7 +1610,7 @@ namespace MAG.Services.Database
                     PostId = 1,
                     UserId = 7,
                     Content = "Yeah, and because of his incompetence I had to step in and become the captain of the Golden Dawn. I expected more backbone from a man in such a high position.",
-                    LikesCount = 0,
+                    LikesCount = 1,
                     DislikesCount = 0,
                     DateCommented = new DateTime(2024, 7, 11)
                 },
@@ -1619,7 +1621,7 @@ namespace MAG.Services.Database
                     UserId = 7,
                     Content = "Agreed. That's why I work ten times as hard as anyone else. The one with most achievements is going to become the next Wizard King, and that's going to be me.",
                     LikesCount = 0,
-                    DislikesCount = 0,
+                    DislikesCount = 1,
                     DateCommented = new DateTime(2024, 7, 11)
                 },
                 new Comment()
@@ -1631,6 +1633,67 @@ namespace MAG.Services.Database
                     LikesCount = 0,
                     DislikesCount = 0,
                     DateCommented = new DateTime(2024, 7, 11)
+                }
+         );
+        }
+
+        private void SeedUserPostActions(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserPostAction>().HasData(
+                new UserPostAction()
+                {
+                    Id = 1,
+                    UserId = 2,
+                    PostId = 1,
+                    Action = "like"
+                },
+                new UserPostAction()
+                {
+                    Id = 2,
+                    UserId = 2,
+                    PostId = 2,
+                    Action = "dislike"
+                },
+                new UserPostAction()
+                {
+                    Id = 3,
+                    UserId = 2,
+                    PostId = 3,
+                    Action = "like"
+                }
+         );
+        }
+
+        private void SeedUserCommentActions(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserCommentAction>().HasData(
+                new UserCommentAction()
+                {
+                    Id = 1,
+                    UserId = 2,
+                    CommentId = 1,
+                    Action = "like"
+                },
+                new UserCommentAction()
+                {
+                    Id = 2,
+                    UserId = 2,
+                    CommentId = 2,
+                    Action = "dislike"
+                },
+                new UserCommentAction()
+                {
+                    Id = 3,
+                    UserId = 2,
+                    CommentId = 3,
+                    Action = "like"
+                },
+                new UserCommentAction()
+                {
+                    Id = 4,
+                    UserId = 2,
+                    CommentId = 4,
+                    Action = "dislike"
                 }
          );
         }

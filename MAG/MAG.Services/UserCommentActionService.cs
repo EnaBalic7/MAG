@@ -22,6 +22,16 @@ namespace MAG.Services
             _mapper = mapper;
         }
 
+        public override IQueryable<Database.UserCommentAction> AddFilter(IQueryable<Database.UserCommentAction> query, UserCommentActionSearchObject? search = null)
+        {
+            if(search?.UserId != null)
+            {
+                query = query.Where(uca => uca.UserId == search.UserId);
+            }
+
+            return base.AddFilter(query, search);
+        }
+
         public async Task<bool> CommentUserAction(int commentId, UserCommentActionInsertRequest userCommentAction, string username)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
