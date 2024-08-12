@@ -40,4 +40,20 @@ class UserProvider extends BaseProvider<User> {
       throw Exception("Unknown error");
     }
   }
+
+  Future<String> changePassword(int userId, dynamic request) async {
+    var url = "${BaseProvider.baseUrl}$_endpoint/ChangePassword/$userId";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var jsonRequest = jsonEncode(request);
+    var response = await http!.post(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data.toString();
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
 }

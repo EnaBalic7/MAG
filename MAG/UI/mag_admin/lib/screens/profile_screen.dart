@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
+import 'package:mag_admin/widgets/change_password_form.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
@@ -269,20 +270,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       )),
-                  GradientButton(
-                      onPressed: () {
-                        _saveProfileData();
-                      },
-                      width: 100,
-                      height: 30,
-                      borderRadius: 50,
-                      paddingTop: 30,
-                      paddingBottom: 30,
-                      gradient: Palette.buttonGradient,
-                      child: const Text("Save",
-                          style: TextStyle(
-                              color: Palette.white,
-                              fontWeight: FontWeight.w500))),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50, right: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (builder) =>
+                                    const ChangePasswordForm());
+                          },
+                          child: const Text("Change password",
+                              style: TextStyle(color: Palette.lightPurple)),
+                        ),
+                        GradientButton(
+                            onPressed: () {
+                              _saveProfileData();
+                            },
+                            width: 100,
+                            height: 30,
+                            borderRadius: 50,
+                            paddingTop: 30,
+                            paddingBottom: 30,
+                            gradient: Palette.buttonGradient,
+                            child: const Text("Save",
+                                style: TextStyle(
+                                    color: Palette.white,
+                                    fontWeight: FontWeight.w500))),
+                      ],
+                    ),
+                  ),
                 ],
               )),
         ),

@@ -63,6 +63,7 @@ namespace MAG.Services
 
             return base.AddInclude(query, search);
         }
+
         public override async Task BeforeInsert(Database.User entity, UserInsertRequest insert)
         {
             entity.PasswordSalt = GenerateSalt();
@@ -153,9 +154,9 @@ namespace MAG.Services
             DateTime startDate = DateTime.Today.AddDays(-days);
             DateTime endDate = DateTime.Today;
 
-            var userRegistrations = _context.Users
+            var userRegistrations = await _context.Users
                 .Where(user => user.DateJoined >= startDate)
-                .ToList();
+                .ToListAsync();
 
             var registrationsByDate = new Dictionary<DateTime, int>();
 
@@ -190,6 +191,25 @@ namespace MAG.Services
                 .ToList();
 
             return userRegistrationDataList;
+        }
+
+        public async Task ChangePassword(ChangePasswordRequest request)
+        {
+            var user = await _context.Users.FindAsync(request.UserId);
+
+            if (user == null)
+                throw new($"User with ID {request.UserId} not found.");
+
+            var providedHash = GenerateHash(user.PasswordSalt, request.OldPassword);
+
+            if (user.PasswordHash != providedHash)
+                throw new("Invalid password.");
+
+            user.PasswordSalt = GenerateSalt();
+            user.PasswordHash = GenerateHash(user.PasswordSalt, request.NewPassword);
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
         }
     }
     

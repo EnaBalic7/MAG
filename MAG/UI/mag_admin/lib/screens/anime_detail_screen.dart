@@ -395,7 +395,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                         padding: const EdgeInsets.only(left: 10),
                         child: GradientButton(
                           onPressed: () {
-                            //_showOverlayForm(context);
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: ((context) => const GenresScreen())));
                           },

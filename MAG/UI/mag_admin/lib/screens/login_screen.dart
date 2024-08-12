@@ -81,6 +81,9 @@ class LoginScreen extends StatelessWidget {
                             "RolesIncluded": "true",
                             "Username": username
                           });
+                          if (admin.count == 1) {
+                            LoggedUser.user = admin.result.single;
+                          }
                           List<UserRole> userRoles =
                               admin.result.first.userRoles!;
 

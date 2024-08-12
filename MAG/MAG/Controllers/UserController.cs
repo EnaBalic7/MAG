@@ -36,5 +36,25 @@ namespace MAG.Controllers
             return await _userService.GetUserRegistrations(days, groupByMonths);
         }
 
+        [HttpPost("ChangePassword/{userId}")]
+        public async Task<IActionResult> ChangePassword(int userId, [FromBody] ChangePasswordRequest request)
+        {
+            try
+            {
+                if (userId != request.UserId)
+                {
+                    return Forbid("You don't have permission to change another user's password.");
+                }
+
+                await _userService.ChangePassword(request);
+
+                return Ok(new { Message = "Password changed successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }

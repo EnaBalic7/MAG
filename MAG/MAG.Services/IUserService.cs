@@ -13,5 +13,6 @@ namespace MAG.Services
     {
         public Task<Model.User> Login(string username, string password);
         public Task<List<UserRegistrationData>> GetUserRegistrations(int days, bool groupByMonths = false);
+        Task ChangePassword(ChangePasswordRequest request);
     }
 }
