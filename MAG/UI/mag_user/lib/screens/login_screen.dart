@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
-import 'package:mag_user/models/user_post_action.dart';
-import 'package:mag_user/providers/user_comment_action_provider.dart';
-import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/user_comment_action_provider.dart';
+import '../providers/user_post_action_provider.dart';
 import '../screens/home_screen.dart';
 import '../screens/registration_screen.dart';
 import '../providers/anime_provider.dart';

@@ -1,3 +1,4 @@
+using DotNetEnv;
 using MAG;
 using MAG.Filters;
 using MAG.Services;
@@ -106,7 +107,8 @@ using (var scope = app.Services.CreateScope())
    // }
 }
 
-var stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_API_KEY") ?? "sk_test_51PdbM8Rsmg17KngzOLAbX3R0nBEkCCTMKKdraMetVJiuoOL3aQqv0Wqj00dn1tkET4znbZvqI9nCeYMH6OLTfxm600Qzmua2Xt";
+Env.Load("../.env");
+string stripeSecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY") ?? "";
 StripeConfiguration.ApiKey = stripeSecretKey;
 
 app.Run();

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:mag_user/providers/club_cover_provider.dart';
-import 'package:mag_user/providers/club_user_provider.dart';
-import 'package:mag_user/providers/donation_provider.dart';
-import 'package:mag_user/providers/payment_intent_provider.dart';
-import 'package:mag_user/providers/preferred_genre_provider.dart';
-import 'package:mag_user/providers/user_comment_action_provider.dart';
-import 'package:mag_user/providers/user_post_action_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/club_cover_provider.dart';
+import '../providers/club_user_provider.dart';
+import '../providers/donation_provider.dart';
+import '../providers/payment_intent_provider.dart';
+import '../providers/preferred_genre_provider.dart';
+import '../providers/user_comment_action_provider.dart';
+import '../providers/user_post_action_provider.dart';
 import '../providers/anime_list_provider.dart';
 import '../providers/anime_watchlist_provider.dart';
 import '../providers/listt_provider.dart';
@@ -30,9 +31,13 @@ import '../screens/login_screen.dart';
 import './utils/colors.dart';
 import './utils/util.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: "assets/.env");
+
+  String stripePK = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
+
   Stripe.publishableKey =
-      "pk_test_51PdbM8Rsmg17Kngz2v1yStqdZatUsFfc8GQ8rgIuMjDrw5A8Kk2WKOrKUQsLioI6UpqyZeCGkt9oHAytT6C0OGcJ00CP26W1Cc";
+      String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: stripePK);
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AnimeProvider()),

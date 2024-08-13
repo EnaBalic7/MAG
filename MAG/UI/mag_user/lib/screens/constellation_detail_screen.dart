@@ -1,9 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:mag_user/utils/colors.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/colors.dart';
 import '../widgets/anime_indicator.dart';
 import '../models/search_result.dart';
 import '../providers/anime_list_provider.dart';

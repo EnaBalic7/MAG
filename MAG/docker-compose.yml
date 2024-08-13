@@ -44,7 +44,7 @@ services:
       - RABBITMQ_PASSWORD=guest
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetcore-devcert.pfx
-      - STRIPE_API_KEY=sk_test_51PdbM8Rsmg17KngzOLAbX3R0nBEkCCTMKKdraMetVJiuoOL3aQqv0Wqj00dn1tkET4znbZvqI9nCeYMH6OLTfxm600Qzmua2Xt
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     ports:
       - "7074:7074"
     networks:
