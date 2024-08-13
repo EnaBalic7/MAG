@@ -9,6 +9,7 @@ import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/change_password_form.dart';
 import '../providers/user_provider.dart';
 import '../models/user_profile_picture.dart';
 import '../providers/user_profile_picture_provider.dart';
@@ -328,18 +329,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   )),
-              GradientButton(
-                  onPressed: () {
-                    _saveProfileData();
-                  },
-                  width: 90,
-                  height: 30,
-                  borderRadius: 50,
-                  paddingTop: 30,
-                  gradient: Palette.buttonGradient,
-                  child: const Text("Save",
-                      style: TextStyle(
-                          color: Palette.white, fontWeight: FontWeight.w500))),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (builder) => const ChangePasswordForm());
+                      },
+                      child: const Text("Change password",
+                          style: TextStyle(color: Palette.lightPurple)),
+                    ),
+                    GradientButton(
+                        onPressed: () {
+                          _saveProfileData();
+                        },
+                        width: 90,
+                        height: 30,
+                        borderRadius: 50,
+                        paddingTop: 30,
+                        gradient: Palette.buttonGradient,
+                        child: const Text("Save",
+                            style: TextStyle(
+                                color: Palette.white,
+                                fontWeight: FontWeight.w500))),
+                  ],
+                ),
+              ),
             ],
           ),
         ).asGlass(
