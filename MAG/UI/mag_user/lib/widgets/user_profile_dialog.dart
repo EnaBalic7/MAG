@@ -75,7 +75,7 @@ class _UserProfileDialogState extends State<UserProfileDialog> {
                           maxWidth: screenSize.width * 0.4, maxHeight: 50),
                       child: Text(
                         "${widget.loggedUser.firstName} ${widget.loggedUser.lastName}",
-                        overflow: TextOverflow.clip,
+                        overflow: TextOverflow.fade,
                       ),
                     ),
                   ],

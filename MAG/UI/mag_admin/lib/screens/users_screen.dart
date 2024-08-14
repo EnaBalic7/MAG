@@ -260,9 +260,12 @@ class _UsersScreenState extends State<UsersScreen> {
                           const Icon(Icons.person,
                               size: 20, color: Palette.lightPurple),
                           const SizedBox(width: 3),
-                          Text("${user.firstName} ${user.lastName}",
-                              style: const TextStyle(
-                                  color: Palette.lightPurple, fontSize: 16)),
+                          Expanded(
+                            child: Text("${user.firstName} ${user.lastName}",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: Palette.lightPurple, fontSize: 16)),
+                          ),
                         ],
                       ),
                     ),

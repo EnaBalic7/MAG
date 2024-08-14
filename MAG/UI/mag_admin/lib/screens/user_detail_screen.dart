@@ -558,10 +558,14 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "${widget.user.firstName} ${widget.user.lastName}",
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold)),
+                          SizedBox(
+                            width: 400,
+                            child: Text(
+                                "${widget.user.firstName} ${widget.user.lastName}",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold)),
+                          ),
                           Visibility(
                             visible: rating != null && object is Rating,
                             child: FutureBuilder<SearchResult<Anime>>(

@@ -325,8 +325,12 @@ class _ContentCardState extends State<ContentCard> {
                     ),
                   ),
                   const SizedBox(width: 5),
-                  Text("${user.result.single.username}",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 150),
+                    child: Text("${user.result.single.username}",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
                 ],
               );
             } else if (user.count == 1 && widget.largeProfilePhoto == true) {
@@ -347,9 +351,13 @@ class _ContentCardState extends State<ContentCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("${user.result.single.username}",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17)),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 230),
+                        child: Text("${user.result.single.username}",
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17)),
+                      ),
                       const SizedBox(height: 5),
                       Text(
                         widget.post != null

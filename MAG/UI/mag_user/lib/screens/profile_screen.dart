@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: SingleChildScrollView(
         child: Container(
           width: containerWidth,
-          height: containerHeight! - (containerHeight! * 0.151),
+          height: containerHeight! - (containerHeight! * 0.155),
           decoration: BoxDecoration(
             color: Palette.midnightPurple.withOpacity(0.1),
             borderRadius: BorderRadius.circular(15),
@@ -244,15 +244,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
                       MyFormBuilderTextField(
                         focusNode: _focusNode1,
                         name: "username",
                         labelText: "Username",
                         fillColor: Palette.darkPurple,
                         width: textFieldWidth,
-                        height: 43,
-                        // readOnly: true,
                         paddingBottom: 25,
                         borderRadius: 50,
                         onChanged: (val) async {
@@ -279,7 +277,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: "First name",
                         fillColor: Palette.darkPurple,
                         width: textFieldWidth,
-                        height: 43,
                         paddingBottom: 25,
                         borderRadius: 50,
                         validator: FormBuilderValidators.compose([
@@ -293,7 +290,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: "Last name",
                         fillColor: Palette.darkPurple,
                         width: textFieldWidth,
-                        height: 43,
                         paddingBottom: 25,
                         borderRadius: 50,
                         validator: FormBuilderValidators.compose([
@@ -307,7 +303,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: "E-mail",
                         fillColor: Palette.darkPurple,
                         width: textFieldWidth,
-                        height: 43,
                         borderRadius: 50,
                         onChanged: (val) async {
                           if (val != null && val != "" && val.isNotEmpty) {
@@ -351,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 90,
                         height: 30,
                         borderRadius: 50,
-                        paddingTop: 30,
+                        paddingTop: 20,
                         gradient: Palette.buttonGradient,
                         child: const Text("Save",
                             style: TextStyle(

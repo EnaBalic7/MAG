@@ -229,7 +229,13 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                 if (user.count == 1) {
                   return Tooltip(
                       message: "Club owner",
-                      child: Text("${user.result.single.username}"));
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 200),
+                        child: Text(
+                          "${user.result.single.username}",
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ));
                 }
                 return const Text("Owner not found");
               }

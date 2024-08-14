@@ -99,8 +99,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           name: widget.name,
           style: const TextStyle(
             color: Palette.lightPurple,
-            height: 1,
-            fontSize: 14,
+            //height: 1,
+            fontSize: 13,
           ),
           obscuringCharacter: '✮',
           obscureText: widget.obscureText ?? false,

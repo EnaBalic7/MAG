@@ -211,10 +211,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "${widget.user.firstName} ${widget.user.lastName}",
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold)),
+                          SizedBox(
+                            width: 350,
+                            child: Text(
+                                "${widget.user.firstName} ${widget.user.lastName}",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold)),
+                          ),
                           FutureBuilder<SearchResult<Post>>(
                               future: _postProvider.get(filter: {
                                 "Id": "${comment.postId!}",

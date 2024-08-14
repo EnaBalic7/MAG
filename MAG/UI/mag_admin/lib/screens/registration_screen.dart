@@ -90,8 +90,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           Center(
             child: Container(
-              width: 618,
-              height: 520,
+              width: 700,
+              //height: 570,
               constraints: const BoxConstraints(maxHeight: 600, maxWidth: 918),
               decoration: BoxDecoration(
                   color: Palette.darkPurple.withOpacity(0.9),
@@ -112,8 +112,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             name: "username",
                             labelText: "Username",
                             fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 250,
-                            height: 40,
+                            width: 300,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode1,
@@ -125,8 +124,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
-                              } else if (val.length > 20) {
-                                return 'Username can contain 20 characters max.';
+                              } else if (val.length > 50) {
+                                return 'Username can contain 50 characters max.';
                               } else if (isValidUsername(val) == false) {
                                 return 'Use only letters, numbers, and underscore.';
                               } else if (usernameTaken == true) {
@@ -140,8 +139,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             name: "email",
                             labelText: "E-mail",
                             fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 250,
-                            height: 40,
+                            width: 300,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode2,
@@ -151,8 +149,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               }
                             },
                             validator: (val) {
-                              if (val != null && val.length > 25) {
-                                return 'Email can contain 25 characters max.';
+                              if (val != null && val.length > 100) {
+                                return 'Email can contain 100 characters max.';
                               } else if (val != null &&
                                   val.isNotEmpty &&
                                   isValidEmail(val) == false) {
@@ -167,16 +165,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             name: "firstName",
                             labelText: "First name",
                             fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 250,
-                            height: 40,
+                            width: 300,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode3,
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
-                              } else if (val.length > 20) {
-                                return 'First name can contain 20 characters max.';
+                              } else if (val.length > 50) {
+                                return 'First name can contain 50 characters max.';
                               } else if (isValidName(val) == false) {
                                 return 'Use only letters.';
                               }
@@ -188,16 +185,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             name: "lastName",
                             labelText: "Last name",
                             fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 250,
-                            height: 40,
+                            width: 300,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode4,
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
-                              } else if (val.length > 20) {
-                                return 'Last name can contain 20 characters max.';
+                              } else if (val.length > 50) {
+                                return 'Last name can contain 50 characters max.';
                               } else if (isValidName(val) == false) {
                                 return 'Use only letters.';
                               }
@@ -209,7 +205,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             labelText: "Password",
                             fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 400,
-                            height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
                             obscureText: true,
@@ -234,7 +229,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             labelText: "Repeat password",
                             fillColor: Palette.textFieldPurple.withOpacity(0.5),
                             width: 400,
-                            height: 40,
                             paddingBottom: 25,
                             borderRadius: 50,
                             obscureText: true,

@@ -37,8 +37,8 @@ class LoginScreen extends StatelessWidget {
           Center(
             child: Container(
               width: 518,
-              height: 500,
-              constraints: const BoxConstraints(maxHeight: 500, maxWidth: 518),
+              height: 530,
+              constraints: const BoxConstraints(maxHeight: 600, maxWidth: 518),
               decoration: BoxDecoration(
                   color: Palette.darkPurple.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(15)),
@@ -52,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                       fillColor: Palette.textFieldPurple.withOpacity(0.5),
                       obscureText: false,
                       width: 417,
-                      height: 38,
+                      //  height: 38,
                       borderRadius: 50,
                       controller: _usernameController),
                   const SizedBox(height: 20),
@@ -61,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                     fillColor: Palette.textFieldPurple.withOpacity(0.5),
                     obscureText: true,
                     width: 417,
-                    height: 38,
+                    // height: 38,
                     borderRadius: 50,
                     controller: _passwordController,
                   ),
@@ -142,7 +142,10 @@ class LoginScreen extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                               color: Palette.white))),
                   Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                      bottom: 20,
+                    ),
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(

@@ -306,7 +306,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
                                     } else if (val.length > 50) {
-                                      return "Character limit exceeded: ${val.length}/200";
+                                      return "Character limit exceeded: ${val.length}/50";
                                     }
                                     return null;
                                   },

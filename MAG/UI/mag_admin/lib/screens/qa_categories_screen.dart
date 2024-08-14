@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 
 import '../models/qa_category.dart';
@@ -125,19 +124,24 @@ class _QACategoriesScreenState extends State<QACategoriesScreen> {
                                                 const Icon(Icons.clear_rounded))
                                         : Container(),
                                     MyFormBuilderTextField(
-                                      name: "name",
-                                      labelText: "Category name",
-                                      fillColor: Palette.disabledControl,
-                                      width: 300,
-                                      height: 50,
-                                      borderRadius: 50,
-                                      focusNode: _focusNode,
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(
-                                            errorText:
-                                                "This field cannot be empty."),
-                                      ]),
-                                    ),
+                                        name: "name",
+                                        labelText: "Category name",
+                                        fillColor: Palette.disabledControl,
+                                        width: 300,
+                                        height: 50,
+                                        borderRadius: 50,
+                                        focusNode: _focusNode,
+                                        validator: (val) {
+                                          if (val == null ||
+                                              val == "" ||
+                                              val.isEmpty ||
+                                              val.trim().isEmpty) {
+                                            return "This field cannot be empty";
+                                          } else if (val.length > 25) {
+                                            return "Category can contain 25 characters max.";
+                                          }
+                                          return null;
+                                        }),
                                     const SizedBox(width: 5),
                                     GradientButton(
                                         onPressed: () {

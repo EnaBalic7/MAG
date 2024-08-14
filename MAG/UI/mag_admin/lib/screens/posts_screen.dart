@@ -209,10 +209,14 @@ class _PostsScreenState extends State<PostsScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "${widget.user.firstName} ${widget.user.lastName}",
-                              style: const TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold)),
+                          SizedBox(
+                            width: 350,
+                            child: Text(
+                                "${widget.user.firstName} ${widget.user.lastName}",
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold)),
+                          ),
                           FutureBuilder<SearchResult<Club>>(
                               future: _clubProvider.get(filter: {
                                 "Id": "${post.clubId!}",

@@ -89,7 +89,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     containerWidth = screenSize.width * 0.95;
-    containerHeight = screenSize.height * 0.82;
+    containerHeight = screenSize.height * 0.9;
     textFieldWidth = containerWidth! * 0.9;
     return Scaffold(
       body: Stack(
@@ -112,7 +112,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     Image.asset(
                       "assets/images/logo.png",
-                      width: 155,
+                      width: 145,
                     ),
                     const SizedBox(height: 20),
                     FormBuilder(
@@ -126,7 +126,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               fillColor:
                                   Palette.textFieldPurple.withOpacity(0.5),
                               width: textFieldWidth,
-                              height: 40,
                               paddingBottom: 25,
                               keyboardType: TextInputType.text,
                               borderRadius: 50,
@@ -139,8 +138,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "This field cannot be empty.";
-                                } else if (val.length > 20) {
-                                  return 'Username can contain 20 characters max.';
+                                } else if (val.length > 50) {
+                                  return 'Username can contain 50 characters max.';
                                 } else if (isValidUsername(val) == false) {
                                   return 'Use only letters, numbers, and underscore.';
                                 } else if (usernameTaken == true) {
@@ -155,7 +154,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               fillColor:
                                   Palette.textFieldPurple.withOpacity(0.5),
                               width: textFieldWidth,
-                              height: 40,
                               paddingBottom: 25,
                               keyboardType: TextInputType.emailAddress,
                               textCapitalization: TextCapitalization.none,
@@ -169,8 +167,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 }
                               },
                               validator: (val) {
-                                if (val != null && val.length > 25) {
-                                  return 'Email can contain 25 characters max.';
+                                if (val != null && val.length > 100) {
+                                  return 'Email can contain 100 characters max.';
                                 } else if (val != null &&
                                     val.isNotEmpty &&
                                     isValidEmail(val) == false) {
@@ -187,7 +185,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               fillColor:
                                   Palette.textFieldPurple.withOpacity(0.5),
                               width: textFieldWidth,
-                              height: 40,
                               paddingBottom: 25,
                               keyboardType: TextInputType.text,
                               borderRadius: 50,
@@ -209,7 +206,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               fillColor:
                                   Palette.textFieldPurple.withOpacity(0.5),
                               width: textFieldWidth,
-                              height: 40,
                               paddingBottom: 25,
                               keyboardType: TextInputType.text,
                               borderRadius: 50,
@@ -231,7 +227,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               fillColor:
                                   Palette.textFieldPurple.withOpacity(0.5),
                               width: textFieldWidth,
-                              height: 40,
                               paddingBottom: 25,
                               borderRadius: 50,
                               obscureText: true,
@@ -257,7 +252,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               fillColor:
                                   Palette.textFieldPurple.withOpacity(0.5),
                               width: textFieldWidth,
-                              height: 40,
                               paddingBottom: 25,
                               borderRadius: 50,
                               obscureText: true,

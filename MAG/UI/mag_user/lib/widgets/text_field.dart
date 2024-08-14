@@ -39,7 +39,7 @@ class _MyTextFieldState extends State<MyTextField> {
       height: widget.height,
       child: TextField(
         controller: widget.controller,
-        style: const TextStyle(color: Palette.lightPurple),
+        style: const TextStyle(color: Palette.lightPurple, fontSize: 13),
         textCapitalization: widget.textCapitalization,
         obscuringCharacter: '✮',
         keyboardType: widget.keyboardType,

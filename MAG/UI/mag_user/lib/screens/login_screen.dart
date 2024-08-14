@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double? containerWidth =
         screenSize.width * 0.95; // Using 95% of the screen width
     double? containerHeight =
-        screenSize.height * 0.62; //  Using 70% of the screen height
+        screenSize.height * 0.67; //  Using 70% of the screen height
     double? textFieldWidth = containerWidth * 0.9; // Using % of containerWidth
 
     _animeProvider = context.read<AnimeProvider>();
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: false,
                         width: textFieldWidth,
                         textCapitalization: TextCapitalization.sentences,
-                        height: 38,
+                        //height: 48,
                         borderRadius: 50,
                         controller: _usernameController),
                     const SizedBox(height: 20),
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fillColor: Palette.textFieldPurple.withOpacity(0.5),
                       obscureText: true,
                       width: textFieldWidth,
-                      height: 38,
+                      // height: 38,
                       borderRadius: 50,
                       controller: _passwordController,
                     ),

@@ -531,7 +531,13 @@ class _HelpScreenState extends State<HelpScreen> {
                             const Icon(Icons.person_rounded,
                                 size: 19, color: Palette.lightPurple),
                             const SizedBox(width: 5),
-                            Text(qa.user!.username.toString()),
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                qa.user!.username.toString(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                         GradientButton(
