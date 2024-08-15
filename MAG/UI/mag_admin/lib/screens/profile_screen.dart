@@ -191,8 +191,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             labelText: "Username",
                             fillColor: Palette.darkPurple,
                             width: 400,
-                            height: 50,
-                            //readOnly: true,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode1,
@@ -204,12 +202,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
-                              } else if (val.length > 20) {
-                                return 'Username can contain 20 characters max.';
-                              } else if (usernameTaken == true) {
-                                return 'This username is taken.';
+                              } else if (val.length > 50) {
+                                return 'Character limit exceeded: ${val.length}/50';
                               } else if (isValidUsername(val) == false) {
                                 return 'Use only letters, numbers, and underscore.';
+                              } else if (usernameTaken == true) {
+                                return 'This username is taken.';
                               }
                               return null;
                             },
@@ -219,35 +217,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             labelText: "First name",
                             fillColor: Palette.darkPurple,
                             width: 400,
-                            height: 50,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode2,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(
-                                  errorText: "This field cannot be empty."),
-                            ]),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 50) {
+                                return 'Character limit exceeded: ${val.length}/50';
+                              } else if (isValidName(val) == false) {
+                                return 'Use only letters.';
+                              }
+                              return null;
+                            },
                           ),
                           MyFormBuilderTextField(
                             name: "lastName",
                             labelText: "Last name",
                             fillColor: Palette.darkPurple,
                             width: 400,
-                            height: 50,
                             paddingBottom: 25,
                             borderRadius: 50,
                             focusNode: _focusNode3,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(
-                                  errorText: "This field cannot be empty."),
-                            ]),
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return "This field cannot be empty.";
+                              } else if (val.length > 50) {
+                                return 'Character limit exceeded: ${val.length}/50';
+                              } else if (isValidName(val) == false) {
+                                return 'Use only letters.';
+                              }
+                              return null;
+                            },
                           ),
                           MyFormBuilderTextField(
                             name: "email",
                             labelText: "E-mail",
                             fillColor: Palette.darkPurple,
                             width: 400,
-                            height: 50,
                             borderRadius: 50,
                             focusNode: _focusNode4,
                             onChanged: (val) async {
@@ -256,8 +263,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               }
                             },
                             validator: (val) {
-                              if (val != null && val.length > 25) {
-                                return 'Email can contain 25 characters max.';
+                              if (val != null && val.length > 100) {
+                                return 'Character limit exceeded: ${val.length}/100';
                               } else if (val != null &&
                                   val.isNotEmpty &&
                                   isValidEmail(val) == false) {

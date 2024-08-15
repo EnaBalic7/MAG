@@ -116,7 +116,7 @@ class _ClubFormState extends State<ClubForm> {
                     } else if (val != "" && !isValidReviewText(val)) {
                       return "Illegal characters.";
                     } else if (val != "" && val.length > 20) {
-                      return "Name is too long.";
+                      return "Character limit exceeded: ${val.length}/20";
                     }
                     return null;
                   },
@@ -139,7 +139,7 @@ class _ClubFormState extends State<ClubForm> {
                     } else if (val.isNotEmpty && !isValidReviewText(val)) {
                       return "Some special characters are not allowed.";
                     } else if (val.isNotEmpty && val.length > 300) {
-                      return "Exceeded character limit: ${val.length}/300";
+                      return "Character limit exceeded: ${val.length}/300";
                     }
                     return null;
                   },

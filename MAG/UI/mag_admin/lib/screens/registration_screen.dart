@@ -125,7 +125,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
                               } else if (val.length > 50) {
-                                return 'Username can contain 50 characters max.';
+                                return 'Character limit exceeded: ${val.length}/50';
                               } else if (isValidUsername(val) == false) {
                                 return 'Use only letters, numbers, and underscore.';
                               } else if (usernameTaken == true) {
@@ -150,7 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             },
                             validator: (val) {
                               if (val != null && val.length > 100) {
-                                return 'Email can contain 100 characters max.';
+                                return 'Character limit exceeded: ${val.length}/100';
                               } else if (val != null &&
                                   val.isNotEmpty &&
                                   isValidEmail(val) == false) {
@@ -173,7 +173,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
                               } else if (val.length > 50) {
-                                return 'First name can contain 50 characters max.';
+                                return 'Character limit exceeded: ${val.length}/50';
                               } else if (isValidName(val) == false) {
                                 return 'Use only letters.';
                               }
@@ -193,7 +193,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               if (val == null || val.isEmpty) {
                                 return "This field cannot be empty.";
                               } else if (val.length > 50) {
-                                return 'Last name can contain 50 characters max.';
+                                return 'Character limit exceeded: ${val.length}/50';
                               } else if (isValidName(val) == false) {
                                 return 'Use only letters.';
                               }

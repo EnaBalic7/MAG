@@ -335,9 +335,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             }
 
             return (user != null)
-                ? Text("${user.username}",
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold))
+                ? Container(
+                    constraints: const BoxConstraints(maxWidth: 120),
+                    child: Text("${user.username}",
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold)),
+                  )
                 : const Text("");
           }
         });

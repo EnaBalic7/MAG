@@ -149,27 +149,30 @@ class _InfoScreenState extends State<InfoScreen> {
                           .any((prefGenre) => prefGenre.genreId == genre.id))
                       .map((genre) => genre.name!);
 
-                  return Wrap(
-                    spacing: 8,
-                    children: [
-                      ...genresToDisplay.map((genreName) {
-                        return GradientButton(
-                          gradient: Palette.navGradient4,
-                          contentPaddingBottom: 2,
-                          contentPaddingLeft: 5,
-                          contentPaddingRight: 5,
-                          contentPaddingTop: 2,
-                          borderRadius: 50,
-                          child: Text(
-                            genreName,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
-                                color: Palette.lightPurple),
-                          ),
-                        );
-                      })
-                    ],
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Wrap(
+                      spacing: 8,
+                      children: [
+                        ...genresToDisplay.map((genreName) {
+                          return GradientButton(
+                            gradient: Palette.navGradient4,
+                            contentPaddingBottom: 2,
+                            contentPaddingLeft: 5,
+                            contentPaddingRight: 5,
+                            contentPaddingTop: 2,
+                            borderRadius: 50,
+                            child: Text(
+                              genreName,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                  color: Palette.lightPurple),
+                            ),
+                          );
+                        })
+                      ],
+                    ),
                   );
                 }
               },

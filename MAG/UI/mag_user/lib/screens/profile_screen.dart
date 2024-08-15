@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -152,14 +151,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     imageWidth = containerWidth! * 0.9;
 
     return Center(
-      child: SingleChildScrollView(
-        child: Container(
-          width: containerWidth,
-          height: containerHeight! - (containerHeight! * 0.155),
-          decoration: BoxDecoration(
-            color: Palette.midnightPurple.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(15),
-          ),
+      child: SizedBox(
+        width: containerWidth,
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -261,8 +255,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         validator: (val) {
                           if (val == null || val.isEmpty) {
                             return "This field cannot be empty.";
-                          } else if (val.length > 20) {
-                            return 'Username can contain 20 characters max.';
+                          } else if (val.length > 50) {
+                            return 'Character limit exceeded: ${val.length}/50';
                           } else if (isValidUsername(val) == false) {
                             return 'Use only letters, numbers, and underscore.';
                           } else if (usernameTaken == true) {
@@ -279,10 +273,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: textFieldWidth,
                         paddingBottom: 25,
                         borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: "This field cannot be empty."),
-                        ]),
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return "This field cannot be empty.";
+                          } else if (val.length > 50) {
+                            return 'Character limit exceeded: ${val.length}/50';
+                          } else if (isValidName(val) == false) {
+                            return 'Use only letters.';
+                          }
+                          return null;
+                        },
                       ),
                       MyFormBuilderTextField(
                         focusNode: _focusNode3,
@@ -292,10 +292,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: textFieldWidth,
                         paddingBottom: 25,
                         borderRadius: 50,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: "This field cannot be empty."),
-                        ]),
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return "This field cannot be empty.";
+                          } else if (val.length > 50) {
+                            return 'Character limit exceeded: ${val.length}/50';
+                          } else if (isValidName(val) == false) {
+                            return 'Use only letters.';
+                          }
+                          return null;
+                        },
                       ),
                       MyFormBuilderTextField(
                         focusNode: _focusNode4,
@@ -310,8 +316,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         },
                         validator: (val) {
-                          if (val != null && val.length > 25) {
-                            return 'Email can contain 25 characters max.';
+                          if (val != null && val.length > 100) {
+                            return 'Character limit exceeded: ${val.length}/100';
                           } else if (val != null &&
                               val.isNotEmpty &&
                               isValidEmail(val) == false) {
@@ -357,9 +363,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-        ).asGlass(
-          tintColor: Palette.darkPurple,
-          frosted: false,
         ),
       ),
     );

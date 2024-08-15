@@ -135,7 +135,7 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                       } else if (val.isNotEmpty && !isValidReviewText(val)) {
                         return "Some special characters are not allowed.";
                       } else if (val.isNotEmpty && val.length > 200) {
-                        return "Exceeded character limit: ${val.length}/200";
+                        return "Character limit exceeded: ${val.length}/200";
                       }
                       return null;
                     },

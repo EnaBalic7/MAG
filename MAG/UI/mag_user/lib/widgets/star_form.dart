@@ -66,7 +66,6 @@ class _StarFormState extends State<StarForm> {
                     initialValue: widget.initialValue,
                     fillColor: Palette.textFieldPurple.withOpacity(0.5),
                     width: textFieldWidth,
-                    height: 43,
                     borderRadius: 50,
                     validator: (val) {
                       if (val != null && val != "" && !isValidReviewText(val)) {
@@ -74,7 +73,7 @@ class _StarFormState extends State<StarForm> {
                       } else if (val == null || isEmptyOrWhiteSpace(val)) {
                         return "This field cannot be empty.";
                       } else if (val != "" && val.length > 15) {
-                        return "Name is too long.";
+                        return "Character limit exceeded: ${val.length}/15";
                       }
                       return null;
                     },

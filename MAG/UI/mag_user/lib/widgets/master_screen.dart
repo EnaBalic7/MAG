@@ -145,6 +145,8 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           onClosed: widget.onClosed,
           onChanged: widget.onChanged,
           onCleared: widget.onCleared,
+          closeSearchIcon: Icons.close_rounded,
+          clearSearchIcon: Icons.backspace_rounded,
           customTextEditingController: widget.controller,
           titleTextStyle: const TextStyle(fontSize: 16),
           centerTitle: true,
@@ -155,8 +157,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   const TextStyle(color: Palette.lightPurple, fontSize: 16),
               fillColor: Palette.searchBar,
               constraints: const BoxConstraints(maxHeight: 40, maxWidth: 500),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(50))),
+              border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(50))),
           iconTheme: const IconThemeData(color: Palette.lightPurple),
           appBarBuilder: (context) {
             return AppBar(

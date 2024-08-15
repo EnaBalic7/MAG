@@ -372,8 +372,11 @@ class _UsersScreenState extends State<UsersScreen> {
                           alignment: Alignment.center,
                         ),
                       ),
-                      Text("${user.username}",
-                          style: const TextStyle(fontSize: 20)),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        child: Text("${user.username}",
+                            style: const TextStyle(fontSize: 20)),
+                      ),
                     ],
                   ),
                   FormBuilder(

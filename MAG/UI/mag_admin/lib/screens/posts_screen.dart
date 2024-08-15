@@ -209,8 +209,8 @@ class _PostsScreenState extends State<PostsScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: 350,
+                          Container(
+                            constraints: const BoxConstraints(maxWidth: 350),
                             child: Text(
                                 "${widget.user.firstName} ${widget.user.lastName}",
                                 overflow: TextOverflow.ellipsis,

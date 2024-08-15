@@ -558,8 +558,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: 400,
+                          Container(
+                            constraints: const BoxConstraints(maxWidth: 400),
                             child: Text(
                                 "${widget.user.firstName} ${widget.user.lastName}",
                                 overflow: TextOverflow.ellipsis,
