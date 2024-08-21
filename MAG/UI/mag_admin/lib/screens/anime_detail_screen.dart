@@ -57,6 +57,16 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   final FocusNode _focusNode6 = FocusNode();
   final FocusNode _focusNode7 = FocusNode();
   final FocusNode _focusNode8 = FocusNode();
+  final FocusNode _focusNode9 = FocusNode();
+  final FocusNode _focusNode10 = FocusNode();
+
+  DateTime? parseDate(String? dateString) {
+    if (dateString == null || dateString.contains("0001-01-01")) {
+      return null;
+    }
+
+    return DateTime.tryParse(dateString);
+  }
 
   @override
   void initState() {
@@ -68,8 +78,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       'imageUrl': widget.anime?.imageUrl ?? "",
       'trailerUrl': widget.anime?.trailerUrl ?? "",
       'score': widget.anime?.score.toString() ?? "0.0",
-      'beginAir': widget.anime?.beginAir ?? DateTime.now(),
-      'finishAir': widget.anime?.finishAir ?? DateTime.now(),
+      'beginAir': parseDate(widget.anime?.beginAir!.toIso8601String()),
+      'finishAir': parseDate(widget.anime?.finishAir!.toIso8601String()),
       'season': widget.anime?.season ?? "Spring",
       'studio': widget.anime?.studio ?? ""
     };
@@ -81,6 +91,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _genreProvider = context.read<GenreProvider>();
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
+
+    if (widget.anime != null) {
+      print("Begin air: ${widget.anime!.beginAir}");
+      print("Finish air: ${widget.anime!.finishAir}");
+    }
 
     _genreProvider.addListener(() {
       _reloadGenresList();
@@ -102,6 +117,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _focusNode6.dispose();
     _focusNode7.dispose();
     _focusNode8.dispose();
+    _focusNode9.dispose();
+    _focusNode10.dispose();
 
     super.dispose();
   }
@@ -235,7 +252,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   fillColor: Palette.darkPurple,
                                   readOnly: true,
                                   width: maxTextFieldWidth,
-                                  height: 50,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
@@ -246,21 +262,59 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   name: "beginAir",
                                   labelText: "Began airing",
                                   fillColor: Palette.darkPurple,
-                                  width: maxTextFieldWidth,
-                                  height: 50,
+                                  width: maxTextFieldWidth * 0.93,
+                                  formKey: _animeFormKey,
+                                  focusNode: _focusNode9,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  validator: (val) {
+                                    final beginAir = _animeFormKey
+                                        .currentState
+                                        ?.fields["beginAir"]
+                                        ?.value as DateTime?;
+                                    final finishAir = _animeFormKey
+                                        .currentState
+                                        ?.fields["finishAir"]
+                                        ?.value as DateTime?;
+
+                                    if (beginAir != null &&
+                                        finishAir != null &&
+                                        beginAir.isAfter(finishAir)) {
+                                      return "Begin date cannot be after finish date.";
+                                    }
+
+                                    return null;
+                                  },
                                 ),
                                 MyDateTimePicker(
                                   name: "finishAir",
                                   labelText: "Finished airing",
                                   fillColor: Palette.darkPurple,
-                                  width: maxTextFieldWidth,
-                                  height: 50,
+                                  width: maxTextFieldWidth * 0.91,
+                                  formKey: _animeFormKey,
+                                  focusNode: _focusNode10,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
+                                  validator: (val) {
+                                    final beginAir = _animeFormKey
+                                        .currentState
+                                        ?.fields["beginAir"]
+                                        ?.value as DateTime?;
+                                    final finishAir = _animeFormKey
+                                        .currentState
+                                        ?.fields["finishAir"]
+                                        ?.value as DateTime?;
+
+                                    if (beginAir != null &&
+                                        finishAir != null &&
+                                        finishAir.isBefore(beginAir)) {
+                                      return "Finish date cannot be before begin date.";
+                                    }
+
+                                    return null;
+                                  },
                                 ),
                                 MyFormBuilderDropdown(
                                   name: "season",

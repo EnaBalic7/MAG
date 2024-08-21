@@ -61,6 +61,7 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Watchlist> Watchlists { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         SeedData(modelBuilder);

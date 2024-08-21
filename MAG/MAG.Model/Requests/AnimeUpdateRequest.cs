@@ -20,9 +20,9 @@ namespace MAG.Model.Requests
 
         public string? TrailerUrl { get; set; }
 
-        public DateTime BeginAir { get; set; }
+        public DateTime? BeginAir { get; set; }
 
-        public DateTime FinishAir { get; set; }
+        public DateTime? FinishAir { get; set; }
 
         public string Season { get; set; } = null!;
 

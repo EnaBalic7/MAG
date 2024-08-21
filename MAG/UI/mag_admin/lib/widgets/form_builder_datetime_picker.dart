@@ -5,34 +5,37 @@ import 'package:flutter/material.dart';
 import '../utils/icons.dart';
 import '../utils/colors.dart';
 
-// ignore: must_be_immutable
 class MyDateTimePicker extends StatefulWidget {
-  String? name;
-  String? labelText;
-  DateTime? initialValue;
-  Color? fillColor;
-  double? width;
-  double? height;
-  double? borderRadius;
-  double? paddingLeft;
-  double? paddingRight;
-  double? paddingTop;
-  double? paddingBottom;
-  String? Function(DateTime?)? validator;
-  MyDateTimePicker({
+  final String name;
+  final String? labelText;
+  final Color? fillColor;
+  final double width;
+
+  final double borderRadius;
+  final double paddingLeft;
+  final double paddingRight;
+  final double paddingTop;
+  final double paddingBottom;
+  final String? Function(DateTime?)? validator;
+  final GlobalKey<FormBuilderState>? formKey;
+  final FocusNode? focusNode;
+  final void Function(DateTime?)? onChanged;
+
+  const MyDateTimePicker({
     super.key,
     required this.name,
     this.width = 100,
-    this.height = 40,
     this.labelText,
     this.borderRadius = 0,
     this.paddingLeft = 0,
     this.paddingRight = 0,
     this.paddingTop = 0,
     this.paddingBottom = 0,
-    this.initialValue,
     this.fillColor,
     this.validator,
+    this.formKey,
+    this.focusNode,
+    this.onChanged,
   });
 
   @override
@@ -44,40 +47,67 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: widget.paddingLeft!,
-          right: widget.paddingRight!,
-          top: widget.paddingTop!,
-          bottom: widget.paddingBottom!),
-      child: SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: FormBuilderDateTimePicker(
-          validator: widget.validator,
-          valueTransformer: (selectedDate) {
-            return selectedDate?.toIso8601String();
-          },
-          name: widget.name!,
-          decoration: InputDecoration(
-            suffixIcon: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: buildCalendarIcon(24),
-            ),
-            fillColor: widget.fillColor,
-            labelText: widget.labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            labelStyle: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Palette.lightPurple,
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(widget.borderRadius!),
+        left: widget.paddingLeft,
+        right: widget.paddingRight,
+        top: widget.paddingTop,
+        bottom: widget.paddingBottom,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: SizedBox(
+              width: widget.width,
+              child: FormBuilderDateTimePicker(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onChanged: widget.onChanged,
+                focusNode: widget.focusNode ?? FocusNode(),
+                validator: widget.validator,
+                valueTransformer: (selectedDate) {
+                  return selectedDate?.toIso8601String();
+                },
+                name: widget.name,
+                decoration: InputDecoration(
+                  errorStyle:
+                      const TextStyle(color: Palette.lightRed, height: 0.5),
+                  errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Palette.lightRed),
+                      borderRadius: BorderRadius.circular(50)),
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 8.0, left: 10),
+                    child: buildCalendarIcon(24),
+                  ),
+                  fillColor: widget.fillColor,
+                  labelText: widget.labelText,
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  labelStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Palette.lightPurple,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(widget.borderRadius),
+                  ),
+                ),
+                inputType: InputType.date,
+                format: DateFormat('MMM d, y'),
+              ),
             ),
           ),
-          inputType: InputType.date,
-          format: DateFormat('MMM d, y'),
-        ),
+          IconButton(
+            icon: Icon(
+              Icons.clear_rounded,
+              color: Palette.lightPurple.withOpacity(0.5),
+            ),
+            onPressed: () {
+              setState(() {
+                widget.formKey?.currentState?.fields[widget.name]
+                    ?.didChange(null);
+              });
+            },
+          ),
+        ],
       ),
     );
   }

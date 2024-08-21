@@ -17,10 +17,6 @@ public partial class Anime
 
     public decimal? Score { get; set; }
 
-    public DateTime BeginAir { get; set; }
-
-    public DateTime FinishAir { get; set; }
-
     public string Season { get; set; } = null!;
 
     public string Studio { get; set; } = null!;
@@ -28,6 +24,10 @@ public partial class Anime
     public string? TrailerUrl { get; set; }
 
     public string? ImageUrl { get; set; }
+
+    public DateTime? BeginAir { get; set; }
+
+    public DateTime? FinishAir { get; set; }
 
     public virtual ICollection<AnimeList> AnimeLists { get; set; } = new List<AnimeList>();
 
