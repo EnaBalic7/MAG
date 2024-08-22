@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:mag_admin/widgets/form_builder_checkbox.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
@@ -57,6 +59,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Text genreBarChartText = const Text("");
   Text animeBarChartText = const Text("");
 
+  bool includeRegUsersInPdf = true;
+  bool includeTopAnimeInPdf = true;
+  bool includeTopGenresInPdf = true;
+  bool chartPdfMode = false;
+
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
   @override
   void initState() {
     _userProvider = context.read<UserProvider>();
@@ -100,12 +109,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   }
 
   Future<void> exportToPdf() async {
-    //Get font
-    final fontData = await File(
-            'C:\\Users\\Ena\\GitHub\\MAG\\MAG\\UI\\mag_admin\\assets\\fonts\\calibri-regular.ttf')
-        .readAsBytes();
-    final ttfFont = pw.Font.ttf(fontData.buffer.asByteData());
-
     //Get device pixel ratio
     double pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
@@ -136,168 +139,91 @@ class _ReportsScreenState extends State<ReportsScreen> {
     Uint8List pngBytesGenreBarChart =
         byteDataGenreBarChart!.buffer.asUint8List();
 
+    setState(() {
+      chartPdfMode = false;
+    });
+
     final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.Page(
-          pageTheme: pw.PageTheme(
-            pageFormat: PdfPageFormat.a4,
-            margin: pw.EdgeInsets.zero,
-            buildBackground: (context) {
-              return pw.Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: PdfColor.fromHex("#0C0B1E"), // 0C0B1E - midnightPurple
-              );
-            },
-          ),
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pw.Container(
-                width: 700,
-                padding: const pw.EdgeInsets.all(30),
-                child: pw.Column(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Column(children: [
-                        pw.Header(
-                          level: 1,
-                          decoration: pw.BoxDecoration(
-                              border: pw.Border.all(
-                                  width: 0, style: pw.BorderStyle.none)),
-                          child: pw.Column(children: [
-                            pw.Row(children: [
-                              pw.Image(pw.MemoryImage(logoBytes), width: 80),
-                              pw.SizedBox(width: 78),
-                              pw.Text(
-                                  'Report - ${DateFormat('MMM d, y').format(DateTime.now())}',
-                                  style: pw.TextStyle(
-                                      color: PdfColor.fromHex("#C0B9FF"),
-                                      fontSize: 22,
-                                      font: ttfFont)),
-                            ]),
-                            pw.Container(
-                                width: 900,
-                                height: 1,
-                                color: PdfColor.fromHex("#C0B9FF")),
-                          ]),
-                        ),
-                        pw.Image(
-                          pw.MemoryImage(pngBytes),
-                          width: 760,
-                        ),
-                        pw.SizedBox(height: 10),
-                        pw.Column(children: [
-                          pw.Text("Total number of registered users:",
-                              style: pw.TextStyle(
-                                  fontSize: 14,
-                                  color: PdfColor.fromHex("#C0B9FF"))),
-                          pw.Text("$totalUsers",
-                              style: pw.TextStyle(
-                                  color: PdfColor.fromHex("#99FFFF"),
-                                  fontSize: 20,
-                                  fontWeight: pw.FontWeight.bold))
-                        ]),
-                        pw.SizedBox(height: 10),
-                        userChartTextForPdf,
-                        pw.SizedBox(height: 10),
-                        pw.Image(
-                          pw.MemoryImage(pngBytesAnimeBarChart),
-                          width: 760,
-                        ),
-                      ]),
-                      pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.end,
-                          children: [
-                            pw.Footer(
-                              title: pw.Text(
-                                "1",
-                                style: pw.TextStyle(
-                                    color: PdfColor.fromHex("#C0B9FF")),
-                              ),
-                            )
-                          ]),
-                    ]),
-              ),
-            );
-          }),
+    final List<pw.Widget> contentWidgets = [];
+
+    contentWidgets.add(
+      pw.Header(
+        level: 1,
+        decoration: pw.BoxDecoration(
+            border: pw.Border.all(width: 0, style: pw.BorderStyle.none)),
+        child: pw.Column(children: [
+          pw.Row(children: [
+            pw.Image(pw.MemoryImage(logoBytes), width: 80),
+            pw.SizedBox(width: 78),
+            pw.Text('Report - ${DateFormat('MMM d, y').format(DateTime.now())}',
+                style: pw.TextStyle(
+                    color: PdfColor.fromHex("#0C0B1E"), fontSize: 22)),
+          ]),
+          pw.Container(
+              width: 900, height: 1, color: PdfColor.fromHex("#0C0B1E")),
+        ]),
+      ),
     );
 
-    pdf.addPage(
-      pw.Page(
-          pageTheme: pw.PageTheme(
-            pageFormat: PdfPageFormat.a4,
-            margin: pw.EdgeInsets.zero,
-            buildBackground: (context) {
-              return pw.Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: PdfColor.fromHex("#0C0B1E"), // 0C0B1E - midnightPurple
-              );
-            },
-          ),
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pw.Container(
-                width: 700,
-                padding: const pw.EdgeInsets.all(30),
-                child: pw.Column(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Column(children: [
-                        pw.Header(
-                          level: 1,
-                          decoration: pw.BoxDecoration(
-                              border: pw.Border.all(
-                                  width: 0, style: pw.BorderStyle.none)),
-                          child: pw.Column(children: [
-                            pw.Row(children: [
-                              pw.Image(pw.MemoryImage(logoBytes), width: 80),
-                              pw.SizedBox(width: 78),
-                              pw.Text(
-                                  'Report - ${DateFormat('MMM d, y').format(DateTime.now())}',
-                                  style: pw.TextStyle(
-                                      color: PdfColor.fromHex("#C0B9FF"),
-                                      fontSize: 22)),
-                            ]),
-                            pw.Container(
-                                width: 900,
-                                height: 1,
-                                color: PdfColor.fromHex("#C0B9FF")),
-                          ]),
-                        ),
-                        // add more here
-                        pw.Text(animeBarChartText.data!,
-                            style: pw.TextStyle(
-                                color: PdfColor.fromHex("#C0B9FF"),
-                                fontSize: 11)),
-                        pw.SizedBox(height: 10),
-                        pw.Image(
-                          pw.MemoryImage(pngBytesGenreBarChart),
-                          width: 760,
-                        ),
-                        pw.SizedBox(height: 10),
-                        pw.Text(genreBarChartText.data!,
-                            style: pw.TextStyle(
-                                color: PdfColor.fromHex("#C0B9FF"),
-                                fontSize: 11)),
-                      ]),
-                      pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.end,
-                          children: [
-                            pw.Footer(
-                              title: pw.Text(
-                                "2",
-                                style: pw.TextStyle(
-                                    color: PdfColor.fromHex("#C0B9FF")),
-                              ),
-                            )
-                          ]),
-                    ]),
-              ),
-            );
-          }),
-    );
+    if (includeRegUsersInPdf == true) {
+      contentWidgets.add(pw.Image(pw.MemoryImage(pngBytes), width: 760));
+      contentWidgets.add(pw.SizedBox(height: 10));
+      contentWidgets.add(pw.Text("Total number of registered users:",
+          style:
+              pw.TextStyle(fontSize: 14, color: PdfColor.fromHex("#0C0B1E"))));
+      contentWidgets.add(pw.Text("$totalUsers",
+          style: pw.TextStyle(
+              color: PdfColor.fromHex("#8A7CFA"),
+              fontSize: 20,
+              fontWeight: pw.FontWeight.bold)));
+      contentWidgets.add(pw.SizedBox(height: 10));
+      contentWidgets.add(userChartTextForPdf);
+      contentWidgets.add(pw.SizedBox(height: 10));
+    }
+
+    if (includeTopAnimeInPdf == true) {
+      contentWidgets
+          .add(pw.Image(pw.MemoryImage(pngBytesAnimeBarChart), width: 760));
+      contentWidgets.add(pw.SizedBox(height: 10));
+      contentWidgets.add(pw.Text(animeBarChartText.data!,
+          style:
+              pw.TextStyle(color: PdfColor.fromHex("#0C0B1E"), fontSize: 11)));
+      contentWidgets.add(pw.SizedBox(height: 10));
+    }
+
+    if (includeTopGenresInPdf == true) {
+      contentWidgets
+          .add(pw.Image(pw.MemoryImage(pngBytesGenreBarChart), width: 760));
+      contentWidgets.add(pw.SizedBox(height: 10));
+      contentWidgets.add(pw.Text(genreBarChartText.data!,
+          style:
+              pw.TextStyle(color: PdfColor.fromHex("#0C0B1E"), fontSize: 11)));
+    }
+
+    final double pageHeight = PdfPageFormat.a4.availableHeight;
+    double currentHeight = 0;
+
+    while (contentWidgets.isNotEmpty) {
+      final List<pw.Widget> pageWidgets = [];
+
+      for (final widget in List<pw.Widget>.from(contentWidgets)) {
+        final estimatedHeight = estimateWidgetHeight(widget);
+
+        if (currentHeight + estimatedHeight > pageHeight) {
+          break;
+        }
+
+        pageWidgets.add(widget);
+        currentHeight += estimatedHeight;
+        contentWidgets.remove(widget);
+      }
+
+      pdf.addPage(
+          pw.Page(build: (context) => pw.Column(children: pageWidgets)));
+
+      currentHeight = 0;
+    }
 
     final filePath = await FilePicker.platform.saveFile(
       dialogTitle: "Choose where to save report",
@@ -308,8 +234,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     if (filePath != null) {
       final file = File(filePath);
-      await file.writeAsBytes(await pdf.save());
+      // Ensures the file path has the .pdf extension even when name is changed
+      if (!filePath.endsWith('.pdf')) {
+        final newFilePath = '$filePath.pdf';
+        final newFile = File(newFilePath);
+        await newFile.writeAsBytes(await pdf.save());
+      } else {
+        await file.writeAsBytes(await pdf.save());
+      }
     }
+  }
+
+  double estimateWidgetHeight(pw.Widget widget) {
+    if (includeRegUsersInPdf == false &&
+        includeTopAnimeInPdf == true &&
+        includeTopGenresInPdf == true) {
+      return 100;
+    }
+    return 70;
   }
 
   @override
@@ -325,7 +267,143 @@ class _ReportsScreenState extends State<ReportsScreen> {
         showFloatingActionButton: true,
         floatingActionButtonIcon: buildPdfIcon(48),
         floatingButtonOnPressed: () async {
-          await exportToPdf();
+          showDialog(
+              context: context,
+              builder: (builder) {
+                return Dialog(
+                    insetPadding: const EdgeInsets.all(17),
+                    alignment: Alignment.center,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    child: Container(
+                        width: 350,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Palette.darkPurple,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Palette.lightPurple.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: FormBuilder(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text("Select which data to show in report",
+                                  style: TextStyle(
+                                      color: Palette.lightPurple,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16)),
+                              const SizedBox(height: 15),
+                              MyFormBuilderCheckBox(
+                                name: "userData",
+                                initialValue: includeRegUsersInPdf,
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() {
+                                      includeRegUsersInPdf = val;
+                                    });
+                                  }
+                                },
+                                title: const Text("User registrations data",
+                                    style: TextStyle(
+                                        color: Palette.lightPurple,
+                                        fontSize: 14)),
+                                validator: (val) {
+                                  bool? showAnimeData = _formKey
+                                      .currentState?.fields["animeData"]?.value;
+                                  bool? showGenreData = _formKey
+                                      .currentState?.fields["genreData"]?.value;
+                                  if (val == false &&
+                                      showAnimeData == false &&
+                                      showGenreData == false) {
+                                    return "Must select at least one option.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              MyFormBuilderCheckBox(
+                                name: "animeData",
+                                initialValue: includeTopAnimeInPdf,
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() {
+                                      includeTopAnimeInPdf = val;
+                                    });
+                                  }
+                                },
+                                title: const Text("Top 5 Anime",
+                                    style: TextStyle(
+                                        color: Palette.lightPurple,
+                                        fontSize: 14)),
+                                validator: (val) {
+                                  bool? showUserData = _formKey
+                                      .currentState?.fields["userData"]?.value;
+                                  bool? showGenreData = _formKey
+                                      .currentState?.fields["genreData"]?.value;
+                                  if (val == false &&
+                                      showUserData == false &&
+                                      showGenreData == false) {
+                                    return "Must select at least one option.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              MyFormBuilderCheckBox(
+                                name: "genreData",
+                                initialValue: includeTopGenresInPdf,
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() {
+                                      includeTopGenresInPdf = val;
+                                    });
+                                  }
+                                },
+                                title: const Text("Top 5 genres",
+                                    style: TextStyle(
+                                        color: Palette.lightPurple,
+                                        fontSize: 14)),
+                                validator: (val) {
+                                  bool? showAnimeData = _formKey
+                                      .currentState?.fields["animeData"]?.value;
+                                  bool? showUserData = _formKey
+                                      .currentState?.fields["userData"]?.value;
+                                  if (val == false &&
+                                      showAnimeData == false &&
+                                      showUserData == false) {
+                                    return "Must select at least one option.";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 15),
+                              GradientButton(
+                                  onPressed: () async {
+                                    if (_formKey.currentState
+                                            ?.saveAndValidate() ==
+                                        true) {
+                                      setState(() {
+                                        chartPdfMode = true;
+                                      });
+                                      await exportToPdf();
+                                    }
+                                  },
+                                  gradient: Palette.buttonGradient,
+                                  borderRadius: 50,
+                                  width: 90,
+                                  height: 30,
+                                  child: const Text(
+                                    "Export",
+                                    style: TextStyle(
+                                        color: Palette.white,
+                                        fontWeight: FontWeight.w500),
+                                  ))
+                            ],
+                          ),
+                        )));
+              });
         },
         floatingButtonTooltip: "Export to .pdf",
         child: SingleChildScrollView(
@@ -403,18 +481,46 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           ],
                         ),
                       ),
-                      gridData: const FlGridData(
-                          show: true,
-                          drawVerticalLine: true,
-                          verticalInterval: 1),
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: true,
+                        verticalInterval: 1,
+                        getDrawingHorizontalLine: (value) {
+                          return FlLine(
+                            color: (chartPdfMode == false)
+                                ? Palette.lightPurple.withOpacity(0.3)
+                                : Palette.darkPurple.withOpacity(0.8),
+                            strokeWidth: 1,
+                            dashArray: [8, 5],
+                          );
+                        },
+                      ),
                       titlesData: FlTitlesData(
                         show: true,
                         rightTitles: const AxisTitles(axisNameWidget: Text("")),
-                        leftTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: true, interval: 1),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            getTitlesWidget: (double value, TitleMeta meta) {
+                              return Text(
+                                value.round().toString(),
+                                style: TextStyle(
+                                  color: (chartPdfMode == false)
+                                      ? Palette.lightPurple
+                                      : Palette.darkPurple,
+                                ),
+                              );
+                            },
+                          ),
                           axisNameWidget: Text(
-                              "Number of users who like the genre",
-                              style: TextStyle(fontWeight: FontWeight.w500)),
+                            "Number of users who like the genre",
+                            style: (chartPdfMode == false)
+                                ? const TextStyle(fontWeight: FontWeight.w500)
+                                : const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Palette.midnightPurple),
+                          ),
                           axisNameSize: 22,
                         ),
                         bottomTitles: AxisTitles(
@@ -434,10 +540,16 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                           softWrap: true,
                                           textAlign: ui.TextAlign.center,
                                           overflow: TextOverflow.clip,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          ),
+                                          style: (chartPdfMode == false)
+                                              ? const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15,
+                                                )
+                                              : const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15,
+                                                  color:
+                                                      Palette.midnightPurple),
                                         ),
                                       ),
                                     ],
@@ -448,19 +560,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             }),
                           ),
                         ),
-                        topTitles: const AxisTitles(
+                        topTitles: AxisTitles(
                           axisNameSize: 30,
                           axisNameWidget: Text(
                             "Top 5 most popular genres",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 18),
+                            style: (chartPdfMode == false)
+                                ? const TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 18)
+                                : const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: Palette.midnightPurple),
                           ),
                         ),
                       ),
                       borderData: FlBorderData(
                           show: true,
                           border: Border.all(
-                            color: Palette.teal.withOpacity(0.5),
+                            color: (chartPdfMode == false)
+                                ? Palette.teal.withOpacity(0.5)
+                                : Palette.darkPurple.withOpacity(0.8),
                             width: 2,
                           )),
                     ),
@@ -584,7 +703,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       userChartTextForPdf = pw.Text(
         temp.data!,
-        style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#C0B9FF")),
+        style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#0C0B1E")),
       );
       return temp;
     }
@@ -600,7 +719,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         temp.data!,
         style: pw.TextStyle(
           fontSize: 11,
-          color: PdfColor.fromHex("#C0B9FF"),
+          color: PdfColor.fromHex("#0C0B1E"),
         ),
       );
 
@@ -616,7 +735,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       userChartTextForPdf = pw.Text(
         temp.data!,
-        style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#C0B9FF")),
+        style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#0C0B1E")),
       );
 
       return temp;
@@ -631,7 +750,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     userChartTextForPdf = pw.Text(
       temp.data!,
-      style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#C0B9FF")),
+      style: pw.TextStyle(fontSize: 11, color: PdfColor.fromHex("#0C0B1E")),
     );
 
     return temp;
@@ -729,8 +848,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   ],
                 ),
               ),
-              gridData: const FlGridData(
-                  show: true, drawVerticalLine: true, verticalInterval: 1),
+              gridData: FlGridData(
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
+                      color: (chartPdfMode == false)
+                          ? Palette.lightPurple.withOpacity(0.3)
+                          : Palette.darkPurple.withOpacity(0.8),
+                      strokeWidth: 1,
+                      dashArray: [8, 5],
+                    );
+                  },
+                  show: true,
+                  drawVerticalLine: true,
+                  verticalInterval: 1),
               titlesData: FlTitlesData(
                 show: true,
                 rightTitles: const AxisTitles(axisNameWidget: Text("")),
@@ -752,10 +882,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   softWrap: true,
                                   textAlign: ui.TextAlign.center,
                                   overflow: TextOverflow.clip,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                  ),
+                                  style: (chartPdfMode == false)
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                        )
+                                      : const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                          color: Palette.midnightPurple),
                                 ),
                               ),
                             ],
@@ -766,18 +901,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     }),
                   ),
                 ),
-                topTitles: const AxisTitles(
+                topTitles: AxisTitles(
                   axisNameSize: 30,
                   axisNameWidget: Text(
                     "Top 5 most popular anime",
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                    style: (chartPdfMode == false)
+                        ? const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 18)
+                        : const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Palette.midnightPurple),
                   ),
                 ),
               ),
               borderData: FlBorderData(
                   show: true,
                   border: Border.all(
-                    color: Palette.teal.withOpacity(0.5),
+                    color: (chartPdfMode == false)
+                        ? Palette.teal.withOpacity(0.5)
+                        : Palette.darkPurple.withOpacity(0.8),
                     width: 2,
                   )),
             ),
@@ -820,28 +963,68 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       height: 500,
                       child: LineChart(
                         LineChartData(
-                            gridData: const FlGridData(
+                            gridData: FlGridData(
+                                getDrawingHorizontalLine: (value) {
+                                  return FlLine(
+                                    color: (chartPdfMode == false)
+                                        ? Palette.lightPurple.withOpacity(0.3)
+                                        : Palette.darkPurple.withOpacity(0.8),
+                                    strokeWidth: 1,
+                                    dashArray: [8, 5],
+                                  );
+                                },
+                                getDrawingVerticalLine: (value) {
+                                  return FlLine(
+                                    color: (chartPdfMode == false)
+                                        ? Palette.lightPurple.withOpacity(0.3)
+                                        : Palette.darkPurple.withOpacity(0.8),
+                                    strokeWidth: 1,
+                                    dashArray: [8, 5],
+                                  );
+                                },
                                 show: true,
                                 drawVerticalLine: true,
                                 verticalInterval: 1),
                             titlesData: FlTitlesData(
                               show: true,
                               leftTitles: AxisTitles(
-                                axisNameWidget: const Text(
-                                    "Number of registered users",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500)),
+                                axisNameWidget: Text(
+                                  "Number of registered users",
+                                  style: (chartPdfMode == false)
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.w500)
+                                      : const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Palette.midnightPurple),
+                                ),
                                 axisNameSize: 22,
                                 sideTitles: SideTitles(
+                                  getTitlesWidget:
+                                      (double value, TitleMeta meta) {
+                                    return Text(
+                                      value.round().toString(),
+                                      style: TextStyle(
+                                        color: (chartPdfMode == false)
+                                            ? Palette.lightPurple
+                                            : Palette.darkPurple,
+                                      ),
+                                    );
+                                  },
                                   showTitles: true,
                                   reservedSize: 25,
-                                  interval: (pastYear == true) ? 10 : null,
+                                  interval: 10,
                                 ),
                               ),
                               bottomTitles: AxisTitles(
-                                axisNameWidget: Text("Past ${days + 1} days",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w500)),
+                                axisNameWidget: Text(
+                                  "Past ${days + 1} days",
+                                  style: (chartPdfMode == false)
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.w500)
+                                      : const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Palette.midnightPurple),
+                                ),
                                 axisNameSize: 20,
                                 sideTitles: SideTitles(
                                   showTitles: true,
@@ -880,7 +1063,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         child: Text(
                                           timeLabels[index],
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(fontSize: 12),
+                                          style: (chartPdfMode == false)
+                                              ? const TextStyle(fontSize: 12)
+                                              : const TextStyle(
+                                                  fontSize: 12,
+                                                  color:
+                                                      Palette.midnightPurple),
                                         ),
                                       );
                                     }
@@ -891,19 +1079,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               ),
                               rightTitles:
                                   const AxisTitles(axisNameWidget: Text("")),
-                              topTitles: const AxisTitles(
+                              topTitles: AxisTitles(
                                   axisNameSize: 30,
                                   axisNameWidget: Text(
                                     "Number of registered users in time",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 18),
+                                    style: (chartPdfMode == false)
+                                        ? const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18)
+                                        : const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18,
+                                            color: Palette.midnightPurple),
                                   )),
                             ),
                             borderData: FlBorderData(
                                 show: true,
                                 border: Border.all(
-                                  color: Palette.teal.withOpacity(0.5),
+                                  color: (chartPdfMode == false)
+                                      ? Palette.teal.withOpacity(0.5)
+                                      : Palette.darkPurple.withOpacity(0.8),
                                   width: 2,
                                 )),
                             minX: 0,
