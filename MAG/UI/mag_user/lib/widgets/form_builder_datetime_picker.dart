@@ -59,6 +59,7 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
         width: widget.width,
         height: widget.height,
         child: FormBuilderDateTimePicker(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           focusNode: widget.focusNode,
           style: const TextStyle(fontSize: 14, height: 1),
           validator: widget.validator,

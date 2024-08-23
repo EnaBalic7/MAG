@@ -42,6 +42,15 @@ class _DonationCardsState extends State<DonationCards> {
   int totalItems = 0;
 
   @override
+  void didUpdateWidget(covariant DonationCards oldWidget) {
+    if (widget.filter != oldWidget.filter) {
+      _donationFuture = widget.fetchDonations();
+      setTotalItems();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void initState() {
     _donationProvider = context.read<DonationProvider>();
     _donationFuture = widget.fetchDonations();

@@ -79,6 +79,7 @@ class LoginScreen extends StatelessWidget {
                           await _animeProvider.get();
                           var admin = await _userProvider.get(filter: {
                             "RolesIncluded": "true",
+                            "ProfilePictureIncluded": "true",
                             "Username": username
                           });
                           if (admin.count == 1) {

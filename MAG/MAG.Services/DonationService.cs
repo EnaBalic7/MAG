@@ -73,6 +73,21 @@ namespace MAG.Services
                 query = query.OrderByDescending(donation => donation.DateDonated);
             }
 
+            if (search?.LargestFirst == true)
+            {
+                query = query.OrderByDescending(donation => donation.Amount);
+            }
+
+            if (search?.SmallestFirst == true)
+            {
+                query = query.OrderBy(donation => donation.Amount);
+            }
+
+            if (search?.OldestFirst == true)
+            {
+                query = query.OrderBy(donation => donation.DateDonated);
+            }
+
             return base.AddFilter(query, search);
         }
     }

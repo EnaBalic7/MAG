@@ -11,5 +11,11 @@ namespace MAG.Model.SearchObjects
         public int? UserId { get; set; }
 
         public bool? NewestFirst { get; set; }
+
+        public bool? LargestFirst { get; set; }
+
+        public bool? SmallestFirst { get; set; }
+
+        public bool? OldestFirst { get; set; }
     }
 }

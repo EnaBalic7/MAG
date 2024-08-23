@@ -1,6 +1,5 @@
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../screens/donations_screen.dart';
 import '../screens/anime_screen.dart';
@@ -8,8 +7,6 @@ import '../screens/help_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/reports_screen.dart';
 import '../screens/users_screen.dart';
-import '../models/user.dart';
-import '../providers/user_provider.dart';
 import '../screens/clubs_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/colors.dart';
@@ -61,7 +58,7 @@ class MasterScreenWidget extends StatefulWidget {
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool? removeAppBar;
-  late UserProvider _userProvider;
+
   Map<String, bool> hoverStates = {
     'Login': false,
     'Anime': false,
@@ -70,12 +67,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     'Clubs': false,
     'Help': false
   };
-
-  @override
-  void initState() {
-    _userProvider = context.read<UserProvider>();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +119,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     const ReportsScreen()),
                 buildListTile(
                     context, 'Clubs', buildClubsIcon(24), const ClubsScreen()),
-                buildListTile(
-                    context,
-                    'Donations',
-                    const Icon(Icons.credit_card_rounded,
-                        color: Palette.lightPurple),
-                    const DonationsScreen()),
                 buildListTile(
                     context, 'Help', buildHelpIcon(24), const HelpScreen()),
               ],
@@ -196,28 +181,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     }
     actions.add(const SizedBox(width: 10));
     if (widget.showProfileIcon == true) {
-      actions.add(GestureDetector(
-          onTap: () async {
-            var userTmp = await _userProvider.get(filter: {
-              "Username": "${Authorization.username}",
-              "ProfilePictureIncluded": "true"
-            });
-            if (userTmp.count == 1) {
-              User user = userTmp.result.first;
-
-              if (mounted) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ProfileScreen(user: user),
-                  ),
-                );
-              }
-            }
-          },
-          child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: Tooltip(
-                  message: "View profile", child: buildAstronautIcon()))));
+      actions.add(_buildPopupMenu());
     }
 
     actions.add(const SizedBox(width: 40));
@@ -241,6 +205,58 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ));
     }
+  }
+
+  Widget _buildPopupMenu() {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 35),
+      tooltip: "More",
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+      ),
+      icon: const Icon(Icons.more_vert_rounded),
+      splashRadius: 1,
+      padding: EdgeInsets.zero,
+      color: const Color.fromRGBO(50, 48, 90, 1),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightPurple.withOpacity(0.1),
+            leading: buildAstronautIcon(),
+            title: const Text('View profile',
+                style: TextStyle(color: Palette.lightPurple)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProfileScreen(user: LoggedUser.user!)));
+            },
+          ),
+        ),
+        PopupMenuItem<String>(
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightPurple.withOpacity(0.1),
+            leading: const Icon(Icons.credit_card_rounded,
+                color: Palette.lightPurple),
+            title: const Text('View Donations',
+                style: TextStyle(color: Palette.lightPurple)),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const DonationsScreen()));
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   MouseRegion buildListTile(

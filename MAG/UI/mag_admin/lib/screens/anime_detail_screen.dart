@@ -282,6 +282,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                         finishAir != null &&
                                         beginAir.isAfter(finishAir)) {
                                       return "Begin date cannot be after finish date.";
+                                    } else if (beginAir != null &&
+                                        beginAir.isAfter(DateTime.now())) {
+                                      return "Begin date cannot be in the future";
                                     }
 
                                     return null;

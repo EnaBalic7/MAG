@@ -197,9 +197,6 @@ class _NebulaFormState extends State<NebulaForm> {
                     FormBuilderChipOption(value: "Dropped"),
                     FormBuilderChipOption(value: "Plan to Watch"),
                   ],
-                  onChanged: (val) {
-                    _nebulaFormKey.currentState?.saveAndValidate();
-                  },
                   validator: (val) {
                     if (val == null || val.isEmpty) {
                       return "You must choose watch status.";
@@ -382,8 +379,20 @@ class _NebulaFormState extends State<NebulaForm> {
                     final watchStatus = _nebulaFormKey
                         .currentState!.fields['watchStatus']?.value;
 
+                    final beganDate = _nebulaFormKey.currentState
+                        ?.fields["dateStarted"]?.value as DateTime?;
+                    final finishedDate = _nebulaFormKey.currentState
+                        ?.fields["dateFinished"]?.value as DateTime?;
+
                     if (watchStatus == "Plan to Watch" && val != null) {
                       return "Cannot choose date with selected watch status.";
+                    } else if (beganDate != null &&
+                        finishedDate != null &&
+                        beganDate.isAfter(finishedDate)) {
+                      return "Begin date cannot be after finish date.";
+                    } else if (beganDate != null &&
+                        beganDate.isAfter(DateTime.now())) {
+                      return "Begin date cannot be in the future";
                     }
                     return null;
                   },
@@ -400,15 +409,21 @@ class _NebulaFormState extends State<NebulaForm> {
                   width: double.infinity,
                   height: 40,
                   borderRadius: 50,
-                  onChanged: (val) {
-                    _nebulaFormKey.currentState?.saveAndValidate();
-                  },
                   validator: (val) {
                     final watchStatus = _nebulaFormKey
                         .currentState!.fields['watchStatus']?.value;
 
+                    final beganDate = _nebulaFormKey.currentState
+                        ?.fields["dateStarted"]?.value as DateTime?;
+                    final finishedDate = _nebulaFormKey.currentState
+                        ?.fields["dateFinished"]?.value as DateTime?;
+
                     if (watchStatus == "Plan to Watch" && val != null) {
                       return "Cannot choose date with selected watch status.";
+                    } else if (beganDate != null &&
+                        finishedDate != null &&
+                        finishedDate.isBefore(beganDate)) {
+                      return "Finish date cannot be before begin date.";
                     }
                     return null;
                   },
@@ -584,9 +599,6 @@ class _NebulaFormState extends State<NebulaForm> {
                             FormBuilderChipOption(value: "Dropped"),
                             FormBuilderChipOption(value: "Plan to Watch"),
                           ],
-                          onChanged: (val) {
-                            _nebulaFormKey.currentState?.saveAndValidate();
-                          },
                           validator: (val) {
                             if (val == null || val.isEmpty) {
                               return "You must choose watch status.";
@@ -684,7 +696,6 @@ class _NebulaFormState extends State<NebulaForm> {
                           name: "reviewText",
                           labelText: "Review",
                           fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                          //height: 54,
                           maxLines: null,
                           textAlignVertical: TextAlignVertical.center,
                           paddingBottom: 10,
@@ -736,8 +747,26 @@ class _NebulaFormState extends State<NebulaForm> {
                           width: double.infinity,
                           height: 40,
                           borderRadius: 50,
-                          onChanged: (val) {
-                            _nebulaFormKey.currentState?.saveAndValidate();
+                          validator: (val) {
+                            final watchStatus = _nebulaFormKey
+                                .currentState!.fields['watchStatus']?.value;
+
+                            final beganDate = _nebulaFormKey.currentState
+                                ?.fields["dateStarted"]?.value as DateTime?;
+                            final finishedDate = _nebulaFormKey.currentState
+                                ?.fields["dateFinished"]?.value as DateTime?;
+
+                            if (watchStatus == "Plan to Watch" && val != null) {
+                              return "Cannot choose date with selected watch status.";
+                            } else if (beganDate != null &&
+                                finishedDate != null &&
+                                beganDate.isAfter(finishedDate)) {
+                              return "Begin date cannot be after finish date.";
+                            } else if (beganDate != null &&
+                                beganDate.isAfter(DateTime.now())) {
+                              return "Begin date cannot be in the future";
+                            }
+                            return null;
                           },
                         ),
                         const SizedBox(
@@ -752,8 +781,23 @@ class _NebulaFormState extends State<NebulaForm> {
                           width: double.infinity,
                           height: 40,
                           borderRadius: 50,
-                          onChanged: (val) {
-                            _nebulaFormKey.currentState?.saveAndValidate();
+                          validator: (val) {
+                            final watchStatus = _nebulaFormKey
+                                .currentState!.fields['watchStatus']?.value;
+
+                            final beganDate = _nebulaFormKey.currentState
+                                ?.fields["dateStarted"]?.value as DateTime?;
+                            final finishedDate = _nebulaFormKey.currentState
+                                ?.fields["dateFinished"]?.value as DateTime?;
+
+                            if (watchStatus == "Plan to Watch" && val != null) {
+                              return "Cannot choose date with selected watch status.";
+                            } else if (beganDate != null &&
+                                finishedDate != null &&
+                                finishedDate.isBefore(beganDate)) {
+                              return "Finish date cannot be before begin date.";
+                            }
+                            return null;
                           },
                         ),
                         Row(

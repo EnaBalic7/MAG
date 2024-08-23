@@ -52,8 +52,8 @@ Stack buildPdfIcon(double size) {
   ]);
 }
 
-Icon buildAstronautIcon() =>
-    const Icon(IconData(0xe90b, fontFamily: 'icomoon'));
+Icon buildAstronautIcon() => const Icon(IconData(0xe90b, fontFamily: 'icomoon'),
+    color: Palette.lightPurple);
 
 Icon buildEditIcon(double size) {
   return Icon(

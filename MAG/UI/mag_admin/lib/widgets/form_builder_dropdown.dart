@@ -59,6 +59,7 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
         height: widget.height,
         child: FormBuilderDropdown(
           borderRadius: BorderRadius.circular(25),
+          initialValue: widget.initialValue,
           focusColor: Palette.darkPurple,
           icon: widget.icon,
           dropdownColor: widget.dropdownColor ?? Palette.darkPurple,

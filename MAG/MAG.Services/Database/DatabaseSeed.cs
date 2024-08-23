@@ -1463,6 +1463,22 @@ namespace MAG.Services.Database
                     Amount = 20,
                     DateDonated = new DateTime(2024, 7, 11),
                     TransactionId = "txn_3PijFYRsmg17Kngz1idOozHb"
+                },
+                new Donation()
+                {
+                    Id = 2,
+                    UserId = 2,
+                    Amount = 3,
+                    DateDonated = new DateTime(2024, 8, 12),
+                    TransactionId = "txn_3PijFYRsmg17Kngz1idOozHc"
+                },
+                new Donation()
+                {
+                    Id = 3,
+                    UserId = 2,
+                    Amount = 8,
+                    DateDonated = new DateTime(2024, 8, 15),
+                    TransactionId = "txn_3PijFYRsmg17Kngz1idOozHd"
                 }
          );
         }

@@ -91,6 +91,13 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     isPlaying.value = _youtubePlayerController.value.isPlaying;
   }
 
+  DateTime? parseDate(String? dateString) {
+    if (dateString == null || dateString.contains("0001-01-01")) {
+      return null;
+    }
+    return DateTime.tryParse(dateString);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -135,6 +142,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                     right: 10,
                   ),
                   child: Text("${widget.anime.titleEn}",
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w500)),
                 ),
@@ -531,8 +539,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(widget.anime.studio!,
-                      style: const TextStyle(color: Palette.lightPurple))
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 100),
+                    child: Text(widget.anime.studio!,
+                        style: const TextStyle(color: Palette.lightPurple)),
+                  )
                 ],
               ),
             ],
@@ -549,8 +560,11 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(widget.anime.titleJp!,
-                      style: const TextStyle(color: Palette.lightPurple))
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 180),
+                    child: Text(widget.anime.titleJp!,
+                        style: const TextStyle(color: Palette.lightPurple)),
+                  )
                 ],
               ),
               const SizedBox(
@@ -565,7 +579,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text("${widget.anime.season!} ${widget.anime.beginAir!.year}",
+                  Text(
+                      "${widget.anime.season!} ${parseDate(widget.anime.beginAir!.toIso8601String())?.year ?? ""}",
                       style: const TextStyle(color: Palette.lightPurple))
                 ],
               ),
@@ -581,9 +596,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(
-                      "${DateFormat('MMM d, y').format(widget.anime.beginAir!)} - ${DateFormat('MMM d, y').format(widget.anime.finishAir!)}",
-                      style: const TextStyle(color: Palette.lightPurple))
+                  _buildAired()
                 ],
               ),
             ],
@@ -591,6 +604,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
         ],
       ),
     );
+  }
+
+  Text _buildAired() {
+    DateTime? begin = parseDate(widget.anime.beginAir!.toIso8601String());
+    DateTime? finish = parseDate(widget.anime.finishAir!.toIso8601String());
+
+    return Text(
+        "${(begin != null) ? DateFormat('MMM d, y').format(widget.anime.beginAir!) : ""} - ${(finish != null) ? DateFormat('MMM d, y').format(widget.anime.finishAir!) : ""}",
+        style: const TextStyle(color: Palette.lightPurple));
   }
 
   Widget _buildGenres() {
