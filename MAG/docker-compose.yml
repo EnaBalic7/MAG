@@ -42,11 +42,9 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/aspnetcore-devcert.pfx
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     ports:
-      - "7074:7074"
+      - "5262:5262"
     networks:
       - myanimegalaxy_network
     links:
@@ -55,7 +53,6 @@ services:
       - myanimegalaxy_sql
       - rabbitMQ
     volumes:
-      - ./aspnetcore-devcert.pfx:/root/.aspnet/https/aspnetcore-devcert.pfx
       - ./SeedImages:/app/SeedImages
 
   rabbitmq-consumer:
