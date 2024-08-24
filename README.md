@@ -49,7 +49,7 @@ Run the following commands:
 flutter run --dart-define=STRIPE_PUBLISHABLE_KEY=YourPublishableKey
 
 **Backend** </br>
-set STRIPE_SECRET_KEY=YourKey </br>
+set STRIPE_SECRET_KEY=YourSecretKey </br>
 docker-compose up -d --build
 
 ### Stripe Test Card Number
