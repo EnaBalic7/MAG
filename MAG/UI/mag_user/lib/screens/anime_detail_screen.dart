@@ -389,15 +389,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                         handleColor: Colors.redAccent,
                       ),
                       bottomActions: [
-                        CurrentPosition(),
-                        ProgressBar(
+                        const CurrentPosition(),
+                        const ProgressBar(
                           isExpanded: true,
-                          colors: const ProgressBarColors(
+                          colors: ProgressBarColors(
                             playedColor: Colors.red,
                             handleColor: Colors.redAccent,
                           ),
                         ),
-                        RemainingDuration(),
+                        const RemainingDuration(),
                         GestureDetector(
                             onTap: () {
                               _youtubePlayerController.pause();

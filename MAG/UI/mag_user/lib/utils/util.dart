@@ -177,7 +177,7 @@ bool isValidUsername(String text) {
 }
 
 bool isValidName(String text) {
-  return RegExp(r'^[a-zA-Z]+$').hasMatch(text);
+  return RegExp(r'^[a-zA-ZšđčćžŠĐČĆŽ]+$').hasMatch(text);
 }
 
 bool isValidEmail(String text) {

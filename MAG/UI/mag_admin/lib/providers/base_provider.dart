@@ -21,9 +21,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
     _baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "http://localhost:5262/");
 
-    /*  _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://localhost:7074/"); */
-
     client.badCertificateCallback = (cert, host, port) => true;
     http = IOClient(client);
   }

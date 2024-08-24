@@ -172,16 +172,18 @@ class _DonateScreenState extends State<DonateScreen> {
       BuildContext context, payment_intent.PaymentIntent paymentIntent) async {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            const SizedBox(
-              width: 300,
-              child: Text(
-                "Payment successful!",
-                textAlign: TextAlign.center,
-              ),
-            ));
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const SizedBox(
+                width: 300,
+                child: Text(
+                  "Payment successful!",
+                  textAlign: TextAlign.center,
+                ),
+              ));
+        }
 
         double amount = double.parse(
             _donationFormKey.currentState?.fields["amount"]?.value);

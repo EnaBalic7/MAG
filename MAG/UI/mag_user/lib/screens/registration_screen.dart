@@ -316,14 +316,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 }, barrierDismissible: false);
                               }
                             }).catchError((error) {
-                              showInfoDialog(
-                                  context,
-                                  const Icon(Icons.warning_rounded,
-                                      color: Palette.lightRed, size: 55),
-                                  Text(
-                                    error.toString(),
-                                    textAlign: TextAlign.center,
-                                  ));
+                              if (context.mounted) {
+                                showInfoDialog(
+                                    context,
+                                    const Icon(Icons.warning_rounded,
+                                        color: Palette.lightRed, size: 55),
+                                    Text(
+                                      error.toString(),
+                                      textAlign: TextAlign.center,
+                                    ));
+                              }
                             });
                           } else {
                             showInfoDialog(

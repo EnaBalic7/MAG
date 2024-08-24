@@ -345,22 +345,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       await _userProvider.update(widget.user.id!, request: userData).then((_) {
         Authorization.username = request["username"];
-        showInfoDialog(
-            context,
-            const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
-            const Text(
-              "Updated successfully!",
-              textAlign: TextAlign.center,
-            ));
+        if (mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Updated successfully!",
+                textAlign: TextAlign.center,
+              ));
+        }
       }).catchError((error) {
-        showInfoDialog(
-            context,
-            const Icon(Icons.warning_rounded,
-                color: Palette.lightRed, size: 55),
-            Text(
-              error.toString(),
-              textAlign: TextAlign.center,
-            ));
+        if (mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.warning_rounded,
+                  color: Palette.lightRed, size: 55),
+              Text(
+                error.toString(),
+                textAlign: TextAlign.center,
+              ));
+        }
       });
     } on Exception catch (e) {
       if (mounted) {

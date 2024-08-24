@@ -92,11 +92,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     _genreAnimeProvider = context.read<GenreAnimeProvider>();
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
 
-    if (widget.anime != null) {
-      print("Begin air: ${widget.anime!.beginAir}");
-      print("Finish air: ${widget.anime!.finishAir}");
-    }
-
     _genreProvider.addListener(() {
       _reloadGenresList();
       if (widget.anime != null) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 
@@ -32,12 +31,8 @@ import './utils/colors.dart';
 import './utils/util.dart';
 
 void main() async {
-  await dotenv.load(fileName: "assets/.env");
 
-  String stripePK = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
-
-  Stripe.publishableKey =
-      String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: stripePK);
+  Stripe.publishableKey = const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: "");
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AnimeProvider()),

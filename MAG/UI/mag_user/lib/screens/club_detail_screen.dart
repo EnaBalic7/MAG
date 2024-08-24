@@ -230,7 +230,7 @@ class _ClubDetailScreenState extends State<ClubDetailScreen> {
                   return Tooltip(
                       message: "Club owner",
                       child: Container(
-                        constraints: BoxConstraints(maxWidth: 200),
+                        constraints: const BoxConstraints(maxWidth: 200),
                         child: Text(
                           "${user.result.single.username}",
                           overflow: TextOverflow.ellipsis,
