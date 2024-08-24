@@ -45,10 +45,10 @@ Run the following commands:
 ### Using Stripe Keys
 - If you want to use your own Stripe keys, use the following commands: </br>
 
-**Mobile app**
+**Mobile app** </br>
 flutter run --dart-define=STRIPE_PUBLISHABLE_KEY=YourPublishableKey
 
-**Backend**
+**Backend** </br>
 set STRIPE_SECRET_KEY=YourKey </br>
 docker-compose up -d --build
 
