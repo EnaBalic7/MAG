@@ -7,8 +7,8 @@ part of 'watchlist.dart';
 // **************************************************************************
 
 Watchlist _$WatchlistFromJson(Map<String, dynamic> json) => Watchlist(
-      json['id'] as int?,
-      json['userId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['userId'] as num?)?.toInt(),
       json['dateAdded'] == null
           ? null
           : DateTime.parse(json['dateAdded'] as String),

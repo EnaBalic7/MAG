@@ -7,7 +7,7 @@ part of 'qa_category.dart';
 // **************************************************************************
 
 QAcategory _$QAcategoryFromJson(Map<String, dynamic> json) => QAcategory(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

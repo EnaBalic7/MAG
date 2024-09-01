@@ -47,6 +47,8 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Rating> Ratings { get; set; }
 
+    public virtual DbSet<Recommender> Recommenders { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -321,6 +323,22 @@ public partial class MagContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Rating_User");
+        });
+
+        modelBuilder.Entity<Recommender>(entity =>
+        {
+            entity.ToTable("Recommender");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.AnimeId).HasColumnName("AnimeID");
+            entity.Property(e => e.CoAnimeId1).HasColumnName("CoAnimeID1");
+            entity.Property(e => e.CoAnimeId2).HasColumnName("CoAnimeID2");
+            entity.Property(e => e.CoAnimeId3).HasColumnName("CoAnimeID3");
+
+            entity.HasOne(d => d.Anime).WithMany(p => p.Recommenders)
+                .HasForeignKey(d => d.AnimeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Recommender_Anime");
         });
 
         modelBuilder.Entity<Role>(entity =>

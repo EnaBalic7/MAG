@@ -7,8 +7,8 @@ part of 'donation.dart';
 // **************************************************************************
 
 Donation _$DonationFromJson(Map<String, dynamic> json) => Donation(
-      id: json['id'] as int?,
-      userId: json['userId'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      userId: (json['userId'] as num?)?.toInt(),
       amount: (json['amount'] as num?)?.toDouble(),
       dateDonated: json['dateDonated'] == null
           ? null

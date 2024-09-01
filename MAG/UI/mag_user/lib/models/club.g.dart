@@ -7,15 +7,15 @@ part of 'club.dart';
 // **************************************************************************
 
 Club _$ClubFromJson(Map<String, dynamic> json) => Club(
-      json['id'] as int?,
-      json['ownerId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['ownerId'] as num?)?.toInt(),
       json['name'] as String?,
       json['description'] as String?,
-      json['memberCount'] as int?,
+      (json['memberCount'] as num?)?.toInt(),
       json['dateCreated'] == null
           ? null
           : DateTime.parse(json['dateCreated'] as String),
-      json['coverId'] as int?,
+      (json['coverId'] as num?)?.toInt(),
       json['cover'] == null
           ? null
           : ClubCover.fromJson(json['cover'] as Map<String, dynamic>),

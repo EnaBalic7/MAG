@@ -7,9 +7,9 @@ part of 'club_user.dart';
 // **************************************************************************
 
 ClubUser _$ClubUserFromJson(Map<String, dynamic> json) => ClubUser(
-      json['id'] as int?,
-      json['clubId'] as int?,
-      json['userId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['clubId'] as num?)?.toInt(),
+      (json['userId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ClubUserToJson(ClubUser instance) => <String, dynamic>{

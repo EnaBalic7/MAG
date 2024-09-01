@@ -1274,6 +1274,76 @@ namespace MAG.Services.Database
                     Progress = 0,
                     DateStarted = null,
                     DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 6,
+                    AnimeId = 1,
+                    WatchlistId = 3,
+                    WatchStatus = "Watching",
+                    Progress = 3,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 7,
+                    AnimeId = 7,
+                    WatchlistId = 3,
+                    WatchStatus = "Watching",
+                    Progress = 2,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 8,
+                    AnimeId = 7,
+                    WatchlistId = 3,
+                    WatchStatus = "Watching",
+                    Progress = 2,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 9,
+                    AnimeId = 7,
+                    WatchlistId = 4,
+                    WatchStatus = "Watching",
+                    Progress = 2,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 10,
+                    AnimeId = 10,
+                    WatchlistId = 4,
+                    WatchStatus = "Watching",
+                    Progress = 2,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 11,
+                    AnimeId = 3,
+                    WatchlistId = 4,
+                    WatchStatus = "Watching",
+                    Progress = 2,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
+                },
+                new AnimeWatchlist()
+                {
+                    Id = 12,
+                    AnimeId = 1,
+                    WatchlistId = 4,
+                    WatchStatus = "Watching",
+                    Progress = 2,
+                    DateStarted = new DateTime(2024, 7, 11),
+                    DateFinished = null
                 }
          );
         }

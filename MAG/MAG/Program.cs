@@ -34,6 +34,7 @@ builder.Services.AddTransient<IClubCoverService, ClubCoverService>();
 builder.Services.AddTransient<IUserPostActionService, UserPostActionService>();
 builder.Services.AddTransient<IUserCommentActionService, UserCommentActionService>();
 builder.Services.AddScoped<IRabbitMQProducer, RabbitMQProducer>();
+builder.Services.AddTransient<IRecommenderService, RecommenderService>();
 
 
 
@@ -99,10 +100,20 @@ using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<MagContext>();
 
-   // if (!dataContext.Database.CanConnect())
-   // {
+    if (!dataContext.Database.CanConnect())
+    {
         dataContext.Database.Migrate();
-   // }
+
+        var recommenderService = scope.ServiceProvider.GetRequiredService<IRecommenderService>();
+        try
+        {
+            await recommenderService.TrainAnimeModelAsync();
+        }
+        catch (Exception)
+        {
+
+        }
+    }
 }
 
 Env.Load("../.env");

@@ -7,7 +7,7 @@ part of 'club_cover.dart';
 // **************************************************************************
 
 ClubCover _$ClubCoverFromJson(Map<String, dynamic> json) => ClubCover(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['cover'] as String?,
     );
 

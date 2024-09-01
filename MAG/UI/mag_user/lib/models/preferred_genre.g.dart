@@ -8,9 +8,9 @@ part of 'preferred_genre.dart';
 
 PreferredGenre _$PreferredGenreFromJson(Map<String, dynamic> json) =>
     PreferredGenre(
-      id: json['id'] as int?,
-      genreId: json['genreId'] as int?,
-      userId: json['userId'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      genreId: (json['genreId'] as num?)?.toInt(),
+      userId: (json['userId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$PreferredGenreToJson(PreferredGenre instance) =>

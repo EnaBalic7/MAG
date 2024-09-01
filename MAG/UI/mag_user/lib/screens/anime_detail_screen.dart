@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:glass/glass.dart';
 import 'package:intl/intl.dart';
+import 'package:mag_user/models/recommender.dart';
+import 'package:mag_user/providers/anime_provider.dart';
+import 'package:mag_user/providers/recommender_provider.dart';
+import 'package:mag_user/widgets/anime_card.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -45,11 +49,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   late RatingProvider _ratingProvider;
   late Future<SearchResult<Rating>> _ratingFuture;
   late UserProvider _userProvider;
+  late RecommenderProvider _recommenderProvider;
+  late AnimeProvider _animeProvider;
 
   @override
   void initState() {
     _genreProvider = context.read<GenreProvider>();
     _genreFuture = _genreProvider.get(filter: {"SortAlphabetically": "true"});
+    _recommenderProvider = context.read<RecommenderProvider>();
+    _animeProvider = context.read<AnimeProvider>();
 
     _userProvider = context.read<UserProvider>();
 
@@ -79,6 +87,37 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     super.initState();
   }
 
+  Future<List<int>> getRecommendedAnimeIds(int animeId) async {
+    try {
+      Recommender recData = await _recommenderProvider.getById(animeId);
+
+      int? coAnimeId1 = recData.coAnimeId1;
+      int? coAnimeId2 = recData.coAnimeId2;
+      int? coAnimeId3 = recData.coAnimeId3;
+
+      List<int> recommendedAnimeIds = [];
+
+      if (coAnimeId1 != null) {
+        Recommender recAnime1 = await _recommenderProvider.getById(coAnimeId1);
+        recommendedAnimeIds.add(recAnime1.animeId!);
+      }
+
+      if (coAnimeId2 != null) {
+        Recommender recAnime2 = await _recommenderProvider.getById(coAnimeId2);
+        recommendedAnimeIds.add(recAnime2.animeId!);
+      }
+
+      if (coAnimeId3 != null) {
+        Recommender recAnime3 = await _recommenderProvider.getById(coAnimeId3);
+        recommendedAnimeIds.add(recAnime3.animeId!);
+      }
+
+      return recommendedAnimeIds;
+    } catch (e) {
+      return [];
+    }
+  }
+
   void _updatePlaybackStatus(int position, bool isPlaying) {
     setState(() {
       playbackPosition.value = position;
@@ -104,70 +143,137 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
     double? imgWidth = screenSize.width * 0.7;
 
     return MasterScreenWidget(
-        selectedIndex: widget.selectedIndex,
-        showNavBar: false,
-        showProfileIcon: false,
-        showBackArrow: true,
-        title: "Anime details",
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Palette.lightPurple.withOpacity(0.5),
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: (widget.anime.imageUrl != null)
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.network(
-                              widget.anime.imageUrl!,
-                              width: imgWidth,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.center,
-                            ),
-                          )
-                        : const SizedBox(),
-                  ),
+      selectedIndex: widget.selectedIndex,
+      showNavBar: false,
+      showProfileIcon: false,
+      showBackArrow: true,
+      title: "Anime details",
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Palette.lightPurple.withOpacity(0.5),
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: (widget.anime.imageUrl != null)
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            widget.anime.imageUrl!,
+                            width: imgWidth,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                          ),
+                        )
+                      : const SizedBox(),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20,
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: Text("${widget.anime.titleEn}",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 10,
+                  right: 10,
                 ),
-                _buildGenres(),
-                _buildDetails(),
-                _buildSynopsis(),
-                _buildTrailer(),
-                MySeparator(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  paddingTop: 20,
-                  paddingBottom: 10,
-                  borderRadius: 50,
-                  opacity: 0.8,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 15),
-                  child: Text("Reviews",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-                ),
-                _buildRating(),
-              ],
-            ),
+                child: Text("${widget.anime.titleEn}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500)),
+              ),
+              _buildGenres(),
+              _buildDetails(),
+              _buildSynopsis(),
+              //_buildTrailer(),
+              MySeparator(
+                width: MediaQuery.of(context).size.width * 0.8,
+                paddingTop: 20,
+                paddingBottom: 10,
+                borderRadius: 50,
+                opacity: 0.8,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 15),
+                child: Text("Reviews",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+              ),
+              _buildRating(),
+              _buildRecommendations(),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecommendations() {
+    return FutureBuilder<List<int>>(
+        future: getRecommendedAnimeIds(widget.anime.id!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); // Loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}'); // Error state
+          } else {
+            // Data loaded successfully
+            var recAnimeIds = snapshot.data!;
+
+            if (recAnimeIds.isEmpty) {
+              return Container();
+            }
+            return FutureBuilder<SearchResult<Anime>>(
+                future: _animeProvider
+                    .get(filter: {"GenresIncluded": true, "Ids": recAnimeIds}),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                    // Loading state
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Error state
+                  } else {
+                    // Data loaded successfully
+                    var recAnimeList = snapshot.data!.result;
+
+                    return Column(
+                      children: [
+                        MySeparator(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          paddingTop: 20,
+                          paddingBottom: 10,
+                          borderRadius: 50,
+                          opacity: 0.8,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: Text("Recommendations",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16)),
+                        ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: _buildRecAnimeCards(recAnimeList),
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                });
+          }
+        });
+  }
+
+  List<Widget> _buildRecAnimeCards(List<Anime> recAnimeList) {
+    return List.generate(
+      recAnimeList.length,
+      (index) => AnimeCard(
+          anime: recAnimeList[index], selectedIndex: widget.selectedIndex),
+    );
   }
 
   Widget _buildSeeMoreRatings() {

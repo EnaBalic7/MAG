@@ -8,11 +8,11 @@ part of 'anime_watchlist.dart';
 
 AnimeWatchlist _$AnimeWatchlistFromJson(Map<String, dynamic> json) =>
     AnimeWatchlist(
-      json['id'] as int?,
-      json['animeId'] as int?,
-      json['watchlistId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['animeId'] as num?)?.toInt(),
+      (json['watchlistId'] as num?)?.toInt(),
       json['watchStatus'] as String?,
-      json['progress'] as int?,
+      (json['progress'] as num?)?.toInt(),
       json['dateStarted'] == null
           ? null
           : DateTime.parse(json['dateStarted'] as String),

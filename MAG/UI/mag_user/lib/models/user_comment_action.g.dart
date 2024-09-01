@@ -8,9 +8,9 @@ part of 'user_comment_action.dart';
 
 UserCommentAction _$UserCommentActionFromJson(Map<String, dynamic> json) =>
     UserCommentAction(
-      id: json['id'] as int?,
-      userId: json['userId'] as int?,
-      commentId: json['commentId'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      userId: (json['userId'] as num?)?.toInt(),
+      commentId: (json['commentId'] as num?)?.toInt(),
       action: json['action'] as String?,
     );
 

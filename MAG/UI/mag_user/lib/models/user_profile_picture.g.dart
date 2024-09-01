@@ -8,7 +8,7 @@ part of 'user_profile_picture.dart';
 
 UserProfilePicture _$UserProfilePictureFromJson(Map<String, dynamic> json) =>
     UserProfilePicture(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['profilePicture'] as String?,
     );
 

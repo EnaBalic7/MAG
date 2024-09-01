@@ -7,9 +7,9 @@ part of 'anime_list.dart';
 // **************************************************************************
 
 AnimeList _$AnimeListFromJson(Map<String, dynamic> json) => AnimeList(
-      json['id'] as int?,
-      json['listId'] as int?,
-      json['animeId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['listId'] as num?)?.toInt(),
+      (json['animeId'] as num?)?.toInt(),
       json['anime'] == null
           ? null
           : Anime.fromJson(json['anime'] as Map<String, dynamic>),

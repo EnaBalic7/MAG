@@ -6,21 +6,22 @@ import '../models/search_result.dart';
 import '../providers/anime_provider.dart';
 import '../widgets/anime_cards.dart';
 
-class RecommendedScreen extends StatefulWidget {
+class LatestScreen extends StatefulWidget {
   final int selectedIndex;
-  const RecommendedScreen({super.key, required this.selectedIndex});
+  const LatestScreen({super.key, required this.selectedIndex});
 
   @override
-  State<RecommendedScreen> createState() => _RecommendedScreenState();
+  State<LatestScreen> createState() => _LatestScreenState();
 }
 
-class _RecommendedScreenState extends State<RecommendedScreen> {
+class _LatestScreenState extends State<LatestScreen> {
   late AnimeProvider _animeProvider;
   int page = 0;
   int pageSize = 10;
 
   final Map<String, dynamic> _filter = {
     "GenresIncluded": "true",
+    "NewestFirst": "true",
   };
 
   @override
@@ -42,10 +43,14 @@ class _RecommendedScreenState extends State<RecommendedScreen> {
   }
 
   Future<SearchResult<Anime>> fetchAnime() {
-    return _animeProvider.getRecommendedAnime();
+    return _animeProvider.get(filter: {
+      ..._filter,
+      "Page": "$page",
+      "PageSize": "$pageSize",
+    });
   }
 
   Future<SearchResult<Anime>> fetchPage(Map<String, dynamic> filter) {
-    return _animeProvider.getRecommendedAnime();
+    return _animeProvider.get(filter: filter);
   }
 }

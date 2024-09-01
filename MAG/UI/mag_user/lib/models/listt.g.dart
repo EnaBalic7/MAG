@@ -7,8 +7,8 @@ part of 'listt.dart';
 // **************************************************************************
 
 Listt _$ListtFromJson(Map<String, dynamic> json) => Listt(
-      json['id'] as int?,
-      json['userId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['userId'] as num?)?.toInt(),
       json['name'] as String?,
       json['dateCreated'] == null
           ? null

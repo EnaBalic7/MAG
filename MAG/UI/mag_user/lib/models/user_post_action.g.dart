@@ -8,9 +8,9 @@ part of 'user_post_action.dart';
 
 UserPostAction _$UserPostActionFromJson(Map<String, dynamic> json) =>
     UserPostAction(
-      id: json['id'] as int?,
-      userId: json['userId'] as int?,
-      postId: json['postId'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      userId: (json['userId'] as num?)?.toInt(),
+      postId: (json['postId'] as num?)?.toInt(),
       action: json['action'] as String?,
     );
 

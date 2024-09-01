@@ -5,7 +5,7 @@ import '../models/preferred_genre.dart';
 import '../providers/preferred_genre_provider.dart';
 import '../utils/util.dart';
 import '../models/search_result.dart';
-import '../screens/recommended_screen.dart';
+import 'latest_screen.dart';
 import '../screens/top_anime_screen.dart';
 import '../widgets/master_screen.dart';
 import '../widgets/preferred_genres_form.dart';
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
           "Top Anime",
         ),
         Text(
-          "Recommended",
+          "Latest Anime",
         )
       ],
       labelPadding: const EdgeInsets.only(
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       child: TabBarView(controller: _tabController, children: [
         TopAnimeScreen(selectedIndex: widget.selectedIndex),
-        RecommendedScreen(selectedIndex: widget.selectedIndex),
+        LatestScreen(selectedIndex: widget.selectedIndex),
       ]),
     );
   }

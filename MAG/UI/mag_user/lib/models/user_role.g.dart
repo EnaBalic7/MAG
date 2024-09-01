@@ -7,9 +7,9 @@ part of 'user_role.dart';
 // **************************************************************************
 
 UserRole _$UserRoleFromJson(Map<String, dynamic> json) => UserRole(
-      json['id'] as int?,
-      json['userId'] as int?,
-      json['roleId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['userId'] as num?)?.toInt(),
+      (json['roleId'] as num?)?.toInt(),
       json['canReview'] as bool?,
       json['canAskQuestions'] as bool?,
       json['canParticipateInClubs'] as bool?,

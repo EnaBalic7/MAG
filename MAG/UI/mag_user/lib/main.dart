@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:mag_user/providers/recommender_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/club_cover_provider.dart';
@@ -31,8 +32,8 @@ import './utils/colors.dart';
 import './utils/util.dart';
 
 void main() async {
-
-  Stripe.publishableKey = const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: "");
+  Stripe.publishableKey =
+      const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY', defaultValue: "");
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => AnimeProvider()),
@@ -64,6 +65,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => PreferredGenreProvider()),
     ChangeNotifierProvider(create: (_) => PaymentIntentProvider()),
     ChangeNotifierProvider(create: (_) => DonationProvider()),
+    ChangeNotifierProvider(create: (_) => RecommenderProvider()),
   ], child: const MyMaterialApp()));
 }
 

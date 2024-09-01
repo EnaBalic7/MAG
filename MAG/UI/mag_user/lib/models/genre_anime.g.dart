@@ -7,9 +7,9 @@ part of 'genre_anime.dart';
 // **************************************************************************
 
 GenreAnime _$GenreAnimeFromJson(Map<String, dynamic> json) => GenreAnime(
-      json['id'] as int?,
-      json['genreId'] as int?,
-      json['animeId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['genreId'] as num?)?.toInt(),
+      (json['animeId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$GenreAnimeToJson(GenreAnime instance) =>

@@ -7,12 +7,12 @@ part of 'user.dart';
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['firstName'] as String?,
       json['lastName'] as String?,
       json['username'] as String?,
       json['email'] as String?,
-      json['profilePictureId'] as int?,
+      (json['profilePictureId'] as num?)?.toInt(),
       json['dateJoined'] == null
           ? null
           : DateTime.parse(json['dateJoined'] as String),

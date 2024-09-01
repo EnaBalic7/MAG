@@ -36,4 +36,6 @@ public partial class Anime
     public virtual ICollection<GenreAnime> GenreAnimes { get; set; } = new List<GenreAnime>();
 
     public virtual ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+
+    public virtual ICollection<Recommender> Recommenders { get; set; } = new List<Recommender>();
 }
