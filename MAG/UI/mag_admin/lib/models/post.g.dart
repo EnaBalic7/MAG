@@ -7,12 +7,12 @@ part of 'post.dart';
 // **************************************************************************
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
-      json['id'] as int?,
-      json['clubId'] as int?,
-      json['userId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['clubId'] as num?)?.toInt(),
+      (json['userId'] as num?)?.toInt(),
       json['content'] as String?,
-      json['likesCount'] as int?,
-      json['dislikesCount'] as int?,
+      (json['likesCount'] as num?)?.toInt(),
+      (json['dislikesCount'] as num?)?.toInt(),
       json['datePosted'] == null
           ? null
           : DateTime.parse(json['datePosted'] as String),

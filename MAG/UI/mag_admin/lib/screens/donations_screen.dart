@@ -25,6 +25,7 @@ class _DonationsScreenState extends State<DonationsScreen> {
 
   Map<String, dynamic> _filter = {
     "NewestFirst": true,
+    "UserIncluded": true,
   };
 
   @override
@@ -69,24 +70,28 @@ class _DonationsScreenState extends State<DonationsScreen> {
                           setState(() {
                             _filter = {
                               "NewestFirst": true,
+                              "UserIncluded": true,
                             };
                           });
                         } else if (val.contains("Largest")) {
                           setState(() {
                             _filter = {
                               "LargestFirst": true,
+                              "UserIncluded": true,
                             };
                           });
                         } else if (val.contains("Smallest")) {
                           setState(() {
                             _filter = {
                               "SmallestFirst": true,
+                              "UserIncluded": true,
                             };
                           });
                         } else if (val.contains("Oldest")) {
                           setState(() {
                             _filter = {
                               "OldestFirst": true,
+                              "UserIncluded": true,
                             };
                           });
                         }

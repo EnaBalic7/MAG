@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../models/user.dart';
 part 'donation.g.dart';
 
 @JsonSerializable()
@@ -8,13 +9,16 @@ class Donation {
   double? amount;
   DateTime? dateDonated;
   String? transactionId;
+  User? user;
 
-  Donation(
-      {this.id,
-      this.userId,
-      this.amount,
-      this.dateDonated,
-      this.transactionId});
+  Donation({
+    this.id,
+    this.userId,
+    this.amount,
+    this.dateDonated,
+    this.transactionId,
+    this.user,
+  });
 
   factory Donation.fromJson(Map<String, dynamic> json) =>
       _$DonationFromJson(json);

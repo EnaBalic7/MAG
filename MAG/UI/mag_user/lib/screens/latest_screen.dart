@@ -17,7 +17,7 @@ class LatestScreen extends StatefulWidget {
 class _LatestScreenState extends State<LatestScreen> {
   late AnimeProvider _animeProvider;
   int page = 0;
-  int pageSize = 10;
+  int pageSize = 20;
 
   final Map<String, dynamic> _filter = {
     "GenresIncluded": "true",

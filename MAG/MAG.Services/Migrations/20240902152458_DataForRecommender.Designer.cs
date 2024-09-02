@@ -4,6 +4,7 @@ using MAG.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MAG.Services.Migrations
 {
     [DbContext(typeof(MagContext))]
-    partial class MagContextModelSnapshot : ModelSnapshot
+    [Migration("20240902152458_DataForRecommender")]
+    partial class DataForRecommender
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1639,7 +1642,7 @@ namespace MAG.Services.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PreferredGenre", (string)null);
+                    b.ToTable("PreferredGenres");
 
                     b.HasData(
                         new
@@ -2674,14 +2677,13 @@ namespace MAG.Services.Migrations
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_PreferredGenre_Genre");
+                        .HasConstraintName("FK_PreferredGenres_Genre");
 
                     b.HasOne("MAG.Services.Database.User", "User")
                         .WithMany("PreferredGenres")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_PreferredGenre_User");
+                        .HasConstraintName("FK_PreferredGenres_User");
 
                     b.Navigation("Genre");
 

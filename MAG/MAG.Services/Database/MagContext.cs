@@ -63,7 +63,6 @@ public partial class MagContext : DbContext
 
     public virtual DbSet<Watchlist> Watchlists { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         SeedData(modelBuilder);
@@ -266,18 +265,19 @@ public partial class MagContext : DbContext
 
         modelBuilder.Entity<PreferredGenre>(entity =>
         {
+            entity.ToTable("PreferredGenre");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.GenreId).HasColumnName("GenreID");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Genre).WithMany(p => p.PreferredGenres)
                 .HasForeignKey(d => d.GenreId)
-                .HasConstraintName("FK_PreferredGenres_Genre");
+                .HasConstraintName("FK_PreferredGenre_Genre");
 
             entity.HasOne(d => d.User).WithMany(p => p.PreferredGenres)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PreferredGenres_User");
+                .HasConstraintName("FK_PreferredGenre_User");
         });
 
         modelBuilder.Entity<QA>(entity =>

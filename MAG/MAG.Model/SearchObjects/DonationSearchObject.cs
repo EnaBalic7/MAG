@@ -17,5 +17,7 @@ namespace MAG.Model.SearchObjects
         public bool? SmallestFirst { get; set; }
 
         public bool? OldestFirst { get; set; }
+
+        public bool? UserIncluded { get; set; }
     }
 }

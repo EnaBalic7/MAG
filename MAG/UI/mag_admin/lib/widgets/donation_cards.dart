@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mag_admin/screens/user_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/donation_provider.dart';
@@ -172,6 +173,20 @@ class _DonationCardsState extends State<DonationCards> {
             style: const TextStyle(
                 color: Palette.white, fontWeight: FontWeight.w500),
           ),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (builder) =>
+                        UserDetailScreen(user: donation.user!)));
+              },
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 200),
+                child: Text(
+                  "by ${donation.user!.username}",
+                  style: const TextStyle(
+                      color: Palette.white, fontWeight: FontWeight.w500),
+                ),
+              )),
           Text(DateFormat('MMM d, y').format(donation.dateDonated!),
               style: const TextStyle(
                   color: Palette.white, fontWeight: FontWeight.w500)),

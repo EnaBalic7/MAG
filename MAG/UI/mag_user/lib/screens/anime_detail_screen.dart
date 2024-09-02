@@ -188,7 +188,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               _buildGenres(),
               _buildDetails(),
               _buildSynopsis(),
-              //_buildTrailer(),
+              _buildTrailer(),
               MySeparator(
                 width: MediaQuery.of(context).size.width * 0.8,
                 paddingTop: 20,

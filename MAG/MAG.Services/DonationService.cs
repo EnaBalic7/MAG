@@ -2,6 +2,7 @@
 using MAG.Model.Requests;
 using MAG.Model.SearchObjects;
 using MAG.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -89,6 +90,16 @@ namespace MAG.Services
             }
 
             return base.AddFilter(query, search);
+        }
+
+        public override IQueryable<Donation> AddInclude(IQueryable<Donation> query, DonationSearchObject? search = null)
+        {
+            if(search?.UserIncluded == true)
+            {
+                query = query.Include(d => d.User).ThenInclude(u => u.ProfilePicture);
+            }
+            
+            return base.AddInclude(query, search);
         }
     }
 }

@@ -7,9 +7,9 @@ part of 'qa.dart';
 // **************************************************************************
 
 QA _$QAFromJson(Map<String, dynamic> json) => QA(
-      json['id'] as int?,
-      json['userId'] as int?,
-      json['categoryId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['userId'] as num?)?.toInt(),
+      (json['categoryId'] as num?)?.toInt(),
       json['question'] as String?,
       json['answer'] as String?,
       json['displayed'] as bool?,

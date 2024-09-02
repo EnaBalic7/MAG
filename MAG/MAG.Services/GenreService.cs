@@ -31,20 +31,20 @@ namespace MAG.Services
 
         public async Task<List<Model.PopularGenresData>> GetMostPopularGenres()
         {
-            var preferredGenres = await _context.Genres.OrderByDescending(genre => genre.PreferredGenres.Count()).Take(5).ToListAsync();
+             var preferredGenres = await _context.Genres.OrderByDescending(genre => genre.PreferredGenres.Count()).Take(5).ToListAsync();
 
-            List<PopularGenresData> popularGenres = new List<PopularGenresData>();
+             List<PopularGenresData> popularGenres = new List<PopularGenresData>();
 
-            foreach(var genre in preferredGenres)
-            {
-                popularGenres.Add(new PopularGenresData
-                {
-                    GenreName = genre.Name,
-                    UsersWhoLikeIt = _context.PreferredGenres.Where(x => x.GenreId == genre.Id).Count(),
-                });
-            }
+             foreach(var genre in preferredGenres)
+             {
+                 popularGenres.Add(new PopularGenresData
+                 {
+                     GenreName = genre.Name,
+                     UsersWhoLikeIt = _context.PreferredGenres.Where(x => x.GenreId == genre.Id).Count(),
+                 });
+             }
 
-            return popularGenres;
+             return popularGenres;
         }
     }
 }

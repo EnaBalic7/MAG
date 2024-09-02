@@ -18,5 +18,6 @@ namespace MAG.Model
 
         public string TransactionId { get; set; } = null!;
 
+        public virtual User User { get; set; } = null!;
     }
 }

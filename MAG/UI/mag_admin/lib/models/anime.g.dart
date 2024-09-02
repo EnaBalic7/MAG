@@ -7,11 +7,11 @@ part of 'anime.dart';
 // **************************************************************************
 
 Anime _$AnimeFromJson(Map<String, dynamic> json) => Anime(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['titleEn'] as String?,
       json['titleJp'] as String?,
       json['synopsis'] as String?,
-      json['episodesNumber'] as int?,
+      (json['episodesNumber'] as num?)?.toInt(),
       json['imageUrl'] as String?,
       json['trailerUrl'] as String?,
       (json['score'] as num?)?.toDouble(),
