@@ -123,11 +123,23 @@ class _ClubsScreenState extends State<ClubsScreen> {
                 const Text("Create a club"),
                 GradientButton(
                   onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return ClubForm();
-                        });
+                    if (LoggedUser.user!.userRoles!.any(
+                      (element) => element.canParticipateInClubs == false,
+                    )) {
+                      showInfoDialog(
+                        context,
+                        const Icon(Icons.info_rounded, size: 40),
+                        const Text("You don't have permission to create clubs.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Palette.lightPurple)),
+                      );
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return ClubForm();
+                          });
+                    }
                   },
                   width: 30,
                   height: 30,

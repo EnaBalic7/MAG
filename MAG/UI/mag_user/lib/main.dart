@@ -115,7 +115,7 @@ class MyMaterialApp extends StatelessWidget {
                 fontWeight: FontWeight.w500)),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-                iconColor: Palette.white,
+                foregroundColor: Palette.white,
                 backgroundColor: Palette.teal.withOpacity(0.5),
                 textStyle: const TextStyle(color: Palette.white))),
         drawerTheme: DrawerThemeData(
@@ -125,10 +125,10 @@ class MyMaterialApp extends StatelessWidget {
         iconTheme: const IconThemeData(color: Palette.lightPurple),
         scrollbarTheme: ScrollbarThemeData(
             crossAxisMargin: -10,
-            thickness: WidgetStateProperty.all(7),
-            trackBorderColor: WidgetStateProperty.all(Palette.white),
-            thumbColor:
-                WidgetStateProperty.all(Palette.lightPurple.withOpacity(0.5))),
+            thickness: MaterialStateProperty.all(7),
+            trackBorderColor: MaterialStateProperty.all(Palette.white),
+            thumbColor: MaterialStateProperty.all(
+                Palette.lightPurple.withOpacity(0.5))),
         inputDecorationTheme: const InputDecorationTheme(
             filled: true,
             fillColor: Palette.darkPurple,

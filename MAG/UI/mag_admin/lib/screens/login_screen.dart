@@ -37,7 +37,7 @@ class LoginScreen extends StatelessWidget {
           Center(
             child: Container(
               width: 518,
-              height: 530,
+              height: 540,
               constraints: const BoxConstraints(maxHeight: 600, maxWidth: 518),
               decoration: BoxDecoration(
                   color: Palette.darkPurple.withOpacity(0.9),

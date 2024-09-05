@@ -42,8 +42,9 @@ class _MyFormBuilderChoiceChipState extends State<MyFormBuilderChoiceChip> {
       ),
       name: widget.name!,
       initialValue: widget.initialValue ?? "",
+      backgroundColor: Palette.lightPurple,
       options: widget.options,
-      selectedColor: widget.selectedColor ?? Palette.stardust,
+      selectedColor: widget.selectedColor ?? Palette.rose.withOpacity(0.5),
       padding: const EdgeInsets.all(4),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(

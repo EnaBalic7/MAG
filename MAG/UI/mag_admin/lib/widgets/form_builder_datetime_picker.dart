@@ -68,6 +68,8 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
                 },
                 name: widget.name,
                 decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
                   errorStyle:
                       const TextStyle(color: Palette.lightRed, height: 0.5),
                   errorBorder: OutlineInputBorder(

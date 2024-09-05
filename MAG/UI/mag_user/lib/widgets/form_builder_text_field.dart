@@ -33,6 +33,7 @@ class MyFormBuilderTextField extends StatefulWidget {
   double? errorBorderRadius;
   FocusNode? focusNode;
   double? errorHeight;
+  EdgeInsetsGeometry? contentPadding;
 
   MyFormBuilderTextField({
     super.key,
@@ -63,6 +64,7 @@ class MyFormBuilderTextField extends StatefulWidget {
     this.errorBorderRadius,
     this.focusNode,
     this.errorHeight,
+    this.contentPadding,
   });
 
   @override
@@ -105,6 +107,8 @@ class _MyFormBuilderTextFieldState extends State<MyFormBuilderTextField> {
           obscuringCharacter: '✮',
           obscureText: widget.obscureText ?? false,
           decoration: InputDecoration(
+            contentPadding: widget.contentPadding ??
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
               borderSide: BorderSide(

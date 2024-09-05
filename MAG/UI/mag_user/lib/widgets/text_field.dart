@@ -45,6 +45,8 @@ class _MyTextFieldState extends State<MyTextField> {
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText ?? false,
         decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
             hintText: widget.hintText ?? "",
             hintStyle: const TextStyle(
                 height: 0,

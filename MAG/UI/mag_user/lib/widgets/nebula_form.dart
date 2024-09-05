@@ -191,11 +191,26 @@ class _NebulaFormState extends State<NebulaForm> {
                   focusNode: _focusNode1,
                   name: "watchStatus",
                   options: const [
-                    FormBuilderChipOption(value: "Watching"),
-                    FormBuilderChipOption(value: "Completed"),
-                    FormBuilderChipOption(value: "On Hold"),
-                    FormBuilderChipOption(value: "Dropped"),
-                    FormBuilderChipOption(value: "Plan to Watch"),
+                    FormBuilderChipOption(
+                        value: "Watching",
+                        child: Text("Watching",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: "Completed",
+                        child: Text("Completed",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: "On Hold",
+                        child: Text("On Hold",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: "Dropped",
+                        child: Text("Dropped",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: "Plan to Watch",
+                        child: Text("Plan to Watch",
+                            style: TextStyle(color: Palette.darkPurple))),
                   ],
                   validator: (val) {
                     if (val == null || val.isEmpty) {
@@ -272,16 +287,46 @@ class _NebulaFormState extends State<NebulaForm> {
                   name: "ratingValue",
                   selectedColor: Palette.lightYellow,
                   options: const [
-                    FormBuilderChipOption(value: 10),
-                    FormBuilderChipOption(value: 9),
-                    FormBuilderChipOption(value: 8),
-                    FormBuilderChipOption(value: 7),
-                    FormBuilderChipOption(value: 6),
-                    FormBuilderChipOption(value: 5),
-                    FormBuilderChipOption(value: 4),
-                    FormBuilderChipOption(value: 3),
-                    FormBuilderChipOption(value: 2),
-                    FormBuilderChipOption(value: 1),
+                    FormBuilderChipOption(
+                        value: 10,
+                        child: Text("10",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 9,
+                        child: Text("9",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 8,
+                        child: Text("8",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 7,
+                        child: Text("7",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 6,
+                        child: Text("6",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 5,
+                        child: Text("5",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 4,
+                        child: Text("4",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 3,
+                        child: Text("3",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 2,
+                        child: Text("2",
+                            style: TextStyle(color: Palette.darkPurple))),
+                    FormBuilderChipOption(
+                        value: 1,
+                        child: Text("1",
+                            style: TextStyle(color: Palette.darkPurple))),
                   ],
                   onChanged: (val) {
                     _nebulaFormKey.currentState?.saveAndValidate();
@@ -316,6 +361,8 @@ class _NebulaFormState extends State<NebulaForm> {
                   keyboardType: TextInputType.multiline,
                   borderRadius: 20,
                   errorBorderRadius: 20,
+                  contentPadding:
+                      const EdgeInsets.only(left: 10, right: 10, top: 25),
                   validator: (val) {
                     if (val != null &&
                         val.isNotEmpty &&
@@ -323,7 +370,9 @@ class _NebulaFormState extends State<NebulaForm> {
                       return "Some special characters are not allowed.";
                     } else if (LoggedUser.user!.userRoles!.any(
                       (element) =>
-                          element.canReview == false && val!.isNotEmpty,
+                          element.canReview == false &&
+                          val != null &&
+                          val.isNotEmpty,
                     )) {
                       return "Not permitted to leave review.";
                     } else if (val != null &&
@@ -593,11 +642,31 @@ class _NebulaFormState extends State<NebulaForm> {
                           name: "watchStatus",
                           initialValue: initialValue?["watchStatus"],
                           options: const [
-                            FormBuilderChipOption(value: "Watching"),
-                            FormBuilderChipOption(value: "Completed"),
-                            FormBuilderChipOption(value: "On Hold"),
-                            FormBuilderChipOption(value: "Dropped"),
-                            FormBuilderChipOption(value: "Plan to Watch"),
+                            FormBuilderChipOption(
+                                value: "Watching",
+                                child: Text("Watching",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: "Completed",
+                                child: Text("Completed",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: "On Hold",
+                                child: Text("On Hold",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: "Dropped",
+                                child: Text("Dropped",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: "Plan to Watch",
+                                child: Text("Plan to Watch",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
                           ],
                           validator: (val) {
                             if (val == null || val.isEmpty) {
@@ -673,16 +742,56 @@ class _NebulaFormState extends State<NebulaForm> {
                           initialValue: initialValue?["ratingValue"],
                           selectedColor: Palette.lightYellow,
                           options: const [
-                            FormBuilderChipOption(value: 10),
-                            FormBuilderChipOption(value: 9),
-                            FormBuilderChipOption(value: 8),
-                            FormBuilderChipOption(value: 7),
-                            FormBuilderChipOption(value: 6),
-                            FormBuilderChipOption(value: 5),
-                            FormBuilderChipOption(value: 4),
-                            FormBuilderChipOption(value: 3),
-                            FormBuilderChipOption(value: 2),
-                            FormBuilderChipOption(value: 1),
+                            FormBuilderChipOption(
+                                value: 10,
+                                child: Text("10",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 9,
+                                child: Text("9",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 8,
+                                child: Text("8",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 7,
+                                child: Text("7",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 6,
+                                child: Text("6",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 5,
+                                child: Text("5",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 4,
+                                child: Text("4",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 3,
+                                child: Text("3",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 2,
+                                child: Text("2",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
+                            FormBuilderChipOption(
+                                value: 1,
+                                child: Text("1",
+                                    style:
+                                        TextStyle(color: Palette.darkPurple))),
                           ],
                           onChanged: (val) {
                             _nebulaFormKey.currentState?.saveAndValidate();
@@ -702,11 +811,20 @@ class _NebulaFormState extends State<NebulaForm> {
                           keyboardType: TextInputType.multiline,
                           borderRadius: 20,
                           errorBorderRadius: 20,
+                          contentPadding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 25),
                           validator: (val) {
                             if (val != null &&
                                 val.isNotEmpty &&
                                 !isValidReviewText(val)) {
                               return "Some special characters are not allowed.";
+                            } else if (LoggedUser.user!.userRoles!.any(
+                              (element) =>
+                                  element.canReview == false &&
+                                  val != null &&
+                                  val.isNotEmpty,
+                            )) {
+                              return "Not permitted to leave review.";
                             } else if (val != null &&
                                 val.isNotEmpty &&
                                 (_nebulaFormKey.currentState
@@ -745,7 +863,6 @@ class _NebulaFormState extends State<NebulaForm> {
                           labelText: "Began watching",
                           fillColor: Palette.ratingPurple,
                           width: double.infinity,
-                          height: 40,
                           borderRadius: 50,
                           validator: (val) {
                             final watchStatus = _nebulaFormKey
@@ -779,7 +896,6 @@ class _NebulaFormState extends State<NebulaForm> {
                           labelText: "Finished watching",
                           fillColor: Palette.ratingPurple,
                           width: double.infinity,
-                          height: 40,
                           borderRadius: 50,
                           validator: (val) {
                             final watchStatus = _nebulaFormKey

@@ -208,6 +208,11 @@ class _HelpScreenState extends State<HelpScreen> {
                           minLines: 40,
                           maxLines: 40,
                           focusNode: _focusNode,
+                          contentPadding: const EdgeInsets.only(
+                            left: 10,
+                            top: 30,
+                            right: 10,
+                          ),
                           borderColor: Palette.lightPurple.withOpacity(0.3),
                         ),
                       ),
@@ -228,6 +233,20 @@ class _HelpScreenState extends State<HelpScreen> {
                           color: Palette.white),
                     ),
                     onPressed: () async {
+                      if (_initialValue["question"] == "") {
+                        showInfoDialog(
+                            context,
+                            const Icon(Icons.info_rounded, size: 60),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                    "To answer a question, you must first select it by clicking on"),
+                                const SizedBox(width: 5),
+                                buildEditIcon(24),
+                              ],
+                            ));
+                      }
                       if (_qAFormKey.currentState?.saveAndValidate() == true) {
                         var tmp = Map.from(_qAFormKey.currentState!.value);
                         var request = {
@@ -616,6 +635,7 @@ class _HelpScreenState extends State<HelpScreen> {
           setState(() {
             qaID = null;
             _questionTitle = "";
+            _initialValue["question"] = "";
             _qAFormKey.currentState?.fields["answer"]?.didChange("");
           });
         }

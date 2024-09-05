@@ -112,7 +112,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     Image.asset(
                       "assets/images/logo.png",
-                      width: 145,
+                      width: 170,
                     ),
                     const SizedBox(height: 20),
                     FormBuilder(

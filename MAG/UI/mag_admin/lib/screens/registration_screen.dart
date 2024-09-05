@@ -91,254 +91,264 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           Center(
             child: Container(
               width: 700,
-              //height: 570,
+              height: 570,
               constraints: const BoxConstraints(maxHeight: 600, maxWidth: 918),
               decoration: BoxDecoration(
                   color: Palette.darkPurple.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/logo.png",
-                    width: 155,
-                  ),
-                  const SizedBox(height: 20),
-                  FormBuilder(
-                      key: _formKey,
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        children: [
-                          MyFormBuilderTextField(
-                            name: "username",
-                            labelText: "Username",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 300,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            focusNode: _focusNode1,
-                            onChanged: (val) async {
-                              if (val != null) {
-                                await checkUsernameAvailability(val);
-                              }
-                            },
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "This field cannot be empty.";
-                              } else if (val.length > 50) {
-                                return 'Character limit exceeded: ${val.length}/50';
-                              } else if (isValidUsername(val) == false) {
-                                return 'Use only letters, numbers, and underscore.';
-                              } else if (usernameTaken == true) {
-                                return 'This username is taken.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(width: 40),
-                          MyFormBuilderTextField(
-                            name: "email",
-                            labelText: "E-mail",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 300,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            focusNode: _focusNode2,
-                            onChanged: (val) async {
-                              if (val != null && val != "" && val.isNotEmpty) {
-                                await checkEmailAvailability(val);
-                              }
-                            },
-                            validator: (val) {
-                              if (val != null && val.length > 100) {
-                                return 'Character limit exceeded: ${val.length}/100';
-                              } else if (val != null &&
-                                  val.isNotEmpty &&
-                                  isValidEmail(val) == false) {
-                                return 'Invalid email.';
-                              } else if (emailTaken == true) {
-                                return 'This email is taken.';
-                              }
-                              return null;
-                            },
-                          ),
-                          MyFormBuilderTextField(
-                            name: "firstName",
-                            labelText: "First name",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 300,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            focusNode: _focusNode3,
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "This field cannot be empty.";
-                              } else if (val.length > 50) {
-                                return 'Character limit exceeded: ${val.length}/50';
-                              } else if (isValidName(val) == false) {
-                                return 'Use only letters.';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(width: 40),
-                          MyFormBuilderTextField(
-                            name: "lastName",
-                            labelText: "Last name",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 300,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            focusNode: _focusNode4,
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "This field cannot be empty.";
-                              } else if (val.length > 50) {
-                                return 'Character limit exceeded: ${val.length}/50';
-                              } else if (isValidName(val) == false) {
-                                return 'Use only letters.';
-                              }
-                              return null;
-                            },
-                          ),
-                          MyFormBuilderTextField(
-                            name: "password",
-                            labelText: "Password",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 400,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            obscureText: true,
-                            focusNode: _focusNode5,
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "This field cannot be empty.";
-                              } else if (val.length < 8) {
-                                return 'Password is too short.';
-                              } else if (containsNumbers(val) == false) {
-                                return 'Password must contain at least one number';
-                              } else if (containsUppercase(val) == false) {
-                                return 'Password must contain at least one uppercase letter.';
-                              } else if (containsLowercase(val) == false) {
-                                return 'Password must contain at least one lowercase letter.';
-                              }
-                              return null;
-                            },
-                          ),
-                          MyFormBuilderTextField(
-                            name: "passwordConfirmation",
-                            labelText: "Repeat password",
-                            fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                            width: 400,
-                            paddingBottom: 25,
-                            borderRadius: 50,
-                            obscureText: true,
-                            focusNode: _focusNode6,
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return "This field cannot be empty.";
-                              } else if (_formKey.currentState
-                                      ?.fields['password']?.value !=
-                                  val) {
-                                return "Passwords do not match.";
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      )),
-                  GradientButton(
-                    onPressed: () async {
-                      if (_formKey.currentState?.saveAndValidate() == true) {
-                        _formKey.currentState?.saveAndValidate();
-                        var userInsertRequest =
-                            Map.from(_formKey.currentState!.value);
-
-                        userInsertRequest["dateJoined"] =
-                            DateTime.now().toIso8601String();
-
-                        userInsertRequest["profilePictureId"] = 1;
-                        User? admin;
-
-                        await _userProvider
-                            .insert(userInsertRequest)
-                            .then((response) async {
-                          admin = response;
-
-                          if (admin != null) {
-                            Map<dynamic, dynamic> userRole = {
-                              "userId": "${admin!.id}",
-                              "roleId": 1,
-                              "canReview": true,
-                              "canAskQuestions": true,
-                              "canParticipateInClubs": true
-                            };
-                            await _userRoleProvider.insert(userRole);
-                          }
-
-                          if (context.mounted) {
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.task_alt,
-                                    color: Palette.lightPurple, size: 50),
-                                const Text(
-                                  "Successfully registered.",
-                                  textAlign: TextAlign.center,
-                                ), onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
-                            }, barrierDismissible: false);
-                          }
-                        }).catchError((error) {
-                          if (context.mounted) {
-                            showInfoDialog(
-                                context,
-                                const Icon(Icons.warning_rounded,
-                                    color: Palette.lightRed, size: 55),
-                                Text(
-                                  error.toString(),
-                                  textAlign: TextAlign.center,
-                                ));
-                          }
-                        });
-                      } else {
-                        showInfoDialog(
-                            context,
-                            const Icon(Icons.warning_rounded,
-                                color: Palette.lightRed, size: 55),
-                            const Text(
-                              "There are validation errors.",
-                              textAlign: TextAlign.center,
-                            ));
-                      }
-                    },
-                    width: 110,
-                    height: 32,
-                    borderRadius: 50,
-                    gradient: Palette.buttonGradient,
-                    child: const Text(
-                      "Register",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Palette.white),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/logo.png",
+                      width: 155,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                    const SizedBox(height: 20),
+                    FormBuilder(
+                        key: _formKey,
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          children: [
+                            MyFormBuilderTextField(
+                              name: "username",
+                              labelText: "Username",
+                              fillColor:
+                                  Palette.textFieldPurple.withOpacity(0.5),
+                              width: 300,
+                              paddingBottom: 25,
+                              borderRadius: 50,
+                              focusNode: _focusNode1,
+                              onChanged: (val) async {
+                                if (val != null) {
+                                  await checkUsernameAvailability(val);
+                                }
+                              },
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "This field cannot be empty.";
+                                } else if (val.length > 50) {
+                                  return 'Character limit exceeded: ${val.length}/50';
+                                } else if (isValidUsername(val) == false) {
+                                  return 'Use only letters, numbers, and underscore.';
+                                } else if (usernameTaken == true) {
+                                  return 'This username is taken.';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(width: 40),
+                            MyFormBuilderTextField(
+                              name: "email",
+                              labelText: "E-mail",
+                              fillColor:
+                                  Palette.textFieldPurple.withOpacity(0.5),
+                              width: 300,
+                              paddingBottom: 25,
+                              borderRadius: 50,
+                              focusNode: _focusNode2,
+                              onChanged: (val) async {
+                                if (val != null &&
+                                    val != "" &&
+                                    val.isNotEmpty) {
+                                  await checkEmailAvailability(val);
+                                }
+                              },
+                              validator: (val) {
+                                if (val != null && val.length > 100) {
+                                  return 'Character limit exceeded: ${val.length}/100';
+                                } else if (val != null &&
+                                    val.isNotEmpty &&
+                                    isValidEmail(val) == false) {
+                                  return 'Invalid email.';
+                                } else if (emailTaken == true) {
+                                  return 'This email is taken.';
+                                }
+                                return null;
+                              },
+                            ),
+                            MyFormBuilderTextField(
+                              name: "firstName",
+                              labelText: "First name",
+                              fillColor:
+                                  Palette.textFieldPurple.withOpacity(0.5),
+                              width: 300,
+                              paddingBottom: 25,
+                              borderRadius: 50,
+                              focusNode: _focusNode3,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "This field cannot be empty.";
+                                } else if (val.length > 50) {
+                                  return 'Character limit exceeded: ${val.length}/50';
+                                } else if (isValidName(val) == false) {
+                                  return 'Use only letters.';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(width: 40),
+                            MyFormBuilderTextField(
+                              name: "lastName",
+                              labelText: "Last name",
+                              fillColor:
+                                  Palette.textFieldPurple.withOpacity(0.5),
+                              width: 300,
+                              paddingBottom: 25,
+                              borderRadius: 50,
+                              focusNode: _focusNode4,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "This field cannot be empty.";
+                                } else if (val.length > 50) {
+                                  return 'Character limit exceeded: ${val.length}/50';
+                                } else if (isValidName(val) == false) {
+                                  return 'Use only letters.';
+                                }
+                                return null;
+                              },
+                            ),
+                            MyFormBuilderTextField(
+                              name: "password",
+                              labelText: "Password",
+                              fillColor:
+                                  Palette.textFieldPurple.withOpacity(0.5),
+                              width: 400,
+                              paddingBottom: 25,
+                              borderRadius: 50,
+                              obscureText: true,
+                              focusNode: _focusNode5,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "This field cannot be empty.";
+                                } else if (val.length < 8) {
+                                  return 'Password is too short.';
+                                } else if (containsNumbers(val) == false) {
+                                  return 'Password must contain at least one number';
+                                } else if (containsUppercase(val) == false) {
+                                  return 'Password must contain at least one uppercase letter.';
+                                } else if (containsLowercase(val) == false) {
+                                  return 'Password must contain at least one lowercase letter.';
+                                }
+                                return null;
+                              },
+                            ),
+                            MyFormBuilderTextField(
+                              name: "passwordConfirmation",
+                              labelText: "Repeat password",
+                              fillColor:
+                                  Palette.textFieldPurple.withOpacity(0.5),
+                              width: 400,
+                              paddingBottom: 25,
+                              borderRadius: 50,
+                              obscureText: true,
+                              focusNode: _focusNode6,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "This field cannot be empty.";
+                                } else if (_formKey.currentState
+                                        ?.fields['password']?.value !=
+                                    val) {
+                                  return "Passwords do not match.";
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        )),
+                    GradientButton(
+                      onPressed: () async {
+                        if (_formKey.currentState?.saveAndValidate() == true) {
+                          _formKey.currentState?.saveAndValidate();
+                          var userInsertRequest =
+                              Map.from(_formKey.currentState!.value);
+
+                          userInsertRequest["dateJoined"] =
+                              DateTime.now().toIso8601String();
+
+                          userInsertRequest["profilePictureId"] = 1;
+                          User? admin;
+
+                          await _userProvider
+                              .insert(userInsertRequest)
+                              .then((response) async {
+                            admin = response;
+
+                            if (admin != null) {
+                              Map<dynamic, dynamic> userRole = {
+                                "userId": "${admin!.id}",
+                                "roleId": 1,
+                                "canReview": true,
+                                "canAskQuestions": true,
+                                "canParticipateInClubs": true
+                              };
+                              await _userRoleProvider.insert(userRole);
+                            }
+
+                            if (context.mounted) {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.task_alt,
+                                      color: Palette.lightPurple, size: 50),
+                                  const Text(
+                                    "Successfully registered.",
+                                    textAlign: TextAlign.center,
+                                  ), onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()));
+                              }, barrierDismissible: false);
+                            }
+                          }).catchError((error) {
+                            if (context.mounted) {
+                              showInfoDialog(
+                                  context,
+                                  const Icon(Icons.warning_rounded,
+                                      color: Palette.lightRed, size: 55),
+                                  Text(
+                                    error.toString(),
+                                    textAlign: TextAlign.center,
+                                  ));
+                            }
+                          });
+                        } else {
+                          showInfoDialog(
+                              context,
+                              const Icon(Icons.warning_rounded,
+                                  color: Palette.lightRed, size: 55),
+                              const Text(
+                                "There are validation errors.",
+                                textAlign: TextAlign.center,
+                              ));
+                        }
                       },
-                      child: const Text("Back",
-                          style: TextStyle(
-                              color: Palette.lightPurple,
-                              fontWeight: FontWeight.normal)),
+                      width: 110,
+                      height: 32,
+                      borderRadius: 50,
+                      gradient: Palette.buttonGradient,
+                      child: const Text(
+                        "Register",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Palette.white),
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Back",
+                            style: TextStyle(
+                                color: Palette.lightPurple,
+                                fontWeight: FontWeight.normal)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -123,6 +123,8 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                     borderRadius: 15,
                     errorBorderRadius: 15,
                     focusNode: _focusNode,
+                    contentPadding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 25),
                     validator: (val) {
                       if (val == null ||
                           val.isEmpty ||

@@ -489,11 +489,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
             .push(MaterialPageRoute(builder: (context) => screenName));
       },
       style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all<Color>(Palette.lightPurple),
+        foregroundColor: MaterialStateProperty.all<Color>(Palette.lightPurple),
         splashFactory: InkRipple.splashFactory,
-        overlayColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) {
-            if (states.contains(WidgetState.pressed)) {
+        overlayColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
               return Colors
                   .transparent; // Set to transparent for the pressed state
             }

@@ -69,6 +69,8 @@ class _MyDateTimePickerState extends State<MyDateTimePicker> {
           name: widget.name!,
           onChanged: widget.onChanged,
           decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 20, horizontal: 12.0),
             suffixIcon: GestureDetector(
               onTap: () {
                 if (widget.formKey != null) {

@@ -68,7 +68,8 @@ class _MyFormBuilderDropdownState extends State<MyFormBuilderDropdown> {
           name: widget.name,
           style: const TextStyle(color: Palette.lightPurple),
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(left: 20),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
             labelText: widget.labelText ?? "",
             floatingLabelBehavior: FloatingLabelBehavior.always,
             labelStyle: const TextStyle(
