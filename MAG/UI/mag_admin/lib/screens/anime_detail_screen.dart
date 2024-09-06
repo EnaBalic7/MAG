@@ -177,7 +177,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "titleEn",
                                   labelText: "Title (English)",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
@@ -203,7 +204,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "titleJp",
                                   labelText: "Title (Japanese)",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
@@ -221,7 +223,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "episodesNumber",
                                   labelText: "Number of episodes",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
@@ -241,7 +244,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "score",
                                   labelText: "Score",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   readOnly: true,
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
@@ -253,7 +257,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyDateTimePicker(
                                   name: "beginAir",
                                   labelText: "Began airing",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth * 0.93,
                                   formKey: _animeFormKey,
                                   focusNode: _focusNode9,
@@ -285,7 +290,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyDateTimePicker(
                                   name: "finishAir",
                                   labelText: "Finished airing",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth * 0.91,
                                   formKey: _animeFormKey,
                                   focusNode: _focusNode10,
@@ -314,7 +320,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderDropdown(
                                   name: "season",
                                   labelText: "Season",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
@@ -343,7 +350,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "studio",
                                   labelText: "Studio",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
@@ -361,7 +369,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "imageUrl",
                                   labelText: "Image URL",
-                                  fillColor: Palette.darkPurple,
+                                  fillColor:
+                                      Palette.textFieldPurple.withOpacity(0.3),
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
                                   paddingBottom: 50,
@@ -388,7 +397,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                     name: "trailerUrl",
                                     labelText: "Trailer URL",
-                                    fillColor: Palette.darkPurple,
+                                    fillColor: Palette.textFieldPurple
+                                        .withOpacity(0.3),
                                     width: maxTextFieldWidth,
                                     paddingLeft: 40,
                                     paddingBottom: 50,
@@ -415,7 +425,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                         child: MyFormBuilderTextField(
                           name: "synopsis",
                           labelText: "Synopsis",
-                          fillColor: Palette.darkPurple,
+                          fillColor: Palette.textFieldPurple.withOpacity(0.3),
                           minLines: 10,
                           maxLines: 10,
                           borderRadius: 15,

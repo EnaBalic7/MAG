@@ -26,6 +26,7 @@ class _GenresScreenState extends State<GenresScreen> {
   late GenreProvider _genreProvider;
   late Future<SearchResult<Genre>> _genreFuture;
   final FocusNode _focusNode = FocusNode();
+  int? genreId;
 
   @override
   void initState() {
@@ -106,33 +107,63 @@ class _GenresScreenState extends State<GenresScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
+                                    (genreId != null)
+                                        ? IconButton(
+                                            onPressed: () {
+                                              if (mounted) {
+                                                setState(() {
+                                                  genreId = null;
+                                                  _genreFormKey.currentState
+                                                      ?.fields["name"]
+                                                      ?.didChange("");
+                                                });
+                                              }
+                                            },
+                                            icon:
+                                                const Icon(Icons.clear_rounded))
+                                        : Container(),
                                     MyFormBuilderTextField(
-                                      name: "name",
-                                      labelText: "Genre name",
-                                      fillColor: Palette.disabledControl,
-                                      width: 300,
-                                      height: 50,
-                                      borderRadius: 50,
-                                      focusNode: _focusNode,
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(
-                                            errorText:
-                                                "This field cannot be empty."),
-                                      ]),
-                                    ),
+                                        name: "name",
+                                        labelText: "Genre name",
+                                        fillColor: Palette.textFieldPurple
+                                            .withOpacity(0.3),
+                                        width: 300,
+                                        height: 50,
+                                        borderRadius: 50,
+                                        focusNode: _focusNode,
+                                        validator: (val) {
+                                          if (val == null ||
+                                              val == "" ||
+                                              val.isEmpty ||
+                                              val.trim().isEmpty) {
+                                            return "This field cannot be empty";
+                                          } else if (val.length > 25) {
+                                            return "Category can contain 25 characters max.";
+                                          }
+                                          return null;
+                                        }),
                                     const SizedBox(width: 5),
                                     GradientButton(
                                         onPressed: () {
-                                          _saveGenre(context);
+                                          (genreId == null)
+                                              ? _addGenre(context)
+                                              : _saveGenre(context);
                                         },
                                         width: 80,
                                         height: 30,
                                         borderRadius: 50,
                                         gradient: Palette.buttonGradient,
-                                        child: const Text("Add",
-                                            style: TextStyle(
-                                                color: Palette.white,
-                                                fontWeight: FontWeight.w500))),
+                                        child: (genreId == null)
+                                            ? const Text("Add",
+                                                style: TextStyle(
+                                                    color: Palette.white,
+                                                    fontWeight:
+                                                        FontWeight.w500))
+                                            : const Text("Save",
+                                                style: TextStyle(
+                                                    color: Palette.white,
+                                                    fontWeight:
+                                                        FontWeight.w500))),
                                   ],
                                 ),
                                 const SizedBox(
@@ -181,21 +212,7 @@ class _GenresScreenState extends State<GenresScreen> {
                 children: [
                   Text("${genreList[index].name}",
                       style: const TextStyle(fontSize: 15)),
-                  GestureDetector(
-                      onTap: () {
-                        showConfirmationDialog(
-                            context,
-                            const Icon(Icons.warning_rounded,
-                                color: Palette.lightRed, size: 55),
-                            const Text(
-                                "Are you sure you want to delete this genre?"),
-                            () async {
-                          await _genreProvider.delete(genreList[index].id!);
-                        });
-                      },
-                      child: MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: buildTrashIcon(20)))
+                  _buildPopupMenu(genreList[index]),
                 ],
               )),
         );
@@ -203,7 +220,7 @@ class _GenresScreenState extends State<GenresScreen> {
     );
   }
 
-  Future<void> _saveGenre(BuildContext context) async {
+  Future<void> _addGenre(BuildContext context) async {
     try {
       if (_genreFormKey.currentState?.saveAndValidate() == true) {
         var request = Map.from(_genreFormKey.currentState!.value);
@@ -224,5 +241,93 @@ class _GenresScreenState extends State<GenresScreen> {
         showErrorDialog(context, e);
       }
     }
+  }
+
+  Future<void> _saveGenre(BuildContext context) async {
+    try {
+      if (_genreFormKey.currentState?.saveAndValidate() == true) {
+        var request = Map.from(_genreFormKey.currentState!.value);
+        await _genreProvider.update(genreId!, request: request);
+
+        if (context.mounted) {
+          showInfoDialog(
+              context,
+              const Icon(Icons.task_alt, color: Palette.lightPurple, size: 50),
+              const Text(
+                "Saved successfully!",
+                textAlign: TextAlign.center,
+              ));
+        }
+      }
+    } on Exception catch (e) {
+      if (context.mounted) {
+        showErrorDialog(context, e);
+      }
+    }
+  }
+
+  Widget _buildPopupMenu(Genre genre) {
+    return PopupMenuButton<String>(
+      tooltip: "Actions",
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(color: Palette.lightPurple.withOpacity(0.3)),
+      ),
+      icon: const Icon(Icons.more_vert_rounded),
+      splashRadius: 1,
+      padding: EdgeInsets.zero,
+      color: const Color.fromRGBO(50, 48, 90, 1),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightPurple.withOpacity(0.1),
+            leading: buildEditIcon(24),
+            title: const Text('Edit',
+                style: TextStyle(color: Palette.lightPurple)),
+            onTap: () {
+              if (mounted) {
+                setState(() {
+                  genreId = genre.id;
+                  _genreFormKey.currentState?.fields["name"]
+                      ?.didChange(genre.name);
+                });
+              }
+            },
+          ),
+        ),
+        PopupMenuItem<String>(
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            hoverColor: Palette.lightRed.withOpacity(0.1),
+            leading: buildTrashIcon(24),
+            title:
+                const Text('Delete', style: TextStyle(color: Palette.lightRed)),
+            onTap: () {
+              Navigator.pop(context);
+              showConfirmationDialog(
+                  context,
+                  const Icon(Icons.warning_rounded,
+                      color: Palette.lightRed, size: 55),
+                  const SizedBox(
+                    width: 300,
+                    child: Text(
+                      "Are you sure you want to delete this genre?",
+                      textAlign: TextAlign.center,
+                    ),
+                  ), () async {
+                _genreProvider.delete(genre.id!);
+              });
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

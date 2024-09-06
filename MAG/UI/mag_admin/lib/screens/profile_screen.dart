@@ -188,7 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           MyFormBuilderTextField(
                             name: "username",
                             labelText: "Username",
-                            fillColor: Palette.darkPurple,
+                            fillColor: Palette.textFieldPurple.withOpacity(0.3),
                             width: 400,
                             paddingBottom: 25,
                             borderRadius: 50,
@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           MyFormBuilderTextField(
                             name: "firstName",
                             labelText: "First name",
-                            fillColor: Palette.darkPurple,
+                            fillColor: Palette.textFieldPurple.withOpacity(0.3),
                             width: 400,
                             paddingBottom: 25,
                             borderRadius: 50,
@@ -233,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           MyFormBuilderTextField(
                             name: "lastName",
                             labelText: "Last name",
-                            fillColor: Palette.darkPurple,
+                            fillColor: Palette.textFieldPurple.withOpacity(0.3),
                             width: 400,
                             paddingBottom: 25,
                             borderRadius: 50,
@@ -252,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           MyFormBuilderTextField(
                             name: "email",
                             labelText: "E-mail",
-                            fillColor: Palette.darkPurple,
+                            fillColor: Palette.textFieldPurple.withOpacity(0.3),
                             width: 400,
                             borderRadius: 50,
                             focusNode: _focusNode4,

@@ -201,7 +201,7 @@ class _HelpScreenState extends State<HelpScreen> {
                         ),
                         child: MyFormBuilderTextField(
                           name: "answer",
-                          fillColor: Palette.darkPurple,
+                          fillColor: Palette.textFieldPurple.withOpacity(0.3),
                           width: 500,
                           height: 300,
                           borderRadius: 15,
@@ -312,6 +312,8 @@ class _HelpScreenState extends State<HelpScreen> {
                                       height: 50,
                                       borderRadius: 15,
                                       paddingRight: 15,
+                                      fillColor: Palette.textFieldPurple
+                                          .withOpacity(0.3),
                                       dropdownColor: Palette.disabledControl,
                                       onChanged: (filter) {
                                         if (mounted) {

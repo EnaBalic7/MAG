@@ -126,7 +126,8 @@ class _QACategoriesScreenState extends State<QACategoriesScreen> {
                                     MyFormBuilderTextField(
                                         name: "name",
                                         labelText: "Category name",
-                                        fillColor: Palette.disabledControl,
+                                        fillColor: Palette.textFieldPurple
+                                            .withOpacity(0.3),
                                         width: 300,
                                         height: 50,
                                         borderRadius: 50,
