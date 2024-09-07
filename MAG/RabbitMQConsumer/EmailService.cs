@@ -22,10 +22,10 @@ namespace RabbitMQConsumer
         {
             try
             {
-                string smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER") ?? "smtp.gmail.com";
-                int smtpPort = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT") ?? "587");
-                string fromMail = Environment.GetEnvironmentVariable("SMTP_USERNAME") ?? "myanimegalaxy0@gmail.com";
-                string password = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "ltkdhzwgcznbeonf";
+                string smtpServer = Environment.GetEnvironmentVariable("SMTP_SERVER") ?? "";
+                int smtpPort = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT") ?? "");
+                string fromMail = Environment.GetEnvironmentVariable("SMTP_USERNAME") ?? "";
+                string password = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "";
 
                 var emailData = JsonConvert.DeserializeObject<EmailModelToParse>(message);
                 var senderEmail = emailData.Sender;

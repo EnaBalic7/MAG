@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/genre_anime_provider.dart';
 import '../screens/genres_screen.dart';
@@ -244,8 +245,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 MyFormBuilderTextField(
                                   name: "score",
                                   labelText: "Score",
-                                  fillColor:
-                                      Palette.textFieldPurple.withOpacity(0.3),
                                   readOnly: true,
                                   width: maxTextFieldWidth,
                                   paddingLeft: 40,
@@ -312,6 +311,9 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                         finishAir != null &&
                                         finishAir.isBefore(beginAir)) {
                                       return "Finish date cannot be before begin date.";
+                                    } else if (finishAir != null &&
+                                        finishAir.isAfter(DateTime.now())) {
+                                      return "Finish date cannot be in the future";
                                     }
 
                                     return null;
@@ -326,7 +328,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                   paddingLeft: 40,
                                   paddingBottom: 50,
                                   borderRadius: 50,
-                                  dropdownColor: Palette.disabledControl,
+                                  dropdownColor: Palette.dropdownMenu,
                                   items: const [
                                     DropdownMenuItem(
                                         value: 'Spring', child: Text('Spring')),
@@ -394,24 +396,63 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                     }
                                   },
                                 ),
-                                MyFormBuilderTextField(
-                                    name: "trailerUrl",
-                                    labelText: "Trailer URL",
-                                    fillColor: Palette.textFieldPurple
-                                        .withOpacity(0.3),
-                                    width: maxTextFieldWidth,
-                                    paddingLeft: 40,
-                                    paddingBottom: 50,
-                                    borderRadius: 50,
-                                    focusNode: _focusNode7,
-                                    validator: (val) {
-                                      if (val != null &&
-                                          val.isNotEmpty &&
-                                          !isValidYouTubeUrl(val)) {
-                                        return "Not a valid YouTube URL.";
-                                      }
-                                      return null;
-                                    }),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MyFormBuilderTextField(
+                                        name: "trailerUrl",
+                                        labelText: "Trailer URL",
+                                        fillColor: Palette.textFieldPurple
+                                            .withOpacity(0.3),
+                                        width: maxTextFieldWidth,
+                                        paddingLeft: 40,
+                                        paddingBottom: 50,
+                                        borderRadius: 50,
+                                        focusNode: _focusNode7,
+                                        validator: (val) {
+                                          if (val != null &&
+                                              val.isNotEmpty &&
+                                              !isValidYouTubeUrl(val)) {
+                                            return "Not a valid YouTube URL.";
+                                          }
+                                          return null;
+                                        }),
+                                    Tooltip(
+                                      message: "Watch in YouTube",
+                                      child: IconButton(
+                                          onPressed: () async {
+                                            var youtubeUrl = _animeFormKey
+                                                .currentState
+                                                ?.fields["trailerUrl"]
+                                                ?.value;
+
+                                            if (await canLaunchUrl(
+                                                Uri.parse(youtubeUrl))) {
+                                              await launchUrl(
+                                                  Uri.parse(youtubeUrl),
+                                                  mode: LaunchMode
+                                                      .externalApplication);
+                                            } else {
+                                              if (context.mounted) {
+                                                showInfoDialog(
+                                                    context,
+                                                    const Icon(
+                                                      Icons.warning_rounded,
+                                                      color: Palette.lightRed,
+                                                      size: 55,
+                                                    ),
+                                                    Text(
+                                                        "Could not launch video with URL: $youtubeUrl"));
+                                              }
+                                            }
+                                          },
+                                          icon: const Icon(
+                                              Icons.open_in_new_rounded,
+                                              color: Palette.lightPurple)),
+                                    )
+                                  ],
+                                ),
                               ],
                             );
                           },

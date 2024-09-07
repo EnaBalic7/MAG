@@ -14,7 +14,8 @@ class Palette {
   static const Color lightRed = Color.fromRGBO(255, 185, 235, 1);
   static const Color textFieldPurple = Color.fromRGBO(140, 131, 215, 1);
   static const Color searchBar = Color.fromRGBO(52, 48, 110, 1);
-  static const Color disabledControl = Color.fromRGBO(69, 67, 108, 1);
+  static const Color dropdownMenu = Color.fromRGBO(69, 67, 108, 1);
+  static const Color disabledControl = Color.fromRGBO(105, 103, 154, 1);
   static const Color selectedGenre = Color.fromRGBO(245, 184, 255, 1);
   static const Color popupMenu = Color.fromRGBO(50, 48, 90, 1);
   static const Color listTile = Color.fromRGBO(55, 53, 102, 1);

@@ -93,6 +93,8 @@ class _ContentFormState extends State<ContentForm> {
               keyboardType: TextInputType.multiline,
               borderRadius: 15,
               errorBorderRadius: 15,
+              contentPadding:
+                  const EdgeInsets.only(left: 10, right: 10, top: 25),
               validator: (val) {
                 return _buildValidator(val);
               },

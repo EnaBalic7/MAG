@@ -63,7 +63,7 @@ class _DonationsScreenState extends State<DonationsScreen> {
                     width: 130,
                     icon: const Icon(Icons.filter_alt,
                         color: Palette.lightPurple),
-                    dropdownColor: Palette.disabledControl,
+                    dropdownColor: Palette.dropdownMenu,
                     onChanged: (val) {
                       if (val != null) {
                         if (val.contains("Latest")) {

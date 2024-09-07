@@ -333,7 +333,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             padding: const EdgeInsets.only(right: 15, left: 15, bottom: 10),
             child: Container(
               constraints: const BoxConstraints(
-                // minHeight: 100,
+                minHeight: 48,
                 maxHeight: 200,
                 minWidth: 315,
               ),
@@ -360,7 +360,8 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 1),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       buildStarIcon(15),
                                       const SizedBox(width: 3),

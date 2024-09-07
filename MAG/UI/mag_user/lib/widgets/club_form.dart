@@ -133,6 +133,8 @@ class _ClubFormState extends State<ClubForm> {
                   borderRadius: 20,
                   errorBorderRadius: 20,
                   focusNode: _focusNode2,
+                  contentPadding:
+                      const EdgeInsets.only(left: 10, right: 10, top: 25),
                   validator: (val) {
                     if (val == null || isEmptyOrWhiteSpace(val)) {
                       return "This field cannot be empty.";

@@ -190,6 +190,9 @@ class _NebulaFormState extends State<NebulaForm> {
                 MyFormBuilderChoiceChip(
                   focusNode: _focusNode1,
                   name: "watchStatus",
+                  onChanged: (val) {
+                    _nebulaFormKey.currentState?.saveAndValidate();
+                  },
                   options: const [
                     FormBuilderChipOption(
                         value: "Watching",
@@ -421,9 +424,6 @@ class _NebulaFormState extends State<NebulaForm> {
                   width: double.infinity,
                   height: 40,
                   borderRadius: 50,
-                  onChanged: (val) {
-                    _nebulaFormKey.currentState?.saveAndValidate();
-                  },
                   validator: (val) {
                     final watchStatus = _nebulaFormKey
                         .currentState!.fields['watchStatus']?.value;
@@ -641,6 +641,9 @@ class _NebulaFormState extends State<NebulaForm> {
                           focusNode: _focusNode7,
                           name: "watchStatus",
                           initialValue: initialValue?["watchStatus"],
+                          onChanged: (val) {
+                            _nebulaFormKey.currentState?.saveAndValidate();
+                          },
                           options: const [
                             FormBuilderChipOption(
                                 value: "Watching",

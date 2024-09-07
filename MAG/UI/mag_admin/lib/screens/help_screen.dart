@@ -314,7 +314,7 @@ class _HelpScreenState extends State<HelpScreen> {
                                       paddingRight: 15,
                                       fillColor: Palette.textFieldPurple
                                           .withOpacity(0.3),
-                                      dropdownColor: Palette.disabledControl,
+                                      dropdownColor: Palette.dropdownMenu,
                                       onChanged: (filter) {
                                         if (mounted) {
                                           setState(() {
