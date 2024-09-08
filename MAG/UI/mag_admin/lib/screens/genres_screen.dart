@@ -137,7 +137,7 @@ class _GenresScreenState extends State<GenresScreen> {
                                               val.trim().isEmpty) {
                                             return "This field cannot be empty";
                                           } else if (val.length > 25) {
-                                            return "Category can contain 25 characters max.";
+                                            return "Genre can contain 25 characters max.";
                                           }
                                           return null;
                                         }),

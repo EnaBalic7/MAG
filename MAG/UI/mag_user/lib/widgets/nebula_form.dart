@@ -357,7 +357,6 @@ class _NebulaFormState extends State<NebulaForm> {
                   name: "reviewText",
                   labelText: "Review",
                   fillColor: Palette.textFieldPurple.withOpacity(0.5),
-                  //height: 54,
                   maxLines: null,
                   textAlignVertical: TextAlignVertical.center,
                   paddingBottom: 10,
@@ -366,6 +365,7 @@ class _NebulaFormState extends State<NebulaForm> {
                   errorBorderRadius: 20,
                   contentPadding:
                       const EdgeInsets.only(left: 10, right: 10, top: 25),
+                  errorHeight: 1,
                   validator: (val) {
                     if (val != null &&
                         val.isNotEmpty &&
@@ -473,6 +473,9 @@ class _NebulaFormState extends State<NebulaForm> {
                         finishedDate != null &&
                         finishedDate.isBefore(beganDate)) {
                       return "Finish date cannot be before begin date.";
+                    } else if (finishedDate != null &&
+                        finishedDate.isAfter(DateTime.now())) {
+                      return "Finish date cannot be in the future";
                     }
                     return null;
                   },
@@ -713,6 +716,13 @@ class _NebulaFormState extends State<NebulaForm> {
                               ),
                             );
                           },
+                          onChanged: (val) {
+                            if (_nebulaFormKey.currentState
+                                    ?.fields["watchStatus"]?.value !=
+                                "Plan to Watch") {
+                              _nebulaFormKey.currentState?.saveAndValidate();
+                            }
+                          },
                           validator: (val) {
                             final watchStatus = _nebulaFormKey
                                 .currentState!.fields['watchStatus']?.value;
@@ -915,6 +925,9 @@ class _NebulaFormState extends State<NebulaForm> {
                                 finishedDate != null &&
                                 finishedDate.isBefore(beganDate)) {
                               return "Finish date cannot be before begin date.";
+                            } else if (finishedDate != null &&
+                                finishedDate.isAfter(DateTime.now())) {
+                              return "Finish date cannot be in the future";
                             }
                             return null;
                           },
