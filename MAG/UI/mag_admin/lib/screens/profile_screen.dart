@@ -344,6 +344,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       await _userProvider.update(widget.user.id!, request: userData).then((_) {
+        LoggedUser.user!.username = request["username"];
+        LoggedUser.user!.firstName = request["firstName"];
+        LoggedUser.user!.lastName = request["lastName"];
+        LoggedUser.user!.email = request["email"];
+        LoggedUser.user!.profilePicture?.profilePicture = _base64Image;
         Authorization.username = request["username"];
         if (mounted) {
           showInfoDialog(

@@ -307,22 +307,6 @@ class _UsersScreenState extends State<UsersScreen> {
           child: Stack(
             children: [
               _buildOverlayForm(context, user),
-              Positioned(
-                left: 190,
-                top: 25,
-                child: Image.asset(
-                  "assets/images/animeWitch.png",
-                  width: 400,
-                ),
-              ),
-              Positioned(
-                right: 350,
-                bottom: 20,
-                child: Image.asset(
-                  "assets/images/cauldron.png",
-                  width: 200,
-                ),
-              ),
             ],
           ),
         );

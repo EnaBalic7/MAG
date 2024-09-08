@@ -337,7 +337,6 @@ public partial class MagContext : DbContext
 
             entity.HasOne(d => d.Anime).WithMany(p => p.Recommenders)
                 .HasForeignKey(d => d.AnimeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Recommender_Anime");
         });
 

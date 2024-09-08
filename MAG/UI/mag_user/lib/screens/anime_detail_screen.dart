@@ -98,18 +98,33 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       List<int> recommendedAnimeIds = [];
 
       if (coAnimeId1 != null) {
-        Recommender recAnime1 = await _recommenderProvider.getById(coAnimeId1);
-        recommendedAnimeIds.add(recAnime1.animeId!);
+        try {
+          Recommender recAnime1 =
+              await _recommenderProvider.getById(coAnimeId1);
+          recommendedAnimeIds.add(recAnime1.animeId!);
+        } catch (e) {
+          // Do nothing
+        }
       }
 
       if (coAnimeId2 != null) {
-        Recommender recAnime2 = await _recommenderProvider.getById(coAnimeId2);
-        recommendedAnimeIds.add(recAnime2.animeId!);
+        try {
+          Recommender recAnime2 =
+              await _recommenderProvider.getById(coAnimeId2);
+          recommendedAnimeIds.add(recAnime2.animeId!);
+        } catch (e) {
+          // Do nothing
+        }
       }
 
       if (coAnimeId3 != null) {
-        Recommender recAnime3 = await _recommenderProvider.getById(coAnimeId3);
-        recommendedAnimeIds.add(recAnime3.animeId!);
+        try {
+          Recommender recAnime3 =
+              await _recommenderProvider.getById(coAnimeId3);
+          recommendedAnimeIds.add(recAnime3.animeId!);
+        } catch (e) {
+          // Do nothing
+        }
       }
 
       return recommendedAnimeIds;
