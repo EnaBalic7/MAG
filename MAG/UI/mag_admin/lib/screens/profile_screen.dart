@@ -204,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               } else if (val.length > 50) {
                                 return 'Character limit exceeded: ${val.length}/50';
                               } else if (isValidUsername(val) == false) {
-                                return 'Use only letters, numbers, and underscore.';
+                                return 'Use only letters, numbers, _ and -';
                               } else if (usernameTaken == true) {
                                 return 'This username is taken.';
                               }

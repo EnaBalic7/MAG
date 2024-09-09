@@ -66,6 +66,10 @@ class _NebulaCardsState extends State<NebulaCards>
       setTotalItems();
     });
 
+    _ratingProvider.addListener(() {
+      _reloadData();
+    });
+
     setTotalItems();
 
     super.initState();
@@ -98,7 +102,6 @@ class _NebulaCardsState extends State<NebulaCards>
 
     return FutureBuilder<SearchResult<AnimeWatchlist>>(
         future: _animeWatchlistFuture,
-        // future: _loadDataForever(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SingleChildScrollView(

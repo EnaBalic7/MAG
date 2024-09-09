@@ -173,7 +173,7 @@ bool containsLowercase(String text) {
 }
 
 bool isValidUsername(String text) {
-  return RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(text);
+  return RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(text);
 }
 
 bool isValidName(String text) {
