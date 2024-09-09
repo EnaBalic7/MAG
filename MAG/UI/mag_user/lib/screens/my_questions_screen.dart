@@ -131,7 +131,9 @@ class _MyQuestionsScreenState extends State<MyQuestionsScreen> {
                           isEmptyOrWhiteSpace(val)) {
                         return "This field cannot be empty.";
                       } else if (LoggedUser.user!.userRoles!.any(
-                        (element) => element.canAskQuestions == false,
+                        (element) =>
+                            element.roleId == 2 &&
+                            element.canAskQuestions == false,
                       )) {
                         return "You don't have permission to ask questions.";
                       } else if (val.isNotEmpty && !isValidReviewText(val)) {

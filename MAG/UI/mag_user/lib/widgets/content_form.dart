@@ -62,7 +62,8 @@ class _ContentFormState extends State<ContentForm> {
 
   Widget _buildChild(BuildContext context) {
     if (LoggedUser.user!.userRoles!.any(
-      (element) => element.canParticipateInClubs == false,
+      (element) =>
+          element.roleId == 2 && element.canParticipateInClubs == false,
     )) {
       return const Column(
         mainAxisSize: MainAxisSize.min,

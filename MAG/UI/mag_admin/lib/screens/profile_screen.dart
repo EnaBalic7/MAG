@@ -335,6 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (_base64Image != widget.user.profilePicture!.profilePicture) {
         if (widget.user.profilePictureId == 1) {
           pic = await _userProfilePictureProvider.insert(profilePic);
+          widget.user.profilePictureId = pic.id;
           userData["profilePictureId"] = pic.id;
         } else {
           await _userProfilePictureProvider

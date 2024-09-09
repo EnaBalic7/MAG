@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glass/glass.dart';
+import 'package:mag_user/models/user_role.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_comment_action_provider.dart';
@@ -99,23 +100,44 @@ class _LoginScreenState extends State<LoginScreen> {
                           try {
                             await _animeProvider.get();
                             var userResult = await _userProvider.get(filter: {
+                              "RolesIncluded": "true",
                               "Username": "${Authorization.username}",
                               "ProfilePictureIncluded": "true",
                             });
                             if (userResult.count == 1) {
                               LoggedUser.user = userResult.result.single;
                             }
-                            if (context.mounted) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const HomeScreen(selectedIndex: 0),
-                                ),
-                              );
+                            List<UserRole> userRoles =
+                                userResult.result.first.userRoles!;
+
+                            if (userRoles
+                                .any((userRole) => userRole.roleId == 2)) {
+                              if (context.mounted) {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const HomeScreen(selectedIndex: 0),
+                                  ),
+                                );
+                              }
 
                               await _userPostActionProvider.syncUserActions();
                               await _userCommentActionProvider
                                   .syncUserActions();
+                            } else {
+                              if (context.mounted) {
+                                showInfoDialog(
+                                    context,
+                                    const Icon(Icons.warning_rounded,
+                                        color: Palette.lightRed, size: 55),
+                                    const SizedBox(
+                                      width: 300,
+                                      child: Text(
+                                        "User is registered but does not have privileges to login to mobile app.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ));
+                              }
                             }
                           } on Exception catch (e) {
                             if (context.mounted) {

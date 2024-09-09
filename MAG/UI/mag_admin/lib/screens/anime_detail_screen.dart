@@ -236,7 +236,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                     if (val == null || val.isEmpty) {
                                       return "This field cannot be empty.";
                                     } else if (val.isNotEmpty == true &&
-                                        int.tryParse(val) == null) {
+                                        !isOnlyDigits(val)) {
                                       return "This field may only contain numbers.";
                                     }
                                     return null;
@@ -280,7 +280,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                       return "Begin date cannot be after finish date.";
                                     } else if (beginAir != null &&
                                         beginAir.isAfter(DateTime.now())) {
-                                      return "Begin date cannot be in the future";
+                                      return "Begin date cannot be in the future.";
                                     }
 
                                     return null;
@@ -313,7 +313,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                                       return "Finish date cannot be before begin date.";
                                     } else if (finishAir != null &&
                                         finishAir.isAfter(DateTime.now())) {
-                                      return "Finish date cannot be in the future";
+                                      return "Finish date cannot be in the future.";
                                     }
 
                                     return null;
@@ -481,7 +481,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                           ),
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(
-                                errorText: "This field cannot be empty"),
+                                errorText: "This field cannot be empty."),
                           ]),
                         ),
                       ),
@@ -492,19 +492,23 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
-                        child: GradientButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: ((context) => const GenresScreen())));
-                          },
-                          width: 75,
-                          height: 32,
-                          gradient: Palette.buttonGradient,
-                          paddingTop: 5,
-                          paddingRight: 8,
-                          borderRadius: 50,
-                          child: const Icon(Icons.add_rounded,
-                              size: 20, color: Palette.white),
+                        child: Tooltip(
+                          message: "Manage genres",
+                          child: GradientButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: ((context) =>
+                                      const GenresScreen())));
+                            },
+                            width: 75,
+                            height: 32,
+                            gradient: Palette.buttonGradient,
+                            paddingTop: 5,
+                            paddingRight: 8,
+                            borderRadius: 50,
+                            child: const Icon(Icons.add_rounded,
+                                size: 20, color: Palette.white),
+                          ),
                         ),
                       ),
                       Expanded(

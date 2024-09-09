@@ -373,6 +373,7 @@ class _NebulaFormState extends State<NebulaForm> {
                       return "Some special characters are not allowed.";
                     } else if (LoggedUser.user!.userRoles!.any(
                       (element) =>
+                          element.roleId == 2 &&
                           element.canReview == false &&
                           val != null &&
                           val.isNotEmpty,
@@ -441,7 +442,7 @@ class _NebulaFormState extends State<NebulaForm> {
                       return "Begin date cannot be after finish date.";
                     } else if (beganDate != null &&
                         beganDate.isAfter(DateTime.now())) {
-                      return "Begin date cannot be in the future";
+                      return "Begin date cannot be in the future.";
                     }
                     return null;
                   },
@@ -475,7 +476,7 @@ class _NebulaFormState extends State<NebulaForm> {
                       return "Finish date cannot be before begin date.";
                     } else if (finishedDate != null &&
                         finishedDate.isAfter(DateTime.now())) {
-                      return "Finish date cannot be in the future";
+                      return "Finish date cannot be in the future.";
                     }
                     return null;
                   },
@@ -833,6 +834,7 @@ class _NebulaFormState extends State<NebulaForm> {
                               return "Some special characters are not allowed.";
                             } else if (LoggedUser.user!.userRoles!.any(
                               (element) =>
+                                  element.roleId == 2 &&
                                   element.canReview == false &&
                                   val != null &&
                                   val.isNotEmpty,
@@ -894,7 +896,7 @@ class _NebulaFormState extends State<NebulaForm> {
                               return "Begin date cannot be after finish date.";
                             } else if (beganDate != null &&
                                 beganDate.isAfter(DateTime.now())) {
-                              return "Begin date cannot be in the future";
+                              return "Begin date cannot be in the future.";
                             }
                             return null;
                           },
@@ -927,7 +929,7 @@ class _NebulaFormState extends State<NebulaForm> {
                               return "Finish date cannot be before begin date.";
                             } else if (finishedDate != null &&
                                 finishedDate.isAfter(DateTime.now())) {
-                              return "Finish date cannot be in the future";
+                              return "Finish date cannot be in the future.";
                             }
                             return null;
                           },

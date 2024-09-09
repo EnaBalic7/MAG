@@ -200,3 +200,7 @@ bool isValidYouTubeUrl(String url) {
 
   return youtubeRegex.hasMatch(url);
 }
+
+bool isOnlyDigits(String text) {
+  return RegExp(r'^\d+$').hasMatch(text);
+}

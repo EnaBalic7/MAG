@@ -124,7 +124,9 @@ class _ClubsScreenState extends State<ClubsScreen> {
                 GradientButton(
                   onPressed: () {
                     if (LoggedUser.user!.userRoles!.any(
-                      (element) => element.canParticipateInClubs == false,
+                      (element) =>
+                          element.roleId == 2 &&
+                          element.canParticipateInClubs == false,
                     )) {
                       showInfoDialog(
                         context,

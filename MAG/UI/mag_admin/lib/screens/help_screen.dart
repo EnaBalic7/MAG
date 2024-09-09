@@ -73,9 +73,22 @@ class _HelpScreenState extends State<HelpScreen> {
     _qaCategoryProvider.addListener(() {
       _reloadQAList();
       setTotalItems();
+      _emptySelectedQuestion();
     });
 
     super.initState();
+  }
+
+  void _emptySelectedQuestion() {
+    if (mounted) {
+      setState(() {
+        _initialValue["question"] = "";
+        _initialValue["question"] = "";
+        qaID = null;
+        _questionTitle = "";
+        _qAFormKey.currentState?.fields["answer"]?.didChange("");
+      });
+    }
   }
 
   @override
